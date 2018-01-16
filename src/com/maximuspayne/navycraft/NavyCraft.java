@@ -5,7 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.logging.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -28,7 +34,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
 
 /**
  * MoveCraft plugin for Hey0 mod (hMod) by Yogoda
@@ -54,17 +59,35 @@ public class NavyCraft extends JavaPlugin {
 	public ConfigFile configFile;
 
 	public static ArrayList<Player> aaGunnersList = new ArrayList<Player>();
+	public static ArrayList<Player> flakGunnersList = new ArrayList<Player>();
+	public static ArrayList<Skeleton> flakSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Skeleton> aaSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Egg> explosiveEggsList = new ArrayList<Egg>();
 	public static HashMap<UUID, Player> shotTNTList = new HashMap<UUID, Player>();
-	
 	
 	public final NavyCraft_PlayerListener playerListener = new NavyCraft_PlayerListener(this);
 	public final NavyCraft_BlockListener blockListener = new NavyCraft_BlockListener(this);
 	public final NavyCraft_EntityListener entityListener = new NavyCraft_EntityListener(this);
 	public final NavyCraft_InventoryListener inventoryListener = new NavyCraft_InventoryListener(this);
 	
+    public static int battleMode=-1; //-1 false, 0 queue, 1 battle
+    public static int battleType=-1;
+    public static boolean battleLockTeams=false;
+    public static ArrayList<String> bluePlayers = new ArrayList<String>();
+    public static ArrayList<String> redPlayers = new ArrayList<String>();
+    public static ArrayList<String> anyPlayers = new ArrayList<String>();
+
 	public static ArrayList<String> playerKits = new ArrayList<String>();
+    public static Location redSpawn;
+    public static Location blueSpawn;
+    public static int redPoints=0;
+    public static int bluePoints=0;
+    public static long battleStartTime;
+    public static long battleLength;
+    public static boolean redMerchant = false;
+    public static boolean blueMerchant = false;
+
+    public static enum battleTypes { battle1, battle2 }; //1
 	
 
 	public static Thread updateThread=null;
@@ -84,6 +107,31 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, String> playerLastBoughtSignString2 = new HashMap<Player, String>();
 	
 	public static int spawnTime=10;
+	
+	public static HashMap<String, ArrayList<Sign>> playerDDSigns = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSUB1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerCLSigns = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSUB2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerCASigns = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerHANGAR1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
+	
+	public static HashMap<String, Integer> playerDDRewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSUB1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSUB2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerCLRewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerCARewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerHANGAR1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerHANGAR2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerTANK1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerTANK2Rewards = new HashMap<String, Integer>();
+	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
+	
+	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();
+	
+	public static HashMap<String, Long> playerPayDays = new HashMap<String, Long>();
 	
 	public static HashMap<String, Integer> cleanupPlayerTimes = new HashMap<String, Integer>();
 	public static ArrayList<String> cleanupPlayers = new ArrayList<String>();
@@ -120,8 +168,6 @@ public class NavyCraft extends JavaPlugin {
 		pm.registerEvents(entityListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(inventoryListener, this);
-		
-
 		
 		PluginDescriptionFile pdfFile = this.getDescription();
 		version = pdfFile.getVersion();
@@ -188,11 +234,26 @@ public class NavyCraft extends JavaPlugin {
 		
 		if( autoShip )
 			craft.captainName = null;
-		
-		
+
 		CraftMover cm = new CraftMover(craft, this);
 		cm.structureUpdate(null,false);
 
+		if( !craft.redTeam && !craft.blueTeam )
+		{
+			if( checkTeamRegion(player.getLocation()) > 0 )
+			{
+				if( checkTeamRegion(player.getLocation()) == 1 )
+				{
+					craft.blueTeam = true;
+					player.sendMessage(ChatColor.BLUE + "You start a blue team vehicle!");
+				}
+				else
+				{
+					craft.redTeam = true;
+					player.sendMessage(ChatColor.RED + "You start a red team vehicle!");
+				}
+			}
+		}
 
 		Craft.addCraftList.add(craft);
 		//craft.cloneCraft();
@@ -228,6 +289,41 @@ public class NavyCraft extends JavaPlugin {
 		return craft;
 	}
     
+    public static int checkTeamRegion(Location loc) /// 0 no region, 1 blue team, 2 red team
+    {
+    	
+    	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
+    	if( wgp != null && loc != null)
+    	{
+    		if( !loc.getWorld().getName().equalsIgnoreCase("warworld1") &&  !loc.getWorld().getName().equalsIgnoreCase("warworld2") &&  !loc.getWorld().getName().equalsIgnoreCase("warworld3") )
+    		{
+    			return 0;
+    		}
+	    	RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
+		
+			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
+			
+			Iterator<ProtectedRegion> it = set.iterator();
+			while( it.hasNext() )
+			{
+				String id = it.next().getId();
+				String[] splits = id.split("_");
+				if( splits.length == 2 )
+				{
+					if( splits[1].equalsIgnoreCase("blue") )
+						return 1;
+					else if( splits[1].equalsIgnoreCase("red") )
+						return 2;
+					
+				}
+		
+				
+		    }
+			return 0;
+		}
+    	return 0;
+	}
+
     public static boolean checkStorageRegion(Location loc)
     {
     	
@@ -433,7 +529,90 @@ public class NavyCraft extends JavaPlugin {
 			}
 		}
 	}
+
+	@SuppressWarnings("resource")
+	public static void loadExperience()
+	{
+		String path = File.separator + "NCExp.txt";
+        File file = new File(path);
+        
+        FileReader fr;
+        BufferedReader reader;
+		try {
+			fr = new FileReader(file.getName());
+			reader = new BufferedReader(fr);
+
+	        String line = null;        
+	        try {
+	        	playerExp.clear();
+	        	
+				while ((line=reader.readLine()) != null) {
+					String[] strings = line.split(",");
+					if( strings.length != 2 )
+					{
+						System.out.println("Player EXP Load Error3");
+						return;
+					}
+					playerExp.put(strings[0], Integer.valueOf(strings[1]));
+					
+				}
+
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Player EXP Load Error2");
+			}
+	        
+	        reader.close();  // Close to unlock.
+
+		} catch (FileNotFoundException e) {
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Player EXP Load Error4");
+		}
+	}
 	
+	
+	@SuppressWarnings("resource")
+	public static void saveExperience()
+	{
+		String path = File.separator + "NCExp.txt";
+        File file = new File(path);
+        FileWriter fw;
+        BufferedWriter writer;
+	
+		try {
+			fw = new FileWriter(file.getName());
+			writer = new BufferedWriter(fw);
+	        String line = null;
+	        
+	        if( playerExp.isEmpty() )
+	        {
+	        	System.out.println("Player Save Exp Error1");
+	        	return;
+	        }
+	        
+			for( String s : playerExp.keySet() )
+			{
+				line = s + "," + playerExp.get(s).toString();
+				try {
+					writer.write(line);
+					writer.newLine();
+				} catch (IOException e) {
+					System.out.println("Player Save Exp Error2");
+					e.printStackTrace();
+					return;
+				}	
+			}
+			
+			writer.close();
+		} catch (IOException e2) {
+			System.out.println("Player Save Exp Error4");
+			e2.printStackTrace();
+			return;
+		}
+	}
    
    public void structureUpdateScheduler()
    {
@@ -538,7 +717,8 @@ public class NavyCraft extends JavaPlugin {
    	, 4, 1);
 	 }
    
-   public void updateCraft(int vehicleNum, int updateNum)
+   @SuppressWarnings("deprecation")
+public void updateCraft(int vehicleNum, int updateNum)
    {
 	   int vehicleCount = Craft.craftList.size();
 	   if( vehicleNum < Craft.craftList.size() && Craft.craftList.get(vehicleNum) != null )
@@ -697,6 +877,157 @@ public class NavyCraft extends JavaPlugin {
 		    }
     	}
     	);
+	}
+
+	public static void loadRewardsFile()
+	{
+		String path = File.separator + "PlayerPlotRewards.txt";
+       File file = new File(path);
+       
+       
+       FileReader fr;
+       BufferedReader reader;
+		try {
+			fr = new FileReader(file.getName());
+			reader = new BufferedReader(fr);
+
+	        String line = null;
+	        
+	        try {
+	        	
+				while ((line=reader.readLine()) != null) 
+				{
+					String[] strings = line.split(",");
+					if( strings.length != 4 )
+					{
+						System.out.println("Player Reward Load Error1");
+						reader.close(); 
+						return;
+					}
+					
+					if( strings[1].equalsIgnoreCase("dd") || strings[1].equalsIgnoreCase("ship1") )
+					{
+						if( playerDDRewards.containsKey(strings[0]) )
+							 playerDDRewards.put(strings[0], playerDDRewards.get(strings[0]) + 1);
+						else
+							 playerDDRewards.put(strings[0], 1);
+					}else if( strings[1].equalsIgnoreCase("sub1") || strings[1].equalsIgnoreCase("ship2") )
+					{
+						{
+							if( playerSUB1Rewards.containsKey(strings[0]) )
+								playerSUB1Rewards.put(strings[0], playerSUB1Rewards.get(strings[0]) + 1);
+							else
+								playerSUB1Rewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("sub2") || strings[1].equalsIgnoreCase("ship3") )
+					{
+						{
+							if( playerSUB2Rewards.containsKey(strings[0]) )
+								playerSUB2Rewards.put(strings[0], playerSUB2Rewards.get(strings[0]) + 1);
+							else
+								playerSUB2Rewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("cl") || strings[1].equalsIgnoreCase("ship4") )
+					{
+						{
+							if( playerCLRewards.containsKey(strings[0]) )
+								playerCLRewards.put(strings[0], playerCLRewards.get(strings[0]) + 1);
+							else
+								playerCLRewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("ca") || strings[1].equalsIgnoreCase("ship5") )
+					{
+						{
+							if( playerCARewards.containsKey(strings[0]) )
+								playerCARewards.put(strings[0], playerCARewards.get(strings[0]) + 1);
+							else
+								playerCARewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("hangar1") )
+					{
+						{
+							if( playerHANGAR1Rewards.containsKey(strings[0]) )
+								playerHANGAR1Rewards.put(strings[0], playerHANGAR1Rewards.get(strings[0]) + 1);
+							else
+								playerHANGAR1Rewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("hangar2") )
+					{
+						{
+							if( playerHANGAR2Rewards.containsKey(strings[0]) )
+								playerHANGAR2Rewards.put(strings[0], playerHANGAR2Rewards.get(strings[0]) + 1);
+							else
+								playerHANGAR2Rewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("tank1") )
+					{
+						{
+							if( playerTANK1Rewards.containsKey(strings[0]) )
+								playerTANK1Rewards.put(strings[0], playerTANK1Rewards.get(strings[0]) + 1);
+							else
+								playerTANK1Rewards.put(strings[0], 1);
+						}
+					}else if( strings[1].equalsIgnoreCase("tank2") )
+					{
+						{
+							if( playerTANK2Rewards.containsKey(strings[0]) )
+								playerTANK2Rewards.put(strings[0], playerTANK2Rewards.get(strings[0]) + 1);
+							else
+								playerTANK2Rewards.put(strings[0], 1);
+						}
+					}else
+					{
+						System.out.println("Player Reward Load Error: Unknown Reward");
+					}
+					
+				}
+
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Player Reward Load Error2");
+				return;
+			}
+	        
+	        reader.close();  // Close to unlock.
+
+		} catch (FileNotFoundException e) {
+			//System.out.println("Player Reward Load Error3");
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Player Reward Load Error4");
+			return;
+		}
+	}
+	
+	public static void saveRewardsFile(String s)
+	{
+		String path = File.separator + "PlayerPlotRewards.txt";
+        File file = new File(path);
+        FileWriter fw;
+        BufferedWriter writer;
+	
+		try {
+			fw = new FileWriter(file.getName(), true);
+			writer = new BufferedWriter(fw);
+	        
+			try {
+				writer.write(s);
+				writer.newLine();
+			} catch (IOException e) {
+				System.out.println("Player Save Reward Error1");
+				e.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			writer.close();
+		} catch (IOException e2) {
+			System.out.println("Player Save Reward Error2");
+			e2.printStackTrace();
+			return;
+		}
 	}
    
 	@SuppressWarnings("deprecation")

@@ -591,6 +591,7 @@ public class CraftBuilder {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean detect(Craft craft, int X, int Y, int Z, boolean autoShip){
 		waitStopMakingThatCraft = false;
 		CraftBuilder.craft = craft;

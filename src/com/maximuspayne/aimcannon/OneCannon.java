@@ -794,7 +794,7 @@ public class OneCannon{
 		    else if( cannonType == 3 )//torpedo mk 2
 		    	cost=600;
 		    else if( cannonType == 4 )//depth charge
-		    	cost=250;
+		    	cost=850;
 		    else if( cannonType == 5 )//depth charge mk2
 		    	cost=1250;
 		    else if( cannonType == 6 )//triple barrel
@@ -804,7 +804,7 @@ public class OneCannon{
 		    else if( cannonType == 8 )//torpedo mk 1
 		    	cost=250;
 		    else if( cannonType == 9 )//bombs
-		    	cost=100;
+		    	cost=500;
 		    
 		    //p.sendMessage("test1.");
 			if( PermissionInterface.CheckEnabledWorld(p.getLocation()) )
@@ -2146,7 +2146,7 @@ public class OneCannon{
 			
 			float nx = -(float) Math.sin(rotation);
 			float nz = (float) Math.cos(rotation);
-
+			
 		////north
 			
 			//p.sendMessage("torpRotation=" + torpRotation + " rotation=" + rotation);

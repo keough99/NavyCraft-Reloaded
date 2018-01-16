@@ -143,7 +143,7 @@ public class NavyCraft_EntityListener implements Listener {
     		{
     			if( NavyCraft.explosiveEggsList.contains((Egg)attacker) )
     			{	
-    				event.setDamage(5);
+    				event.setDamage(8);
     			}
     		}
     	}

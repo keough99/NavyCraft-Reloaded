@@ -172,6 +172,9 @@ public class Craft {
 	int reductionSpeed = -1;
 	int collisionSpeed = -1;
 	
+	boolean blueTeam = false;
+	boolean redTeam = false;
+	
 	boolean isAutoCraft = false;
 	
 	long abandonTime=0;
@@ -276,7 +279,7 @@ public class Craft {
 	public float minDispValue = 0.33f;
 	
 	public float ballastDisplacement = 0.0f;
-	public int ballastAirPercent=50;
+	public int ballastAirPercent=100;
 	public int ballastMode=0; //0 closed, 1 flood, 2 blow, 3 auto equalize
 	
 	public float lastDisplacement=0;
@@ -454,6 +457,10 @@ public class Craft {
 	}
 	
 	void remove() {
+		if( isMerchantCraft && redTeam )
+			NavyCraft.redMerchant = false;
+		else if( isMerchantCraft && blueTeam )
+			NavyCraft.blueMerchant = false;
 		isDestroying = true;
 		releaseCraft();
 		craftList.remove(this);
@@ -1239,19 +1246,19 @@ public class Craft {
 		}else if( blockID == 8 || blockID == 9 || blockID == 10 || blockID == 11 )
 		{
 			return -3;
-		}else if( blockID == 1 || blockID == 4 || blockID == 23 || blockID == 41 || blockID == 42 || blockID == 48 || blockID == 57
+		}else if( blockID == 1 || blockID == 4 || blockID == 23 || blockID == 41 || blockID == 251 || blockID == 42 || blockID == 48 || blockID == 57
 				|| blockID == 67 || blockID == 71 || blockID == 86 || blockID == 98 || blockID == 109 || blockID == 112 
 				|| blockID == 114 || blockID == 121 || blockID == 122 || blockID == 133 || blockID == 139 || blockID == 155 
-				|| blockID == 156 || blockID == 159 || blockID == 172 || blockID == 251 || (blockID >= 235 && blockID <= 250))
+				|| blockID == 156 || blockID == 251 || (blockID >= 235 && blockID <= 250))
 		{
 			return 2;
 		}else if( blockID == 2 || blockID == 3 || blockID == 5 || blockID == 12 || blockID == 13 || blockID == 14 || blockID == 15 || blockID == 16 
-				|| blockID == 17 || blockID == 19  || blockID == 21 || blockID == 22 || blockID == 24 || blockID == 25 || blockID == 29 || blockID == 33 || blockID == 35 
+				|| blockID == 17 || blockID == 19 || blockID == 20 || blockID == 95  || blockID == 21 || blockID == 22 || blockID == 24 || blockID == 25 || blockID == 29 || blockID == 33 || blockID == 35 
 				|| blockID == 43 || blockID == 44 || blockID == 45 || blockID == 47 || blockID == 53 || blockID == 54 || blockID == 56 || blockID == 58 || blockID == 60 || blockID == 61 
 				|| blockID == 62 || blockID == 63 || blockID == 64 || blockID == 65 || blockID == 68 || blockID == 69 || blockID == 70 || blockID == 72 || blockID == 73 || blockID == 74 
 				|| blockID == 77 || blockID == 78 || blockID == 79 || blockID == 80 || blockID == 82 || blockID == 84 || blockID == 85 || blockID == 91 || blockID == 96 || blockID == 101 || blockID == 107
 				|| blockID == 108 || blockID == 110 || blockID == 113 || blockID == 117 || blockID == 118 || blockID == 125 || blockID == 126 
-				|| blockID == 128 || blockID == 134 || blockID == 135 || blockID == 136 || blockID == 138 || blockID == 143 || blockID == 146 || blockID == 147 || blockID == 148 || blockID == 154 || blockID == 158)
+				|| blockID == 128 || blockID == 159 || blockID == 172 || blockID == 134 || blockID == 135 || blockID == 136 || blockID == 138 || blockID == 143 || blockID == 146 || blockID == 147 || blockID == 148 || blockID == 154 || blockID == 158)
 		{
 			return 1;
 		}else if( blockID == 46 || blockID == 129 || blockID == 152 )
@@ -1279,12 +1286,12 @@ public class Craft {
 		{
 			return 1.0f;
 		}else if(  blockID == 19 || blockID == 43 || blockID == 54 || blockID == 58 || blockID == 64 || blockID == 91 || blockID == 96 || blockID == 101 || blockID == 113 
-				|| blockID == 117 || blockID == 118 || blockID == 137 || blockID == 153 || blockID == 170 || blockID == 173 || blockID == 159 || blockID == 172 )
+				|| blockID == 117 || blockID == 118 || blockID == 137 || blockID == 153 || blockID == 170 || blockID == 173 || blockID == 172 )
 		{
 			return 0.5f;
 		}else if( blockID == 5 || blockID == 14 || blockID == 15 || blockID == 16 || blockID == 17 || blockID == 21 || blockID == 25 || blockID == 44 || blockID == 47 
 				|| blockID == 53 || blockID == 56 || blockID == 63 || blockID == 65 || blockID == 68 || blockID == 73 
-				|| blockID == 74 || blockID == 84 || blockID == 125 || blockID == 126 || blockID == 134 || blockID == 135 || blockID == 136 )
+				|| blockID == 74 || blockID == 159 || blockID == 84 || blockID == 125 || blockID == 126 || blockID == 134 || blockID == 135 || blockID == 136 )
 		{
 			return 0.25f;
 		}else if( blockID == 35 || blockID == 85 || blockID == 107 )
@@ -1364,7 +1371,7 @@ public class Craft {
 		if( helmDestroyed )
 		{
 			if( player != null )
-				player.sendMessage("Helm Control or Engines Destroyed!");
+				player.sendMessage(ChatColor.RED + "Helm Control or Engines Destroyed!");
 			return;
 		}
 		if( increase )
@@ -1379,7 +1386,7 @@ public class Craft {
 				if( this.setSpeed == 1 )
 				{
 					if( player != null)
-						player.sendMessage("Starting Engines.");
+						player.sendMessage(ChatColor.GREEN + "Starting Engines.");
 					if( !enginesOn )
 					{
 						this.speed = 1;
@@ -1397,7 +1404,7 @@ public class Craft {
 				if( this.setSpeed == 1 )
 				{
 					if( player != null)
-						player.sendMessage("Starting Engines.");
+						player.sendMessage(ChatColor.GREEN + "Starting Engines.");
 					if( !enginesOn )
 					{
 						this.speed = 1;
@@ -1420,7 +1427,7 @@ public class Craft {
 					if( NavyCraft.checkSpawnRegion(new Location(this.world, this.minX, this.minY, this.minZ)) || NavyCraft.checkSpawnRegion(new Location(this.world, this.maxX, this.maxY, this.maxZ)) )
 					{
 						if( player != null )
-							player.sendMessage("Cannot stop engines until clear of safe dock area.");
+							player.sendMessage(ChatColor.YELLOW + "Cannot stop engines until clear of safe dock area.");
 						this.setSpeed = this.setSpeed + 1;
 						return;
 					}
@@ -1428,7 +1435,7 @@ public class Craft {
 					this.setSpeed = 0;
 					this.turnProgress = 0;
 					this.rudder = 0;
-					player.sendMessage("Stopping Engines...");
+					player.sendMessage(ChatColor.RED + "Stopping Engines...");
 					this.enginesOn = false;
 					return;
 				}
@@ -1439,14 +1446,14 @@ public class Craft {
 				{
 					this.setSpeed = this.setSpeed + 1;
 					if( player != null )
-						player.sendMessage("Can't reduce speed to zero in this gear");
+						player.sendMessage(ChatColor.YELLOW + "Can't reduce speed to zero in this gear");
 				}
 				if( this.setSpeed <= 0 )
 				{
 					if( NavyCraft.checkSpawnRegion(new Location(this.world, this.minX, this.minY, this.minZ)) || NavyCraft.checkSpawnRegion(new Location(this.world, this.maxX, this.maxY, this.maxZ)) )
 					{
 						if( player != null )
-							player.sendMessage("Cannot stop engines until clear of safe dock area.");
+							player.sendMessage(ChatColor.YELLOW + "Cannot stop engines until clear of safe dock area.");
 						this.setSpeed = this.setSpeed + 1;
 						return;
 					}
@@ -1454,7 +1461,7 @@ public class Craft {
 					this.turnProgress = 0;
 					this.rudder = 0;
 					if( player != null )
-						player.sendMessage("Stopping Engines...");
+						player.sendMessage(ChatColor.RED + "Stopping Engines...");
 					this.enginesOn = false;
 					return;
 				}
@@ -1464,33 +1471,33 @@ public class Craft {
 		{
 			if( type.canFly )
 			{
-				player.sendMessage("Throttle-" + this.setSpeed*10 + "%");
+				player.sendMessage(ChatColor.GOLD + "Throttle-" + ChatColor.GREEN + this.setSpeed*10 + ChatColor.GOLD + "%");
 			}else if( type.isTerrestrial )
 			{
-				player.sendMessage("Throttle-" + this.setSpeed*25 + "%");
+				player.sendMessage(ChatColor.GOLD + "Throttle-" + ChatColor.GREEN +  this.setSpeed*25 + ChatColor.GOLD + "%");
 			}else
 			{
 				if( this.setSpeed == 0 )
 				{
-					player.sendMessage("All Stop");
+					player.sendMessage(ChatColor.RED + "All Stop");
 				}else if( this.setSpeed == 1 )
 				{
-					player.sendMessage("Engines Slow");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN +  "Slow");
 				}else if( this.setSpeed == 2 )
 				{
-					player.sendMessage("Engines 1/3");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN + "1" + ChatColor.DARK_GRAY + "/" + ChatColor.RED + "3");
 				}else if( this.setSpeed == 3 )
 				{
-					player.sendMessage("Engines 2/3");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN + "2" + ChatColor.DARK_GRAY + "/" + ChatColor.RED + "3");
 				}else if( this.setSpeed == 4 )
 				{
-					player.sendMessage("Engines Standard");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN + "Standard");
 				}else if( this.setSpeed == 5 )
 				{
-					player.sendMessage("Engines Full");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN + "Full");
 				}else if( this.setSpeed == 6 )
 				{
-					player.sendMessage("Engines Flank!");
+					player.sendMessage(ChatColor.GOLD + "Engines " + ChatColor.GREEN + "Flank!");
 				}
 				telegraphDingThread(player);
 			}
@@ -1502,7 +1509,7 @@ public class Craft {
 		if( helmDestroyed )
 		{
 			if( player != null )
-				player.sendMessage("Helm Control or Engines Destroyed!");
+				player.sendMessage(ChatColor.RED + "Helm Control or Engines Destroyed!");
 			return;
 		}
 		if( increase )
@@ -1525,7 +1532,7 @@ public class Craft {
 					{
 						this.gear = -1;
 						if( player != null )
-							player.sendMessage("Stop moving before changing to forward gears.");
+							player.sendMessage(ChatColor.RED + "Stop moving before changing to forward gears.");
 						return;
 					}
 				}
@@ -1548,7 +1555,7 @@ public class Craft {
 					{
 						this.gear = -1;
 						if( player != null )
-							player.sendMessage("Stop moving before changing to forward gears.");
+							player.sendMessage(ChatColor.RED + "Stop moving before changing to forward gears.");
 						return;
 					}
 				}
@@ -1557,7 +1564,7 @@ public class Craft {
 					this.turnProgress = 0;
 					this.rudder = 0;
 					if( player != null )
-						player.sendMessage("Ready for takeoff!");
+						player.sendMessage(ChatColor.GREEN + "Ready for takeoff!");
 				}
 			}
 		}else ///decrease
@@ -1577,7 +1584,7 @@ public class Craft {
 					{
 						this.gear = 1;
 						if( player != null )
-							player.sendMessage("Stop moving before changing to reverse gears.");
+							player.sendMessage(ChatColor.RED + "Stop moving before changing to reverse gears.");
 						return;
 					}
 				}else if( this.gear <= this.type.maxReverseGear )
@@ -1598,14 +1605,14 @@ public class Craft {
 					{
 						this.gear = 1;
 						if( player != null )
-							player.sendMessage("Stop moving before changing to reverse gears.");
+							player.sendMessage(ChatColor.RED + "Stop moving before changing to reverse gears.");
 						return;
 					}
 				}
 				if( this.gear == 1 && (!this.onGround || this.setSpeed != 1) )
 				{
 					if( player != null )
-						player.sendMessage("Must be on ground and engine at idle to shift into 1...");
+						player.sendMessage(ChatColor.RED + "Must be on ground and engine at idle to shift into 1...");
 					this.gear = this.gear + 1;
 					return;
 				}
@@ -1613,7 +1620,7 @@ public class Craft {
 			}
 		}
 		if( player != null )
-			player.sendMessage("Set engines to Gear-(" + this.gear + ")");
+			player.sendMessage(ChatColor.GOLD + "Set engines to Gear" + ChatColor.DARK_GRAY + " - " + ChatColor.GREEN + this.gear + ChatColor.DARK_GRAY + "/" + ChatColor.RED + this.type.maxForwardGear);
 	}
 	
 	public void rudderChange(Player player, int order, boolean turn)
@@ -1621,28 +1628,28 @@ public class Craft {
 		if( helmDestroyed )
 		{
 			if( player != null )
-				player.sendMessage("Helm Control or Engines Destroyed!");
+				player.sendMessage(ChatColor.RED + "Helm Control or Engines Destroyed!");
 			return;
 		}
 		
 		if( this.setSpeed == 0 || this.gear <= 0 )
 		{
 			if( player != null )
-				player.sendMessage("You have to be moving forward to turn.");
+				player.sendMessage(ChatColor.RED + "You have to be moving forward to turn.");
 			return;
 		}
 		
 		if( NavyCraft.checkSpawnRegion(new Location(this.world, this.minX, this.minY, this.minZ)) || NavyCraft.checkSpawnRegion(new Location(this.world, this.maxX, this.maxY, this.maxZ)) )
 		{
 			if( player != null )
-				player.sendMessage("Rudder disabled in safe dock area.");
+				player.sendMessage(ChatColor.RED + "Rudder disabled in safe dock area.");
 			return;
 		}
 		
 		if( this.type.canFly && this.gear > 1 && this.onGround )
 		{
 			if( player != null )
-				player.sendMessage("You can't turn while taking off.");
+				player.sendMessage(ChatColor.RED + "You can't turn while taking off.");
 			return;
 		}
 
@@ -1655,11 +1662,11 @@ public class Craft {
 				{
 					this.turnProgress = this.type.turnRadius;
 					if( player != null )
-						player.sendMessage("Rudder Turning Right");
+						player.sendMessage(ChatColor.GOLD + "Rudder Turning Right");
 				}else
 				{
 					if( player != null )
-						player.sendMessage("Rudder Right");
+						player.sendMessage(ChatColor.GOLD + "Rudder Right");
 				}
 				
 			}else if( this.rudder == -1 )
@@ -1669,16 +1676,16 @@ public class Craft {
 					this.rudder = 0;
 					this.turnProgress = 0;
 					if( player != null )
-						player.sendMessage("Rudder Centered");
+						player.sendMessage(ChatColor.GOLD + "Rudder Centered");
 				}else
 				{
 					if( player != null )
-						player.sendMessage("Too late to cancel turn, please wait.");
+						player.sendMessage(ChatColor.RED + "Too late to cancel turn.");
 				}
 			}else
 			{
 				if( player != null )
-					player.sendMessage("Rudder already set. Look other way to cancel.");
+					player.sendMessage(ChatColor.RED + "Rudder already set. " + ChatColor.GOLD + "Look other way to cancel.");
 			}
 		}else if( order == -1 )
 		{
@@ -1689,11 +1696,11 @@ public class Craft {
 				{
 					this.turnProgress = this.type.turnRadius;
 					if( player != null )
-						player.sendMessage("Rudder Turning Left");
+						player.sendMessage(ChatColor.GOLD + "Rudder Turning Left");
 				}else
 				{
 					if( player != null )
-						player.sendMessage("Rudder Left");
+						player.sendMessage(ChatColor.GOLD + "Rudder Left");
 				}
 			}else if( this.rudder == 1 )
 			{
@@ -1702,16 +1709,16 @@ public class Craft {
 					this.rudder = 0;
 					this.turnProgress = 0;
 					if( player != null )
-						player.sendMessage("Rudder Centered");
+						player.sendMessage(ChatColor.GOLD + "Rudder Centered");
 				}else
 				{
 					if( player != null )
-						player.sendMessage("Too late to cancel turn, please wait.");
+						player.sendMessage(ChatColor.RED + "Too late to cancel turn.");
 				}
 			}else
 			{
 				if( player != null )
-					player.sendMessage("Rudder already set. Look other way to cancel.");
+					player.sendMessage(ChatColor.RED + "Rudder already set." + ChatColor.GOLD + "Look other way to cancel.");
 			}
 		}
 	}
@@ -1726,7 +1733,7 @@ public class Craft {
 			Player p = plugin.getServer().getPlayer(s);
 			if( p != null )
 			{
-				p.sendMessage(ChatColor.LIGHT_PURPLE  + "" + ChatColor.ITALIC + player.getName() + " has left your crew.");
+				p.sendMessage(ChatColor.GOLD + player.getName() + ChatColor.RED + " has left your crew.");
 			}
 		}
 		
@@ -1737,7 +1744,7 @@ public class Craft {
 				Player p = plugin.getServer().getPlayer(s);
 				if( p != null )
 				{
-					p.sendMessage(ChatColor.LIGHT_PURPLE  + "" + ChatColor.BOLD + "Your crew has been disbanded.");
+					p.sendMessage(ChatColor.RED + "Your crew has been disbanded.");
 				}
 			}
 			releaseCraft();
@@ -1784,7 +1791,7 @@ public class Craft {
 	    			if( !craft.abandoned )
 	    			{
 	    				craft.cancelTakeoverTimer = true;
-	    				player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Takeover failed!");
+	    				player.sendMessage(ChatColor.RED + "Takeover failed!");
 	    			}
 				}else
 				{
@@ -1793,7 +1800,7 @@ public class Craft {
 						if( craft.customName != null )
 						{
 							if( craft.captainName != null )
-								plugin.getServer().broadcastMessage(ChatColor.WHITE + craft.captainName + ChatColor.YELLOW + "'s " + ChatColor.WHITE + craft.customName + ChatColor.YELLOW + " was abandoned.");
+								plugin.getServer().broadcastMessage(ChatColor.WHITE + craft.captainName + ChatColor.GOLD + "'s " + ChatColor.WHITE + craft.customName + ChatColor.GOLD + " was abandoned.");
 							else
 								plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + ChatColor.WHITE + craft.customName + ChatColor.YELLOW + " was abandoned.");
 						}else
@@ -1803,7 +1810,7 @@ public class Craft {
 							else
 								plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + ChatColor.WHITE + craft.name + ChatColor.YELLOW + " was abandoned.");
 						}
-						player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Vehicle abandoned! You may now take command.");
+						player.sendMessage(ChatColor.GREEN + "Vehicle abandoned! You may now take command.");
 						craft.releaseCraft();
 					}else
 					{

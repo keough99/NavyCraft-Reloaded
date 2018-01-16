@@ -23,8 +23,10 @@ public class PermissionInterface {
 		if(pm != null) {
 			pm.addPermission(new Permission("navycraft.periscope.use"));
 			pm.addPermission(new Permission("navycraft.aa-gun.use"));
+			pm.addPermission(new Permission("navycraft.flak-gun.use"));
 			pm.addPermission(new Permission("navycraft.periscope.create"));
 			pm.addPermission(new Permission("navycraft.aa-gun.create"));
+			pm.addPermission(new Permission("navycraft.flak-gun.create"));
 			
 			for (CraftType type : CraftType.craftTypes) 
 			{

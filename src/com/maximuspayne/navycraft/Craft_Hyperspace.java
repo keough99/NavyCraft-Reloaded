@@ -6,7 +6,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
+/**
+ * Most of this code does not work, or is broken
+ * I personally do not recommend trying to use it because in its current state it is broken
+ *
+ * You are free to modify it for your own use
+ * Although I do not recommend doing so unless you know what your doing.
+ * If you do get it to work you can contact me on discord if you want it in my public release :)
+ */
 public class Craft_Hyperspace {	
 	//Craft-based functions relating specifically to hyperspace
 	public static ArrayList<Block> hyperspaceBlocks = new ArrayList<Block>();
@@ -18,6 +25,7 @@ public class Craft_Hyperspace {
 		plugin = p;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void enterHyperSpace(Craft craft) {
 		//surround the craft with portal blocks
 		//use posX, sizeX, etc. to get edges?
@@ -29,6 +37,7 @@ public class Craft_Hyperspace {
 			driver.sendMessage("You have entered hyperspace. Type \"/" + craft.type.name + " hyperspace\" to exit.");
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void exitHyperSpace(Craft craft) {
 		//make the hyperspace bits appear at the destination,
 		//then move the craft
@@ -52,6 +61,7 @@ public class Craft_Hyperspace {
 				" blocks from where you started.");
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void hyperSpaceMove(Craft craft, int dx, int dy, int dz) {
 
 		craft.HyperSpaceMoves[0] += dx;
@@ -76,7 +86,7 @@ public class Craft_Hyperspace {
 		}		
 		
 	}
-	
+	//This literally breaks the ship
 	public static void surroundCraft(Craft craft, Boolean fieldOn) {
 		if(NavyCraft.instance.ConfigSetting("DisableHyperSpaceField").equalsIgnoreCase("true")) {
 			return;

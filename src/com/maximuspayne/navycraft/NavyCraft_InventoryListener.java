@@ -46,7 +46,7 @@ public class NavyCraft_InventoryListener implements Listener {
     		if( event.getWhoClicked().getType() == EntityType.PLAYER )
     		{
     			Player p = (Player)event.getWhoClicked();
-    			p.sendMessage("Sorry, you are not allowed to craft this item. Purchase it from a Safe Dock instead.");
+    			p.sendMessage("Sorry, you are not allowed to craft this item. Purchase it from the shop instead.");
     		}
     		event.setCancelled(false);
     	}

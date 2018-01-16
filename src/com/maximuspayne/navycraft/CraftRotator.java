@@ -308,6 +308,7 @@ public class CraftRotator {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void turn(int dr) {
 
 		if( craft.waitTorpLoading > 0 )

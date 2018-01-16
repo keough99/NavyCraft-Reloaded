@@ -46,20 +46,22 @@ import com.maximuspayne.aimcannon.AimCannonPlayerListener;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.aimcannon.Weapon;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
-import com.maximuspayne.navycraft.shipyard.Shipyard;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.ess3.api.MaxMoneyException;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class NavyCraft_PlayerListener implements Listener {
 
 	public Plugin plugin;
-	public static Shipyard syp;
 	public WorldGuardPlugin wgp;
+	public static PermissionsEx pex;
 	public WorldEditPlugin wep;
 
 	Thread timerThread;
@@ -124,22 +126,71 @@ public class NavyCraft_PlayerListener implements Listener {
 			Craft.reboardNames.remove(player.getName());
 
 		}
+		String worldName = player.getWorld().getName();
 		
-		syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-		if( syp != null )
-		{
-			syp.playerJoin(player);
+		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if( pex==null )
+			return;
+		
+		if (!NavyCraft.playerPayDays.containsKey(player.getName()) || (NavyCraft.playerPayDays.containsKey(player.getName())
+				&& (((System.currentTimeMillis() - NavyCraft.playerPayDays.get(player.getName())) / 1000) > 86400))) {
+			Essentials ess;
+			ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+			if (ess == null) {
+				player.sendMessage(ChatColor.RED + "Essentials Economy Error");
+				return;
+			}
+				
+			for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
+				if( s.contains("navycraft") ) {
+					if( s.contains("pay") ) {
+						String[] split = s.split("\\.");
+						try {
+							int pay = Integer.parseInt(split[2]);
+							
+							List<String> groupNames = PermissionsEx.getUser(player).getParentIdentifiers("navycraft");
+							String rankName="";
+							for( String group : groupNames ) {
+								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+									rankName = group;
+									break;
+								}
+							}
+	
+							player.sendMessage(
+									ChatColor.GREEN + "Pay day! Your pay rate is:" + ChatColor.WHITE + rankName.toUpperCase());
+							try {
+								ess.getUser(player).giveMoney(new BigDecimal(pay));
+							} catch (MaxMoneyException e) {
+								e.printStackTrace();
+							}
+							NavyCraft.playerPayDays.put(player.getName(), System.currentTimeMillis());
+								
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							System.out.println("Invalid perm-" + s);
+						}
+					}
+				}
+			}
 		}
-
 	}
+	
+
 
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		String deathMsg = event.getDeathMessage();
+
+		if ((NavyCraft.battleMode > 0)
+				&& PermissionInterface.CheckEnabledWorld(event.getEntity().getLocation())) {
+			CraftMover.battleLogger(deathMsg);
+		}
 
 		String[] msgWords = deathMsg.split("\\s");
 		if (msgWords.length == 5) {
@@ -147,16 +198,18 @@ public class NavyCraft_PlayerListener implements Listener {
 				Player p = plugin.getServer().getPlayer(msgWords[4]);
 				if ((p != null) && PermissionInterface.CheckEnabledWorld(p.getLocation())) {
 					int newExp = 100;
-					
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + p.getName() + " receives " + ChatColor.YELLOW
 							+ newExp + ChatColor.GREEN + " rank points!");
-					
-					syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-					if( syp != null ) {
-						syp.rewardExpPlayer(newExp, p);
-						syp.checkRankWorld(p, newExp, p.getWorld());
-						syp.saveExperience();
+					if (NavyCraft.playerExp.containsKey(p.getName())) {
+						newExp = NavyCraft.playerExp.get(p.getName()) + newExp;
+						NavyCraft.playerExp.put(p.getName(), newExp);
+					} else {
+						NavyCraft.playerExp.put(p.getName(), newExp);
 					}
+					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY
+							+ " rank points.");
+					CraftMover.checkRankWorld(p, newExp, p.getWorld());
+					NavyCraft.saveExperience();
 				}
 			}
 		}
@@ -166,13 +219,21 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 	}
 
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 
 		Craft craft = Craft.getPlayerCraft(player);
-
 		
+		if (NavyCraft.flakGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
+				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
+			NavyCraft.flakGunnersList.remove(player);
+			if (player.getInventory().contains(Material.BLAZE_ROD)) {
+				player.getInventory().remove(Material.BLAZE_ROD);
+			}
+			player.sendMessage(ChatColor.YELLOW + "You get off the Flak-Gun.");
+		}
 
 		if (NavyCraft.aaGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
 				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
@@ -181,16 +242,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
 			player.sendMessage(ChatColor.YELLOW + "You get off the AA-Gun.");
-
-		} else if (NavyCraft.searchLightMap.containsKey(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
-				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
-			
-			TeleportFix.updateNMSLight(null,NavyCraft.searchLightMap.get(player));
-			NavyCraft.searchLightMap.remove(player);
-			if (player.getInventory().contains(Material.BLAZE_ROD)) {
-				player.getInventory().remove(Material.BLAZE_ROD);
-			}
-			player.sendMessage(ChatColor.YELLOW + "You get off the searchlight.");
 
 		}else if (craft != null) {
 			// craft.setSpeed(1);
@@ -210,15 +261,15 @@ public class NavyCraft_PlayerListener implements Listener {
 			if (!craft.isNameOnBoard.isEmpty() && craft.isNameOnBoard.containsKey(player.getName())
 					&& craft.isNameOnBoard.get(player.getName()) && !craft.isOnCraft(player, false)) {
 				if (craft.customName != null) {
-					player.sendMessage(ChatColor.YELLOW + "You get off the " + craft.customName);
+					player.sendMessage(ChatColor.GOLD + "You get off the " + craft.customName);
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You get off the " + craft.name + " class.");
+					player.sendMessage(ChatColor.GOLD + "You get off the " + craft.name + " class.");
 
 				}
 
 				craft.isNameOnBoard.put(player.getName(), false);
 				if (craft.driverName == player.getName()) {
-					player.sendMessage(ChatColor.YELLOW + "You release the helm");
+					player.sendMessage(ChatColor.GOLD + "You release the helm");
 					craft.haveControl = false;
 					craft.releaseHelm();
 				}
@@ -242,7 +293,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 			} else if (craft.isNameOnBoard.containsKey(player.getName()) && !craft.isNameOnBoard.get(player.getName())
 					&& craft.isOnCraft(player, false)) {
-				player.sendMessage(ChatColor.YELLOW + "Welcome on board");
+				player.sendMessage(ChatColor.GOLD + "Welcome on board");
 
 				craft.isNameOnBoard.put(player.getName(), true);
 
@@ -326,25 +377,6 @@ public class NavyCraft_PlayerListener implements Listener {
 					}				
 				}
 
-				
-				if( block.getType() == Material.JACK_O_LANTERN && event.getHand() == EquipmentSlot.HAND ) {
-					if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
-						player.sendMessage(ChatColor.RED + "You do not have permission to use this.");
-						return;
-					}
-					
-					if (player.getItemInHand().getTypeId() > 0) {
-						player.sendMessage(ChatColor.RED + "Have nothing in your hand before using this.");
-						return;
-					}
-					
-					Location newLoc = new Location(player.getWorld(), block.getLocation().getBlockX(), block.getLocation().getBlockY()+1, block.getLocation().getBlockZ());
-					player.teleport(newLoc);
-					player.setItemInHand(new ItemStack(369, 1));
-					NavyCraft.searchLightMap.put(player, newLoc);
-					player.sendMessage(ChatColor.YELLOW + "Manning Searchlight! Left Click with Blaze Rod to point!");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
-				}
 				
 				
 				if ((block.getTypeId() == 69) && (block.getRelative(BlockFace.DOWN, 1).getTypeId() == 68) && event.getHand() == EquipmentSlot.HAND) {
@@ -476,12 +508,21 @@ public class NavyCraft_PlayerListener implements Listener {
 		if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.aaGunnersList.contains(player)
 				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
 			Egg newEgg = player.launchProjectile(Egg.class);
-			newEgg.setVelocity(newEgg.getVelocity().multiply(1.5f));
+			newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 			NavyCraft.explosiveEggsList.add(newEgg);
 			event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-
 			event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
-					1.70f);
+					1.70f);			
+		}
+			// Flak Gunner...
+			if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.flakGunnersList.contains(player)
+					&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
+				Egg newEgg = player.launchProjectile(Egg.class);
+				newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
+				NavyCraft.explosiveEggsList.add(newEgg);
+				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
+				event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+						1.70f);	
 
 			//// else check for movement clicking
 		} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
@@ -493,29 +534,10 @@ public class NavyCraft_PlayerListener implements Listener {
 			playerUsedAnItem(player, playerCraft);
 		}
 		
-		// Search light
-		if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.searchLightMap.containsKey(player)
-				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
-			Set<Material> transp = new HashSet<>();
-			transp.add(Material.AIR);
-			Block block=null;
-			try {
-				block = player.getTargetBlock(transp, 100);
-			}catch( IllegalStateException e ) {
-			}
-			
-			if (block != null) {
-				TeleportFix.updateNMSLight(block.getLocation(), NavyCraft.searchLightMap.get(player));
-				NavyCraft.searchLightMap.put(player, block.getLocation());
-				player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
-			}
-			
-		}
-
 		
 		AimCannonPlayerListener.onPlayerInteract(event);
+		}
 
-	}
 
 	@SuppressWarnings("deprecation")
 	public void playerUsedAnItem(Player player, Craft craft) {
@@ -577,23 +599,23 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (dy == 1) {
 						if (craft.vertPlanes == 0) {
 							craft.vertPlanes = 1;
-							player.sendMessage("Up Elevator");
+							player.sendMessage(ChatColor.GOLD + "Up Elevator");
 						} else if (craft.vertPlanes == -1) {
 							craft.vertPlanes = 0;
-							player.sendMessage("Neutral Elevator");
+							player.sendMessage(ChatColor.GOLD + "Neutral Elevator");
 						} else {
-							player.sendMessage("Elevator already up");
+							player.sendMessage(ChatColor.RED + "Elevator already up");
 						}
 						return;
 					} else if (dy == -1) {
 						if (craft.vertPlanes == 0) {
 							craft.vertPlanes = -1;
-							player.sendMessage("Down Elevator");
+							player.sendMessage(ChatColor.GOLD + "Down Elevator");
 						} else if (craft.vertPlanes == 1) {
 							craft.vertPlanes = 0;
-							player.sendMessage("Neutral Elevator");
+							player.sendMessage(ChatColor.GOLD + "Neutral Elevator");
 						} else {
-							player.sendMessage("Elevator already down");
+							player.sendMessage(ChatColor.RED + "Elevator already down");
 						}
 						return;
 					}
@@ -607,7 +629,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					if (dy != 0) {
 						if (!craft.submergedMode) {
-							player.sendMessage("Set engines to dive first.");
+							player.sendMessage(ChatColor.RED + "Set engines to dive first.");
 							return;
 						}
 					}
@@ -615,23 +637,23 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (dy == 1) {
 						if (craft.vertPlanes == 0) {
 							craft.vertPlanes = 1;
-							player.sendMessage("Diving Planes Up Bubble");
+							player.sendMessage(ChatColor.GOLD + "Diving Planes Up Bubble");
 						} else if (craft.vertPlanes == -1) {
 							craft.vertPlanes = 0;
-							player.sendMessage("Diving Planes Neutral");
+							player.sendMessage(ChatColor.GOLD + "Diving Planes Neutral");
 						} else {
-							player.sendMessage("Diving Planes already up");
+							player.sendMessage(ChatColor.RED + "Diving Planes already up");
 						}
 						return;
 					} else if (dy == -1) {
 						if (craft.vertPlanes == 0) {
 							craft.vertPlanes = -1;
-							player.sendMessage("Diving Planes Down Bubble");
+							player.sendMessage(ChatColor.GOLD + "Diving Planes Down Bubble");
 						} else if (craft.vertPlanes == 1) {
 							craft.vertPlanes = 0;
-							player.sendMessage("Diving Planes Neutral");
+							player.sendMessage(ChatColor.GOLD + "Diving Planes Neutral");
 						} else {
-							player.sendMessage("Diving Planes already down");
+							player.sendMessage(ChatColor.RED + "Diving Planes already down");
 						}
 						return;
 					}
@@ -643,13 +665,13 @@ public class NavyCraft_PlayerListener implements Listener {
 				if ((craft.rotation % 360) == 0) {
 					if (nx > 0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 090");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 090");
 						}
 						craft.rudderChange(player, 1, true);
 						return;
 					} else if (nx < -0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 270");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 270");
 						}
 						craft.rudderChange(player, -1, true);
 						return;
@@ -681,13 +703,13 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					if (nx > 0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 090");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 090");
 						}
 						craft.rudderChange(player, -1, true);
 						return;
 					} else if (nx < -0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 270");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 270");
 						}
 						craft.rudderChange(player, 1, true);
 						return;
@@ -719,13 +741,13 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					if (nz > 0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 180");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 180");
 						}
 						craft.rudderChange(player, 1, true);
 						return;
 					} else if (nz < -0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 000");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 000");
 						}
 						craft.rudderChange(player, -1, true);
 						return;
@@ -755,13 +777,13 @@ public class NavyCraft_PlayerListener implements Listener {
 				} else if (craft.rotation == 270) {
 					if (nz > 0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 180");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 180");
 						}
 						craft.rudderChange(player, -1, true);
 						return;
 					} else if (nz < -0.866) {
 						if (craft.rudder == 0) {
-							player.sendMessage("Turning to heading 000");
+							player.sendMessage(ChatColor.GOLD + "Turning to heading 000");
 						}
 						craft.rudderChange(player, 1, true);
 						return;
@@ -893,9 +915,9 @@ public class NavyCraft_PlayerListener implements Listener {
 									+ c.getLocation().getBlockX() + " Y:" + c.getLocation().getBlockY() + " Z:"
 									+ c.getLocation().getBlockZ());
 							c.doDestroy = true;
-							player.sendMessage("Vehicle destroyed.");
+							player.sendMessage(ChatColor.GREEN + "Vehicle destroyed.");
 						} else {
-							player.sendMessage("Vehicle's captain is online.");
+							player.sendMessage(ChatColor.RED + "Vehicle's captain is online.");
 						}
 					} else {
 						block.getRelative(BlockFace.UP, 1).setTypeId(63);
@@ -934,7 +956,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											+ theCraft.getLocation().getBlockY() + " Z:"
 											+ theCraft.getLocation().getBlockZ());
 									theCraft.doDestroy = true;
-									player.sendMessage("Vehicle destroyed.");
+									player.sendMessage(ChatColor.GREEN  + "Vehicle destroyed.");
 								} else {
 									player.sendMessage(ChatColor.RED + player.getName()
 											+ ", why are you trying to destroy a dock vehicle??");
@@ -942,13 +964,13 @@ public class NavyCraft_PlayerListener implements Listener {
 											player.getName() + ", why are you trying to destroy a dock vehicle??");
 								}
 							} else {
-								player.sendMessage("No vehicle could be detected.");
+								player.sendMessage(ChatColor.RED + "No vehicle could be detected.");
 								block.getRelative(BlockFace.UP, 1).setTypeId(0);
 							}
 						}
 					}
 				} else {
-					player.sendMessage("No block detected");
+					player.sendMessage(ChatColor.RED + "No block detected");
 				}
 				return;
 			}
@@ -968,7 +990,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				if (block != null) {
 					System.out.println("Shears used:" + player.getName() + " X:" + block.getX() + " Y:" + block.getY()
 							+ " Z:" + block.getZ());
-					player.sendMessage("Shears used!");
+					player.sendMessage(ChatColor.GOLD + "Shears used!");
 					for (int x = block.getX() - 7; x <= (block.getX() + 7); x++) {
 						for (int z = block.getZ() - 7; z <= (block.getZ() + 7); z++) {
 							for (int y = block.getY() - 7; y <= (block.getY() + 7); y++) {
@@ -986,7 +1008,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 					}
 				} else {
-					player.sendMessage("No block detected");
+					player.sendMessage(ChatColor.RED + "No block detected");
 				}
 				return;
 			}
@@ -1003,7 +1025,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				if (block != null) {
 					System.out.println("Golden Shovel used:" + player.getName() + " X:" + block.getX() + " Y:"
 							+ block.getY() + " Z:" + block.getZ());
-					player.sendMessage("Golden Shovel used!");
+					player.sendMessage(ChatColor.GOLD + "Golden Shovel used!");
 					for (int x = block.getX() - 7; x <= (block.getX() + 7); x++) {
 						for (int z = block.getZ() - 7; z <= (block.getZ() + 7); z++) {
 							for (int y = block.getY() - 7; y <= (block.getY() + 7); y++) {
@@ -1121,7 +1143,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		if (split[0].equalsIgnoreCase("movecraft") || split[0].equalsIgnoreCase("navycraft")
 				|| split[0].equalsIgnoreCase("nc")) {
-			/*if (!PermissionInterface.CheckPermission(player, "navycraft." + event.getMessage().substring(1))) {
+			/*if (!PermissionInterface.CheckQuietPerm(player, "navycraft." + event.getMessage().substring(1))) {
 				return;
 			}*/
 			if (split[0].equalsIgnoreCase("movecraft"))
@@ -1153,7 +1175,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
 					NavyCraft.instance.loadProperties();
-					player.sendMessage(ChatColor.YELLOW + "MoveCraft configuration reloaded");
+					player.sendMessage(ChatColor.YELLOW + "NavyCraft configuration reloaded");
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("debug")) {
@@ -1205,7 +1227,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						return;
 					if (NavyCraft.cleanupPlayers.contains(player.getName())) {
 						NavyCraft.cleanupPlayers.remove(player.getName());
-						player.sendMessage("Exiting cleanup mode.");
+						player.sendMessage(ChatColor.GOLD + "Exiting cleanup mode.");
 					} else {
 
 
@@ -1258,7 +1280,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					for (Craft c : Craft.craftList) {
 						c.doDestroy = true;
 					}
-					player.sendMessage("All vehicles destroyed");
+					player.sendMessage(ChatColor.GREEN + "All vehicles destroyed");
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("removeships")) {
@@ -1267,7 +1289,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					for (Craft c : Craft.craftList) {
 						c.doRemove = true;
 					}
-					player.sendMessage("All vehicles removed");
+					player.sendMessage(ChatColor.GREEN + "All vehicles removed");
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("destroyauto")) {
@@ -1286,7 +1308,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					craftCheckList.clear();
 
-					player.sendMessage("All auto vehicles destroyed-" + count);
+					player.sendMessage(ChatColor.GREEN + "All auto vehicles destroyed: " + ChatColor.GOLD + count);
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("destroystuck")) {
@@ -1305,7 +1327,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					craftCheckList.clear();
 
-					player.sendMessage("All stopped auto vehicles destroyed-" + count);
+					player.sendMessage(ChatColor.GREEN + "All stopped auto vehicles destroyed: " + ChatColor.GOLD + count);
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("tpShip") || split[1].equalsIgnoreCase("tp")) {
@@ -1316,7 +1338,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						try {
 							shipNum = Integer.parseInt(split[2]);
 						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid id number");
+							player.sendMessage(ChatColor.RED + "Invalid ID Number");
 							e.printStackTrace();
 						}
 					}
@@ -1329,9 +1351,9 @@ public class NavyCraft_PlayerListener implements Listener {
 								return;
 							}
 						}
-						player.sendMessage("ID Number not found");
+						player.sendMessage(ChatColor.RED + "ID Number not found");
 					} else {
-						player.sendMessage("Invalid id number");
+						player.sendMessage(ChatColor.RED + "Invalid ID Number");
 					}
 
 					event.setCancelled(true);
@@ -1401,33 +1423,33 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 					}
-					player.sendMessage("All vehicles loaded in ocean area");
+					player.sendMessage(ChatColor.GOLD + "All vehicles loaded in ocean area");
 					event.setCancelled(true);
 					return;
 				}
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
 					player.sendMessage(ChatColor.WHITE + "NavyCraft v" + NavyCraft.version + " commands :");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft types " + " : " + ChatColor.WHITE
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft types " + " : " + ChatColor.WHITE
 							+ "list the types of craft available");
-					player.sendMessage(ChatColor.YELLOW + "/[craft type] " + " : " + ChatColor.WHITE
+					player.sendMessage(ChatColor.DARK_AQUA + "/[craft type] " + " : " + ChatColor.WHITE
 							+ "commands specific to the craft type try /ship help");
-					player.sendMessage(ChatColor.YELLOW + "/engine ## " + " : " + ChatColor.WHITE
-							+ "set engine piston volume from 0-100");
+					player.sendMessage(ChatColor.DARK_AQUA + "/engine ## " + " : " + ChatColor.WHITE
+							+ "set engine volume from 0-100");
 				}
 				
 				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
 				{
-					player.sendMessage(ChatColor.YELLOW + "/navycraft list : " + ChatColor.WHITE
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft list : " + ChatColor.WHITE
 						+ "list all craft");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft config : " + ChatColor.WHITE + "display config settings");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft destroyauto : " + ChatColor.WHITE + "destroys all auto ships");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft destroystuck : " + ChatColor.WHITE + "destroys stuck auto ships");
-					player.sendMessage(ChatColor.YELLOW + "/navycraft tpship id# : " + ChatColor.WHITE + "teleport to ship ID #");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft config : " + ChatColor.WHITE + "display config settings");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroyauto : " + ChatColor.WHITE + "destroys all auto ships");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroystuck : " + ChatColor.WHITE + "destroys stuck auto ships");
+					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft tpship id# : " + ChatColor.WHITE + "teleport to ship ID #");
 				}
 
 			}
@@ -1457,7 +1479,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					event.setCancelled(true);
 				}
 			} else {
-				player.sendMessage("You have no craft to remote :( Hurry and get one before they're sold out!");
+				player.sendMessage(ChatColor.RED + "Remotes have been removed, Please discontinue use of this command.");
 			}
 		} else {
 
@@ -1468,24 +1490,24 @@ public class NavyCraft_PlayerListener implements Listener {
 			if (craftName.equalsIgnoreCase("crew")) {
 				Craft craft = Craft.getPlayerCraft(player);
 				if (craft == null) {
-					player.sendMessage("You are not on a crew!");
+					player.sendMessage(ChatColor.RED + "You are not on a crew!");
 					event.setCancelled(true);
 					return;
 				}
 
 				if (split.length == 1) {
-					player.sendMessage("Your " + craft.name + " crew...");
+					player.sendMessage(craft.name + "'s" + ChatColor.GOLD + " Crew:");
 					if (craft.captainName != null) {
-						player.sendMessage("Captain - " + craft.captainName);
+						player.sendMessage(ChatColor.DARK_AQUA + "Captain: " + ChatColor.GREEN + craft.captainName);
 					}
 					for (String s : craft.crewNames) {
 						if (s != craft.captainName) {
-							player.sendMessage(s);
+							player.sendMessage(ChatColor.BLUE + s);
 						}
 					}
 				} else {
 					String msgString;
-					msgString = "> ";
+					msgString = ": " + ChatColor.RESET;
 					for (int i = 1; i < split.length; i++) {
 						msgString += split[i] + " ";
 					}
@@ -1494,45 +1516,37 @@ public class NavyCraft_PlayerListener implements Listener {
 						Player p = plugin.getServer().getPlayer(s);
 						if (p != null) {
 							if (player.getName() == craft.captainName) {
-								p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[Captain] <"
-										+ player.getName() + msgString);
+								p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "Captain" + ChatColor.DARK_GRAY + "] "
+										+ ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 
 							} else {
-								p.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[Crew] <"
-										+ player.getName() + msgString);
+								p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + "Crew" + ChatColor.DARK_GRAY + "] "
+										+ ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 
 							}
 						}
 					}
 
 					if (player.getName() == craft.captainName) {
-						System.out.println("[Captain] <" + player.getName() + msgString);
+						System.out.println("[" + craft.name + "]" + "[Captain] " + player.getName() + msgString);
 					} else {
-						System.out.println("[Crew] <" + player.getName() + msgString);
+						System.out.println("[" + craft.name + "]" + "[Crew] " + player.getName() + msgString);
 					}
 				}
 				event.setCancelled(true);
 				return;
-			} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("yard")) {
-				syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-				if( syp != null ) {
-					syp.onPlayerCommandPreprocess(event);
-				}else {
-					player.sendMessage("Shipyard function is not installed.");
-				}
-				event.setCancelled(true);
-				return;
-			} else if (craftName.equalsIgnoreCase("radio") || craftName.equalsIgnoreCase("ra")) {
+			}
+			 else if (craftName.equalsIgnoreCase("radio") || craftName.equalsIgnoreCase("ra")) {
 				Craft craft = Craft.getPlayerCraft(player);
 				if (craft == null) {
-					player.sendMessage("You are not on a crew!");
+					player.sendMessage(ChatColor.RED + "You are not on a crew!");
 					event.setCancelled(true);
 					return;
 				}
 
 				if (split.length == 1) {
 					if ((craft.radioSignLoc != null) && (craft.maxY >= 63) && craft.radioSetOn) {
-						player.sendMessage("Your radio is Active on frequency-" + craft.radio1 + "" + craft.radio2 + ""
+						player.sendMessage(ChatColor.GREEN + "Your radio is Active on frequency: " + ChatColor.GREEN + craft.radio1 + "" + craft.radio2 + ""
 								+ craft.radio3 + "" + craft.radio4);
 
 						int craftCount = 0;
@@ -1549,42 +1563,42 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 							}
 						}
-						player.sendMessage("There are " + craftCount + " vehicles on your frequency.");
+						player.sendMessage(ChatColor.GOLD + "There are " + ChatColor.GREEN + craftCount + ChatColor.GOLD + " vehicles on your frequency.");
 
 					} else if ((craft.radioSignLoc != null) && craft.radioSetOn) {
-						player.sendMessage("Your radio is disabled because you are underwater...");
+						player.sendMessage(ChatColor.RED + "Your radio is disabled because you are underwater...");
 					} else if (craft.radioSignLoc != null) {
-						player.sendMessage("Your radio is turned off.");
+						player.sendMessage(ChatColor.RED + "Your radio is turned off.");
 					} else {
-						player.sendMessage("No radio detected...");
+						player.sendMessage(ChatColor.RED + "No radio detected...");
 					}
 				} else {
 					if (craft.radioSignLoc == null) {
-						player.sendMessage("No radio detected...");
+						player.sendMessage(ChatColor.RED + "No radio detected...");
 						event.setCancelled(true);
 						return;
 					}
 
 					if (!craft.radioSetOn) {
-						player.sendMessage("Your radio is turned off.");
+						player.sendMessage(ChatColor.RED + "Your radio is turned off.");
 						event.setCancelled(true);
 						return;
 					}
 
 					if (craft.maxY < 63) {
-						player.sendMessage("Your radio will not work underwater.");
+						player.sendMessage(ChatColor.RED + "Your radio will not work underwater.");
 						event.setCancelled(true);
 						return;
 					}
 
 					if ((craft.radio1 == 0) && (craft.radio2 == 0) && (craft.radio3 == 0) && (craft.radio4 == 0)) {
-						player.sendMessage("0000 is invalid frequency, use Radio sign to change.");
+						player.sendMessage(ChatColor.RED + "0000 is invalid frequency, use Radio sign to change.");
 						event.setCancelled(true);
 						return;
 					}
 
 					String msgString;
-					msgString = "> ";
+					msgString = ": " + ChatColor.RESET;
 					for (int i = 1; i < split.length; i++) {
 						msgString += split[i] + " ";
 					}
@@ -1593,13 +1607,13 @@ public class NavyCraft_PlayerListener implements Listener {
 						Player p = plugin.getServer().getPlayer(s);
 						if (p != null) {
 							if (craft.customName != null) {
-								p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "[Radio-" + craft.radio1 + ""
-										+ craft.radio2 + "" + craft.radio3 + "" + craft.radio4 + "] <"
-										+ craft.customName.toUpperCase() + "><" + player.getName() + msgString);
+								p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + craft.radio1
+										+ craft.radio2 + craft.radio3 + craft.radio4 + ChatColor.DARK_GRAY + "] ["
+										+ craft.customName.toUpperCase() + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 							} else {
-								p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "[Radio-" + craft.radio1 + ""
-										+ craft.radio2 + "" + craft.radio3 + "" + craft.radio4 + "] <"
-										+ craft.name.toUpperCase() + "><" + player.getName() + msgString);
+								p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + craft.radio1
+										+ craft.radio2 + craft.radio3 + craft.radio4 + ChatColor.DARK_GRAY +  "] ["
+										+ craft.name.toUpperCase() + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 							}
 						}
 					}
@@ -1611,22 +1625,18 @@ public class NavyCraft_PlayerListener implements Listener {
 									if (c.radio3 == craft.radio3) {
 										if (c.radio4 == craft.radio4) {
 											if ((c.world == craft.world)
-													&& (c.getLocation().distance(craft.getLocation()) < 2000)) {
+													&& (c.getLocation().distance(craft.getLocation()) < 5000)) {
 												for (String s : c.crewNames) {
 													Player p = plugin.getServer().getPlayer(s);
 													if (p != null) {
 														if (craft.customName != null) {
-															p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD
-																	+ "[Radio-" + craft.radio1 + "" + craft.radio2 + ""
-																	+ craft.radio3 + "" + craft.radio4 + "] <"
-																	+ craft.customName.toUpperCase() + "><"
-																	+ player.getName() + msgString);
+															p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + craft.radio1
+																	+ craft.radio2 + craft.radio3 + craft.radio4 + ChatColor.DARK_GRAY + "] ["
+																	+ craft.customName.toUpperCase() + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 														} else {
-															p.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD
-																	+ "[Radio-" + craft.radio1 + "" + craft.radio2 + ""
-																	+ craft.radio3 + "" + craft.radio4 + "] <"
-																	+ craft.name.toUpperCase() + "><" + player.getName()
-																	+ msgString);
+															p.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + craft.radio1
+																	+ craft.radio2 + craft.radio3 + craft.radio4 + ChatColor.DARK_GRAY +  "] ["
+																	+ craft.name.toUpperCase() + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE + player.getName() + ChatColor.GRAY + msgString);
 														}
 													}
 												}
@@ -1639,11 +1649,11 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 
 					if (craft.customName != null) {
-						System.out.println("[Radio-" + craft.radio1 + "" + craft.radio2 + "" + craft.radio3 + ""
-								+ craft.radio4 + "]<" + craft.customName + "><" + player.getName() + msgString);
+						System.out.println("[" + craft.radio1 + "" + craft.radio2 + "" + craft.radio3 + ""
+								+ craft.radio4 + "] [" + craft.customName + "] " + player.getName() + msgString);
 					} else {
-						System.out.println("[Radio-" + craft.radio1 + "" + craft.radio2 + "" + craft.radio3 + ""
-								+ craft.radio4 + "]<" + craft.name + "><" + player.getName() + msgString);
+						System.out.println("[" + craft.radio1 + "" + craft.radio2 + "" + craft.radio3 + ""
+								+ craft.radio4 + "] [" + craft.name + "] " + player.getName() + msgString);
 					}
 
 					craft.lastRadioPulse = System.currentTimeMillis();
@@ -1651,6 +1661,931 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				event.setCancelled(true);
 				return;
+				
+				} else if (craftName.equalsIgnoreCase("shipyard")) {
+					if (split.length > 1) {
+						if (split[1].equalsIgnoreCase("reward")) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
+								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
+								event.setCancelled(true);
+								return;
+							}
+
+							if (split.length < 5) {
+								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard reward <player> <type> <reason>");
+								player.sendMessage(ChatColor.GOLD + "Example - /shipyard reward Solmex SHIP5 Donation");
+								event.setCancelled(true);
+								return;
+							}
+
+							String reasonString;
+							reasonString = "";
+							for (int i = 4; i < split.length; i++) {
+								reasonString += split[i] + " ";
+							}
+
+							String typeString = split[3];
+							if (!typeString.equalsIgnoreCase("DD") && !typeString.equalsIgnoreCase("SHIP1")
+									&& !typeString.equalsIgnoreCase("SUB1") && !typeString.equalsIgnoreCase("SHIP2")
+									&& !typeString.equalsIgnoreCase("SUB2") && !typeString.equalsIgnoreCase("SHIP3")
+									&& !typeString.equalsIgnoreCase("CL") && !typeString.equalsIgnoreCase("SHIP4")
+									&& !typeString.equalsIgnoreCase("CA") && !typeString.equalsIgnoreCase("SHIP5")
+									&& !typeString.equalsIgnoreCase("HANGAR1") && !typeString.equalsIgnoreCase("HANGAR2")
+									&& !typeString.equalsIgnoreCase("TANK1") && !typeString.equalsIgnoreCase("TANK2")) {
+								player.sendMessage(ChatColor.RED + "Unknown lot type");
+								event.setCancelled(true);
+								return;
+							}
+
+							String playerString = split[2];
+							if ((plugin.getServer().getPlayer(playerString) == null) || !plugin.getServer()
+									.getPlayer(playerString).getName().equalsIgnoreCase(playerString)) {
+								player.sendMessage(ChatColor.RED + "Player not found or not online.");
+								event.setCancelled(true);
+								return;
+							}
+
+							String outputString = playerString + "," + typeString + "," + player.getName() + ","
+									+ reasonString;
+
+							NavyCraft.saveRewardsFile(outputString);
+
+							player.sendMessage(ChatColor.GREEN + "Plot Rewarded.");
+
+						} else if (split[1].equalsIgnoreCase("list")) {
+							NavyCraft_BlockListener.loadShipyard();
+							NavyCraft_BlockListener.loadRewards(player.getName());
+						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
+							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
+
+							if (NavyCraft.playerDDSigns.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerDDSigns.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP1");
+								}
+							}
+							if (NavyCraft.playerSUB1Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerSUB1Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP2");
+								}
+							}
+							if (NavyCraft.playerSUB2Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerSUB2Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP3");
+								}
+							}
+							if (NavyCraft.playerCLSigns.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerCLSigns.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP4");
+								}
+							}
+							if (NavyCraft.playerCASigns.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerCASigns.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP5");
+								}
+							}
+							if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerHANGAR1Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR1");
+								}
+							}
+							if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerHANGAR2Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR2");
+								}
+							}
+							if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerTANK1Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK1");
+								}
+							}
+							if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerTANK2Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
+								}
+							}
+
+						} else if (split[1].equalsIgnoreCase("tp")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										player.teleport(foundSign.getLocation().add(0.5, 0.5, 0.5));
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard tp <id> " + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to a plot id");
+							}
+						} else if (split[1].equalsIgnoreCase("open")) {
+							if (split.length == 3) {
+								String typeString = split[2];
+
+								Block tpBlock = null;
+								if (typeString.equalsIgnoreCase("DD") || typeString.equalsIgnoreCase("SHIP1")) {
+									tpBlock = NavyCraft_BlockListener.findDDOpen();
+								} else if (typeString.equalsIgnoreCase("SUB1") || typeString.equalsIgnoreCase("SHIP2")) {
+									tpBlock = NavyCraft_BlockListener.findSUB1Open();
+								} else if (typeString.equalsIgnoreCase("SUB2") || typeString.equalsIgnoreCase("SHIP3")) {
+									tpBlock = NavyCraft_BlockListener.findSUB2Open();
+								} else if (typeString.equalsIgnoreCase("CL") || typeString.equalsIgnoreCase("SHIP4")) {
+									tpBlock = NavyCraft_BlockListener.findCLOpen();
+								} else if (typeString.equalsIgnoreCase("CA") || typeString.equalsIgnoreCase("SHIP5")) {
+									tpBlock = NavyCraft_BlockListener.findCAOpen();
+								} else if (typeString.equalsIgnoreCase("HANGAR1")) {
+									tpBlock = NavyCraft_BlockListener.findHANGAR1Open();
+								} else if (typeString.equalsIgnoreCase("HANGAR2")) {
+									tpBlock = NavyCraft_BlockListener.findHANGAR2Open();
+								} else if (typeString.equalsIgnoreCase("TANK1")) {
+									tpBlock = NavyCraft_BlockListener.findTANK1Open();
+								} else if (typeString.equalsIgnoreCase("TANK2")) {
+									tpBlock = NavyCraft_BlockListener.findTANK2Open();
+								} else {
+									player.sendMessage(ChatColor.RED + "Unknown lot type");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpBlock != null) {
+									player.teleport(tpBlock.getLocation().add(0.5, 0.5, 0.5));
+								} else {
+									player.sendMessage(ChatColor.RED + "No open plots found!");
+								}
+
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard open <plot type> " + ChatColor.DARK_GRAY + "-" + ChatColor.GOLD +  "teleport to an unclaimed plot");
+							}
+						} else if (split[1].equalsIgnoreCase("info")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("shipyard"));
+											String regionName = "--" + player.getName() + "-" + tpId;
+
+											DefaultDomain dd = regionManager.getRegion(regionName).getMembers();
+
+											player.sendMessage("Info-" + player.getName() + "-" + tpId);
+											String members = "Members-";
+											for (String s : dd.getPlayers()) {
+												members += s + ", ";
+											}
+											player.sendMessage(members);
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard addmember <id> <player>");
+							}
+						} else if (split[1].equalsIgnoreCase("addmember")) {
+							if (split.length == 4) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("shipyard"));
+											String regionName = "--" + player.getName() + "-" + tpId;
+
+											String playerInName = split[3];
+											Player p = plugin.getServer().getPlayer(playerInName);
+											if (p == null) {
+												player.sendMessage(ChatColor.RED + "Player not found");
+												event.setCancelled(true);
+												return;
+											}
+											com.sk89q.worldguard.LocalPlayer lp = wgp.wrapPlayer(p);
+
+											regionManager.getRegion(regionName).getMembers().addPlayer(lp);
+
+											try {
+												regionManager.save();
+											} catch (StorageException e) {
+												e.printStackTrace();
+											}
+
+											player.sendMessage(ChatColor.GREEN + "Player Added.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard addmember <id> <player>");
+							}
+						} else if (split[1].equalsIgnoreCase("remmember")) {
+							if (split.length == 4) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("shipyard"));
+											String regionName = "--" + player.getName() + "-" + tpId;
+
+											String playerInName = split[3];
+
+											if (!regionManager.getRegion(regionName).getMembers().contains(playerInName)) {
+												player.sendMessage(ChatColor.RED + "Member not found.");
+												event.setCancelled(true);
+												return;
+											}
+
+											regionManager.getRegion(regionName).getMembers().removePlayer(playerInName);
+
+											try {
+												regionManager.save();
+											} catch (StorageException e) {
+												e.printStackTrace();
+											}
+
+											player.sendMessage(ChatColor.GREEN + "Player removed.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard remmember <id> <player>");
+							}
+						} else if (split[1].equalsIgnoreCase("clear")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("ShipYard"));
+											String regionName = "--" + player.getName() + "-" + tpId;
+
+											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
+											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
+											int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
+											int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
+											int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
+											int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+
+											for (int x = startX; x <= endX; x++) {
+												for (int z = startZ; z <= endZ; z++) {
+													for (int y = startY; y <= 62; y++) {
+														plugin.getServer().getWorld("ShipYard").getBlockAt(x, y, z)
+																.setType(Material.AIR);
+
+													}
+													int startYy;
+													if (startY > 63) {
+														startYy = startY;
+													} else {
+														startYy = 63;
+													}
+													for (int y = startYy; y <= endY; y++) {
+														plugin.getServer().getWorld("ShipYard").getBlockAt(x, y, z)
+																.setType(Material.AIR);
+													}
+												}
+											}
+
+											player.sendMessage(ChatColor.GREEN + "Plot Cleared.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard clear <id>");
+							}
+						} else if (split[1].equalsIgnoreCase("rename")) {
+							if (split.length > 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								String nameString;
+								nameString = "";
+								for (int i = 3; i < split.length; i++) {
+									nameString += split[i] + " ";
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										foundSign.setLine(3, nameString);
+										foundSign.update();
+										player.sendMessage(ChatColor.GREEN + "Plot renamed.");
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard rename <id> <custom name>");
+							}
+						} else if (split[1].equalsIgnoreCase("public")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										Block selectSignBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX(),
+												foundSign.getY() - 1, foundSign.getZ() + 1);
+										if (selectSignBlock2.getTypeId() != 68) {
+											selectSignBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX() + 1,
+													foundSign.getY() - 1, foundSign.getZ());
+										}
+										if (selectSignBlock2.getTypeId() == 68) {
+											Sign selectSign2 = (Sign) selectSignBlock2.getState();
+											selectSign2.setLine(0, "Public");
+											selectSign2.update();
+											player.sendMessage(ChatColor.GREEN + "Plot set to PUBLIC" + ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + "Any player may select it.");
+										} else {
+											player.sendMessage(ChatColor.RED + "Error: There may be a problem with your plot signs.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage("/shipyard public <id>");
+							}
+						} else if (split[1].equalsIgnoreCase("private")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										Block selectSignBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX(),
+												foundSign.getY() - 1, foundSign.getZ() + 1);
+										if (selectSignBlock2.getTypeId() != 68) {
+											selectSignBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX() + 1,
+													foundSign.getY() - 1, foundSign.getZ());
+										}
+										if (selectSignBlock2.getTypeId() == 68) {
+											Sign selectSign2 = (Sign) selectSignBlock2.getState();
+											selectSign2.setLine(0, "Private");
+											selectSign2.update();
+											player.sendMessage(ChatColor.GREEN + "Plot set to PRIVATE" + ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + "Only you and your plot members can SELECT it.");
+										} else {
+											player.sendMessage(ChatColor.DARK_RED + "Error: There may be a problem with your plot signs.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard private <id>");
+							}
+						} else if (split[1].equalsIgnoreCase("player")) {
+							if (split.length == 3) {
+								String p = split[2];
+								NavyCraft_BlockListener.loadShipyard();
+								NavyCraft_BlockListener.loadRewards(p);
+								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
+								if (NavyCraft.playerDDSigns.containsKey(p)) {
+									int numDDs = NavyCraft.playerDDSigns.get(p).size();
+									if (NavyCraft.playerDDRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numDDs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerDDRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numDDs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerDDRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerDDRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerSUB1Signs.containsKey(p)) {
+									int numSUB1s = NavyCraft.playerSUB1Signs.get(p).size();
+									if (NavyCraft.playerSUB1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSUB1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSUB1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerSUB1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerSUB2Signs.containsKey(p)) {
+									int numSUB2s = NavyCraft.playerSUB2Signs.get(p).size();
+									if (NavyCraft.playerSUB2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSUB2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSUB2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerSUB2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerCLSigns.containsKey(p)) {
+									int numCLs = NavyCraft.playerCLSigns.get(p).size();
+									if (NavyCraft.playerCLRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerCLRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerCLSigns.containsKey(p)) {
+									int numCLs = NavyCraft.playerCLSigns.get(p).size();
+									if (NavyCraft.playerCLRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerCLRewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
+									int numHANGAR1s = NavyCraft.playerHANGAR1Signs.get(p).size();
+									if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
+									int numHANGAR2s = NavyCraft.playerHANGAR2Signs.get(p).size();
+									if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerTANK1Signs.containsKey(p)) {
+									int numTANK1s = NavyCraft.playerTANK1Signs.get(p).size();
+									if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerTANK2Signs.containsKey(p)) {
+									int numTANK2s = NavyCraft.playerTANK2Signs.get(p).size();
+									if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard player <playerName>");
+							}
+						} else if (split[1].equalsIgnoreCase("plist")) {
+							if (split.length == 3) {
+								String p = split[2];
+								NavyCraft_BlockListener.loadShipyard();
+								NavyCraft_BlockListener.loadRewards(p);
+								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
+
+								if (NavyCraft.playerDDSigns.containsKey(p)) {
+									for (Sign s : NavyCraft.playerDDSigns.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP1");
+									}
+								}
+								if (NavyCraft.playerSUB1Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerSUB1Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP2");
+									}
+								}
+								if (NavyCraft.playerSUB2Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerSUB2Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP3");
+									}
+								}
+								if ( NavyCraft.playerCLSigns.containsKey(p)) {
+									for (Sign s : NavyCraft.playerCLSigns.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP4");
+									}
+								}
+								if (NavyCraft.playerCASigns.containsKey(p)) {
+									for (Sign s : NavyCraft.playerCASigns.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP5");
+									}
+								}
+								if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerHANGAR1Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR1");
+									}
+								}
+								if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerHANGAR2Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR2");
+									}
+								}
+								if (NavyCraft.playerTANK1Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerTANK1Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK1");
+									}
+								}
+								if (NavyCraft.playerTANK2Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerTANK2Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
+									}
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard playerlist <playerName>");
+							}
+						} else if (split[1].equalsIgnoreCase("ptp")) {
+							if (split.length == 4) {
+								String p = split[2];
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[3]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(p);
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(p, tpId);
+
+									if (foundSign != null) {
+										player.teleport(foundSign.getLocation().add(0.5, 0.5, 0.5));
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, Use:" + ChatColor.YELLOW + "/shipyard plist" + ChatColor.RED +  "to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard ptp <playerName> <id>" + ChatColor.DARK_GRAY + "-" + ChatColor.GOLD + "teleport to a player's plot id");
+							}
+						} else {
+							player.sendMessage(ChatColor.GOLD + "/shipyard - Status message");
+							player.sendMessage(ChatColor.GOLD + "/shipyard list - List your current plots");
+							player.sendMessage(ChatColor.GOLD + "/shipyard info <id> - Information about plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard open <plot type> - teleport to an unclaimed plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard tp <id> - Teleport to the plot id number");
+							player.sendMessage(ChatColor.GOLD + "/shipyard addmember <id> <player> - Gives player permission to that plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard remmember <id> <player> - Removes player permission to that plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard clear <id> - Destroys all blocks within the plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard rename <id> <custom name> - Renames the plot");
+							player.sendMessage(ChatColor.GOLD + "/shipyard public <id> - Allows any player to select your vehicle");
+							player.sendMessage(ChatColor.GOLD + "/shipyard private <id> - Allows only you and your members to select your vehicle");
+							player.sendMessage(ChatColor.GOLD + "/shipyard plist <player> - List the given player's plots");
+							player.sendMessage(ChatColor.GOLD + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
+							if (PermissionInterface.CheckPerm(player, "navycraft.admin") || player.isOp()) {
+								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard player <player> - View a players plot status");
+								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
+							}
+						}
+					} else {
+						NavyCraft_BlockListener.loadShipyard();
+						NavyCraft_BlockListener.loadRewards(player.getName());
+						String p = player.getName();
+						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
+						if (NavyCraft.playerDDSigns.containsKey(p)) {
+							int numDDs = NavyCraft.playerDDSigns.get(p).size();
+							if (NavyCraft.playerDDRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numDDs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerDDRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numDDs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerDDRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerDDRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerSUB1Signs.containsKey(p)) {
+							int numSUB1s = NavyCraft.playerSUB1Signs.get(p).size();
+							if (NavyCraft.playerSUB1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSUB1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSUB1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerSUB1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerSUB2Signs.containsKey(p)) {
+							int numSUB2s = NavyCraft.playerSUB2Signs.get(p).size();
+							if (NavyCraft.playerSUB2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSUB2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSUB2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerSUB2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSUB2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerCLSigns.containsKey(p)) {
+							int numCLs = NavyCraft.playerCLSigns.get(p).size();
+							if (NavyCraft.playerCLRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerCLRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerCLSigns.containsKey(p)) {
+							int numCLs = NavyCraft.playerCLSigns.get(p).size();
+							if (NavyCraft.playerCLRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numCLs + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerCLRewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerCLRewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
+							int numHANGAR1s = NavyCraft.playerHANGAR1Signs.get(p).size();
+							if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
+							int numHANGAR2s = NavyCraft.playerHANGAR2Signs.get(p).size();
+							if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerHANGAR2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerTANK1Signs.containsKey(p)) {
+							int numTANK1s = NavyCraft.playerTANK1Signs.get(p).size();
+							if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerTANK2Signs.containsKey(p)) {
+							int numTANK2s = NavyCraft.playerTANK2Signs.get(p).size();
+							if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + "∞" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+					}
+					event.setCancelled(true);
+					return;	
+				
 			} else if (craftName.equalsIgnoreCase("sign")) {
 				if (split.length == 2) {
 					if (split[1].equalsIgnoreCase("undo")) {
@@ -1691,51 +2626,850 @@ public class NavyCraft_PlayerListener implements Listener {
 									NavyCraft.playerLastBoughtSignString1.remove(player);
 									NavyCraft.playerLastBoughtSignString2.remove(player);
 								} else {
-									player.sendMessage("Incorrect sign detected.");
+									player.sendMessage(ChatColor.RED + "Incorrect sign detected.");
 								}
 
 							} else {
-								player.sendMessage("No sign detected to undo.");
+								player.sendMessage(ChatColor.RED + "No sign detected to undo.");
 							}
 						} else {
-							player.sendMessage("Nothing to undo.");
+							player.sendMessage(ChatColor.RED + "Nothing to undo.");
 						}
 						event.setCancelled(true);
 						return;
 					}
 				}
-			} else if (craftName.equalsIgnoreCase("sailor")) {
-				if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
-					if (PermissionInterface.CheckPerm(player, "navycraft.kit")) {
-						if (!NavyCraft.playerKits.contains(player.getName())) {
-							player.sendMessage("Anchors Aweigh!");
-							player.getInventory().addItem(new ItemStack(Material.IRON_SWORD, 1));
-							player.getInventory().addItem(new ItemStack(Material.IRON_PICKAXE, 1));
-							player.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1));
-							player.getInventory().addItem(new ItemStack(Material.BOW, 1));
-							player.getInventory().addItem(new ItemStack(Material.ARROW, 64));
-							player.getInventory().addItem(new ItemStack(Material.LADDER, 10));
-							player.getInventory().addItem(new ItemStack(Material.COOKED_FISH, 64));
-							player.getInventory().addItem(new ItemStack(Material.WOOD, 20));
-							player.getInventory().addItem(new ItemStack(Material.SMOOTH_BRICK, 20));
-							player.getInventory().addItem(new ItemStack(Material.GLASS, 10));
-							player.getInventory().addItem(new ItemStack(Material.STONE_BUTTON, 5));
-							player.getInventory().addItem(new ItemStack(Material.LEVER, 5));
-							player.getInventory().addItem(new ItemStack(Material.BOAT, 1));
-							player.getInventory().addItem(new ItemStack(Material.TNT, 1));
-							player.getInventory().addItem(new ItemStack(Material.REDSTONE_TORCH_ON, 1));
-							NavyCraft.playerKits.add(player.getName());
-						} else {
-							player.sendMessage("You only get one sailor kit per life!");
-						}
-					}else{
-						player.sendMessage("You do not have permission to use that kit.");
+
+			} else if (craftName.equalsIgnoreCase("team")) {
+				if (!NavyCraft.redPlayers.contains(player.getName())
+						&& !NavyCraft.bluePlayers.contains(player.getName())
+						&& !NavyCraft.anyPlayers.contains(player.getName())
+						&& !PermissionInterface.CheckQuietPerm(player, "navycraft.battle") && !player.isOp()) {
+					player.sendMessage(ChatColor.RED + "You are not on a team!");
+					event.setCancelled(true);
+					return;
+				}
+
+				if (split.length == 1) {
+					if (NavyCraft.redPlayers.contains(player.getName())) {
+						player.sendMessage(ChatColor.RED + "You are on Team Red.");
+					} else if (NavyCraft.bluePlayers.contains(player.getName())) {
+						player.sendMessage(ChatColor.BLUE + "You are on Team Blue.");
+					} else if (NavyCraft.bluePlayers.contains(player.getName())) {
+						player.sendMessage(ChatColor.YELLOW + "You are queued for Any Team.");
 					}
+					String teamString = ChatColor.RED + "Team Red Players: ";
+					for (String s : NavyCraft.redPlayers) {
+						teamString = teamString + s + ", ";
+					}
+					player.sendMessage(teamString);
+					teamString = ChatColor.BLUE + "Team Blue Players: ";
+					for (String s : NavyCraft.bluePlayers) {
+						teamString = teamString + s + ", ";
+					}
+					player.sendMessage(teamString);
+
+					if (!NavyCraft.anyPlayers.isEmpty()) {
+						teamString = ChatColor.YELLOW + "Any Team Players: ";
+						for (String s : NavyCraft.anyPlayers) {
+							teamString = teamString + s + ", ";
+						}
+						player.sendMessage(teamString);
+					}
+
 				} else {
-					player.sendMessage("You can only get this kit in enabled worlds.");
+					if (!NavyCraft.redPlayers.contains(player.getName())
+							&& !NavyCraft.bluePlayers.contains(player.getName())) {
+						player.sendMessage(ChatColor.RED + "You are not on a team!");
+						event.setCancelled(true);
+						return;
+					}
+
+					String msgString;
+					msgString = "";
+					for (int i = 1; i < split.length; i++) {
+						msgString += split[i] + " ";
+					}
+
+					if (NavyCraft.redPlayers.contains(player.getName())) {
+						for (String s : NavyCraft.redPlayers) {
+							if ((plugin.getServer().getPlayer(s) != null)
+									&& plugin.getServer().getPlayer(s).isOnline()) {
+								plugin.getServer().getPlayer(s).sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "Team Red" + ChatColor.DARK_GRAY + "] " + ChatColor.RED + player.getName() + ChatColor.GRAY + ": " + ChatColor.RESET + msgString);
+							}
+						}
+						System.out.println("[Team Red] <" + player.getName() + "> " + msgString);
+					} else {
+						for (String s : NavyCraft.bluePlayers) {
+							if ((plugin.getServer().getPlayer(s) != null)
+									&& plugin.getServer().getPlayer(s).isOnline()) {
+								plugin.getServer().getPlayer(s).sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_BLUE + "Team Blue" + ChatColor.DARK_GRAY + "] " + ChatColor.BLUE + player.getName() + ChatColor.GRAY + ": " + ChatColor.RESET + msgString);
+							}
+						}
+						System.out.println("[Team Blue] <" + player.getName() + "> " + msgString);
+					}
 				}
 				event.setCancelled(true);
 				return;
+			}else if ( craftName.equalsIgnoreCase("sailor") )
+			{
+				if( player.getWorld().getName().equalsIgnoreCase("WarWorld1") || player.getWorld().getName().equalsIgnoreCase("WarWorld2") )
+				{
+					if( player.getWorld().getName().equalsIgnoreCase("WarWorld2") && NavyCraft.battleMode > 0 )
+					{
+						if( !NavyCraft.playerKits.contains(player.getName()) )
+						{
+							player.sendMessage("Anchors Aweigh!");
+							player.getInventory().addItem(new ItemStack( Material.IRON_SWORD, 1));
+							player.getInventory().addItem(new ItemStack( Material.IRON_PICKAXE, 1));
+							player.getInventory().addItem(new ItemStack( Material.IRON_AXE, 1));
+							player.getInventory().addItem(new ItemStack( Material.BOW, 1));
+							player.getInventory().addItem(new ItemStack( Material.ARROW, 64));
+							player.getInventory().addItem(new ItemStack( Material.LADDER, 10));
+							player.getInventory().addItem(new ItemStack( Material.COOKED_FISH, 64));
+							player.getInventory().addItem(new ItemStack( Material.WOOD, 20));
+							player.getInventory().addItem(new ItemStack( Material.SMOOTH_BRICK, 20));
+							player.getInventory().addItem(new ItemStack( Material.GLASS, 10));
+							player.getInventory().addItem(new ItemStack( Material.STONE_BUTTON, 5));
+							player.getInventory().addItem(new ItemStack( Material.LEVER, 5));
+							player.getInventory().addItem(new ItemStack( Material.BOAT, 1));
+							player.getInventory().addItem(new ItemStack( Material.TNT, 1));
+							player.getInventory().addItem(new ItemStack( Material.REDSTONE_TORCH_ON, 1));
+							NavyCraft.playerKits.add(player.getName());
+						}else
+						{
+							player.sendMessage(ChatColor.RED + "You only get one sailor kit per life!");
+						}
+					}else if( player.getWorld().getName().equalsIgnoreCase("shipyard") )
+					{
+						player.sendMessage(ChatColor.RED + "You can only get this kit in the overworld.");
+					}else
+					{
+						player.sendMessage(ChatColor.RED + "You can't use that kit right now");
+					}
+				}else
+				{
+					player.sendMessage(ChatColor.RED + "You can only get this kit in the overworld.");
+				}
+			}else if( craftName.equalsIgnoreCase("battle") )
+			{
+				
+				
+				if( split.length == 1 ) {
+					if (NavyCraft.battleMode == -1) {
+						player.sendMessage(ChatColor.RED + "No active battle.");
+						player.sendMessage(ChatColor.YELLOW + "Use /battle help for more help");
+						if (PermissionInterface.CheckQuietPerm(player, "navycraft.battle") || player.isOp()) {
+							player.sendMessage(ChatColor.YELLOW + "Use /battle new to start new battle");
+						}
+					} else if (NavyCraft.battleMode == 0) {
+						String battleTypeStr = "";
+						switch (NavyCraft.battleType) {
+						case 1:
+							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+							break;
+						case 2:
+							battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+							break;
+						case 3:
+							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
+							break;
+						case 4:
+							battleTypeStr = "Normandy";
+							break;
+						case 5:
+							battleTypeStr = "Wake Island";
+							break;
+						case 6:
+							battleTypeStr = "Omaha";
+							break;
+						}
+						player.sendMessage("New Battle Queuing for " + battleTypeStr + "!");
+						if (NavyCraft.bluePlayers.contains(player.getName())) {
+							player.sendMessage(ChatColor.BLUE + "You are queued for team blue!");
+						} else if (NavyCraft.redPlayers.contains(player.getName())) {
+							player.sendMessage(ChatColor.RED + "You are queued for team red!");
+						} else if (NavyCraft.anyPlayers.contains(player.getName())) {
+							player.sendMessage(ChatColor.YELLOW + "You are queued for any team!");
+						}
+
+						player.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any"  + ChatColor.YELLOW + "to queue!");
+						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red "
+								+ ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue "
+								+ ChatColor.WHITE + " and " + NavyCraft.anyPlayers.size() + " unassigned.");
+						if (PermissionInterface.CheckQuietPerm(player, "navycraft.battle") || player.isOp()) {
+							player.sendMessage(ChatColor.GREEN + "Use /battle start to start battle");
+						}
+					} else /// active battle
+					{
+						String battleTypeStr = "";
+						String scoreUpdateStr = "";
+						switch (NavyCraft.battleType) {
+						case 1:
+							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+							scoreUpdateStr = "Time Left: "
+									+ (int) ((NavyCraft.battleLength
+											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
+									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
+							break;
+						case 2:
+							battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+							scoreTarawa();
+							scoreUpdateStr = "Time Left: "
+									+ (int) ((NavyCraft.battleLength
+											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
+									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
+							break;
+						case 3:
+							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
+							scoreUpdateStr = "Time Left: "
+									+ (int) ((NavyCraft.battleLength
+											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
+									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
+							break;
+						case 4:
+							battleTypeStr = "Normandy";
+							break;
+						case 5:
+							battleTypeStr = "Wake Island";
+							break;
+						case 6:
+							battleTypeStr = "Omaha";
+							break;
+						}
+						player.sendMessage(ChatColor.RED + "Battle in progress!" + battleTypeStr);
+						if (!scoreUpdateStr.equalsIgnoreCase("")) {
+							player.sendMessage(scoreUpdateStr);
+						}
+
+						if (NavyCraft.bluePlayers.contains(player.getName())) {
+							player.sendMessage(ChatColor.BLUE + "You are on team blue!");
+						} else if (NavyCraft.redPlayers.contains(player.getName())) {
+							player.sendMessage(ChatColor.RED + "You are on team red!");
+						} else if (!NavyCraft.battleLockTeams) {
+							player.sendMessage(ChatColor.YELLOW + "You can join this battle by typing"  + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any" );
+						}
+						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red "
+								+ ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue");
+					}
+				} else {
+					if (split[1].equalsIgnoreCase("red")) {
+						if (NavyCraft.battleMode == 0) {
+							if (NavyCraft.bluePlayers.contains(player.getName())) {
+								NavyCraft.bluePlayers.remove(player.getName());
+							}
+							if (NavyCraft.anyPlayers.contains(player.getName())) {
+								NavyCraft.anyPlayers.remove(player.getName());
+							}
+							if (!NavyCraft.redPlayers.contains(player.getName())) {
+								NavyCraft.redPlayers.add(player.getName());
+								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED
+										+ " queues for the Red Team!");
+							} else {
+								player.sendMessage("You are already on that team");
+							}
+						} else if (NavyCraft.battleMode > 0) {
+							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
+									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
+								if (NavyCraft.redPlayers.contains(player.getName())
+										|| NavyCraft.bluePlayers.contains(player.getName())) {
+									player.sendMessage(ChatColor.RED + "Already on a team first use " + ChatColor.YELLOW + "/battle exit");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (NavyCraft.redPlayers.size() > NavyCraft.bluePlayers.size()) {
+									player.sendMessage(ChatColor.RED + "Teams unbalanced, Must join Blue");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (NavyCraft.bluePlayers.contains(player.getName())) {
+									NavyCraft.bluePlayers.remove(player.getName());
+								}
+								if (!NavyCraft.redPlayers.contains(player.getName())) {
+									NavyCraft.redPlayers.add(player.getName());
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+											+ ChatColor.RED + " joins the Red Team!");
+									player.teleport(NavyCraft.redSpawn);
+								}
+							} else {
+								player.sendMessage(ChatColor.DARK_RED + "Teams locked");
+							}
+						}
+
+					} else if (split[1].equalsIgnoreCase("blue")) {
+						if (NavyCraft.battleMode == 0) {
+							if (NavyCraft.redPlayers.contains(player.getName())) {
+								NavyCraft.redPlayers.remove(player.getName());
+							}
+							if (NavyCraft.anyPlayers.contains(player.getName())) {
+								NavyCraft.anyPlayers.remove(player.getName());
+							}
+							if (!NavyCraft.bluePlayers.contains(player.getName())) {
+								NavyCraft.bluePlayers.add(player.getName());
+								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.BLUE
+										+ " queues for the Blue Team!");
+							} else {
+								player.sendMessage("You are already on that team");
+							}
+						} else if (NavyCraft.battleMode > 0) {
+							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
+									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
+								if (NavyCraft.redPlayers.contains(player.getName())
+										|| NavyCraft.bluePlayers.contains(player.getName())) {
+									player.sendMessage(ChatColor.RED + "Already on a team, first use" + ChatColor.YELLOW + "/battle exit");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (NavyCraft.redPlayers.size() < NavyCraft.bluePlayers.size()) {
+									player.sendMessage(ChatColor.RED + "Teams unbalanced, Must choose Red");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (NavyCraft.redPlayers.contains(player.getName())) {
+									NavyCraft.redPlayers.remove(player.getName());
+								}
+								if (!NavyCraft.bluePlayers.contains(player.getName())) {
+									NavyCraft.bluePlayers.add(player.getName());
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+											+ ChatColor.BLUE + " joins the Blue Team!");
+									player.teleport(NavyCraft.blueSpawn);
+								}
+							} else {
+								player.sendMessage(ChatColor.DARK_RED + "Teams locked");
+							}
+						}
+
+					} else if (split[1].equalsIgnoreCase("any")) {
+						if (NavyCraft.battleMode == 0) {
+							if (NavyCraft.bluePlayers.contains(player.getName())) {
+								NavyCraft.bluePlayers.remove(player.getName());
+							}
+							if (NavyCraft.redPlayers.contains(player.getName())) {
+								NavyCraft.redPlayers.remove(player.getName());
+							}
+							if (!NavyCraft.anyPlayers.contains(player.getName())) {
+								NavyCraft.anyPlayers.add(player.getName());
+								plugin.getServer().broadcastMessage(
+										ChatColor.YELLOW + player.getName() + " queues for either Team!");
+							} else {
+								player.sendMessage(ChatColor.RED + "You are already on that team");
+							}
+						} else if (NavyCraft.battleMode > 0) {
+							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
+									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
+								if (NavyCraft.redPlayers.contains(player.getName())
+										|| NavyCraft.bluePlayers.contains(player.getName())) {
+									player.sendMessage(ChatColor.RED + "Already on a team, first use " + ChatColor.YELLOW + "/battle exit");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (NavyCraft.redPlayers.size() > NavyCraft.bluePlayers.size()) {
+									if (NavyCraft.redPlayers.contains(player.getName())) {
+										NavyCraft.redPlayers.remove(player.getName());
+									}
+									if (!NavyCraft.bluePlayers.contains(player.getName())) {
+										NavyCraft.bluePlayers.add(player.getName());
+										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+												+ ChatColor.BLUE + " joins the Blue Team!");
+										player.teleport(NavyCraft.blueSpawn);
+									}
+								} else if (NavyCraft.redPlayers.size() < NavyCraft.bluePlayers.size()) {
+									if (NavyCraft.bluePlayers.contains(player.getName())) {
+										NavyCraft.bluePlayers.remove(player.getName());
+									}
+									if (!NavyCraft.redPlayers.contains(player.getName())) {
+										NavyCraft.redPlayers.add(player.getName());
+										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+												+ ChatColor.RED + " joins the Red Team!");
+										player.teleport(NavyCraft.redSpawn);
+									}
+								} else {
+									if (Math.random() < .5) {
+										if (NavyCraft.bluePlayers.contains(player.getName())) {
+											NavyCraft.bluePlayers.remove(player.getName());
+										}
+										if (!NavyCraft.redPlayers.contains(player.getName())) {
+											NavyCraft.redPlayers.add(player.getName());
+											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+													+ ChatColor.RED + " joins the Red Team!");
+											player.teleport(NavyCraft.redSpawn);
+										}
+									} else {
+										if (NavyCraft.redPlayers.contains(player.getName())) {
+											NavyCraft.redPlayers.remove(player.getName());
+										}
+										if (!NavyCraft.bluePlayers.contains(player.getName())) {
+											NavyCraft.bluePlayers.add(player.getName());
+											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
+													+ ChatColor.BLUE + " joins the Blue Team!");
+											player.teleport(NavyCraft.blueSpawn);
+										}
+									}
+								}
+							} else {
+								player.sendMessage(ChatColor.DARK_RED + "Teams locked");
+							}
+						}
+
+					} else if (split[1].equalsIgnoreCase("help")) {
+						if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
+							player.sendMessage(ChatColor.WHITE + "Battles v2.0 commands :");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle (red,blue,any) " + " : " + ChatColor.WHITE
+									+ "joins the battle as red, blue, or any");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle exit " + " : " + ChatColor.WHITE
+									+ "exits the battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/team " + " : " + ChatColor.WHITE
+									+ "displays your team");
+							player.sendMessage(ChatColor.DARK_AQUA + "/team (text) " + " : " + ChatColor.WHITE
+									+ "displays a message to your team");
+						}
+						
+						if( PermissionInterface.CheckQuietPerm(player, "navycraft.battle") )
+						{
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle new : " + ChatColor.WHITE
+								+ "queues a battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle start : " + ChatColor.WHITE + "starts a queued battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle cancel : " + ChatColor.WHITE + "cancels a queued battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle end : " + ChatColor.WHITE + "ends a battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle kick (player) : " + ChatColor.WHITE + "kicks a player from the battle");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle kickall : " + ChatColor.WHITE + "kicks all players out of Battle World");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle lock : " + ChatColor.WHITE + "locks team joining");
+						}
+					
+						
+					} else if (split[1].equalsIgnoreCase("exit")) {
+						if (!NavyCraft.redPlayers.contains(player.getName())
+								&& !NavyCraft.bluePlayers.contains(player.getName())
+								&& !NavyCraft.anyPlayers.contains(player.getName())) {
+							if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
+								Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+								player.teleport(spawnLoc);
+							}
+							player.sendMessage(ChatColor.RED + "You are not on a team.");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (NavyCraft.redPlayers.contains(player.getName())) {
+							NavyCraft.redPlayers.remove(player.getName());
+						}
+						if (NavyCraft.bluePlayers.contains(player.getName())) {
+							NavyCraft.bluePlayers.remove(player.getName());
+						}
+						if (NavyCraft.anyPlayers.contains(player.getName())) {
+							NavyCraft.anyPlayers.remove(player.getName());
+						}
+						plugin.getServer()
+								.broadcastMessage(ChatColor.YELLOW + player.getName() + " has quit the battle!");
+
+						if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
+							Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+							player.teleport(spawnLoc);
+						}
+					} else if (split[1].equalsIgnoreCase("kick")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (split.length != 3) {
+							player.sendMessage(ChatColor.RED + "Improper format, use " + ChatColor.YELLOW + "/battle kick (player)");
+							event.setCancelled(true);
+							return;
+						}
+
+						Player testPlayer = plugin.getServer().getPlayer(split[2]);
+						if (testPlayer != null) {
+							if (NavyCraft.bluePlayers.contains(testPlayer.getName())) {
+								NavyCraft.bluePlayers.remove(testPlayer.getName());
+							} else if (NavyCraft.redPlayers.contains(testPlayer.getName())) {
+								NavyCraft.redPlayers.remove(testPlayer.getName());
+							} else if (NavyCraft.anyPlayers.contains(testPlayer.getName())) {
+								NavyCraft.anyPlayers.remove(testPlayer.getName());
+							} else {
+								if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
+									Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+									testPlayer.teleport(spawnLoc);
+								}
+								player.sendMessage(ChatColor.YELLOW + testPlayer.getName() + ChatColor.RED +  " is not on a team.");
+								event.setCancelled(true);
+								return;
+							}
+							plugin.getServer().broadcastMessage(
+									ChatColor.YELLOW + testPlayer.getName() + " was kicked from the battle!");
+							if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
+								Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+								testPlayer.teleport(spawnLoc);
+							}
+
+						} else {
+							if (NavyCraft.bluePlayers.contains(split[2])) {
+								NavyCraft.bluePlayers.remove(split[2]);
+								plugin.getServer()
+										.broadcastMessage(ChatColor.YELLOW + split[2] + " was kicked from the battle!");
+							} else if (NavyCraft.redPlayers.contains(split[2])) {
+								NavyCraft.redPlayers.remove(split[2]);
+								plugin.getServer()
+										.broadcastMessage(ChatColor.YELLOW + split[2] + " was kicked from the battle!");
+							} else if (NavyCraft.anyPlayers.contains(split[2])) {
+								NavyCraft.anyPlayers.remove(split[2]);
+								plugin.getServer()
+										.broadcastMessage(ChatColor.YELLOW + split[2] + " was kicked from the battle!");
+							} else {
+								player.sendMessage(ChatColor.RED + "Player not found.");
+							}
+
+							event.setCancelled(true);
+							return;
+						}
+
+					} else if (split[1].equalsIgnoreCase("kickall")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						List<Player> ww2Players = player.getWorld().getPlayers();
+						Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+						for (Player p : ww2Players) {
+							if (p != player) {
+								p.teleport(spawnLoc);
+							}
+						}
+						plugin.getServer().broadcastMessage(
+								ChatColor.YELLOW + player.getName() + " evicts everyone from Battle World!");
+
+					} else if (split[1].equalsIgnoreCase("cancel")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (NavyCraft.battleMode < 0) {
+							player.sendMessage("No active battle.");
+						} else {
+							plugin.getServer().broadcastMessage(
+									ChatColor.RED + "" + ChatColor.BOLD + "OFFICIAL BATTLE CANCELLED!");
+							if ((timerThread != null) && timerThread.isAlive()) {
+								timerThread.stop();
+							}
+
+							NavyCraft.battleMode = -1;
+							NavyCraft.battleType = -1;
+							NavyCraft.battleLockTeams = false;
+							NavyCraft.redPlayers.clear();
+							NavyCraft.bluePlayers.clear();
+							NavyCraft.anyPlayers.clear();
+							NavyCraft.playerKits.clear();
+							NavyCraft.redPoints = 0;
+							NavyCraft.bluePoints = 0;
+							NavyCraft.redMerchant = false;
+							NavyCraft.blueMerchant = false;
+						}
+					} else if (split[1].equalsIgnoreCase("new")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (NavyCraft.battleMode >= 1) {
+							player.sendMessage(ChatColor.RED + "Battle already started! Use " + ChatColor.YELLOW + "/battle end" + ChatColor.RED + " first");
+						} else if (NavyCraft.battleMode == 0) {
+							player.sendMessage(ChatColor.RED + "Battle already created, Do you mean " + ChatColor.YELLOW + "/battle start?");
+						} else {
+							int battleType = -1;
+							if (split.length == 3) {
+								if (split[2].equalsIgnoreCase("list")) {
+									player.sendMessage("Battle List");
+									player.sendMessage("1 - Tunisia (Desert-Tanks and Airplanes)");
+									player.sendMessage("2 - Tarawa (Island-Ships and Airplanes)");
+									player.sendMessage("3 - North Sea (Open Ocean-Ships)");
+									player.sendMessage("And more coming soon...");
+									event.setCancelled(true);
+									return;
+								}
+								try {
+									battleType = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage("Invalid battle type option");
+									e.printStackTrace();
+								}
+							}
+
+							if (battleType == -1) {
+								battleType = (int) (Math.random() * 3) + 1;
+							}
+
+							String battleTypeStr = "";
+							switch (battleType) {
+							case 1:
+								if (!checkTunisia()) {
+									player.sendMessage("Tunisia bases need to be repaired first!");
+									event.setCancelled(true);
+									return;
+								}
+								battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+								break;
+							case 2:
+								if (!checkTarawa()) {
+									player.sendMessage("Tarawa bases need to be repaired first!");
+									event.setCancelled(true);
+									return;
+								}
+								battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+								break;
+							case 3:
+								/*
+								 * if( !checkNorthSea() ) { player.
+								 * sendMessage("North Sea bases need to be repaired first!"
+								 * ); event.setCancelled(true); return; }
+								 */
+								battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
+								break;
+							case 4:
+								battleTypeStr = "Normandy";
+								break;
+							case 5:
+								battleTypeStr = "Wake Island";
+								break;
+							case 6:
+								battleTypeStr = "Omaha";
+								break;
+							default:
+								player.sendMessage(ChatColor.RED + "Invalid battle type option, use " + ChatColor.YELLOW + "/battle new (1,2,3)");
+								return;
+							}
+	                        plugin.getServer().broadcastMessage(ChatColor.GREEN + "*** OFFICIAL BATTLE QUEUE OPEN!!! ***");
+	                        plugin.getServer().broadcastMessage(ChatColor.AQUA + "*** Battle Map: " + battleTypeStr + ChatColor.AQUA + " ***");
+	                        plugin.getServer().broadcastMessage(ChatColor.AQUA + "***" + ChatColor.YELLOW + " Started by: " + ChatColor.DARK_RED + player.getName() + ChatColor.AQUA + " ***" );
+	                        plugin.getServer().broadcastMessage(ChatColor.GREEN + "*** Type " + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any"  + ChatColor.GREEN + " to queue! ***");
+							NavyCraft.battleMode = 0;
+							NavyCraft.battleType = battleType;
+							NavyCraft.battleLockTeams = false;
+							NavyCraft.redPlayers.clear();
+							NavyCraft.bluePlayers.clear();
+							NavyCraft.anyPlayers.clear();
+							NavyCraft.playerKits.clear();
+							NavyCraft.redPoints = 0;
+							NavyCraft.bluePoints = 0;
+							NavyCraft.redMerchant = false;
+							NavyCraft.blueMerchant = false;
+						}
+					} else if (split[1].equalsIgnoreCase("spam")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						String battleTypeStr = "";
+						switch (NavyCraft.battleType) {
+						case 1:
+
+							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+							break;
+						case 2:
+							battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+							break;
+						case 3:
+							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
+							break;
+						case 4:
+							battleTypeStr = "Normandy";
+							break;
+						case 5:
+							battleTypeStr = "Wake Island";
+							break;
+						case 6:
+							battleTypeStr = "Omaha";
+							break;
+						default:
+							player.sendMessage(ChatColor.RED + "Invalid battle type option, use " + ChatColor.YELLOW + "/battle new" + ChatColor.RED + "list to view!");
+							return;
+						}
+                        plugin.getServer().broadcastMessage(ChatColor.GREEN + "*** OFFICIAL BATTLE QUEUE OPEN!!! ***");
+                        plugin.getServer().broadcastMessage(ChatColor.AQUA + "*** Battle Map: " + battleTypeStr + ChatColor.AQUA + " ***");
+                        plugin.getServer().broadcastMessage(ChatColor.AQUA + "***" + ChatColor.YELLOW + " Started by: " + ChatColor.DARK_RED + player.getName() + ChatColor.AQUA + " ***" );
+                        plugin.getServer().broadcastMessage(ChatColor.GREEN + "*** Type " + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any"  + ChatColor.GREEN + " to queue! ***");
+
+					} else if (split[1].equalsIgnoreCase("start")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (NavyCraft.battleMode >= 1) {
+							player.sendMessage(ChatColor.RED + "Battle already started!");
+						} else if (NavyCraft.battleMode == -1) {
+							player.sendMessage(ChatColor.YELLOW + "Do /battle new first!");
+						} else {
+							while (NavyCraft.anyPlayers.size() > 0) {
+								if (NavyCraft.redPlayers.size() < NavyCraft.bluePlayers.size()) {
+									NavyCraft.redPlayers.add(NavyCraft.anyPlayers.get(0));
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + NavyCraft.anyPlayers.get(0)
+											+ ChatColor.RED + " joins the Red Team!");
+								} else if (NavyCraft.redPlayers.size() > NavyCraft.bluePlayers.size()) {
+									NavyCraft.bluePlayers.add(NavyCraft.anyPlayers.get(0));
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + NavyCraft.anyPlayers.get(0)
+											+ ChatColor.BLUE + " joins the Blue Team!");
+								} else {
+									if (Math.random() < .5) {
+										NavyCraft.redPlayers.add(NavyCraft.anyPlayers.get(0));
+										plugin.getServer().broadcastMessage(ChatColor.YELLOW
+												+ NavyCraft.anyPlayers.get(0) + ChatColor.RED + " joins the Red Team!");
+									} else {
+										NavyCraft.bluePlayers.add(NavyCraft.anyPlayers.get(0));
+										plugin.getServer()
+												.broadcastMessage(ChatColor.YELLOW + NavyCraft.anyPlayers.get(0)
+														+ ChatColor.BLUE + " joins the Blue Team!");
+									}
+								}
+								NavyCraft.anyPlayers.remove(0);
+							}
+
+							/// battle types
+							NavyCraft.redSpawn = new Location(player.getWorld(), 100, 64, 100);
+							NavyCraft.blueSpawn = new Location(player.getWorld(), 200, 64, 200);
+							String redWelcomeStr = "";
+							String blueWelcomeStr = "";
+							String logStr = "";
+							if (NavyCraft.battleType == 1) {
+								NavyCraft.redSpawn = new Location(player.getWorld(), -356, 69,
+										1114);
+								NavyCraft.blueSpawn = new Location(player.getWorld(), -650, 67,
+										1485);
+								redWelcomeStr = ChatColor.RED + "Welcome to Tunisia : Red Team Base!";
+								blueWelcomeStr = ChatColor.BLUE + "Welcome to Tunisia : Blue Team Base!";
+								logStr = "Battlezone: Tunisia";
+								NavyCraft.battleLength = 1800000;
+								// MoveCraft.battleLength = 330000;
+							} else if (NavyCraft.battleType == 2) {
+								NavyCraft.redSpawn = new Location(player.getWorld(), 199, 60,
+										-1065);
+								NavyCraft.blueSpawn = new Location(player.getWorld(), -322, 75,
+										-1166);
+								redWelcomeStr = ChatColor.RED + "Welcome to Tarawa : Red Team Base!";
+								blueWelcomeStr = ChatColor.BLUE + "Welcome to Tarawa : Blue Team Fleet!";
+								logStr = "Battlezone: Tarawa";
+								NavyCraft.battleLength = 1800000;
+							} else if (NavyCraft.battleType == 3) {
+								NavyCraft.redSpawn = new Location(player.getWorld(), -503.5, 64,
+										-711.5);
+								NavyCraft.blueSpawn = new Location(player.getWorld(), -629.5, 64,
+										-105.5);
+								redWelcomeStr = ChatColor.RED + "Welcome to the North Sea : Red Team Fleet!";
+								blueWelcomeStr = ChatColor.BLUE + "Welcome to the North Sea : Blue Team Fleet!";
+								logStr = "Battlezone: North Sea";
+								NavyCraft.battleLength = 3600000;
+							}
+
+							plugin.getServer().broadcastMessage(
+									ChatColor.GREEN + "*** OFFICIAL BATTLE STARTED! ***");
+							CraftMover.battleLogger("***OFFICIAL BATTLE STARTED!!!***");
+							CraftMover.battleLogger(logStr);
+							for (String s : NavyCraft.redPlayers) {
+								Player p = plugin.getServer().getPlayer(s);
+								if (p != null) {
+									p.teleport(NavyCraft.redSpawn);
+									p.sendMessage(redWelcomeStr);
+								}
+							}
+							for (String s : NavyCraft.bluePlayers) {
+								Player p = plugin.getServer().getPlayer(s);
+								if (p != null) {
+									p.teleport(NavyCraft.blueSpawn);
+									p.sendMessage(blueWelcomeStr);
+								}
+							}
+
+							NavyCraft.battleMode = 1;
+							battleTimerThread();
+							NavyCraft.battleStartTime = System.currentTimeMillis();
+						}
+					} else if (split[1].equalsIgnoreCase("end")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage("You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (NavyCraft.battleMode < 0) {
+							player.sendMessage("No active battle.");
+						} else {
+							if (NavyCraft.battleMode > 0) {
+								switch (NavyCraft.battleType) {
+								case 1:
+									endTunisia();
+									break;
+								case 2:
+									endTarawa();
+									break;
+								case 3:
+									endNorthSea();
+									break;
+								case 4:
+
+									break;
+								case 5:
+
+									break;
+								case 6:
+
+									break;
+								}
+							} else {
+								plugin.getServer().broadcastMessage(
+										ChatColor.RED + "" + ChatColor.BOLD + "OFFICIAL BATTLE CANCELLED!");
+							}
+
+							if ((timerThread != null) && timerThread.isAlive()) {
+								timerThread.stop();
+							}
+
+							NavyCraft.battleMode = -1;
+							NavyCraft.battleType = -1;
+							NavyCraft.battleLockTeams = false;
+							NavyCraft.redPlayers.clear();
+							NavyCraft.bluePlayers.clear();
+							NavyCraft.anyPlayers.clear();
+							NavyCraft.playerKits.clear();
+							NavyCraft.redPoints = 0;
+							NavyCraft.bluePoints = 0;
+							NavyCraft.redMerchant = false;
+							NavyCraft.blueMerchant = false;
+						}
+					} else if (split[1].equalsIgnoreCase("lock") && (NavyCraft.battleMode >= 0)) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (!NavyCraft.battleLockTeams) {
+							player.sendMessage(ChatColor.DARK_RED + "Teams locked");
+							NavyCraft.battleLockTeams = true;
+						} else {
+							player.sendMessage(ChatColor.DARK_GREEN + "Teams open");
+							NavyCraft.battleLockTeams = false;
+						}
+					}
+				}
+				event.setCancelled(true);
+				return;
+				
 			} else if (craftName.equalsIgnoreCase("engine")) {
 				if (split.length == 2) {
 					float inValue = 1.0f;
@@ -1743,15 +3477,15 @@ public class NavyCraft_PlayerListener implements Listener {
 						inValue = Float.parseFloat(split[1]);
 						if ((inValue >= 0) && (inValue <= 100.0f)) {
 							NavyCraft.playerEngineVolumes.put(player, inValue);
-							player.sendMessage("Volume set - " + inValue + "%");
+							player.sendMessage(ChatColor.GOLD + "Volume set - " + ChatColor.GREEN + inValue + "%");
 						} else {
-							player.sendMessage("Invalid volume percent, use a number from 0 to 100");
+							player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
 						}
 					} catch (NumberFormatException e) {
-						player.sendMessage("Invalid volume percent, use a number from 0 to 100");
+						player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
 					}
 				} else {
-					player.sendMessage("Change engine volume with /engine <%> with % from 0 to 100");
+					player.sendMessage(ChatColor.YELLOW + "Change engine volume with /engine <%> with % from 0 to 100");
 				}
 				
 				event.setCancelled(true);
@@ -1780,20 +3514,20 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 								
 								if( checkCraft == null )
-									player.sendMessage("Boom Level - " + inValue);
+									player.sendMessage(ChatColor.GOLD + "Boom Level" + ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + inValue);
 								else
-									player.sendMessage("Boom level - " + inValue + " done on " + checkCraft.name);
+									player.sendMessage(ChatColor.GOLD + "Boom level " + ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + inValue + ChatColor.GOLD + " done on " + ChatColor.GREEN + checkCraft.name);
 							} else {
-								player.sendMessage("Invalid explosion level, use a number from 1 to 100");
+								player.sendMessage(ChatColor.RED + "Invalid explosion level, use a number from 1 to 100");
 							}
 						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid explosion level, use a number from 1 to 100");
+							player.sendMessage(ChatColor.RED + "Invalid explosion level, use a number from 1 to 100");
 						}
 					} else {
-						player.sendMessage("command /explode ###  number from 1-100");
+						player.sendMessage(ChatColor.YELLOW + "/explode ###  number from 1-100");
 					}
 				}else {
-					player.sendMessage("You do not have permission to use that.");
+					player.sendMessage(ChatColor.RED + "You do not have permission to use that.");
 				}
 				
 				event.setCancelled(true);
@@ -1806,29 +3540,29 @@ public class NavyCraft_PlayerListener implements Listener {
 							inValue = Float.parseFloat(split[1]);
 							if ((inValue >= 1) && (inValue <= 100.0f)) {
 								NavyCraft.explosion((int)inValue, player.getLocation().getBlock(),true);
-								player.sendMessage("Boom Level - " + inValue);
+								player.sendMessage(ChatColor.GOLD + "Boom Level" + ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + inValue);
 							} else {
-								player.sendMessage("Invalid explosion level, use a number from 1 to 100");
+								player.sendMessage(ChatColor.RED + "Invalid explosion level, use a number from 1 to 100");
 							}
 						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid explosion level, use a number from 1 to 100");
+							player.sendMessage(ChatColor.RED + "Invalid explosion level, use a number from 1 to 100");
 						}
 					} else {
-						player.sendMessage("command /explode ###  number from 1-100");
+						player.sendMessage(ChatColor.YELLOW + "/explode ###  number from 1-100");
 					}
 				}else{
-					player.sendMessage("You do not have permission to use that.");
+					player.sendMessage(ChatColor.RED + "You do not have permission to use that.");
 				}
 				
 				event.setCancelled(true);
 				return;
-			} else if (craftName.equalsIgnoreCase("rank")) {
-				syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-				if( syp != null ){
+			} else if (craftName.equalsIgnoreCase("rank")) {	
+				pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+				if( pex != null ){
 					
-						syp.getRank(player);
+						NavyCraft_BlockListener.getRank(player);
 				} else {
-					player.sendMessage("Shipyard and rank system not installed.");
+					player.sendMessage(ChatColor.RED + "PermissionsEX Not installed");
 				}
 				event.setCancelled(true);
 				return;
@@ -1859,7 +3593,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 
 		return;
-	}
+		}
 
 	@SuppressWarnings("deprecation")
 	public boolean processCommand(CraftType craftType, Player player, String[] split) {
@@ -1964,14 +3698,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				// MoveCraft.instance.releaseCraft(player, craft);
 				if (craft != null) {
 					if ((craft.captainName == player.getName()) || player.isOp()) {
-						player.sendMessage(ChatColor.YELLOW + "You release command of the ship");
+						player.sendMessage(ChatColor.GOLD + "You release command of the ship");
 						craft.releaseCraft();
 						if (player.getInventory().contains(Material.GOLD_SWORD)) {
 							player.getInventory().remove(Material.GOLD_SWORD);
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 
@@ -1983,7 +3717,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					CraftMover cm = new CraftMover(craft, plugin);
 					cm.reloadWeapons(player);
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 
 				// }
@@ -1998,7 +3732,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				craft.driverName = player.getName();
 				craft.haveControl = true;
-				player.sendMessage(ChatColor.YELLOW + "You take control of the helm.");
+				player.sendMessage(ChatColor.GOLD + "You take control of the helm.");
 				player.setItemInHand(new ItemStack(283, 1));
 				CraftMover cm = new CraftMover(craft, plugin);
 				cm.structureUpdate(null, false);
@@ -2007,19 +3741,19 @@ public class NavyCraft_PlayerListener implements Listener {
 
 			} else if (split[1].equalsIgnoreCase("info")) {
 
-				player.sendMessage(ChatColor.WHITE + craftType.name);
+				player.sendMessage(ChatColor.DARK_AQUA + craftType.name);
 				if (craft != null) {
-					player.sendMessage(ChatColor.YELLOW + "Using " + craft.blockCount + " of " + craftType.maxBlocks
+					player.sendMessage(ChatColor.GOLD + "Using " + craft.blockCount + " of " + craftType.maxBlocks
 							+ " blocks (minimum " + craftType.minBlocks + ").");
 
 				} else {
-					player.sendMessage(ChatColor.YELLOW + Integer.toString(craftType.minBlocks) + "-"
+					player.sendMessage(ChatColor.GOLD + Integer.toString(craftType.minBlocks) + "-"
 							+ craftType.maxBlocks + " blocks.");
 				}
-				player.sendMessage(ChatColor.YELLOW + "Max speed: " + craftType.maxSpeed);
+				player.sendMessage(ChatColor.GOLD + "Max speed: " + craftType.maxSpeed);
 
 				if (NavyCraft.instance.DebugMode) {
-					player.sendMessage(ChatColor.YELLOW + Integer.toString(craft.dataBlocks.size()) + " data Blocks, "
+					player.sendMessage(ChatColor.GOLD + Integer.toString(craft.dataBlocks.size()) + " data Blocks, "
 							+ craft.complexBlocks.size() + " complex Blocks, " + craft.engineBlocks.size()
 							+ " engine Blocks," + craft.digBlockCount + " drill bits.");
 				}
@@ -2090,7 +3824,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					craft.addWayPoint(player.getLocation());
 				}
 
-				player.sendMessage("Added waypoint...");
+				player.sendMessage(ChatColor.GREEN + "Added waypoint...");
 
 			} else if (split[1].equalsIgnoreCase("autotravel") && (PermissionInterface.CheckPerm(player,  "navycraft.other"))) {
 				if (split[2].equalsIgnoreCase("true")) {
@@ -2103,14 +3837,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				if (craft != null) {
 					if (craft.driverName == player.getName()) {
 						if (craft.autoTurn) {
-							player.sendMessage("Docking mode engaged");
+							player.sendMessage(ChatColor.GREEN + "Docking mode engaged");
 						} else {
-							player.sendMessage("Docking mode disengaged");
+							player.sendMessage(ChatColor.RED + "Docking mode disengaged");
 						}
 						craft.autoTurn = !craft.autoTurn;
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("command")
@@ -2130,7 +3864,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					CraftMover cm = new CraftMover(testCraft, plugin);
 					cm.structureUpdate(null, false);
 					if (testCraft.captainName == player.getName()) {
-						player.sendMessage("You admin-hijack this vehicle!");
+						player.sendMessage(ChatColor.GOLD + "You admin-hijack this vehicle!");
 					}
 				}
 				return true;
@@ -2142,17 +3876,17 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (player.getInventory().contains(Material.GOLD_SWORD)) {
 								player.getInventory().remove(Material.GOLD_SWORD);
 							}
-							player.sendMessage("Vehicle Removed");
+							player.sendMessage(ChatColor.GREEN + "Vehicle Removed");
 						} else {
 							player.sendMessage(ChatColor.RED
-									+ "You do not have permission for this command. Use \"/ship disable\" instead.");
+									+ "You do not have permission for this command. Use: " + ChatColor.YELLOW + "/ship disable" + ChatColor.RED + "instead.");
 						}
 
 					} else {
 						player.sendMessage(ChatColor.RED + "You do not command this ship.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("disable")) {
@@ -2163,13 +3897,12 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (player.getInventory().contains(Material.GOLD_SWORD)) {
 								player.getInventory().remove(Material.GOLD_SWORD);
 							}
-							player.sendMessage("Vehicle disabled.");
+							player.sendMessage(ChatColor.GREEN + "Vehicle disabled.");
 						} else if (!checkProtectedRegion(player, player.getLocation())) {
 							craft.helmDestroyed = true;
 							craft.setSpeed = 0;
 							playerDisableThread(player, craft);
-							player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD
-									+ "Your vehicle will be fully disabled in 3 minutes.");
+							player.sendMessage(ChatColor.RED + "Your vehicle will be fully disabled in 1 minute.");
 						} else {
 							player.sendMessage(ChatColor.RED
 									+ "You can only use that command in a repair dock within the safe dock area.");
@@ -2178,18 +3911,18 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED + "You do not command this ship.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("destroy")) {
 				if (craft != null) {
 					if ((craft.captainName == player.getName()) || player.isOp()) {
-						if (checkProtectedRegion(player, craft.getLocation()) || PermissionInterface.CheckPerm(player,  "navycraft.admin")) {
+						if (checkProtectedRegion(player, craft.getLocation()) || PermissionInterface.CheckPerm(player,  "navycraft.basic")) {
 							craft.doDestroy = true;
 							if (player.getInventory().contains(Material.GOLD_SWORD)) {
 								player.getInventory().remove(Material.GOLD_SWORD);
 							}
-							player.sendMessage("Vehicle Destroyed");
+							player.sendMessage(ChatColor.GREEN + "Vehicle Destroyed");
 						} else {
 							player.sendMessage(
 									ChatColor.RED + "You can only use this command in a safe dock region.");
@@ -2199,7 +3932,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED + "You do not command this ship.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("sink")) {
@@ -2211,8 +3944,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								craft.helmDestroyed = true;
 								craft.setSpeed = 0;
 								playerSinkThread(craft);
-								player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD
-										+ "Your vehicle will be scuttled in 3 minutes.");
+								player.sendMessage(ChatColor.RED + "Your vehicle will be scuttled in 3 minutes.");
 							} else {
 								player.sendMessage(
 										ChatColor.RED + "This command cannot be used within a protected region.");
@@ -2224,7 +3956,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED + "You are already sinking!");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("update")) {
@@ -2250,10 +3982,10 @@ public class NavyCraft_PlayerListener implements Listener {
 							return false;
 						}
 					} else {
-						player.sendMessage(ChatColor.YELLOW + "You cannot use this command on this vehicle.");
+						player.sendMessage(ChatColor.RED + "You cannot use this command on this vehicle.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "No vehicle detected.");
+					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
 			} else if (split[1].equalsIgnoreCase("warpdrive")&& PermissionInterface.CheckPerm(player,  "navycraft.other") ) {
 
@@ -2293,9 +4025,9 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (split[1].equalsIgnoreCase("leave")) {
 				if (craft != null) {
 					craft.leaveCrew(player);
-					player.sendMessage(ChatColor.YELLOW + "You leave the crew.");
+					player.sendMessage(ChatColor.GREEN + "You leave the crew.");
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You are not on a crew.");
+					player.sendMessage(ChatColor.RED + "You are not on a crew.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("crew")) {
@@ -2303,10 +4035,10 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (craft.captainName == player.getName()) {
 						craft.buildCrew(player, false);
 					} else {
-						player.sendMessage(ChatColor.YELLOW + "You are not the captain of this crew.");
+						player.sendMessage(ChatColor.RED + "You are not the captain of this crew.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You are not on a crew.");
+					player.sendMessage(ChatColor.RED + "You are not on a crew.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("add")) {
@@ -2314,55 +4046,55 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (craft.captainName == player.getName()) {
 						craft.buildCrew(player, true);
 					} else {
-						player.sendMessage(ChatColor.YELLOW + "You are not the captain of this crew.");
+						player.sendMessage(ChatColor.RED + "You are not the captain of this crew.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You are not on a crew.");
+					player.sendMessage(ChatColor.RED + "You are not on a crew.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("summon")) {
 				if (craft != null) {
 					if (craft.captainName == player.getName()) {
 						if (craft.signLoc != null) {
-							player.sendMessage(ChatColor.YELLOW + "Summoning crew to your vehicle...");
+							player.sendMessage(ChatColor.GOLD + "Summoning crew to your vehicle.");
 							for (String s : craft.crewNames) {
 								Player p = plugin.getServer().getPlayer(s);
 								if (p != null) {
 									if (!NavyCraft.shipTPCooldowns.containsKey(s) || (System
-											.currentTimeMillis() > (NavyCraft.shipTPCooldowns.get(s) + 600000))) {
+											.currentTimeMillis() > (NavyCraft.shipTPCooldowns.get(s) + 60000))) {
 										NavyCraft.shipTPCooldowns.put(s, System.currentTimeMillis());
 										p.teleport(new Location(craft.world, craft.signLoc.getBlockX() + 0.5,
 												craft.signLoc.getBlockY() + 0.1, craft.signLoc.getBlockZ() + 0.5));
 									} else {
-										int timeLeft = (int) (((NavyCraft.shipTPCooldowns.get(s) + 600000)
+										int timeLeft = (int) (((NavyCraft.shipTPCooldowns.get(s) + 60000)
 												- System.currentTimeMillis()) / 60000);
-										player.sendMessage(ChatColor.RED + "Player-" + s + " is on cooldown for "
-												+ timeLeft + " min");
+										player.sendMessage(ChatColor.RED + "Player, " + s + " is on cooldown for "
+												+ timeLeft + " minute");
 									}
 								} else {
-									player.sendMessage(ChatColor.RED + "Player-" + s + " not located.");
+									player.sendMessage(ChatColor.RED + "Player, " + s + " not located.");
 								}
 							}
 						} else {
 							player.sendMessage(ChatColor.RED + "Vehicle sign not located.");
 						}
 					} else {
-						player.sendMessage(ChatColor.YELLOW + "You are not the captain of this crew.");
+						player.sendMessage(ChatColor.RED + "You are not the captain of this crew.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You are not on a crew.");
+					player.sendMessage(ChatColor.RED + "You are not on a crew.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("tp")) {
 				if (craft != null) {
 					if (craft.signLoc != null) {
 						if (!NavyCraft.shipTPCooldowns.containsKey(player.getName()) || (System
-								.currentTimeMillis() > (NavyCraft.shipTPCooldowns.get(player.getName()) + 600000))) {
+								.currentTimeMillis() > (NavyCraft.shipTPCooldowns.get(player.getName()) + 60000))) {
 							NavyCraft.shipTPCooldowns.put(player.getName(), System.currentTimeMillis());
 							player.teleport(new Location(craft.world, craft.signLoc.getBlockX() + 0.5,
 									craft.signLoc.getBlockY() + 0.1, craft.signLoc.getBlockZ() + 0.5));
 						} else {
-							int timeLeft = (int) (((NavyCraft.shipTPCooldowns.get(player.getName()) + 600000)
+							int timeLeft = (int) (((NavyCraft.shipTPCooldowns.get(player.getName()) + 60000)
 									- System.currentTimeMillis()) / 60000);
 							player.sendMessage(ChatColor.RED + "You are on cooldown for " + timeLeft + " min");
 						}
@@ -2370,7 +4102,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED + "Vehicle sign not located.");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "You are not on a crew.");
+					player.sendMessage(ChatColor.RED + "You are not on a crew.");
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("buoy") && PermissionInterface.CheckPerm(player,  "navycraft.admin")) {
@@ -2382,10 +4114,10 @@ public class NavyCraft_PlayerListener implements Listener {
 							if ((blockValue >= 0.01f) && (blockValue <= 100.0f)) {
 								craft.blockDispValue = blockValue;
 							} else {
-								player.sendMessage("Invalid block displacement value, use 0.01 to 100.0");
+								player.sendMessage(ChatColor.RED + "Invalid block displacement value, use 0.01 to 100.0");
 							}
 						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid block displacement value, use 0.01 to 100.0");
+							player.sendMessage(ChatColor.RED + "Invalid block displacement value, use 0.01 to 100.0");
 						}
 					} else if ((split.length > 3) && split[2].equalsIgnoreCase("air")) {
 						float airValue = 5.00f;
@@ -2394,10 +4126,10 @@ public class NavyCraft_PlayerListener implements Listener {
 							if ((airValue >= 0.01f) && (airValue <= 100.0f)) {
 								craft.airDispValue = airValue;
 							} else {
-								player.sendMessage("Invalid air displacement value, use 0.01 to 100.0");
+								player.sendMessage(ChatColor.RED + "Invalid air displacement value, use 0.01 to 100.0");
 							}
 						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid air displacement value, use 0.01 to 100.0");
+							player.sendMessage(ChatColor.RED + "Invalid air displacement value, use 0.01 to 100.0");
 						}
 					} else if ((split.length > 3) && split[2].equalsIgnoreCase("min")) {
 						float minValue = 5.00f;
@@ -2426,71 +4158,70 @@ public class NavyCraft_PlayerListener implements Listener {
 					} else {
 
 						player.sendMessage("Block Displacement = " + craft.blockDispValue
-								+ ", use \"/ship buoy block <value>\" to set");
+								+ ", use /ship buoy block <value> to set");
 						player.sendMessage(
-								"Air Displacement = " + craft.airDispValue + ", use \"/ship buoy air <value>\" to set");
+								"Air Displacement = " + craft.airDispValue + ", use /ship buoy air <value> to set");
 						player.sendMessage("Minimum Displacement = " + craft.minDispValue
-								+ ", use \"/ship buoy min <value>\" to set");
+								+ ", use /ship buoy min <value> to set");
 						player.sendMessage("Weight Multiplier = " + craft.weightMult
-								+ ", use \"/ship buoy weight <value>\" to set");
+								+ ", use /ship buoy weight <value> to set");
 					}
 				}
 				return true;
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-					player.sendMessage("/ship - Ship Status");
-					player.sendMessage("/ship release - (Cpt) Release your command of the ship");
-					player.sendMessage("/ship leave - Leave the crew of your ship");
-					player.sendMessage("/ship crew - (Cpt) Recreates your crew with players on your vehicle");
-					player.sendMessage("/ship add - (Cpt) Add players on your vehicle to your crew");
-					player.sendMessage(
-							"/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
-					player.sendMessage("/ship tp - Teleport to your vehicle (10 min cooldown)");
-					player.sendMessage("/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
-					player.sendMessage("/ship store - (Cpt) Stores your vehicle if in a storage dock region");
-					player.sendMessage("/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
-					player.sendMessage("/ship sink - (Cpt) Scuttles your vehicle after a timer");
-					player.sendMessage("/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
-					player.sendMessage("/radio <message> - (or /ra) Send radio message (if equipped)");
-					player.sendMessage("/radio - (or /ra) Radio status");
-					player.sendMessage("/crew <message> - Send message to your crew");
-					player.sendMessage("/crew - Crew status");
+					player.sendMessage(ChatColor.GOLD + "/ship - Ship Status");
+					player.sendMessage(ChatColor.GOLD + "/ship tp - Teleport to your vehicle (1 min cooldown)");
+					player.sendMessage(ChatColor.GOLD + "/ship leave - Leave the crew of your ship");
+					player.sendMessage(ChatColor.GOLD + "/radio <message> - (or /ra) Send radio message (if equipped)");
+					player.sendMessage(ChatColor.GOLD + "/radio - (or /ra) Radio status");
+					player.sendMessage(ChatColor.GOLD + "/crew <message> - Send message to your crew");
+					player.sendMessage(ChatColor.GOLD + "/crew - Crew status");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship release - (Cpt) Release your command of the ship");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship store - (Cpt) Stores your vehicle if in a storage dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship sink - (Cpt) Scuttles your vehicle after a timer");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
 				}
 				if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin")) {
-					player.sendMessage("/ship command - (Mod) Steal command of a ship");
-					player.sendMessage("/ship remove - (Mod) Instantly disable a ship");
-					player.sendMessage("/ship drive - (Mod) Drive without sign");
-					player.sendMessage("/ship buoy - (Mod) View and modify buoyancy variables");
+					player.sendMessage(ChatColor.BLUE + "/ship command - (Mod) Steal command of a ship");
+					player.sendMessage(ChatColor.BLUE + "/ship remove - (Mod) Instantly disable a ship");
+					player.sendMessage(ChatColor.BLUE + "/ship drive - (Mod) Drive without sign");
+					player.sendMessage(ChatColor.BLUE + "/ship buoy - (Mod) View and modify buoyancy variables");
 				}
 				return true;
 			}
 		}
 
 		if (craft != null) {
-			player.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Vehicle Status");
-			player.sendMessage(ChatColor.YELLOW + "Type : " + ChatColor.WHITE + craft.name);
+			player.sendMessage(ChatColor.GOLD + "Vehicle Status");
+			player.sendMessage(ChatColor.GOLD + "Type : " + ChatColor.WHITE + craft.name);
 			if (craft.customName != null) {
-				player.sendMessage(ChatColor.YELLOW + "Name : " + ChatColor.WHITE + craft.customName);
+				player.sendMessage(ChatColor.GOLD + "Name : " + ChatColor.WHITE + craft.customName);
 			} else {
-				player.sendMessage(ChatColor.YELLOW + "Name : " + ChatColor.WHITE + craft.name);
+				player.sendMessage(ChatColor.GOLD + "Name : " + ChatColor.WHITE + craft.name);
 			}
-			player.sendMessage(ChatColor.YELLOW + "Captain : " + ChatColor.WHITE + craft.captainName);
-			player.sendMessage(ChatColor.YELLOW + "Crew : " + ChatColor.WHITE + craft.crewNames.size());
-			player.sendMessage(ChatColor.YELLOW + "Size : " + ChatColor.WHITE + craft.blockCount + " blocks");
-			player.sendMessage(ChatColor.YELLOW + "Weight (current) : " + ChatColor.WHITE + craft.weightCurrent + " tons");
-			player.sendMessage(ChatColor.YELLOW + "Weight (start) : " + ChatColor.WHITE + craft.weightStart + " tons");
-			player.sendMessage(ChatColor.YELLOW + "Displacement : " + ChatColor.WHITE + craft.displacement + " tons ("
+			player.sendMessage(ChatColor.GOLD + "Captain : " + ChatColor.DARK_AQUA + craft.captainName);
+			player.sendMessage(ChatColor.GOLD + "Crew : " + ChatColor.BLUE + craft.crewNames.size());
+			player.sendMessage(ChatColor.GOLD + "Size : " + ChatColor.WHITE + craft.blockCount + " blocks");
+			player.sendMessage(ChatColor.GOLD + "Weight (current) : " + ChatColor.WHITE + craft.weightCurrent + " tons");
+			player.sendMessage(ChatColor.GOLD + "Weight (start) : " + ChatColor.WHITE + craft.weightStart + " tons");
+			player.sendMessage(ChatColor.GOLD + "Displacement : " + ChatColor.WHITE + craft.displacement + " tons ("
 					+ craft.blockDisplacement + " block," + craft.airDisplacement + " air)");
-			player.sendMessage(ChatColor.YELLOW + "Health : " + ChatColor.WHITE
+			player.sendMessage(ChatColor.GOLD + "Health : " + ChatColor.WHITE
 					+ (int) (((float) craft.blockCount * 100) / craft.blockCountStart) + "%");
-			player.sendMessage(ChatColor.YELLOW + "Engines : " + ChatColor.WHITE + craft.engineIDLocs.size() + " of "
+			player.sendMessage(ChatColor.GOLD + "Engines : " + ChatColor.WHITE + craft.engineIDLocs.size() + " of "
 					+ craft.engineIDIsOn.size());
 			if (craft.isAutoCraft) {
-				player.sendMessage(ChatColor.YELLOW + "Auto Merchant : " + ChatColor.WHITE + craft.routeID + ":"
+				player.sendMessage(ChatColor.GOLD + "Auto Merchant : " + ChatColor.WHITE + craft.routeID + ":"
 						+ craft.routeStage);
 			}
 		} else {
-			player.sendMessage(ChatColor.YELLOW + "You have no active vehicle.");
+			player.sendMessage(ChatColor.GOLD + "You have no active vehicle.");
 		}
 
 		return true;
@@ -2737,6 +4468,541 @@ public class NavyCraft_PlayerListener implements Listener {
 	}
 
 
+	@SuppressWarnings("deprecation")
+	public void endTunisia()
+	{
+		int blueTargetPoints=0;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-263,63,1066)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-274,63,1065)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-299,63,1076)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-316,67,1072)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-332,67,1072)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-371,70,1065)) )
+			blueTargetPoints += 500;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-344,63,1101)) )
+			blueTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-344,84,1184)) )
+			blueTargetPoints += 500;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-367,77,1178)) )
+			blueTargetPoints += 200;
+		
+		int redTargetPoints=0;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-611,64,1529)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-631,64,1539)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-642,64,1539)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-664,68,1537)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-677,68,1537)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-699,71,1489)) )
+			redTargetPoints += 500;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-695,64,1522)) )
+			redTargetPoints += 200;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-609,75,1478)) )
+			redTargetPoints += 500;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-633,68,1468)) )
+			redTargetPoints += 200;
+		int playerNewExp = 0;
+		if (redTargetPoints > 0) {
+			for (String s : NavyCraft.redPlayers) {
+				Player p = plugin.getServer().getPlayer(s);
+				playerNewExp = redTargetPoints;
+				if ((p != null) && p.isOnline()) {
+					if (NavyCraft.playerExp.containsKey(p.getName())) {
+						playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					} else {
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					}
+					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
+							+ " rank points.");
+				}
+			}
+			NavyCraft.saveExperience();
+		}
+
+		if (blueTargetPoints > 0) {
+			for (String s : NavyCraft.bluePlayers) {
+				Player p = plugin.getServer().getPlayer(s);
+				playerNewExp = blueTargetPoints;
+				if ((p != null) && p.isOnline()) {
+					if (NavyCraft.playerExp.containsKey(p.getName())) {
+						playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					} else {
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					}
+					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
+							+ " rank points.");
+				}
+			}
+			NavyCraft.saveExperience();
+		}
+
+		NavyCraft.redPoints += redTargetPoints;
+		NavyCraft.bluePoints += blueTargetPoints;
+
+		String winStr = "";
+		String scoreStr = "";
+		String winLogStr = "";
+		String scoreLogStr = "";
+		if (NavyCraft.redPoints > NavyCraft.bluePoints) {
+			winStr = ChatColor.RED + "" + ChatColor.BOLD + "Red Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Red Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";
+
+			
+		} else if (NavyCraft.redPoints < NavyCraft.bluePoints) {
+			winStr = ChatColor.BLUE + "" + ChatColor.BOLD + "Blue Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.BLUE + NavyCraft.bluePoints + " Blue  " + ChatColor.RED
+					+ NavyCraft.redPoints + " Red";
+			winLogStr = "Blue Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.bluePoints + " Blue  " + NavyCraft.redPoints + " Red";
+			
+		} else {
+			winStr = ChatColor.YELLOW + "" + ChatColor.BOLD + "Tie Game!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Tie Game!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";		
+					}
+
+		plugin.getServer().broadcastMessage(ChatColor.AQUA + "" + ChatColor.BOLD + "***OFFICIAL BATTLE ENDED!***");
+		plugin.getServer().broadcastMessage(winStr);
+		plugin.getServer().broadcastMessage(scoreStr);
+		CraftMover.battleLogger("***OFFICIAL BATTLE ENDED!***");
+		CraftMover.battleLogger(winLogStr);
+		CraftMover.battleLogger(scoreLogStr);
+	}
+	public void scoreTarawa()
+	{
+		int blueTargetPoints=0;	
+		int redTargetPoints=0;
+		
+		//shore battiers
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(194,66,-1180)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(179,66,-1110)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(163,66,-1064)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(125,66,-1023)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(82,66,-977)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(171,66,-867)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		
+		//buildings
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(186,65,-1079)) )
+			redTargetPoints+=300;
+		else
+			blueTargetPoints+=300;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(167,66,-1086)) )
+			redTargetPoints+=300;
+		else
+			blueTargetPoints+=300;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(197,60,-1066)) )
+			redTargetPoints+=500;
+		else
+			blueTargetPoints+=500;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,66,-1156)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,79,-1149)) )
+			redTargetPoints+=150;
+		else
+			blueTargetPoints+=150;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,79,-977)) )
+			redTargetPoints+=150;
+		else
+			blueTargetPoints+=150;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,66,-984)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		
+		NavyCraft.redPoints = redTargetPoints;
+		NavyCraft.bluePoints = blueTargetPoints;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void endTarawa()
+	{
+		int blueTargetPoints=0;	
+		int redTargetPoints=0;
+		
+		//shore battiers
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(194,66,-1180)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(179,66,-1110)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(163,66,-1064)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(125,66,-1023)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(82,66,-977)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(171,66,-867)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		
+		//buildings
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(186,65,-1079)) )
+			redTargetPoints+=300;
+		else
+			blueTargetPoints+=300;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(167,66,-1086)) )
+			redTargetPoints+=300;
+		else
+			blueTargetPoints+=300;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(197,60,-1066)) )
+			redTargetPoints+=500;
+		else
+			blueTargetPoints+=500;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,66,-1156)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,79,-1149)) )
+			redTargetPoints+=150;
+		else
+			blueTargetPoints+=150;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,79,-977)) )
+			redTargetPoints+=150;
+		else
+			blueTargetPoints+=150;
+		if( checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,66,-984)) )
+			redTargetPoints+=200;
+		else
+			blueTargetPoints+=200;
+
+		int playerNewExp = 0;
+		if (redTargetPoints > 0) {
+			for (String s : NavyCraft.redPlayers) {
+				Player p = plugin.getServer().getPlayer(s);
+				playerNewExp = redTargetPoints;
+				if ((p != null) && p.isOnline()) {
+					if (NavyCraft.playerExp.containsKey(p.getName())) {
+						playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					} else {
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					}
+					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
+							+ " rank points.");
+				}
+			}
+		}
+
+		if (blueTargetPoints > 0) {
+			for (String s : NavyCraft.bluePlayers) {
+				Player p = plugin.getServer().getPlayer(s);
+				playerNewExp = blueTargetPoints;
+				if ((p != null) && p.isOnline()) {
+					if (NavyCraft.playerExp.containsKey(p.getName())) {
+						playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					} else {
+						NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					}
+					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
+							+ " rank points.");
+				}
+			}
+		}
+		NavyCraft.saveExperience();
+
+		NavyCraft.redPoints = redTargetPoints;
+		NavyCraft.bluePoints = blueTargetPoints;
+
+		String winStr = "";
+		String scoreStr = "";
+		String winLogStr = "";
+		String scoreLogStr = "";
+
+		Essentials ess;
+		ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+		if (ess == null) {
+			return;
+		}
+
+		if (NavyCraft.redPoints > NavyCraft.bluePoints) {
+			winStr = ChatColor.RED + "" + ChatColor.BOLD + "Red Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Red Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";
+
+		} else if (NavyCraft.redPoints < NavyCraft.bluePoints) {
+			winStr = ChatColor.BLUE + "" + ChatColor.BOLD + "Blue Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.BLUE + NavyCraft.bluePoints + " Blue  " + ChatColor.RED
+					+ NavyCraft.redPoints + " Red";
+			winLogStr = "Blue Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.bluePoints + " Blue  " + NavyCraft.redPoints + " Red";
+			
+		} else {
+			winStr = ChatColor.YELLOW + "" + ChatColor.BOLD + "Tie Game!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Tie Game!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";
+				}
+
+		plugin.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "*** OFFICIAL BATTLE ENDED! ***");
+		plugin.getServer().broadcastMessage(winStr);
+		plugin.getServer().broadcastMessage(scoreStr);
+		CraftMover.battleLogger("*** OFFICIAL BATTLE ENDED! ***");
+		CraftMover.battleLogger(winLogStr);
+		CraftMover.battleLogger(scoreLogStr);
+
+	}
+
+	public void endNorthSea() {
+		String winStr = "";
+		String scoreStr = "";
+		String winLogStr = "";
+		String scoreLogStr = "";
+
+		Essentials ess;
+		ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+		if (ess == null) {
+			return;
+		}
+
+		if (NavyCraft.redPoints > NavyCraft.bluePoints) {
+			winStr = ChatColor.RED + "" + ChatColor.BOLD + "Red Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Red Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";
+
+		} else if (NavyCraft.redPoints < NavyCraft.bluePoints) {
+			winStr = ChatColor.BLUE + "" + ChatColor.BOLD + "Blue Team Wins!!";
+			scoreStr = "Final Team Scores: " + ChatColor.BLUE + NavyCraft.bluePoints + " Blue  " + ChatColor.RED
+					+ NavyCraft.redPoints + " Red";
+			winLogStr = "Blue Team Wins!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.bluePoints + " Blue  " + NavyCraft.redPoints + " Red";
+
+		} else {
+			winStr = ChatColor.YELLOW + "" + ChatColor.BOLD + "Tie Game!!";
+			scoreStr = "Final Team Scores: " + ChatColor.RED + NavyCraft.redPoints + " Red  " + ChatColor.BLUE
+					+ NavyCraft.bluePoints + " Blue";
+			winLogStr = "Tie Game!!";
+			scoreLogStr = "Final Team Scores: " + NavyCraft.redPoints + " Red  " + NavyCraft.bluePoints + " Blue";
+		}
+
+		plugin.getServer().broadcastMessage(ChatColor.RED + "" + ChatColor.BOLD + "*** OFFICIAL BATTLE ENDED! ***");
+		plugin.getServer().broadcastMessage(winStr);
+		plugin.getServer().broadcastMessage(scoreStr);
+		CraftMover.battleLogger("***OFFICIAL BATTLE ENDED!***");
+		CraftMover.battleLogger(winLogStr);
+		CraftMover.battleLogger(scoreLogStr);
+
+	}
+
+	public boolean checkTunisia()
+	{
+		//red
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-263,63,1066)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-274,63,1065)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-299,63,1076)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-316,67,1072)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-332,67,1072)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-371,70,1065)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-344,63,1101)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-344,84,1184)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-367,77,1178)) )
+			return false;
+		//blue
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-611,64,1529)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-631,64,1539)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-642,64,1539)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-664,68,1537)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-677,68,1537)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-699,71,1489)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-695,64,1522)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-609,75,1478)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(-633,68,1468)) )
+			return false;
+		return true;
+	}
+	
+	public boolean checkTarawa()
+	{
+		//shore battiers
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(194,66,-1180)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(179,66,-1110)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(163,66,-1064)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(125,66,-1023)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(82,66,-977)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(171,66,-867)) )
+			return false;
+		
+		//buildings
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(186,65,-1079)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(167,66,-1086)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(197,60,-1066)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,66,-1156)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(201,79,-1149)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,79,-977)) )
+			return false;
+		if( !checkForTarget(plugin.getServer().getWorld("warworld2").getBlockAt(220,66,-984)) )
+			return false;
+		return true;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean checkForTarget(Block targetSignCheck) {
+		if (targetSignCheck.getTypeId() == 68) {
+			Sign sign = (Sign) targetSignCheck.getState();
+
+			if ((sign.getLine(0) == null) || sign.getLine(0).trim().equals("")) {
+				return false;
+			}
+
+			String signLine0 = sign.getLine(0).trim().toLowerCase();
+
+			// remove colors
+			signLine0 = signLine0.replaceAll(ChatColor.BLUE.toString(), "");
+
+			// remove brackets
+			if (signLine0.startsWith("[")) {
+				signLine0 = signLine0.substring(1, signLine0.length() - 1);
+			}
+
+			if (signLine0.equalsIgnoreCase("Target")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void battleTimerThread() {
+		// final int taskNum;
+		// int taskNum =
+		// plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin,
+		// new Runnable(){
+		timerThread = new Thread() {
+
+			@Override
+			public void run() {
+
+				setPriority(Thread.MIN_PRIORITY);
+
+				try {
+					sleep(NavyCraft.battleLength);
+					stopTimer();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}; // , 20L);
+		timerThread.start();
+	}
+
+	public void stopTimer() {
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+			if (NavyCraft.battleMode > 0) {
+				switch (NavyCraft.battleType) {
+				case 1:
+					endTunisia();
+					break;
+				case 2:
+					endTarawa();
+					break;
+				case 3:
+					endNorthSea();
+					break;
+				case 4:
+
+					break;
+				case 5:
+
+					break;
+				case 6:
+
+					break;
+				}
+			} else {
+				return;
+			}
+
+			NavyCraft.battleMode = -1;
+			NavyCraft.battleType = -1;
+			NavyCraft.battleLockTeams = false;
+			NavyCraft.redPlayers.clear();
+			NavyCraft.bluePlayers.clear();
+			NavyCraft.anyPlayers.clear();
+			NavyCraft.playerKits.clear();
+			NavyCraft.redPoints = 0;
+			NavyCraft.bluePoints = 0;
+			NavyCraft.redMerchant = false;
+			NavyCraft.blueMerchant = false;
+		});
+	}
 	public void playerDisableThread(final Player player, final Craft craft) {
 
 		Thread td = new Thread() {
@@ -2764,7 +5030,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				if (player.getInventory().contains(Material.GOLD_SWORD)) {
 					player.getInventory().remove(Material.GOLD_SWORD);
 				}
-				player.sendMessage("Vehicle disabled.");
+				player.sendMessage(ChatColor.GREEN + "Vehicle disabled.");
 			}
 		});
 	}
@@ -2789,6 +5055,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		td.start();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void playerSinkUpdate(final Craft craft) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			if (craft != null) {
@@ -2808,3 +5075,5 @@ public class NavyCraft_PlayerListener implements Listener {
 
 
 }
+
+

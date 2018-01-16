@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
@@ -38,19 +39,19 @@ import com.maximuspayne.aimcannon.AimCannon;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.aimcannon.Weapon;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
-import com.maximuspayne.navycraft.shipyard.Shipyard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.ess3.api.MaxMoneyException;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CraftMover {
 	private Craft craft;
 	public static Plugin plugin;
+	public static PermissionsEx pex;
 	public WorldGuardPlugin wgp;
-	public static Shipyard syp;
 
 	volatile boolean sinkUpdate = false;
 	volatile boolean stopSink = false;
@@ -71,7 +72,6 @@ public class CraftMover {
 	public CraftMover(Craft c, Plugin p) {
 		craft = c;
 		plugin = p;
-		syp = (Shipyard)p.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -617,41 +617,38 @@ public class CraftMover {
 	}
 
 	@SuppressWarnings("deprecation")
-	public int calculateBuoyancyMove() {
-		if( craft.buoyancy >= 1 && craft.displacement < (craft.lastDisplacement*0.995f) )
+	public int calculateBuoyancyMove()
+	{	
+		if( craft.canMove(0, craft.buoyancy, 0) )
 		{
-			craft.buoyancy = craft.buoyancy - 1;
-		}
-		if (craft.canMove(0, craft.buoyancy, 0)) {
 			return craft.buoyancy;
-		} else {
-			if (craft.buoyancy < 0) {
+		}else
+		{
+			if( craft.buoyancy < 0 )
+			{
 				Block newBlock;
 				int newBlockId;
-				int solidCount = 0;
-				for (int x = 0; x < craft.sizeX; x++) {
-					for (int z = 0; z < craft.sizeZ; z++) {
+				int solidCount=0;
+				for( int x=0; x<craft.sizeX; x++ )
+				{
+					for( int z=0; z<craft.sizeZ; z++ )
+					{
 						newBlock = craft.world.getBlockAt(craft.minX + x, craft.minY - 1, craft.minZ + z);
 						newBlockId = newBlock.getTypeId();
-						if ((newBlockId != 0) && !((newBlockId >= 8) && (newBlockId <= 11))) {
+						if( newBlockId != 0 && !(newBlockId >= 8 && newBlockId <= 11) )
+						{
 							solidCount++;
 						}
 					}
 				}
-
-				if (solidCount > (int) (craft.sizeX * craft.sizeZ * 0.2f)) {
-					if( !craft.sinking ) {
-						craft.doSink = true;
-						for (String s : craft.crewNames) {
-							Player p = plugin.getServer().getPlayer(s);
-							if (p != null) {
-								p.sendMessage(ChatColor.RED + "***We ran aground!***");
-							}
-	
-						}
-					}
-				} else {
-					return craft.buoyancy;
+				
+				if( solidCount > (int)(craft.sizeX * craft.sizeZ * 0.2f) )
+				{
+					craft.doSink = true;
+				}
+				else
+				{
+					return craft.buoyancy;						
 				}
 			}
 		}
@@ -659,6 +656,7 @@ public class CraftMover {
 	}
 
 	// move the craft according to a vector d
+	@SuppressWarnings("deprecation")
 	public void move1() {
 		// if(craft.type.canDig) {
 		if (craft.isDestroying) { return; }
@@ -970,6 +968,7 @@ public class CraftMover {
 		restoreSupportBlocks(craft.dx, craft.dy, craft.dz);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void move3(boolean scheduledMove) {
 
 		playerTeleports.clear();
@@ -1085,6 +1084,7 @@ public class CraftMover {
 
 	//performs vehicle movement, performs collision explosion
 	//called by calculateMove, calls move1, move2, move3
+	@SuppressWarnings("deprecation")
 	public void delayed_move_collide(int dx, int dy, int dz) {
 
 		if (craft.type.canNavigate || craft.type.canDive) {
@@ -1507,8 +1507,74 @@ public class CraftMover {
 			}
 			craft.doDestroy = true;
 			return;
-
+		
 		}
+
+			if (!craft.isDestroying && (NavyCraft.battleType == 3) && craft.isMerchantCraft && (checkMerchantScoreRegion(new Location(craft.world, craft.minX, craft.minY, craft.minZ), craft) || checkMerchantScoreRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ), craft))) {
+
+				if (craft.redTeam) {
+					for (String s : NavyCraft.redPlayers) {
+						Player p = plugin.getServer().getPlayer(s);
+						int playerNewExp = 5000;
+						if ((p != null) && p.isOnline()) {
+							if (NavyCraft.playerExp.containsKey(p.getName())) {
+								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							} else {
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							}
+							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+							checkRankWorld(p, playerNewExp, craft.world);
+						}
+					}
+					NavyCraft.saveExperience();
+
+					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.YELLOW + "5000 points!");
+					NavyCraft.redPoints += 5000;
+
+					for (String s : craft.crewNames) {
+						Player p = plugin.getServer().getPlayer(s);
+						if ((p != null) && p.isOnline()) {
+							p.teleport(NavyCraft.redSpawn);
+						}
+					}
+
+					NavyCraft.redMerchant = false;
+
+				} else if (craft.blueTeam) {
+					for (String s : NavyCraft.bluePlayers) {
+						Player p = plugin.getServer().getPlayer(s);
+						int playerNewExp = 5000;
+						if ((p != null) && p.isOnline()) {
+							if (NavyCraft.playerExp.containsKey(p.getName())) {
+								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							} else {
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							}
+							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+							checkRankWorld(p, playerNewExp, craft.world);
+						}
+					}
+					NavyCraft.saveExperience();
+
+					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.YELLOW + "5000 points!");
+					NavyCraft.bluePoints += 5000;
+
+					for (String s : craft.crewNames) {
+						Player p = plugin.getServer().getPlayer(s);
+						if ((p != null) && p.isOnline()) {
+							p.teleport(NavyCraft.blueSpawn);
+						}
+					}
+
+					NavyCraft.blueMerchant = false;
+				}
+
+				craft.doDestroy = true;
+				return;
+			}
+			
 
 		float displacement = 0.0f;
 		craft.airDisplacement = 0.0f;
@@ -1706,11 +1772,24 @@ public class CraftMover {
 							continue;
 						}*/
 
-						if ((craftBlockId == 87) && (blockId == 87)) {					
-							craft.matrix[x][y][z] = (short) 35;
-							craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 4));
-							newBlock.setTypeId(35);
-							newBlock.setData((byte) 0x4);
+						if ((craftBlockId == 87) && (blockId == 87)) {
+							if (craft.redTeam) {
+								craft.matrix[x][y][z] = (short) 35;
+								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 14));
+								newBlock.setTypeId(35);
+								newBlock.setData((byte) 0xE);
+							} else if (craft.blueTeam) {
+								craft.matrix[x][y][z] = (short) 35;
+								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 11));
+								newBlock.setTypeId(35);
+								newBlock.setData((byte) 0xB);
+							} else {
+								craft.matrix[x][y][z] = (short) 35;
+								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 4));
+								newBlock.setTypeId(35);
+								newBlock.setData((byte) 0x4);
+							}
+
 						}
 
 						if (blockId == 68) {
@@ -1843,12 +1922,15 @@ public class CraftMover {
 			craft.pumps.remove(p);
 		}
 
-		if (craft.type.canNavigate || craft.type.canDive) {
+		if( craft.type.canNavigate || craft.type.canDive )
+		{
 			updateBuoyancy(displacement);
-			if (!craft.isMoving && scheduled && (craft.buoyancy != 0) && (((craft.buoyFloodTicker == 3) && (Math.abs((displacement - (craft.weightStart * craft.weightMult)) / (craft.weightStart * craft.weightMult)) > 0.3f)) || (craft.buoyFloodTicker == 7))) {
-				if ((craft.waitTorpLoading == 0) && !craft.launcherOn) {
+			if( !craft.isMoving && scheduled && craft.buoyancy != 0 && ((craft.buoyFloodTicker == 3 && Math.abs((displacement-craft.weightStart*craft.weightMult)/(craft.weightStart*craft.weightMult)) > 0.3f ) || craft.buoyFloodTicker == 7))
+			{
+				if( craft.waitTorpLoading == 0 && !craft.launcherOn)
+				{
 					delayed_move(0, calculateBuoyancyMove(), 0);
-				}
+				}		
 			}
 			if (scheduled || (craft.gear == 3)) {
 				craft.buoyFloodTicker = (craft.buoyFloodTicker + 1) % 8;
@@ -2017,37 +2099,48 @@ public class CraftMover {
 		}
 	}
 
-	public void updateBuoyancy(float displacement) {
-		if (displacement < (craft.weightStart * craft.weightMult)) {
-			if (craft.type.canDive && (displacement < (craft.weightStart * craft.weightMult * 0.9f))) {
-
+	public void updateBuoyancy(float displacement)
+	{
+		if( displacement < craft.weightStart * craft.weightMult )
+		{
+			if( craft.type.canDive && displacement < craft.weightStart*craft.weightMult*0.9f )
+			{
+				//if( displacement < craft.weight*craft.weightMult*0.3f )
+					//craft.buoyancy = -2;
+				//else
 				craft.buoyancy = -1;
-			} else if (!craft.type.canDive) {
-
+			}
+			else if( !craft.type.canDive )
+			{
+				//if( displacement < craft.weight*craft.weightMult*0.3f )
+					//craft.buoyancy = -2;
+				//else
 				craft.buoyancy = -1;
-			} else {
-				craft.buoyancy = 0;
 			}
-		} else {
-
-			if (craft.type.canDive && (displacement > (craft.weightStart * craft.weightMult * 1.1f))) {
-
-				craft.buoyancy = 1;
-			} else if (!craft.type.canDive) {
-
-				craft.buoyancy = 1;
-			} else {
+			else
 				craft.buoyancy = 0;
+		}else
+		{
+	
+			if( craft.type.canDive && displacement > craft.weightStart*craft.weightMult*1.1f )
+			{
+				//if( displacement > craft.weight*craft.weightMult*1.7f )
+					//craft.buoyancy = 2;
+				//else
+				craft.buoyancy = 1;
 			}
+			else if( !craft.type.canDive )
+			{
+				//if( displacement > craft.weight*craft.weightMult*1.7f )
+					//craft.buoyancy = 2;
+				//else
+				craft.buoyancy = 1;
+			}
+			else
+				craft.buoyancy = 0;
 		}
 		
-		craft.lastDisplacement = craft.displacement;
 		craft.displacement = displacement;
-		
-		//do not allow positive buoyancy if displacement is decreasing
-		if( craft.buoyancy == 1 && craft.displacement < (craft.lastDisplacement * 0.995f) ) {
-			craft.buoyancy = 0;
-		}
 
 		if (craft.ballastMode == 1) {
 			craft.ballastAirPercent -= 2;
@@ -4801,6 +4894,8 @@ public class CraftMover {
 				cost = 100;
 			} else if (craftTypeName.equalsIgnoreCase("aa-gun")) {
 				cost = 100;
+			} else if (craftTypeName.equalsIgnoreCase("flak-gun")) {
+				cost = 200;
 			} else if (craftTypeName.equalsIgnoreCase("radar")) {
 				cost = 200;
 			} else if (craftTypeName.equalsIgnoreCase("radio")) {
@@ -5073,7 +5168,7 @@ public class CraftMover {
 				
 				sinkUpdate = true;
 				if( i%4==0 ) {
-					craft.world.playSound(craft.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 2.0f, 0.7f);
+					craft.world.playSound(craft.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2.0f, 0.7f);
 				}else if( i%4==1 ) {
 					craft.world.playSound(craft.getLocation(), Sound.BLOCK_PORTAL_AMBIENT, 2.0f, 0.7f);
 				}else if( i%4==2 ) {
@@ -5174,8 +5269,41 @@ public class CraftMover {
 		return false;
 	}
 
+	public boolean checkMerchantScoreRegion(Location loc, Craft merchant) {
+
+		wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+		if ((wgp != null) && (loc != null)) {
+			RegionManager regionManager = wgp.getRegionManager(craft.world);
+
+			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
+
+			Iterator<ProtectedRegion> it = set.iterator();
+			while (it.hasNext()) {
+				String id = it.next().getId();
+
+				String[] splits = id.split("_");
+				if (splits.length == 3) {
+					if (splits[1].equalsIgnoreCase("score")) {
+						if (splits[2].equalsIgnoreCase("red") && merchant.redTeam) {
+							return true;
+						} else if (splits[2].equalsIgnoreCase("blue") && merchant.blueTeam) {
+							return true;
+						} else if (splits[2].equalsIgnoreCase("any")) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+
 	//updates if vehicle is moving and has stopped, 
 	//calls cruiseUpdate
+	@SuppressWarnings("deprecation")
 	public void moveUpdate() {
 
 		if ((craft.noCaptain < 200) && (craft.stuckAutoTimer < 20)) {
@@ -6527,35 +6655,66 @@ public class CraftMover {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void sinkBroadcast() {
 		String broadcastMsg = "";
+		String logEntry = "";
 
-		broadcastMsg += ChatColor.YELLOW;
+		if (craft.blueTeam) {
+			broadcastMsg += ChatColor.BLUE;
+		} else if (craft.redTeam) {
+			broadcastMsg += ChatColor.RED;
+		} else {
+			broadcastMsg += ChatColor.YELLOW;
+		}
 
 		if (craft.captainName != null) {
 			broadcastMsg += craft.captainName + "'s ";
+			logEntry += craft.captainName + "'s ";
 		}
 
 		if (craft.customName != null) {
 			broadcastMsg += craft.customName.toUpperCase() + " (" + craft.name.toUpperCase() + " class)";
+			logEntry += craft.customName.toUpperCase() + " (" + craft.name.toUpperCase() + " class)";
 		} else {
 			broadcastMsg += craft.name.toUpperCase() + " class";
+			logEntry += craft.name.toUpperCase() + " class)";
 		}
 
 		broadcastMsg += ChatColor.WHITE + " - " + craft.weightStart + " tons -";
+		logEntry += " - " + craft.weightStart + " tons -";
 
 		if (craft.type.canFly) {
 			broadcastMsg += ChatColor.YELLOW + " was shot down.";
+			logEntry += " was shot down.";
 		} else if (craft.type.canNavigate || craft.type.canDive) {
 			broadcastMsg += ChatColor.YELLOW + " was sunk.";
+			logEntry += " was sunk.";
 		} else {
 			broadcastMsg += ChatColor.YELLOW + " was destroyed.";
+			logEntry += " was destroyed.";
+		}
+
+		if (craft.isMerchantCraft) {
+			if (craft.redTeam) {
+				NavyCraft.redMerchant = false;
+			} else if (craft.blueTeam) {
+
+				NavyCraft.blueMerchant = false;
+			}
+			broadcastMsg = ChatColor.YELLOW + "MERCHANT " + broadcastMsg;
 		}
 
 		plugin.getServer().broadcastMessage(broadcastMsg);
+		if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+			battleLogger(logEntry);
+		}
 
 		if (craft.damagers.isEmpty()) {
-
+			if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+				logEntry = "Unknown damage=" + craft.uncreditedDamage;
+				battleLogger(logEntry);
+			}
 		} else {
 			HashMap<Craft, Integer> craftDamagers = new HashMap<>();
 			HashMap<Player, Integer> uncrewedPlayers = new HashMap<>();
@@ -6589,28 +6748,40 @@ public class CraftMover {
 
 				for (Craft c : craftDamagers.keySet()) {
 					broadcastMsg = "";
+					logEntry = "";
 					int score = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * 100.0f);
 					if (score > topScore) {
 						topScore = score;
 						topCraft = c;
 					}
 					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
+					logEntry = " " + score + "% - ";
 
-
-					broadcastMsg += ChatColor.YELLOW;
-
+					if (c.blueTeam) {
+						broadcastMsg += ChatColor.BLUE;
+					} else if (c.redTeam) {
+						broadcastMsg += ChatColor.RED;
+					} else {
+						broadcastMsg += ChatColor.YELLOW;
+					}
 
 					if (c.captainName != null) {
 						broadcastMsg += c.captainName.toUpperCase() + "'s ";
+						logEntry += c.captainName.toUpperCase() + "'s ";
 					}
 
 					if (c.customName != null) {
 						broadcastMsg += c.customName.toUpperCase() + " (" + c.name + " class)";
+						logEntry += c.customName.toUpperCase() + " (" + c.name + " class)";
 					} else {
 						broadcastMsg += c.name.toUpperCase() + " class";
+						logEntry += c.name.toUpperCase() + " class";
 					}
 
 					plugin.getServer().broadcastMessage(broadcastMsg);
+					if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+						battleLogger(logEntry);
+					}
 				}
 			}
 
@@ -6620,6 +6791,7 @@ public class CraftMover {
 			if (!uncrewedPlayers.isEmpty()) {
 				for (Player p : uncrewedPlayers.keySet()) {
 					broadcastMsg = "";
+					logEntry = "";
 					int score = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * 100.0f);
 					if (score > topScore) {
 						topScore = score;
@@ -6627,25 +6799,36 @@ public class CraftMover {
 					}
 
 					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
+					logEntry = " " + score + "% - ";
 
 					broadcastMsg += ChatColor.YELLOW;
 
 					broadcastMsg += p.getName();
+					logEntry += p.getName();
 
 					plugin.getServer().broadcastMessage(broadcastMsg);
+					if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+						battleLogger(logEntry);
+					}
 				}
 			}
 
 			if (craft.uncreditedDamage > 0)// && craft.world.getName().equalsIgnoreCase("navalbattlezone")) )
 			{
 				broadcastMsg = "";
+				logEntry = "";
 				int score = (int) (((float) craft.uncreditedDamage / (float) totalDamage) * 100.0f);
 				broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
+				logEntry = " " + score + "% - ";
 
 				broadcastMsg += ChatColor.YELLOW;
 
 				broadcastMsg += "Unknown damage";
+				logEntry += "Unknown damage";
 				plugin.getServer().broadcastMessage(broadcastMsg);
+				if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+					battleLogger(logEntry);
+				}
 			}
 
 			if (craft.isAutoCraft) {
@@ -6686,21 +6869,23 @@ public class CraftMover {
 				}
 			}
 
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180) || craft.isAutoCraft)) {
-			//if (PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+			if (!PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180) || craft.isAutoCraft)) {
 				if (topPlayer != null) {
-					if (craft.crewHistory.contains(topPlayer.getName()) && !topPlayer.isOp()) { return; }
+					if (craft.crewHistory.contains(topPlayer.getName())) { return; }
 					int newExp = craft.blockCountStart;
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					
-					syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-					if(syp != null)
-					{
-						syp.rewardExpPlayer(newExp, topPlayer);
+					if (NavyCraft.playerExp.containsKey(topPlayer.getName())) {
+						newExp = NavyCraft.playerExp.get(topPlayer.getName()) + craft.blockCountStart;
+						NavyCraft.playerExp.put(topPlayer.getName(), newExp);
+					} else {
+						NavyCraft.playerExp.put(topPlayer.getName(), newExp);
 					}
+					topPlayer.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
+					checkRankWorld(topPlayer, newExp, craft.world);
+					NavyCraft.saveExperience();
 				} else if ((topCraft != null) && (topCraft != craft)) {
 					for (String s : topCraft.crewNames) {
-						if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
+						if (craft.crewHistory.contains(s)) { return; }
 					}
 
 					int newExp = craft.blockCountStart;
@@ -6712,17 +6897,127 @@ public class CraftMover {
 					}
 
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					
-					syp = (Shipyard)plugin.getServer().getPluginManager().getPlugin("NavyCraft-Shipyard");
-					if(syp != null)
-					{
-						syp.rewardExpCraft(newExp, topCraft);
+
+					int playerNewExp = newExp;
+					for (String s : topCraft.crewNames) {
+						Player p = plugin.getServer().getPlayer(s);
+						if (p != null) {
+							playerNewExp = newExp;
+							if (NavyCraft.playerExp.containsKey(p.getName())) {
+								playerNewExp = NavyCraft.playerExp.get(p.getName()) + craft.blockCountStart;
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							} else {
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							}
+							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+							checkRankWorld(p, playerNewExp, craft.world);
+						}
+					}
+					NavyCraft.saveExperience();
+				}
+			}
+
+			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (NavyCraft.battleMode > 0)) {
+
+				if (topPlayer != null) {
+					if ((!NavyCraft.redPlayers.contains(topPlayer.getName()) && !NavyCraft.bluePlayers.contains(topPlayer.getName())) || (NavyCraft.redPlayers.contains(topPlayer.getName()) && !craft.blueTeam) || (NavyCraft.bluePlayers.contains(topPlayer.getName()) && !craft.redTeam)) { return; }
+					int newExp = craft.blockCountStart;
+					int playerNewExp = newExp;
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
+					if (NavyCraft.playerExp.containsKey(topPlayer.getName())) {
+
+						playerNewExp = NavyCraft.playerExp.get(topPlayer.getName()) + playerNewExp;
+						NavyCraft.playerExp.put(topPlayer.getName(), playerNewExp);
+					} else {
+						NavyCraft.playerExp.put(topPlayer.getName(), playerNewExp);
+					}
+					topPlayer.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+					checkRankWorld(topPlayer, playerNewExp, craft.world);
+					NavyCraft.saveExperience();
+
+					if (NavyCraft.battleType == 1) {
+						if (NavyCraft.redPlayers.contains(topPlayer.getName())) {
+							NavyCraft.redPoints += newExp;
+						} else {
+							NavyCraft.bluePoints += newExp;
+						}
+					}
+				} else if ((topCraft != null) && (topCraft != craft)) {
+					if ((!NavyCraft.redPlayers.contains(topCraft.captainName) && !NavyCraft.bluePlayers.contains(topCraft.captainName)) || (NavyCraft.redPlayers.contains(topCraft.captainName) && !craft.blueTeam) || (NavyCraft.bluePlayers.contains(topCraft.captainName) && !craft.redTeam)) { return; }
+					int newExp = craft.blockCountStart;
+					String dispName;
+					if (topCraft.customName != null) {
+						dispName = topCraft.customName.toUpperCase();
+					} else {
+						dispName = topCraft.name.toUpperCase();
+					}
+
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
+
+					int playerNewExp = 0;
+					for (String s : topCraft.crewNames) {
+						Player p = plugin.getServer().getPlayer(s);
+						if (p != null) {
+							playerNewExp = newExp;
+							if (NavyCraft.playerExp.containsKey(p.getName())) {
+								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							} else {
+								NavyCraft.playerExp.put(p.getName(), playerNewExp);
+							}
+							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+							checkRankWorld(p, playerNewExp, craft.world);
+						}
+					}
+					NavyCraft.saveExperience();
+					if (NavyCraft.battleType == 1) {
+						if (NavyCraft.redPlayers.contains(topCraft.captainName)) {
+							NavyCraft.redPoints += newExp;
+						} else {
+							NavyCraft.bluePoints += newExp;
+						}
 					}
 				}
 			}
 		}
 	}
 
+	public static void checkRankWorld(Player playerIn, int newExp, World world) {
+		String worldName = world.getName();
+		
+		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if( pex==null )
+			return;
+		
+		for(String s:PermissionsEx.getUser(playerIn).getPermissions(worldName)) {
+			if( s.contains("navycraft") ) {
+				if( s.contains("exp") ) {
+					String[] split = s.split("\\.");
+					try {
+						int rankExp = Integer.parseInt(split[2]);
+						if( newExp >= rankExp ) {
+							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
+							
+							String rankName = "";
+							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
+							for( String group : groupNames ) {
+								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+									rankName = group;
+									break;
+								}
+							}
+							plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
+						}
+							
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						System.out.println("Invalid perm-" + s);
+					}
+				}
+			}
+		}
+	}
+	
 	public String idIntToString(int id) {
 		switch (id % 26) {
 			case 0:
@@ -7011,9 +7306,9 @@ public class CraftMover {
 					World cw = loc.getWorld();
 					for (int i = 0; i < 2; i++) {
 						if( i==0 )
-							cw.playSound(loc, Sound.BLOCK_NOTE_BELL, 2.0f, strength);
+							cw.playSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength);
 						else
-							cw.playSound(loc, Sound.BLOCK_NOTE_BELL, 2.0f, strength + 0.4f);
+							cw.playSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength + 0.4f);
 						sleep(400);
 					}
 				} catch (InterruptedException e) {
