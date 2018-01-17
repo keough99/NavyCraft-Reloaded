@@ -109,6 +109,7 @@ public class ConfigFile {
 				" leave 'null' for none.");
 		ConfigComments.put("DisableHyperSpaceField", "Prevents the hyperspace field blocks from appearing.");
 		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in. Leave as null for all.");
+		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in. Leave as null for all. Not recommended as I have not tested what this can do to a server");
 				
 		NavyCraft.instance.configFile = this;
 		

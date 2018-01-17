@@ -3711,11 +3711,19 @@ public class NavyCraft_BlockListener implements Listener {
 			worldName = plugin.getServer().getPlayer(player).getWorld().getName();
 		}
 		
+		String worldName1 = "";
+		if(plugin.ConfigSetting("BattleWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.ConfigSetting("BattleWorlds").split(",");
+			worldName1 = worlds[0];
+		}else{
+			worldName1 = plugin.getServer().getPlayer(player).getWorld().getName();
+		}
+		
 		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		if( pex==null )
 			return;
 		
-		for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
+		for(String s:PermissionsEx.getUser(player).getPermissions(worldName1)) {
 			if( s.contains("navycraft") ) {
 				if( s.contains("ship1") )
 				{
