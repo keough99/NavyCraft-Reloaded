@@ -6876,6 +6876,9 @@ public class CraftMover {
 					{
 						NavyCraft_BlockListener.rewardExpPlayer(newExp, topPlayer);
 					}
+					
+					
+					
 				} else if ((topCraft != null) && (topCraft != craft)) {
 					for (String s : topCraft.crewNames) {
 						if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }

@@ -3993,6 +3993,8 @@ public class NavyCraft_BlockListener implements Listener {
 		    }
 	    }
 	
+	//Need to add back battles support.
+	
 	public static void rewardExpPlayer(int newExp, Player player) {
 		if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
