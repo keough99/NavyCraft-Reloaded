@@ -3992,4 +3992,42 @@ public class NavyCraft_BlockListener implements Listener {
 			    }
 		    }
 	    }
+	
+	public static void rewardExpPlayer(int newExp, Player player) {
+		if (NavyCraft.playerExp.containsKey(player.getName())) {
+			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
+			NavyCraft.playerExp.put(player.getName(), newExp);
+		} else {
+			NavyCraft.playerExp.put(player.getName(), newExp);
+		}
+		
+		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
+			
+		CraftMover.checkRankWorld(player, newExp, player.getWorld());
+		NavyCraft.saveExperience();
+	}
+	
+	public static void rewardExpCraft(int newExp, Craft craft) {
+		int playerNewExp = newExp;
+		for (String s : craft.crewNames) {
+			Player p = plugin.getServer().getPlayer(s);
+			if (p != null) {
+				playerNewExp = newExp;
+				if (NavyCraft.playerExp.containsKey(p.getName())) {
+					playerNewExp = NavyCraft.playerExp.get(p.getName()) + newExp;
+					NavyCraft.playerExp.put(p.getName(), playerNewExp);
+				} else {
+					NavyCraft.playerExp.put(p.getName(), playerNewExp);
+				}
+				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
+				CraftMover.checkRankWorld(p, playerNewExp, craft.world);
+			}
+			
+		}
+		NavyCraft.saveExperience();
+		
+		
+		
+	}
+	
 	}

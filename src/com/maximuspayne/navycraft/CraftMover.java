@@ -6842,7 +6842,6 @@ public class CraftMover {
 					try {
 						ess.getUser(topPlayer).giveMoney(new BigDecimal(craft.sinkValue));
 					} catch (MaxMoneyException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else if ((topCraft != null) && (topCraft != craft)) {
@@ -6869,23 +6868,17 @@ public class CraftMover {
 				}
 			}
 
-			if (!PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180) || craft.isAutoCraft)) {
+			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180) || craft.isAutoCraft)) {
 				if (topPlayer != null) {
-					if (craft.crewHistory.contains(topPlayer.getName())) { return; }
+					if (craft.crewHistory.contains(topPlayer.getName()) && !topPlayer.isOp()) { return; }
 					int newExp = craft.blockCountStart;
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					if (NavyCraft.playerExp.containsKey(topPlayer.getName())) {
-						newExp = NavyCraft.playerExp.get(topPlayer.getName()) + craft.blockCountStart;
-						NavyCraft.playerExp.put(topPlayer.getName(), newExp);
-					} else {
-						NavyCraft.playerExp.put(topPlayer.getName(), newExp);
+					{
+						NavyCraft_BlockListener.rewardExpPlayer(newExp, topPlayer);
 					}
-					topPlayer.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
-					checkRankWorld(topPlayer, newExp, craft.world);
-					NavyCraft.saveExperience();
 				} else if ((topCraft != null) && (topCraft != craft)) {
 					for (String s : topCraft.crewNames) {
-						if (craft.crewHistory.contains(s)) { return; }
+						if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
 					}
 
 					int newExp = craft.blockCountStart;
@@ -6897,85 +6890,8 @@ public class CraftMover {
 					}
 
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-
-					int playerNewExp = newExp;
-					for (String s : topCraft.crewNames) {
-						Player p = plugin.getServer().getPlayer(s);
-						if (p != null) {
-							playerNewExp = newExp;
-							if (NavyCraft.playerExp.containsKey(p.getName())) {
-								playerNewExp = NavyCraft.playerExp.get(p.getName()) + craft.blockCountStart;
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							} else {
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							}
-							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							checkRankWorld(p, playerNewExp, craft.world);
-						}
-					}
-					NavyCraft.saveExperience();
-				}
-			}
-
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (NavyCraft.battleMode > 0)) {
-
-				if (topPlayer != null) {
-					if ((!NavyCraft.redPlayers.contains(topPlayer.getName()) && !NavyCraft.bluePlayers.contains(topPlayer.getName())) || (NavyCraft.redPlayers.contains(topPlayer.getName()) && !craft.blueTeam) || (NavyCraft.bluePlayers.contains(topPlayer.getName()) && !craft.redTeam)) { return; }
-					int newExp = craft.blockCountStart;
-					int playerNewExp = newExp;
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					if (NavyCraft.playerExp.containsKey(topPlayer.getName())) {
-
-						playerNewExp = NavyCraft.playerExp.get(topPlayer.getName()) + playerNewExp;
-						NavyCraft.playerExp.put(topPlayer.getName(), playerNewExp);
-					} else {
-						NavyCraft.playerExp.put(topPlayer.getName(), playerNewExp);
-					}
-					topPlayer.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-					checkRankWorld(topPlayer, playerNewExp, craft.world);
-					NavyCraft.saveExperience();
-
-					if (NavyCraft.battleType == 1) {
-						if (NavyCraft.redPlayers.contains(topPlayer.getName())) {
-							NavyCraft.redPoints += newExp;
-						} else {
-							NavyCraft.bluePoints += newExp;
-						}
-					}
-				} else if ((topCraft != null) && (topCraft != craft)) {
-					if ((!NavyCraft.redPlayers.contains(topCraft.captainName) && !NavyCraft.bluePlayers.contains(topCraft.captainName)) || (NavyCraft.redPlayers.contains(topCraft.captainName) && !craft.blueTeam) || (NavyCraft.bluePlayers.contains(topCraft.captainName) && !craft.redTeam)) { return; }
-					int newExp = craft.blockCountStart;
-					String dispName;
-					if (topCraft.customName != null) {
-						dispName = topCraft.customName.toUpperCase();
-					} else {
-						dispName = topCraft.name.toUpperCase();
-					}
-
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-
-					int playerNewExp = 0;
-					for (String s : topCraft.crewNames) {
-						Player p = plugin.getServer().getPlayer(s);
-						if (p != null) {
-							playerNewExp = newExp;
-							if (NavyCraft.playerExp.containsKey(p.getName())) {
-								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							} else {
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							}
-							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							checkRankWorld(p, playerNewExp, craft.world);
-						}
-					}
-					NavyCraft.saveExperience();
-					if (NavyCraft.battleType == 1) {
-						if (NavyCraft.redPlayers.contains(topCraft.captainName)) {
-							NavyCraft.redPoints += newExp;
-						} else {
-							NavyCraft.bluePoints += newExp;
-						}
+					{
+						NavyCraft_BlockListener.rewardExpCraft(newExp, topCraft);
 					}
 				}
 			}
