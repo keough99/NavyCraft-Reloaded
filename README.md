@@ -11,35 +11,3 @@ Follow Max's latest releases on SpigotMC: https://www.spigotmc.org/resources/nav
 You can download the resource packs and some of the old worlds from the old NBZ to help your setup here... http://navalbattlezone.com/downloads/
 
 If you have any questions message me on discord using Solmex#7439
-
-Type /navycraft or /nc to see basic plugin help commands.
-Type "/ship help" to get vehicle specific commands.
-Type /battle help to see basic battle help commands.
-
--Permissions-
-
-navycraft.[VEHICLE TYPE] - grants permission to use specific vehicle type ex. "navycraft.ship" "navycraft.aircraft"
-
-navycraft.basic - grants usage of basic help commands, allows periscope and aa-gun use
-
-navycraft.admin - grants usage of admin commands and cleanup mode
-
-navycraft.signcreate - allows players to place vehicle and equipment signs
-
-navycraft.takeover - allows players to takeover an enemy ship after a timer
-
-navycraft.free - makes vehicle and equipment purchases free
-
-navycraft.kit - grants usage of the "/sailor" kit
-
-navycraft.reload - reload weapons, not functional at this time
-
-navycraft.drive - allows driving vehicle using command instead of sign (unsupported at this time)
-
-navycraft.remote - allows remote controlling of vehicles (unsupported at this time)
-
-navycraft.battle - use of admin battle commands
-
-navycraft.other - allows use of hyperdrive and other unsupported commands
-
-Later on I will add to this description further explaining other commands, and other things like Shipyard. Just give me some time while I further develop the plugin. Thanks.
