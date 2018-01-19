@@ -4,7 +4,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.maximuspayne.navycraft.Craft;
+import com.maximuspayne.navycraft.craft.Craft;
 
 public class NavyCraftTurnEvent extends Event implements Cancellable {
     

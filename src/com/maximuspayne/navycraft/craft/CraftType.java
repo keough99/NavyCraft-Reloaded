@@ -1,10 +1,11 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.io.*;
 import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
+import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 
 /*
@@ -18,45 +19,45 @@ public class CraftType {
 	public String name = "";
 	public String driveCommand = "drive";
 
-	int minBlocks = 9;
-	int maxBlocks = 500;
-	int maxSpeed = 4;
-	int discount = 0;
+	public int minBlocks = 9;
+	public int maxBlocks = 500;
+	public int maxSpeed = 4;
+	public int discount = 0;
 	
-	boolean adminBuild=false;
+	public boolean adminBuild=false;
 
-	int digBlockId = 0;		//the type of block needed to make the vehicle able to drill through terrain
-	double digBlockPercent = 0;
-	int digBlockDurability = 0;
+	public int digBlockId = 0;		//the type of block needed to make the vehicle able to drill through terrain
+	public double digBlockPercent = 0;
+	public int digBlockDurability = 0;
 	
-	int HelmControllerItem = 0;
+	public int HelmControllerItem = 0;
 
-	boolean canFly = false;
-	boolean canNavigate = false;
-	boolean canDive = false;
-	boolean canDig = false;
-	boolean obeysGravity = false;
-	boolean isTerrestrial = false;
+	public boolean canFly = false;
+	public boolean canNavigate = false;
+	public boolean canDive = false;
+	public boolean canDig = false;
+	public boolean obeysGravity = false;
+	public boolean isTerrestrial = false;
 	
 	
-	boolean doesCruise = false;
-	boolean canZamboni = false;
-	int maxEngineSpeed = 4;
-	int maxForwardGear = 2;
-	int maxReverseGear = -2;
-	int turnRadius = 4;
-	int maxSurfaceSpeed = 4;
-	int maxSubmergedSpeed = 3;
+	public boolean doesCruise = false;
+	public boolean canZamboni = false;
+	public int maxEngineSpeed = 4;
+	public int maxForwardGear = 2;
+	public int maxReverseGear = -2;
+	public int turnRadius = 4;
+	public int maxSurfaceSpeed = 4;
+	public int maxSubmergedSpeed = 3;
 
-	short[] structureBlocks = null; // blocks that can make the structure of the craft
-	short[] extendedBlocks = null;		//structureblocks only for this craft type 
-	short[] restrictedBlocks = null;	//structureblocks to be exlcuded from this craft type 
-	short[] forbiddenBlocks = null;		//blocks that are not allowed whatsoever on this craft
+	public short[] structureBlocks = null; // blocks that can make the structure of the craft
+	public short[] extendedBlocks = null;		//structureblocks only for this craft type 
+	public short[] restrictedBlocks = null;	//structureblocks to be exlcuded from this craft type 
+	public short[] forbiddenBlocks = null;		//blocks that are not allowed whatsoever on this craft
 
 	public static ArrayList<CraftType> craftTypes = new ArrayList<CraftType>();
 	
-	boolean listenItem = true;
-	boolean listenAnimation, listenMovement = false;
+	public boolean listenItem = true;
+	public boolean listenAnimation, listenMovement = false;
 
 	public CraftType(String name) {
 		this.name = name;

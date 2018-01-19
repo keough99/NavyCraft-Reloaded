@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
+
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.blocks.BlockLoc;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
 
 /**
  * NavyCraft craft builder

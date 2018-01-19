@@ -1,6 +1,8 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.blocks;
 
 import org.bukkit.Material;
+
+import com.maximuspayne.navycraft.NavyCraft;
 
 /**
  * BlocksInfo file

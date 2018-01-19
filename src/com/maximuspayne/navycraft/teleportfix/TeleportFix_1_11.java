@@ -1,20 +1,20 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.teleportfix;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_12_R1.PlayerConnection;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.EnumSkyBlock;
-import net.minecraft.server.v1_12_R1.EntityHuman;
-import net.minecraft.server.v1_12_R1.EntityTracker;
-import net.minecraft.server.v1_12_R1.EntityTrackerEntry;
-import net.minecraft.server.v1_12_R1.WorldServer;
+import net.minecraft.server.v1_11_R1.BlockPosition;
+import net.minecraft.server.v1_11_R1.EntityHuman;
+import net.minecraft.server.v1_11_R1.EntityTracker;
+import net.minecraft.server.v1_11_R1.EntityTrackerEntry;
+import net.minecraft.server.v1_11_R1.EnumSkyBlock;
+import net.minecraft.server.v1_11_R1.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_11_R1.PlayerConnection;
+import net.minecraft.server.v1_11_R1.WorldServer;
 
-import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,8 +22,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+
+import com.maximuspayne.navycraft.craft.Craft;
  
-public class TeleportFix_1_12 implements Listener {
+public class TeleportFix_1_11 implements Listener {
 	
 	
 
@@ -61,7 +63,7 @@ public class TeleportFix_1_12 implements Listener {
  
 		return nsmPlayers;
 	}
-	
+
 	public static void updateNMSChunks(Craft craft) {
 		for (Chunk c : craft.chunkList ) {
 			for (Player p : c.getWorld().getPlayers() ){
@@ -82,10 +84,10 @@ public class TeleportFix_1_12 implements Listener {
 	public static void updateNMSLight(Location light, Location oldLight) {
 		if( oldLight != null ) {
 			Chunk oc = oldLight.getChunk();
-			ArrayList<net.minecraft.server.v1_12_R1.Chunk> chunks = new ArrayList<net.minecraft.server.v1_12_R1.Chunk>();
+			ArrayList<net.minecraft.server.v1_11_R1.Chunk> chunks = new ArrayList<net.minecraft.server.v1_11_R1.Chunk>();
 			
 			for (Player p : oc.getWorld().getPlayers() ) {
-				net.minecraft.server.v1_12_R1.Chunk nmsChunk = ((CraftChunk)oc).getHandle();
+				net.minecraft.server.v1_11_R1.Chunk nmsChunk = ((CraftChunk)oc).getHandle();
 				Block block = oldLight.getBlock();
 
 				for( int i=-3; i<=3; i++ ) {
@@ -101,7 +103,7 @@ public class TeleportFix_1_12 implements Listener {
 					}
 						
 				}
-				for( net.minecraft.server.v1_12_R1.Chunk ck : chunks )
+				for( net.minecraft.server.v1_11_R1.Chunk ck : chunks )
 				{
 					PlayerConnection connection = ((CraftPlayer) p).getHandle().playerConnection;
 		        	connection.sendPacket(new PacketPlayOutMapChunk(ck, 20));
@@ -118,10 +120,10 @@ public class TeleportFix_1_12 implements Listener {
 		
 		if( light != null ) {
 			Chunk c = light.getChunk();
-			ArrayList<net.minecraft.server.v1_12_R1.Chunk> chunks = new ArrayList<net.minecraft.server.v1_12_R1.Chunk>();
+			ArrayList<net.minecraft.server.v1_11_R1.Chunk> chunks = new ArrayList<net.minecraft.server.v1_11_R1.Chunk>();
 			
 			for (Player p : c.getWorld().getPlayers() ) {
-				net.minecraft.server.v1_12_R1.Chunk nmsChunk = ((CraftChunk)c).getHandle();
+				net.minecraft.server.v1_11_R1.Chunk nmsChunk = ((CraftChunk)c).getHandle();
 				Block block = light.getBlock();
 				
 				
@@ -141,7 +143,7 @@ public class TeleportFix_1_12 implements Listener {
 						
 				}
 				
-				for( net.minecraft.server.v1_12_R1.Chunk ck : chunks )
+				for( net.minecraft.server.v1_11_R1.Chunk ck : chunks )
 				{
 					PlayerConnection connection = ((CraftPlayer) p).getHandle().playerConnection;
 		        	connection.sendPacket(new PacketPlayOutMapChunk(ck, 20));

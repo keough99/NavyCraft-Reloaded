@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.listeners;
 
 
 import org.bukkit.Location;
@@ -18,6 +18,10 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.plugin.Plugin;
 
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.craft.Craft;
+import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 
 public class NavyCraft_EntityListener implements Listener {

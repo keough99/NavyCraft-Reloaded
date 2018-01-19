@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.listeners;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,12 @@ import org.bukkit.plugin.Plugin;
 
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.blocks.DataBlock;
+import com.maximuspayne.navycraft.craft.Craft;
+import com.maximuspayne.navycraft.craft.CraftMover;
+import com.maximuspayne.navycraft.craft.CraftType;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;

@@ -28,8 +28,18 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.config.ConfigFile;
+import com.maximuspayne.navycraft.craft.Craft;
+import com.maximuspayne.navycraft.craft.CraftBuilder;
+import com.maximuspayne.navycraft.craft.CraftMover;
+import com.maximuspayne.navycraft.craft.CraftType;
+import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_EntityListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_InventoryListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -53,11 +63,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 public class NavyCraft extends JavaPlugin {
 
 	static final String pluginName = "NavyCraft";
-	static String version;
+	public static String version;
 	public static NavyCraft instance;
 
 	public static Logger logger = Logger.getLogger("Minecraft");
-	boolean DebugMode = false;
+	public boolean DebugMode = false;
 
 	public ConfigFile configFile;
 

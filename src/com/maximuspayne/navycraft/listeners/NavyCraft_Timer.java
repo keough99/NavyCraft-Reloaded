@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.listeners;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import com.maximuspayne.navycraft.craft.Craft;
 
 public class NavyCraft_Timer {
 	//needs to be migrated to bukkitscheduler. meh.

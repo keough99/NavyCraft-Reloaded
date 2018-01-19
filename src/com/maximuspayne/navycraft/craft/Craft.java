@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +17,12 @@ import org.bukkit.Location;
 import org.bukkit.block.*;
 import org.bukkit.entity.Item;
 
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.Pump;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
+import com.maximuspayne.navycraft.listeners.NavyCraft_Timer;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.session.ClipboardHolder;
@@ -62,37 +68,40 @@ public class Craft {
 	public boolean doDestroy = false;
 	public boolean doRemove = false;
 
-	short matrix[][][];
-	ArrayList<DataBlock> dataBlocks;
+	public short matrix[][][];
+	public ArrayList<DataBlock> dataBlocks;
 	//convert to LinkedList for preformance boost?
-	ArrayList<DataBlock> complexBlocks = new ArrayList<DataBlock>();
+	public ArrayList<DataBlock> complexBlocks = new ArrayList<DataBlock>();
 	//ArrayList<ArrayList<String>> signLines = new ArrayList<ArrayList<String>>();
 	
-	short displacedBlocks[][][];
+	public short displacedBlocks[][][];
 	
 	public ArrayList<Entity> checkEntities;
 	
 	public int dx,dy,dz = 0 ;
 
 	// size of the craft
-	int sizeX, sizeZ, sizeY = 0;
+	public int sizeX;
+	public int sizeZ;
+	public int sizeY = 0;
 
 	// position of the craft on the map
 	public World world;
 	//int posX, posY, posZ;
-	int centerX, centerZ = -1;
+	public int centerX;
+	public int centerZ = -1;
 	
-	int blockCount = 0;
-	int flyBlockCount, digBlockCount = 0;
+	public int blockCount = 0;
+	public int flyBlockCount, digBlockCount = 0;
 
-	int maxBlocks;
+	public int maxBlocks;
 
-	int waterLevel = -1;
-	int newWaterLevel = -1; // new detected waterlevel when moving
+	public int waterLevel = -1;
+	public int newWaterLevel = -1; // new detected waterlevel when moving
 
-	short waterType = 0; // water or lava
+	public short waterType = 0; // water or lava
 
-	int minX, maxX, minY, maxY, minZ, maxZ = 0;
+	public int minX, maxX, minY, maxY, minZ, maxZ = 0;
 
 	public String captainName;
 	public String driverName;
@@ -100,46 +109,46 @@ public class Craft {
 	public ArrayList<String> crewHistory = new ArrayList<String>();
 	public HashMap<String, Boolean> isNameOnBoard = new HashMap<String, Boolean>();
 
-	int speed = 0;
+	public int speed = 0;
 
-	long lastMove = System.currentTimeMillis(); // record time of the last arm
+	public long lastMove = System.currentTimeMillis(); // record time of the last arm
 	public long lastUpdate = System.currentTimeMillis(); // record time of the last arm
 	// swing
-	boolean haveControl = true; // if the player have the control of the craft
+	public boolean haveControl = true; // if the player have the control of the craft
 
-	String customName = null;
+	public String customName = null;
 
-	boolean blockPlaced = false;
+	public boolean blockPlaced = false;
 	
 	/* Rotation */
 	public int rotation = 0;
-	int offX, offZ = 0;
+	public int offX, offZ = 0;
 	/* End Rotation */
 
 	public NavyCraft_Timer timer = null;
-	boolean isPublic = false;
+	public boolean isPublic = false;
 	public boolean inHyperSpace = false;
 	public int HyperSpaceMoves[] = new int[3];
 	public ArrayList<Location> WayPoints = new ArrayList<Location>();
 	public int currentWayPoint = 0;
 	public boolean StopRequested = false;
 	public Block railBlock;
-	int remainingFuel = 0;
-	int asyncTaskId = 0;
+	public int remainingFuel = 0;
+	public int asyncTaskId = 0;
 	
-	boolean autoTurn = true;
-	Location collisionLoc;
-	boolean possibleCollision = false;
-	boolean doCollide = false;
-	boolean helmDestroyed = false;
-	volatile boolean sinking = false;
-	int lastDX = 0;
-	int lastDZ = 0;
+	public boolean autoTurn = true;
+	public Location collisionLoc;
+	public boolean possibleCollision = false;
+	public boolean doCollide = false;
+	public boolean helmDestroyed = false;
+	public volatile boolean sinking = false;
+	public int lastDX = 0;
+	public int lastDZ = 0;
 	
-	Location signLoc;
+	public Location signLoc;
 	
-	int blockCountStart;
-	int lastBlockCount;
+	public int blockCountStart;
+	public int lastBlockCount;
 	
 	public HashMap<Player, Integer> damagers = new HashMap<Player, Integer>(); 
 	public int uncreditedDamage = 0;
@@ -154,42 +163,42 @@ public class Craft {
 	
 	public Player lastCauser;
 
-	int rudder=0; //-1 left, 1 right
-	int turnProgress=0; //0 not turning, countdown to zero
-	int setSpeed=0;
-	int vertPlanes=0; //0 straight, 1 up, -1 down
-	int gear=1;
+	public int rudder=0; //-1 left, 1 right
+	public int turnProgress=0; //0 not turning, countdown to zero
+	public int setSpeed=0;
+	public int vertPlanes=0; //0 straight, 1 up, -1 down
+	public int gear=1;
 	//volatile boolean enginesRunning=false;
-	boolean enginesOn = false;
-	boolean isMoving = false;
-	int keelDepth=0;
-	boolean onGround=true;
-	boolean isRepairing=false;
-	boolean doSink= false;
-	boolean checkLanding = false;
-	boolean submergedMode = false;
-	boolean speedReducedCol = false;
-	int reductionSpeed = -1;
-	int collisionSpeed = -1;
+	public boolean enginesOn = false;
+	public boolean isMoving = false;
+	public int keelDepth=0;
+	public boolean onGround=true;
+	public boolean isRepairing=false;
+	public boolean doSink= false;
+	public boolean checkLanding = false;
+	public boolean submergedMode = false;
+	public boolean speedReducedCol = false;
+	public int reductionSpeed = -1;
+	public int collisionSpeed = -1;
 	
-	boolean blueTeam = false;
-	boolean redTeam = false;
+	public boolean blueTeam = false;
+	public boolean redTeam = false;
 	
-	boolean isAutoCraft = false;
+	public boolean isAutoCraft = false;
 	
-	long abandonTime=0;
+	public long abandonTime=0;
 	//long lastUpdate=0;
-	boolean recentlyUpdated = false;
+	public boolean recentlyUpdated = false;
 	
-	boolean radarOn = false;
-	long lastRadarPulse=0;
-	boolean sonarOn = false;
-	long lastSonarPulse=0;
+	public boolean radarOn = false;
+	public long lastRadarPulse=0;
+	public boolean sonarOn = false;
+	public long lastSonarPulse=0;
 	
-	boolean leftSafeDock = false;
-	boolean isDestroying = false;
+	public boolean leftSafeDock = false;
+	public boolean isDestroying = false;
 	
-	boolean isMerchantCraft = false;
+	public boolean isMerchantCraft = false;
 	
 	public HashMap<Integer, Integer> tubeFiringMode = new HashMap<Integer, Integer>();  /////tubeNumber, tubeStatus...status = -2 straight, -1 periscope, 0+ for target index
 	public HashMap<Integer, Integer> tubeFiringDepth = new HashMap<Integer, Integer>();
@@ -229,7 +238,7 @@ public class Craft {
 	public ArrayList<Chunk> checkedChunks = new ArrayList<Chunk>();
 	
 
-	ArrayList<DataBlock> engineBlocks = new ArrayList<DataBlock>();
+	public ArrayList<DataBlock> engineBlocks = new ArrayList<DataBlock>();
 	
 	public boolean doCost = true;
 	public int vehicleCost = 0;
@@ -286,7 +295,7 @@ public class Craft {
 	
 	//public int moveTicker = 0;
 
-	Craft(CraftType type, Player player, String customName, float Rotation, Location signBlockLoc, Plugin p) {
+	public Craft(CraftType type, Player player, String customName, float Rotation, Location signBlockLoc, Plugin p) {
 		if(Rotation > 45 && Rotation < 135)
 			Rotation = 90;
 		else if(Rotation > 135 && Rotation < 225)
@@ -445,18 +454,18 @@ public class Craft {
 		&& z >= minZ && z <= maxZ;
 	}
 
-	static void addCraft(Craft craft) {
+	public static void addCraft(Craft craft) {
 		craftList.add(craft);
 	}
 
-	void releaseHelm() {
+	public void releaseHelm() {
 		if(this.timer != null)
 			this.timer.Destroy();
 		
 		this.driverName = null;
 	}
 	
-	void remove() {
+	public void remove() {
 		if( isMerchantCraft && redTeam )
 			NavyCraft.redMerchant = false;
 		else if( isMerchantCraft && blueTeam )

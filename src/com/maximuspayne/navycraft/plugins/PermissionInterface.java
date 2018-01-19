@@ -1,8 +1,8 @@
 package com.maximuspayne.navycraft.plugins;
 
 
-import com.maximuspayne.navycraft.CraftType;
 import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.craft.CraftType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
