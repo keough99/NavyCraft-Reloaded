@@ -25,26 +25,18 @@ public class CraftType {
 	
 	boolean adminBuild=false;
 
-	//int flyBlockType = 0;	//type of stone needed to make the vehicle fly
 	int digBlockId = 0;		//the type of block needed to make the vehicle able to drill through terrain
-	//int engineBlockId = 0;		//the type of block used to detect engines
-	//double flyBlockPercent = 0;		//percent of flystone needed to make it fly
 	double digBlockPercent = 0;
 	int digBlockDurability = 0;
-	//int fuelItemId = 0;
-	//int fuelConsumptionMultiplier = 1;
 	
 	int remoteControllerItem = 0;
 
 	boolean canFly = false;
 	boolean canNavigate = false;
 	boolean canDive = false;
-	//boolean iceBreaker = false;
-	//boolean bomber = false;
 	boolean canDig = false;
 	boolean obeysGravity = false;
 	boolean isTerrestrial = false;
-	//boolean requiresRails = false;
 	
 	
 	boolean doesCruise = false;
@@ -55,9 +47,6 @@ public class CraftType {
 	int turnRadius = 4;
 	int maxSurfaceSpeed = 4;
 	int maxSubmergedSpeed = 3;
-
-	//String sayOnControl = "You control the craft";
-	//String sayOnRelease = "You release the craft";
 
 	short[] structureBlocks = null; // blocks that can make the structure of the craft
 	short[] extendedBlocks = null;		//structureblocks only for this craft type 
@@ -159,8 +148,6 @@ public class CraftType {
 			craftType.maxBlocks = 500;
 			craftType.maxSpeed = 4;
 			craftType.doesCruise = false;
-			//craftType.sayOnControl = "You're on a boat !";
-			//craftType.sayOnRelease = "You release the helm";
 			
 		} else if (name.equalsIgnoreCase("ship")) {
 			setAttribute(
@@ -180,8 +167,6 @@ public class CraftType {
 			craftType.doesCruise = true;
 			craftType.maxEngineSpeed = 8;
 			craftType.maxForwardGear = 2;
-			//craftType.sayOnControl = "You're on a ship !";
-			//craftType.sayOnRelease = "You release the helm";
 			
 		} else if (name.equalsIgnoreCase("freeship")) {
 			setAttribute(
@@ -203,8 +188,6 @@ public class CraftType {
 			craftType.maxForwardGear = 3;
 			craftType.discount = 100;
 			craftType.adminBuild = true;
-			//craftType.sayOnControl = "You're on a ship !";
-			//craftType.sayOnRelease = "You release the helm";
 			
 		} else if (name.equalsIgnoreCase("halfship")) {
 			setAttribute(
@@ -226,8 +209,6 @@ public class CraftType {
 			craftType.maxForwardGear = 2;
 			craftType.discount = 50;
 			craftType.adminBuild = true;
-			//craftType.sayOnControl = "You're on a ship !";
-			//craftType.sayOnRelease = "You release the helm";
 			
 		} else if (name.equalsIgnoreCase("aircraft")) {
 			setAttribute(
@@ -246,8 +227,6 @@ public class CraftType {
 			craftType.doesCruise = true;
 			craftType.maxEngineSpeed = 8;
 			craftType.maxForwardGear = 3;
-			//craftType.sayOnControl = "You're on an aircraft !";
-			//craftType.sayOnRelease = "You release the joystick";
 			
 		}else if (name.equalsIgnoreCase("airship")) {
 			setAttribute(
@@ -264,10 +243,6 @@ public class CraftType {
 			craftType.maxBlocks = 1000;
 			craftType.maxSpeed = 6;
 			craftType.doesCruise = false;
-			//craftType.flyBlockType = 35;
-			//craftType.flyBlockPercent = 60;
-			//craftType.sayOnControl = "You're on an airship !";
-			//craftType.sayOnRelease = "You release the control panel";
 			
 		} else if (name.equalsIgnoreCase("submarine")) {
 			setAttribute(
@@ -288,8 +263,6 @@ public class CraftType {
 			craftType.maxEngineSpeed = 6;
 			craftType.maxSubmergedSpeed = 3;
 			craftType.maxForwardGear = 2;
-			//craftType.sayOnControl = "You're into a submarine !";
-			//craftType.sayOnRelease = "You release the helm";	
 		} else if (name.equalsIgnoreCase("tank")) {
 		setAttribute(
 				craftType,
@@ -310,8 +283,6 @@ public class CraftType {
 		craftType.doesCruise = true;
 		craftType.maxEngineSpeed = 4;
 		craftType.maxForwardGear = 3;
-		//craftType.sayOnControl = "You blew a .07! You're good to go!";
-		//craftType.sayOnRelease = "Remember where you parked!";
 		
 	}
 
@@ -334,24 +305,14 @@ public class CraftType {
 			craftType.discount = Integer.parseInt(value);
 		else if (attribute.equalsIgnoreCase("adminBuild"))
 			craftType.adminBuild = Boolean.parseBoolean(value);
-		/*else if (attribute.equalsIgnoreCase("flyBlockType"))
-			craftType.flyBlockType = Integer.parseInt(value);
-		else if (attribute.equalsIgnoreCase("flyBlockPercent"))
-			craftType.flyBlockPercent = Double.parseDouble(value);*/
 		else if (attribute.equalsIgnoreCase("digBlockId"))
 			craftType.digBlockId = Integer.parseInt(value);
 		else if (attribute.equalsIgnoreCase("digBlockDurability"))
 			craftType.digBlockDurability = Integer.parseInt(value);
-		/*else if (attribute.equalsIgnoreCase("fuelItemId"))
-			craftType.fuelItemId = Integer.parseInt(value);
-		else if (attribute.equalsIgnoreCase("fuelConsumptionMultiplier"))
-			craftType.fuelConsumptionMultiplier = Integer.parseInt(value);*/
 		else if (attribute.equalsIgnoreCase("canNavigate"))
 			craftType.canNavigate = Boolean.parseBoolean(value);
 		else if (attribute.equalsIgnoreCase("isTerrestrial"))
 			craftType.isTerrestrial = Boolean.parseBoolean(value);
-		//else if (attribute.equalsIgnoreCase("requiresRails"))
-			//craftType.requiresRails = Boolean.parseBoolean(value);
 		else if (attribute.equalsIgnoreCase("canFly"))
 			craftType.canFly = Boolean.parseBoolean(value);
 		else if (attribute.equalsIgnoreCase("canDive"))
@@ -379,16 +340,9 @@ public class CraftType {
 		else if (attribute.equalsIgnoreCase("turnRadius"))
 			craftType.turnRadius = Integer.parseInt(value);
 		else if (attribute.equalsIgnoreCase("maxSubmergedSpeed"))
-			craftType.maxSubmergedSpeed = Integer.parseInt(value);
-		
+			craftType.maxSubmergedSpeed = Integer.parseInt(value);	
 		// else if(attribute.equalsIgnoreCase("iceBreaker"))
 		// craftType.iceBreaker = Boolean.parseBoolean(value);
-		//else if (attribute.equalsIgnoreCase("bomber"))
-			//craftType.bomber = Boolean.parseBoolean(value);
-		//else if (attribute.equalsIgnoreCase("sayOnControl"))
-			//craftType.sayOnControl = value;
-		//else if (attribute.equalsIgnoreCase("sayOnRelease"))
-			//craftType.sayOnRelease = value;
 		else if (attribute.equalsIgnoreCase("remoteControllerItem"))
 			craftType.remoteControllerItem = Integer.parseInt(value);
 		else if (attribute.equalsIgnoreCase("listenItem"))
@@ -396,14 +350,7 @@ public class CraftType {
 		else if (attribute.equalsIgnoreCase("listenAnimation"))
 			craftType.listenAnimation = Boolean.parseBoolean(value);
 		else if (attribute.equalsIgnoreCase("listenMovement")){
-			craftType.listenMovement = Boolean.parseBoolean(value);
-		//else if (attribute.equalsIgnoreCase("engineBlockId")) {
-			/*craftType.engineBlockId = Integer.parseInt(value);
-			if(BlocksInfo.getCardinals(craftType.engineBlockId) == null){
-				System.out.println("Invalid engine block specified in craft type " +
-						craftType.name + ". Use something that has a face, like a furnace or a dispenser.");
-				craftType.engineBlockId = 0;
-			}	*/			
+			craftType.listenMovement = Boolean.parseBoolean(value);	
 		}
 		else if (attribute.equalsIgnoreCase("structureBlocks")) {
 			String[] split = value.split(",");
@@ -512,23 +459,15 @@ public class CraftType {
 			writeAttribute(writer, "maxSpeed", craftType.maxSpeed, force);
 			writeAttribute(writer, "discount", craftType.discount, force);
 			writeAttribute(writer, "adminBuild", craftType.adminBuild, force);
-			//writeAttribute(writer, "flyBlockType", craftType.flyBlockType, force);
-			//writeAttribute(writer, "flyBlockPercent", craftType.flyBlockPercent, force);
 			writeAttribute(writer, "digBlockId", craftType.digBlockId, force);
 			writeAttribute(writer, "digBlockDurability", craftType.digBlockDurability, force);
-			//writeAttribute(writer, "fuelItemId", craftType.fuelItemId, force);
-			//writeAttribute(writer, "fuelConsumptionMultiplier", craftType.fuelConsumptionMultiplier, force);
 			writeAttribute(writer, "canNavigate", craftType.canNavigate, force);
 			writeAttribute(writer, "isTerrestrial", craftType.isTerrestrial, force);
-			//writeAttribute(writer, "requiresRails", craftType.requiresRails, force);
 			writeAttribute(writer, "canFly", craftType.canFly, force);
 			writeAttribute(writer, "canDive", craftType.canDive, force);
 			writeAttribute(writer, "canDig", craftType.canDig, force);
 			writeAttribute(writer, "obeysGravity", craftType.obeysGravity, force);
 			// writeAttribute(writer, "iceBreaker", craftType.iceBreaker);
-			//writeAttribute(writer, "bomber", craftType.bomber, force);
-			//writeAttribute(writer, "sayOnControl", craftType.sayOnControl, force);
-			//writeAttribute(writer, "sayOnRelease", craftType.sayOnRelease, force);
 			writeAttribute(writer, "doesCruise", craftType.doesCruise, force);
 			writeAttribute(writer, "maxEngineSpeed", craftType.maxEngineSpeed, force);
 			writeAttribute(writer, "maxSubmergedSpeed", craftType.maxSubmergedSpeed, force);
@@ -601,7 +540,6 @@ public class CraftType {
 				CraftType craftType = new CraftType(craftName);
 				
 				craftType.remoteControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalRemoteId"));
-				//craftType.engineBlockId = Integer.parseInt(NavyCraft.instance.ConfigSetting("EngineBlockId"));
 
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(
@@ -620,12 +558,7 @@ public class CraftType {
 					reader.close();
 
 				} catch (IOException ex) {
-				
-				
-				//check remoteid!
-				
-				//if(BlocksInfo.getCardinals(craftType.engineBlockId) == null) {
-					//craftType.engineBlockId = -1;
+			
 					System.out.println("Warning, craft type " + craftType.name + " has an invalid engine block ID. " + 
 							"Please use a block which has a facing direction (default is furnace, ID 61).");
 				}
