@@ -16,7 +16,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BrewingStand;
@@ -1092,9 +1091,9 @@ public class CraftMover {
 					if (e instanceof Player) {
 						Player p = (Player) e;
 						if (craft.submergedMode) {
-							playSound(p.getLocation(), Sound.ENTITY_BOBBER_SPLASH, 0.5f + ((0.5f * craft.speed) / 12.0f), 0.6f);
+							playEngineSound(p.getLocation(), Sound.ENTITY_BOBBER_SPLASH, 0.5f + ((0.5f * craft.speed) / 12.0f), 0.6f);
 						} else {
-							playSound(p.getLocation(), Sound.ENTITY_GENERIC_SPLASH, 0.5f + ((0.5f * craft.speed) / 12.0f), 0.6f);
+							playEngineSound(p.getLocation(), Sound.ENTITY_GENERIC_SPLASH, 0.5f + ((0.5f * craft.speed) / 12.0f), 0.6f);
 						}
 					}
 				}
@@ -1609,7 +1608,7 @@ public class CraftMover {
 							for(Pump p:craft.pumps) { //check if sponge is an existing pump
 								if( newBlock.getData() == 1 && p.loc.equals(newBlock.getLocation()) && p.counter <= p.limit ) { //still active
 									pumpFound=true;
-									playSound(newBlock.getLocation(), Sound.ENTITY_BOBBER_SPLASH, 1.0f, 0.7f);
+									playEngineSound(newBlock.getLocation(), Sound.ENTITY_BOBBER_SPLASH, 1.0f, 0.7f);
 									newBlock.setData((byte)0);
 									p.counter = p.counter+1;
 									p.updated = true;
@@ -1631,7 +1630,7 @@ public class CraftMover {
 											Player player = plugin.getServer().getPlayer(craft.captainName);
 											player.sendMessage("Pump expired!");
 										}
-										playSound(newBlock.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0f, 1.0f);
+										playEngineSound(newBlock.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0f, 1.0f);
 										p.counter++;
 									}
 									
@@ -1721,7 +1720,7 @@ public class CraftMover {
 							} else {
 								if (craftBlockId == 0) {
 									craft.matrix[x][y][z] = -1;
-									playSound(newBlock.getLocation(), Sound.ENTITY_HOSTILE_SWIM, 0.4f, 0.5f);
+									playEngineSound(newBlock.getLocation(), Sound.ENTITY_HOSTILE_SWIM, 0.4f, 0.5f);
 								}
 
 								if (scheduled && ((craft.buoyFloodTicker == 1) || (craft.buoyFloodTicker == 5))) {
@@ -1735,7 +1734,7 @@ public class CraftMover {
 							} else {
 								if (craftBlockId == 0) {
 									craft.matrix[x][y][z] = -1;
-									playSound(newBlock.getLocation(), Sound.ENTITY_HOSTILE_SWIM, 0.4f, 0.5f);
+									playEngineSound(newBlock.getLocation(), Sound.ENTITY_HOSTILE_SWIM, 0.4f, 0.5f);
 								}
 
 								if (scheduled && ((craft.buoyFloodTicker == 1) || (craft.buoyFloodTicker == 5))) {
@@ -1937,7 +1936,7 @@ public class CraftMover {
 					for (Entity e : craft.checkEntities) {
 						if (e instanceof Player) {
 							Player p = (Player) e;
-							playSound(p.getLocation(), Sound.ENTITY_GENERIC_SWIM, 0.4f, 0.4f + ((0.2f * craft.speed) / 12.0f));
+							playEngineSound(p.getLocation(), Sound.ENTITY_GENERIC_SWIM, 0.4f, 0.4f + ((0.2f * craft.speed) / 12.0f));
 						}
 					}
 				}
@@ -5167,13 +5166,13 @@ public class CraftMover {
 				
 				sinkUpdate = true;
 				if( i%4==0 ) {
-					playSound(craft.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2.0f, 0.7f);
+					playEngineSound(craft.getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2.0f, 0.7f);
 				}else if( i%4==1 ) {
-					playSound(craft.getLocation(), Sound.BLOCK_PORTAL_AMBIENT, 2.0f, 0.7f);
+					playEngineSound(craft.getLocation(), Sound.BLOCK_PORTAL_AMBIENT, 2.0f, 0.7f);
 				}else if( i%4==2 ) {
-					playSound(craft.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0f, 0.7f);
+					playEngineSound(craft.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0f, 0.7f);
 				}else if( i%4==3 ) {
-					playSound(craft.getLocation(), Sound.BLOCK_PORTAL_TRIGGER, 2.0f, 0.7f);
+					playEngineSound(craft.getLocation(), Sound.BLOCK_PORTAL_TRIGGER, 2.0f, 0.7f);
 				}
 				
 				if ((craft.minY > 2) && checkSink()) {
@@ -7019,7 +7018,7 @@ public class CraftMover {
 			// return if engine not on
 			if ((engineIndex != -1) && (c.engineIDIsOn.containsKey(engineIndex) && (!c.engineIDIsOn.get(engineIndex) || (c.type.canFly && (c.driverName == null))))) {
 				if( c.type.canFly )
-					playSound(c.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.3f, 0.5f);
+					playEngineSound(c.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.3f, 0.5f);
 				return;
 			} else if ((engineIndex == -1) && (c.type.canFly && (c.driverName == null))) { return; }
 
@@ -7052,56 +7051,56 @@ public class CraftMover {
 					if ((i % 5) == 0) {
 
 						if (craft.type.canFly) {
-							playSound(noEngineLoc, Sound.ENTITY_WITHER_AMBIENT, volume*0.5f, 0.5f);
+							playEngineSound(noEngineLoc, Sound.ENTITY_WITHER_AMBIENT, volume*0.5f, 0.5f);
 						} else if (craft.type.isTerrestrial) {
-							playSound(noEngineLoc, Sound.BLOCK_GRAVEL_STEP, volume, pitch3);
+							playEngineSound(noEngineLoc, Sound.BLOCK_GRAVEL_STEP, volume, pitch3);
 						} else {
-							playSound(noEngineLoc, Sound.BLOCK_WATER_AMBIENT, volume, pitch3);
+							playEngineSound(noEngineLoc, Sound.BLOCK_WATER_AMBIENT, volume, pitch3);
 						}
 					}
 				} else if (c.submergedMode && c.engineIDTypes.get(engineIndex) != 9 && c.engineIDTypes.get(engineIndex) != 1 ) {
 					float pitch4 = ((float) c.setSpeed / (float) 6.0f)*0.5f + 0.5f;
-					playSound(cLoc, Sound.ENTITY_SKELETON_HORSE_DEATH, volume, pitch4);
+					playEngineSound(cLoc, Sound.ENTITY_SKELETON_HORSE_DEATH, volume, pitch4);
 				} else {
 					int engType = c.engineIDTypes.get(engineIndex);
 					if (engType == 0 || engType == 2 || engType == 4) // Diesels
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*1.5f + 0.5f;
-						playSound(cLoc, Sound.ENTITY_MINECART_INSIDE, volume, pitch);
+						playEngineSound(cLoc, Sound.ENTITY_MINECART_INSIDE, volume, pitch);
 
 					}else if (engType == 1) // Motors
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*0.5f + 0.5f;
-						playSound(cLoc, Sound.ENTITY_SKELETON_HORSE_DEATH, volume, pitch);
+						playEngineSound(cLoc, Sound.ENTITY_SKELETON_HORSE_DEATH, volume, pitch);
 					}else if (engType == 3 || engType == 6 || engType == 7) // Boilers
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*0.5f + 0.5f;
 						if( i%2 == 0 )
-							playSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch);
+							playEngineSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch);
 						else
-							playSound(cLoc, Sound.ENTITY_POLAR_BEAR_WARNING, volume, 0.5f);
+							playEngineSound(cLoc, Sound.ENTITY_POLAR_BEAR_WARNING, volume, 0.5f);
 					}else if (engType == 5 || engType == 8) // Gasolines
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*1.0f + 1.0f;
-						playSound(cLoc, Sound.ENTITY_MINECART_RIDING, volume, pitch);
+						playEngineSound(cLoc, Sound.ENTITY_MINECART_RIDING, volume, pitch);
 					}else if (engType == 9) // Nuclear
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*0.5f + 0.5f;
-						playSound(cLoc, Sound.ENTITY_WITHER_SPAWN, volume, pitch);
+						playEngineSound(cLoc, Sound.ENTITY_WITHER_SPAWN, volume, pitch);
 					}else if ((engType >= 10) && (engType <= 17)) // Airplanes
 					{
 						float pitch = 0.5f;
 						float pitch2 = ((float) c.setSpeed / (float) 6.0f)*1.5f + 0.5f;
 						if( i%4 == 0 )
-							playSound(cLoc, Sound.ENTITY_WOLF_GROWL, volume, pitch);
+							playEngineSound(cLoc, Sound.ENTITY_WOLF_GROWL, volume, pitch);
 						else
-							playSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch2);
+							playEngineSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch2);
 						if( c.type.canFly && !c.onGround && i%3 == 0)
-							playSound(c.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.3f, 0.5f);
+							playEngineSound(c.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.3f, 0.5f);
 					}else if ((engType == 18) || (engType == 19)) // Tanks
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*0.3f + 0.5f;
-						playSound(cLoc, Sound.ENTITY_STRAY_DEATH, volume, pitch);
+						playEngineSound(cLoc, Sound.ENTITY_STRAY_DEATH, volume, pitch);
 					}
 
 				}
@@ -7110,12 +7109,32 @@ public class CraftMover {
 		});
 	}
 	
-	public static void playSound( Location loc, Sound sound, float volume, float pitch )
+	public static void playEngineSound( Location loc, Sound sound, float volume, float pitch )
 	{
 		for( Player p : loc.getWorld().getPlayers() )
 		{
-			if( NavyCraft.playerVolumes.containsKey(p) )
-				p.playSound(loc,  sound,  volume*NavyCraft.playerVolumes.get(p)*.01f,  pitch);
+			if( NavyCraft.playerEngineVolumes.containsKey(p) )
+				p.playSound(loc,  sound,  volume*NavyCraft.playerEngineVolumes.get(p)*.01f,  pitch);
+			else
+				p.playSound(loc,  sound,  volume,  pitch);
+		}
+	}
+	public static void playWeaponSound( Location loc, Sound sound, float volume, float pitch )
+	{
+		for( Player p : loc.getWorld().getPlayers() )
+		{
+			if( NavyCraft.playerWeaponVolumes.containsKey(p) )
+				p.playSound(loc,  sound,  volume*NavyCraft.playerWeaponVolumes.get(p)*.01f,  pitch);
+			else
+				p.playSound(loc,  sound,  volume,  pitch);
+		}
+	}
+	public static void playOtherSound( Location loc, Sound sound, float volume, float pitch )
+	{
+		for( Player p : loc.getWorld().getPlayers() )
+		{
+			if( NavyCraft.playerOtherVolumes.containsKey(p) )
+				p.playSound(loc,  sound,  volume*NavyCraft.playerOtherVolumes.get(p)*.01f,  pitch);
 			else
 				p.playSound(loc,  sound,  volume,  pitch);
 		}
@@ -7152,7 +7171,6 @@ public class CraftMover {
 	public static void sonarPingThread(final Location loc) {
 		new Thread() {
 
-			@SuppressWarnings("unused")
 			@Override
 			public void run() {
 
@@ -7160,13 +7178,12 @@ public class CraftMover {
 
 				// taskNum = -1;
 				try {
-					World cw = loc.getWorld();
 					for (int i = 0; i < 2; i++) {
 						sleep(400);
 						if( i==0 )
-							playSound(loc, Sound.BLOCK_NOTE_PLING, 2.0f, 1.6f);
+							playEngineSound(loc, Sound.BLOCK_NOTE_PLING, 2.0f, 1.6f);
 						else
-							playSound(loc, Sound.BLOCK_NOTE_PLING, 2.0f, 2.0f);
+							playEngineSound(loc, Sound.BLOCK_NOTE_PLING, 2.0f, 2.0f);
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -7187,9 +7204,9 @@ public class CraftMover {
 					sleep(1000);
 					for (int i = 0; i < 2; i++) {
 						if( i==0 )
-							playSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength);
+							playEngineSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength);
 						else
-							playSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength + 0.4f);
+							playEngineSound(loc, Sound.BLOCK_NOTE_BASS, 2.0f, strength + 0.4f);
 						sleep(400);
 					}
 				} catch (InterruptedException e) {

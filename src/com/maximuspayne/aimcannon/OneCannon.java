@@ -1711,7 +1711,7 @@ public class OneCannon{
 	    	{
 		    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35 )
 		    	{
-		    		CraftMover.playSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
+		    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 		    		
 					if( i > 15 )
 					{
@@ -2462,7 +2462,7 @@ public class OneCannon{
 	    	{
 		    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35 )
 		    	{
-		    		CraftMover.playSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
+		    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 					if( i > 15 )
 					{
 						if( torp.warhead.getY() > 62 )
@@ -3200,7 +3200,7 @@ public class OneCannon{
 	    	{
 		    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35 )
 		    	{
-		    		CraftMover.playSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
+		    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 					if( i > 15 )
 					{
 						if( torp.warhead.getY() > 62 )

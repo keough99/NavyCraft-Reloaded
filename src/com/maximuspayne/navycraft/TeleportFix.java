@@ -47,6 +47,11 @@ public class TeleportFix implements Listener {
 		        } else if (version.contains("v1_12")) {
 		        	TeleportFix_1_12.updateEntities(getPlayersWithin(player, visibleDistance));
 		        }
+		        //Commented out until 1.13 release
+	           /* } else if (version.contains("v1_13")) {
+	        	TeleportFix_1_13.updateEntities(getPlayersWithin(player, visibleDistance));
+	            }
+	            */
 				
 				//System.out.println("Applying fix ... " + visibleDistance);
 			}
@@ -77,7 +82,10 @@ public class TeleportFix implements Listener {
 
         } else if (version.contains("v1_12")) {
         	TeleportFix_1_12.updateNMSChunks(craft);
-        }
+        //Commented out until 1.13 release
+        }/*else if (version.contains("v1_13")) {
+    	TeleportFix_1_12.updateNMSChunks(craft);
+        }*/
 		
 	}
 	
@@ -90,6 +98,9 @@ public class TeleportFix implements Listener {
 
         } else if (version.contains("v1_12")) {
         	TeleportFix_1_12.updateNMSLight(light, oldLight);
-        }
+        	//Commented out until 1.13 release
+        }/*else if (version.contains("v1_13")) {
+        	TeleportFix_1_13.updateNMSLight(light, oldLight);
+        	*/
 	}
 }

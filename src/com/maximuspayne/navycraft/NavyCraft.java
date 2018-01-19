@@ -140,7 +140,9 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int schedulerCounter = 0;
 	
-	public static HashMap<Player, Float> playerVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {
 		configFile = new ConfigFile();
@@ -150,8 +152,6 @@ public class NavyCraft extends JavaPlugin {
 			dir.mkdir();
 
 		CraftType.loadTypes(dir);
-		//This setting was removed as of 0.6.9, craft type file creation has been commented out of the whole thing,
-			//craft type files are to be distributed with the plugin 
 		CraftType.saveTypes(dir);
 		
 	}

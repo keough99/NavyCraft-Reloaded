@@ -1893,7 +1893,7 @@ public class Craft {
 					Location loc = player.getLocation();
 					for (int i = 0; i < 2; i++) {
 						sleep(200);
-						CraftMover.playSound(loc, Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.9f);
+						CraftMover.playOtherSound(loc, Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.9f);
 
 					}
 				} catch (InterruptedException e) {
