@@ -189,8 +189,10 @@ public class NavyCraft_BlockListener implements Listener {
 					lotType = 7;
 				} else if (lotStr.equalsIgnoreCase("TANK1")) {
 					lotType = 8;
+				} else if (lotStr.equalsIgnoreCase("TANK2")) {
+					lotType = 9;
 				} else {
-					player.sendMessage("Sign error...lot type");
+					player.sendMessage(ChatColor.RED + "Sign error: lot type");
 					return;
 				}
 
@@ -424,8 +426,10 @@ public class NavyCraft_BlockListener implements Listener {
 					lotType = 7;
 				} else if (lotStr.equalsIgnoreCase("TANK1")) {
 					lotType = 8;
+				} else if (lotStr.equalsIgnoreCase("TANK2")) {
+					lotType = 9;
 				} else {
-					player.sendMessage("Sign error...lot type");
+					player.sendMessage(ChatColor.RED + "Sign error: lot type");
 					return;
 				}
 
@@ -625,6 +629,30 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 					if (numT1s >= numRewT1s) {
 						player.sendMessage("You have no TANK1 reward plots available.");
+						return;
+					}
+				} else if (lotType == 9) {
+					loc = block.getRelative(bf, 12).getLocation();
+					sizeX = 12;
+					sizeY = 7;
+					sizeZ = 19;
+					originX = 0;
+					originY = -1;
+					originZ = -18;
+					offsetX = -12;
+					offsetY = 0;
+					offsetZ = -20;
+
+					int numT1s = 0;
+					int numRewT1s = 0;
+					if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
+						numT1s = NavyCraft.playerTANK2Signs.get(player.getName()).size();
+					}
+					if (NavyCraft.playerTANK2Rewards.containsKey(player.getName())) {
+						numRewT1s = NavyCraft.playerTANK2Rewards.get(player.getName());
+					}
+					if (numT1s >= numRewT1s) {
+						player.sendMessage("You have no TANK2 reward plots available.");
 						return;
 					}
 				} else
@@ -3665,6 +3693,10 @@ public class NavyCraft_BlockListener implements Listener {
 			NavyCraft.playerTANK1Signs.get(s).clear();
 		}
 		NavyCraft.playerTANK1Signs.clear();
+		for (String s : NavyCraft.playerTANK2Signs.keySet()) {
+			NavyCraft.playerTANK2Signs.get(s).clear();
+		}
+		NavyCraft.playerTANK2Signs.clear();
 		loadDDSigns();
 		loadSUB1Signs();
 		loadSUB2Signs();
@@ -3673,6 +3705,7 @@ public class NavyCraft_BlockListener implements Listener {
 		loadHANGAR1Signs();
 		loadHANGAR2Signs();
 		loadTANK1Signs();
+		loadTANK2Signs();
 	}
 	
 	public static void loadRewards(String player) {
@@ -3856,6 +3889,13 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
+		if ((foundSign == null) && NavyCraft.playerTANK2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
 		return foundSign;
 	}
 
@@ -3912,6 +3952,13 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 		if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
 			for (Sign s : NavyCraft.playerTANK1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(player.getName())) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}

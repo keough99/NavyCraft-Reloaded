@@ -3887,7 +3887,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				return true;
 
 			}else if (split[1].equalsIgnoreCase("drive")
-					&& (PermissionInterface.CheckPerm(player,  "navycraft.drive"))) {
+					&& (PermissionInterface.CheckPerm(player,  "navycraft.admin"))) {
 				if (player.getItemInHand().getTypeId() > 0) {
 					player.sendMessage(ChatColor.RED + "Have nothing in your hand before using this.");
 					return true;
