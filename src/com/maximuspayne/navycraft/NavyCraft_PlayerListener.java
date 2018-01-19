@@ -450,14 +450,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 
 
-				if ((NavyCraft.instance.ConfigSetting("RequireRemote") == "true") && (playerCraft != null)) {
+				if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true") && (playerCraft != null)) {
 					playerCraft.addBlock(block, false);
 				}
 
 			}
 
 			if ((playerCraft != null) && (playerCraft.driverName == player.getName())) {
-				if ((NavyCraft.instance.ConfigSetting("RequireRemote") == "true")
+				if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true")
 						&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
 					return;
 				}

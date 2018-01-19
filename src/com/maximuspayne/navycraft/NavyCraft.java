@@ -511,7 +511,7 @@ public class NavyCraft extends JavaPlugin {
 		if(configFile.ConfigSettings.containsKey(setting))
 			return configFile.ConfigSettings.get(setting);
 		else {
-			System.out.println("Sycoprime needs to be notified that a non-existing config setting '" + setting + 
+			System.out.println("Solmex needs to be notified that a non-existing config setting '" + setting + 
 					"' was attempted to be accessed.");
 			return "";
 		}
