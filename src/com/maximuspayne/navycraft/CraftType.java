@@ -29,7 +29,7 @@ public class CraftType {
 	double digBlockPercent = 0;
 	int digBlockDurability = 0;
 	
-	int remoteControllerItem = 0;
+	int HelmControllerItem = 0;
 
 	boolean canFly = false;
 	boolean canNavigate = false;
@@ -343,8 +343,8 @@ public class CraftType {
 			craftType.maxSubmergedSpeed = Integer.parseInt(value);	
 		// else if(attribute.equalsIgnoreCase("iceBreaker"))
 		// craftType.iceBreaker = Boolean.parseBoolean(value);
-		else if (attribute.equalsIgnoreCase("remoteControllerItem"))
-			craftType.remoteControllerItem = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("HelmControllerItem"))
+			craftType.HelmControllerItem = Integer.parseInt(value);
 		else if (attribute.equalsIgnoreCase("listenItem"))
 			craftType.listenItem = Boolean.parseBoolean(value);
 		else if (attribute.equalsIgnoreCase("listenAnimation"))
@@ -539,7 +539,7 @@ public class CraftType {
 
 				CraftType craftType = new CraftType(craftName);
 				
-				craftType.remoteControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalRemoteId"));
+				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalRemoteId"));
 
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(

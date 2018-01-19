@@ -458,7 +458,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 			if ((playerCraft != null) && (playerCraft.driverName == player.getName())) {
 				if ((NavyCraft.instance.ConfigSetting("RequireRemote") == "true")
-						&& (event.getItem().getTypeId() != playerCraft.type.remoteControllerItem)) {
+						&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
 					return;
 				}
 				if (event.getHand() == EquipmentSlot.HAND)
@@ -523,8 +523,8 @@ public class NavyCraft_PlayerListener implements Listener {
 			//// else check for movement clicking
 		} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
 				&& (playerCraft.driverName == player.getName()) && (playerCraft.type.listenItem == true)) {
-			if ((NavyCraft.instance.ConfigSetting("RequireRemote") == "true")
-					&& (event.getItem().getTypeId() != playerCraft.type.remoteControllerItem)) {
+			if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true")
+					&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
 				return;
 			}
 			playerUsedAnItem(player, playerCraft);
@@ -555,17 +555,15 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		// the craft won't budge if you have any tool in the hand
 		if (!craft.haveControl) {
-			if (((item == craft.type.remoteControllerItem)
-					|| (item == Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalRemoteId"))))
-					&& !craft.isOnCraft(player, true) && PermissionInterface.CheckPerm(player, "remote")) {
+			if (((item == craft.type.HelmControllerItem)
+					|| (item == Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalHelmId"))))
+					&& !craft.isOnCraft(player, true)) {
 				if (craft.haveControl) {
-					player.sendMessage(ChatColor.YELLOW + "You switch off the remote controller");
 				} else {
 					NavyCraft_Timer timer = NavyCraft_Timer.playerTimers.get(player);
 					if (timer != null) {
 						timer.Destroy();
 					}
-					player.sendMessage(ChatColor.YELLOW + "You switch on the remote controller");
 				}
 				craft.haveControl = !craft.haveControl;
 			} else {
@@ -3803,7 +3801,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		if (split.length >= 2) {
 
-			if (split[1].equalsIgnoreCase(craftType.driveCommand) && PermissionInterface.CheckPerm(player,  "navycraft.remote")) {
+			if (split[1].equalsIgnoreCase(craftType.driveCommand)) {
 
 				String name = craftType.name;
 				if ((split.length > 2) && (split[2] != null)) {
@@ -3824,7 +3822,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				return true;
 
-			} else if (split[1].equalsIgnoreCase("move") && PermissionInterface.CheckPerm(player,  "navycraft.remote")) {
+			} else if (split[1].equalsIgnoreCase("move")) {
 				try {
 					int dx = Integer.parseInt(split[2]);
 					int dy = Integer.parseInt(split[3]);
@@ -3838,7 +3836,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							+ " Where x, y, and z are whole numbers separated by spaces.");
 				}
 				return true;
-			} else if (split[1].equalsIgnoreCase("setspeed") && PermissionInterface.CheckPerm(player,  "navycraft.remote")) {
+			} else if (split[1].equalsIgnoreCase("setspeed")) {
 				int speed = Math.abs(Integer.parseInt(split[2]));
 
 				if ((speed < 1) || (speed > craftType.maxSpeed)) {
@@ -3858,42 +3856,6 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.YELLOW + craft.type.name + "'s name set to " + craft.name);
 					return true;
 				}
-
-			} else if (split[1].equalsIgnoreCase("remote") && PermissionInterface.CheckPerm(player,  "navycraft.remote")) {
-				if ((craft == null) || (craft.type != craftType)) {
-					Set<Material> meh = new HashSet<>();
-					Block targetBlock = player.getTargetBlock(meh, 100);
-
-					if (targetBlock != null) {
-						NavyCraft.instance.createCraft(player, craftType, targetBlock.getX(), targetBlock.getY(),
-								targetBlock.getZ(), null, player.getLocation().getYaw(), null, false);
-						Craft.getPlayerCraft(player).isNameOnBoard.put(player.getName(), false);
-					} else {
-						player.sendMessage("Couldn't find a target within 100 blocks. "
-								+ "If your admin asks reeeaaaaaally nicely, I might add distance as a config setting.");
-					}
-
-					return true;
-				}
-
-				if (craft.isOnCraft(player, true)) {
-					player.sendMessage(
-							ChatColor.YELLOW + "You are on the " + craftType.name + ", remote control not possible");
-				} else {
-					if (craft.haveControl) {
-						player.sendMessage(ChatColor.YELLOW + "You switch off the remote controller");
-					} else {
-						NavyCraft_Timer timer = NavyCraft_Timer.playerTimers.get(player);
-						if (timer != null) {
-							timer.Destroy();
-						}
-						player.sendMessage(ChatColor.YELLOW + "You switch on the remote controller");
-					}
-
-					craft.haveControl = !craft.haveControl;
-				}
-
-				return true;
 
 			} else if (split[1].equalsIgnoreCase("release")) {
 				if (craft != null) {
@@ -4111,7 +4073,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (split[1].equalsIgnoreCase("update")) {
 
 				return true;
-			} else if (split[1].equalsIgnoreCase("turn") && PermissionInterface.CheckPerm(player,  "navycraft.remote")) {
+			} else if (split[1].equalsIgnoreCase("turn")) {
 
 				if (craft != null) {
 					if (craft.autoTurn) {
