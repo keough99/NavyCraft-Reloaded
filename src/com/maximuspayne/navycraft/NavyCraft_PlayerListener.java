@@ -3320,7 +3320,6 @@ public class NavyCraft_PlayerListener implements Listener {
 								blueWelcomeStr = ChatColor.BLUE + "Welcome to Tunisia : Blue Team Base!";
 								logStr = "Battlezone: Tunisia";
 								NavyCraft.battleLength = 1800000;
-								// MoveCraft.battleLength = 330000;
 							} else if (NavyCraft.battleType == 2) {
 								NavyCraft.redSpawn = new Location(player.getWorld(), 199, 60,
 										-1065);
@@ -3897,7 +3896,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				return true;
 
 			} else if (split[1].equalsIgnoreCase("release")) {
-				// MoveCraft.instance.releaseCraft(player, craft);
 				if (craft != null) {
 					if ((craft.captainName == player.getName()) || player.isOp()) {
 						player.sendMessage(ChatColor.GOLD + "You release command of the ship");
@@ -3983,38 +3981,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				player.sendMessage(canDo);
 
 				return true;
-/// UNSUPPORTED HYPERSPACE COMMANDS - REFERENCE THESE LATER TO LEARN HOW TO USE HYPERSPACE.
-			} else if (split[1].equalsIgnoreCase("hyperspace") && (PermissionInterface.CheckPerm(player,  "navycraft.other"))) {
-				if (!craft.inHyperSpace) {
-					Craft_Hyperspace.enterHyperSpace(craft);
-				} else {
-					Craft_Hyperspace.exitHyperSpace(craft);
-				}
-				return true;
-			} else if (split[1].equalsIgnoreCase("addwaypoint") && (PermissionInterface.CheckPerm(player,  "navycraft.other"))) {
-				if (split[2].equalsIgnoreCase("relative")) {
-					Location newLoc = craft.WayPoints.get(craft.WayPoints.size() - 1);
-					if (!split[3].equalsIgnoreCase("0")) {
-						newLoc.setX(newLoc.getX() + Integer.parseInt(split[3]));
-					} else if (!split[4].equalsIgnoreCase("0")) {
-						newLoc.setY(newLoc.getY() + Integer.parseInt(split[4]));
-					} else if (!split[5].equalsIgnoreCase("0")) {
-						newLoc.setZ(newLoc.getZ() + Integer.parseInt(split[5]));
-					}
-
-					craft.addWayPoint(newLoc);
-				} else {
-					craft.addWayPoint(player.getLocation());
-				}
-
-				player.sendMessage(ChatColor.GREEN + "Added waypoint!");
-
-			} else if (split[1].equalsIgnoreCase("autotravel") && (PermissionInterface.CheckPerm(player,  "navycraft.other"))) {
-				if (split[2].equalsIgnoreCase("true")) {
-					new NavyCraft_Timer(plugin, 0, craft, player, "automove", true);
-				} else {
-					new NavyCraft_Timer(plugin, 0, craft, player, "automove", false);
-				}
 
 			} else if (split[1].equalsIgnoreCase("dock")) {
 				if (craft != null) {

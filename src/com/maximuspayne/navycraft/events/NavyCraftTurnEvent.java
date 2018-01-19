@@ -3,34 +3,19 @@ package com.maximuspayne.navycraft.events;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.util.Vector;
 
 import com.maximuspayne.navycraft.Craft;
 
-public class MoveCraftMoveEvent extends Event implements Cancellable {
-
-
-    private Vector movement;
-    private final Craft craft;
+public class NavyCraftTurnEvent extends Event implements Cancellable {
+    
+    private int degrees;
     private boolean cancelled;
+    private final Craft craft;
     
-    public MoveCraftMoveEvent(Craft craft, int x, int y, int z) {
-        //super("MoveCraftMoveEvent");
-        this.movement = new Vector(x, y, z);
+    public NavyCraftTurnEvent(Craft craft, int degrees) {
         this.craft = craft;
+        this.setDegrees(degrees);
         this.cancelled = false;
-    }
-    
-    public Vector getMovement() {
-        return movement;
-    }
-
-    public void setMovement(Vector movement) {
-        this.movement = movement;
-    }
-
-    public Craft getCraft() {
-        return craft;
     }
 
     @Override
@@ -43,9 +28,21 @@ public class MoveCraftMoveEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
+    public void setDegrees(int degrees) {
+        this.degrees = degrees;
+    }
+
+    public int getDegrees() {
+        return degrees;
+    }
+
+    public Craft getCraft() {
+        return craft;
+    }
+
 	@Override
 	public HandlerList getHandlers() {
-		
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

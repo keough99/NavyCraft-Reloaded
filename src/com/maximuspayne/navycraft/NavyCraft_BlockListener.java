@@ -1872,20 +1872,6 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 
 				return;
-			} else if (craftTypeName.equalsIgnoreCase("engage") && sign.getLine(1).equalsIgnoreCase("hyperdrive")) {
-				if (playerCraft == null) {
-					player.kickPlayer("Don't.");
-					return;
-				}
-				Craft_Hyperspace.enterHyperSpace(playerCraft);
-				sign.setLine(0, "Disengage Hyperdrive");
-			} else if (craftTypeName.equalsIgnoreCase("disengage") && sign.getLine(1).equalsIgnoreCase("hyperdrive")) {
-				if (playerCraft == null) {
-					player.kickPlayer("Are you fucking retarded?");
-					return;
-				}
-				Craft_Hyperspace.exitHyperSpace(playerCraft);
-				sign.setLine(0, "Engage Hyperdrive");
 			}
 		}
 	}
@@ -2089,9 +2075,6 @@ public class NavyCraft_BlockListener implements Listener {
 		if (!event.isCancelled()) {
 
 			final Block block = event.getBlock();
-			if (Craft_Hyperspace.hyperspaceBlocks.contains(block)) {
-				event.setCancelled(true);
-			}
 
 			
 			if ((block.getTypeId() == 63) || (block.getTypeId() == 68) || (block.getTypeId() == 50) || (block.getTypeId() == 75) || (block.getTypeId() == 76) || (block.getTypeId() == 65) || (block.getTypeId() == 64) || (block.getTypeId() == 71) || (block.getTypeId() == 70) || (block.getTypeId() == 72) || (block.getTypeId() == 143)) {
