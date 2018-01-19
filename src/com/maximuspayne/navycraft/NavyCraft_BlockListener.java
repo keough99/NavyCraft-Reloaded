@@ -4028,10 +4028,8 @@ public class NavyCraft_BlockListener implements Listener {
 	   }
 	}
 	
-	//Need to add back battles support.
-	
 	public static void rewardExpPlayer(int newExp, Player player) {
-		if (NavyCraft.playerExp.containsKey(player.getName())) {
+		 if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
 			NavyCraft.playerExp.put(player.getName(), newExp);
 		} else {
@@ -4041,7 +4039,17 @@ public class NavyCraft_BlockListener implements Listener {
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
-		NavyCraft.saveExperience();
+		NavyCraft.saveExperience();	
+		if (NavyCraft.battleMode > 0) {
+		if (NavyCraft.battleType == 1) {		
+            if (NavyCraft.redPlayers.contains(player.getName())) {		
+            NavyCraft.redPoints += newExp;		
+            } else {		
+            NavyCraft.bluePoints += newExp;		
+            }
+		}
+	}
+		
 	}
 	
 	public static void rewardExpCraft(int newExp, Craft craft) {
@@ -4059,9 +4067,17 @@ public class NavyCraft_BlockListener implements Listener {
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
 			}
-			
-		}
 		NavyCraft.saveExperience();
+		if (NavyCraft.battleMode > 0) {
+		if (NavyCraft.battleType == 1) {		
+            if (NavyCraft.redPlayers.contains(p.getName())) {		
+            NavyCraft.redPoints += newExp;		
+            } else {		
+            NavyCraft.bluePoints += newExp;		
+            }
+		}
+	}
+}
 	}
 	
 	public static void setExpPlayer(int newExp, String p) {

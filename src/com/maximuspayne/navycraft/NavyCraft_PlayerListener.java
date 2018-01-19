@@ -2628,8 +2628,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 			}else if( craftName.equalsIgnoreCase("battle") )
 			{
-				
-				
 				if( split.length == 1 ) {
 					if (NavyCraft.battleMode == -1) {
 						player.sendMessage(ChatColor.RED + "No active battle.");
@@ -2951,7 +2949,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 					} else if (split[1].equalsIgnoreCase("kick")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
-							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							player.sendMessage(ChatColor.RED + "You do not have permission to kick players from the battle");
 							event.setCancelled(true);
 							return;
 						}
@@ -3009,7 +3007,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					} else if (split[1].equalsIgnoreCase("kickall")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
-							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							player.sendMessage(ChatColor.RED + "You do not have permission to kick everyone from the battle");
 							event.setCancelled(true);
 							return;
 						}
@@ -3026,7 +3024,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					} else if (split[1].equalsIgnoreCase("cancel")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
-							player.sendMessage(ChatColor.RED + "You do not have permission to start battles");
+							player.sendMessage(ChatColor.RED + "You do not have permission to cancel battles");
 							event.setCancelled(true);
 							return;
 						}

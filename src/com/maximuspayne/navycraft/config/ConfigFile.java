@@ -29,8 +29,34 @@ public class ConfigFile {
 		ConfigSettings.put("WriteDefaultCraft", "true");
 		ConfigSettings.put("ForbiddenBlocks", "29,33,34,36,52,90,95,97,116,119,120,130,137,138,145,146");
 		ConfigSettings.put("DisableHyperSpaceField", "false");
-		
 		ConfigSettings.put("EnabledWorlds", "null");
+		ConfigSettings.put("BattleWorlds", "null");
+		
+		ConfigComments.put("CraftReleaseDelay", "<Number:15> The amount of time between when a user exists a craft and when" +
+				" the craft automatically releases.");
+		ConfigComments.put("UniversalRemoteId", "<Number:294> The item ID of the remote control that works on all vehicles.");
+		ConfigComments.put("RequireOp", "<TRUE/false> Only users with Bukkit-given 'op' can use craft.");
+		ConfigComments.put("StructureBlocks", "The blocks that define the structure of the craft. " +
+				"It is recommended not to use blocks like stone, dirt, and grass.");
+		ConfigComments.put("allowHoles", "<true/FALSE> Are holes allowed in craft (for submarines, drills, etc.)");
+		ConfigComments.put("EnableAsyncMovement", "<true/FALSE> Puts craft movement in asyncronous threading." +
+				" This is experimental, and might not work. There could be a preformance increase from it if it does, though.");
+		ConfigComments.put("TryNudge", "<true/FALSE> 'Nudge' the player rather than moving them. Currently broken.");
+		ConfigComments.put("LogLevel", "<Number:1> The amount of output to display to the console. " +
+				"1 means nothing beyond what Bukkit normally does, 2 means suspected errors, " +
+				"3 means errors and notifications, and 4 means suspected errors, notifications, and status messages.");
+		ConfigComments.put("RequireRemote", "<true/FALSE> The vehicle only moves if the remote item is in the player's hand.");
+		ConfigComments.put("EngineBlockId", "<block ID:61> The ID of the block to use as engines for craft types which do not " +
+				" explicitly define their own individual engine type in their craft type file.");
+		ConfigComments.put("HungryHungryDrill", "<true/FALSE> Any craft types which can drill will eat blocks rather than " +
+				"creating items.");
+		ConfigComments.put("WriteDefaultCraft", "Whether or not to create the default craft type files on plugin enable.");
+		ConfigComments.put("ForbiddenBlocks", "Blocks that prevent craft from being created if they are anywhere in the craft" + 
+				" leave 'null' for none.");
+		ConfigComments.put("DisableHyperSpaceField", "Prevents the hyperspace field blocks from appearing.");
+		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in. Leave as null for all.");
+		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in. Leave as null for all. Not recommended as I have not tested what this can do to a server");
+		
 		ConfigSettings.put("Ship1_StartX", "601");
 		ConfigSettings.put("Ship1_EndX", "1567");
 		ConfigSettings.put("Ship1_WidthX", "14");
@@ -41,7 +67,7 @@ public class ConfigFile {
 		ConfigSettings.put("Ship2_EndX", "1421");
 		ConfigSettings.put("Ship2_WidthX", "10");
 		ConfigSettings.put("Ship2_StartZ", "-356");
-		ConfigSettings.put("Ship2_EndZ", "-138");
+		ConfigSettings.put("Ship2_EndZ", "-148");
 		ConfigSettings.put("Ship2_WidthZ", "52");
 		ConfigSettings.put("Ship3_StartX", "549");
 		ConfigSettings.put("Ship3_EndX", "21");
@@ -85,31 +111,6 @@ public class ConfigFile {
 		ConfigSettings.put("Tank2_StartZ", "-920");
 		ConfigSettings.put("Tank2_EndZ", "-1361");
 		ConfigSettings.put("Tank2_WidthZ", "44");
-		
-		ConfigComments.put("CraftReleaseDelay", "<Number:15> The amount of time between when a user exists a craft and when" +
-				" the craft automatically releases.");
-		ConfigComments.put("UniversalRemoteId", "<Number:294> The item ID of the remote control that works on all vehicles.");
-		ConfigComments.put("RequireOp", "<TRUE/false> Only users with Bukkit-given 'op' can use craft.");
-		ConfigComments.put("StructureBlocks", "The blocks that define the structure of the craft. " +
-				"It is recommended not to use blocks like stone, dirt, and grass.");
-		ConfigComments.put("allowHoles", "<true/FALSE> Are holes allowed in craft (for submarines, drills, etc.)");
-		ConfigComments.put("EnableAsyncMovement", "<true/FALSE> Puts craft movement in asyncronous threading." +
-				" This is experimental, and might not work. There could be a preformance increase from it if it does, though.");
-		ConfigComments.put("TryNudge", "<true/FALSE> 'Nudge' the player rather than moving them. Currently broken.");
-		ConfigComments.put("LogLevel", "<Number:1> The amount of output to display to the console. " +
-				"1 means nothing beyond what Bukkit normally does, 2 means suspected errors, " +
-				"3 means errors and notifications, and 4 means suspected errors, notifications, and status messages.");
-		ConfigComments.put("RequireRemote", "<true/FALSE> The vehicle only moves if the remote item is in the player's hand.");
-		ConfigComments.put("EngineBlockId", "<block ID:61> The ID of the block to use as engines for craft types which do not " +
-				" explicitly define their own individual engine type in their craft type file.");
-		ConfigComments.put("HungryHungryDrill", "<true/FALSE> Any craft types which can drill will eat blocks rather than " +
-				"creating items.");
-		ConfigComments.put("WriteDefaultCraft", "Whether or not to create the default craft type files on plugin enable.");
-		ConfigComments.put("ForbiddenBlocks", "Blocks that prevent craft from being created if they are anywhere in the craft" + 
-				" leave 'null' for none.");
-		ConfigComments.put("DisableHyperSpaceField", "Prevents the hyperspace field blocks from appearing.");
-		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in. Leave as null for all.");
-		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in. Leave as null for all. Not recommended as I have not tested what this can do to a server");
 				
 		NavyCraft.instance.configFile = this;
 		
