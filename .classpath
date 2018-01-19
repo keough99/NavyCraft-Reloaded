@@ -22,7 +22,6 @@
 	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/spigot-1.12.jar"/>
 	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/worldedit-bukkit-6.1.7.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/worldguard-6.2.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/NavyCraft-2.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/NavyCraft-2.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/solme/Documents/autism/workspace/jars/craftbukkit-1.12.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -1071,7 +1071,7 @@ public class NavyCraft_BlockListener implements Listener {
 							player.sendMessage(ChatColor.RED + "Player already on scope.");
 						} else if (p.raised && !p.destroyed && (p.scopeLoc != null)) {
 							player.sendMessage(ChatColor.GREEN + "Periscope On!");
-							player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+							CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 							Location newLoc = new Location(playerCraft.world, p.scopeLoc.getBlockX() + 0.5, p.scopeLoc.getBlockY() + 0.5, p.scopeLoc.getBlockZ() + 0.5);
 							newLoc.setYaw(player.getLocation().getYaw());
 							player.teleport(newLoc);
@@ -1102,7 +1102,7 @@ public class NavyCraft_BlockListener implements Listener {
 						player.teleport(newLoc);
 						newPeriscope.user = player;
 						player.sendMessage(ChatColor.GREEN + "Periscope Started!");
-						player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+						CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 					}
 				}
 
@@ -1116,7 +1116,7 @@ public class NavyCraft_BlockListener implements Listener {
 					// if( 63 - c.minY == c.keelDepth )
 					// {
 					player.sendMessage(ChatColor.GOLD + "Starting Diesel Engines (SURFACE MODE)");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 					c.submergedMode = false;
 					c.vertPlanes = 0;
 					// c.type.maxEngineSpeed = c.type.maxSurfaceSpeed;
@@ -1141,7 +1141,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 				} else {
 					player.sendMessage(ChatColor.GOLD + "Starting Electric Engines (READY TO DIVE)");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 					c.submergedMode = true;
 
 					for (int eng : c.engineIDIsOn.keySet()) {
@@ -1190,7 +1190,7 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 				if ((tubeNum != 0) && c.tubeFiringMode.containsKey(tubeNum)) {
 					if (leftClick) {
-						player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+						CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 						if (c.tubeFiringMode.get(tubeNum) == -3) {
 							if (c.tubeFiringDisplay.get(tubeNum) == 0) {
 								if (c.tubeFiringAuto.get(tubeNum)) {
@@ -1255,7 +1255,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 					} else // right click
 					{
-						player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+						CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 						if (player.isSneaking()) {
 							if (c.tubeFiringMode.get(tubeNum) == -3) {
 								player.sendMessage(ChatColor.RED + "Cannot change mode while torpedo is live.");
@@ -1303,7 +1303,7 @@ public class NavyCraft_BlockListener implements Listener {
 			Craft c = Craft.getCraft(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 			if ((c != null) && (Craft.getPlayerCraft(player) == c) && c.isDressed(player)) {
 				if (leftClick) {
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 					if (c.tubeMk1FiringDisplay == 0) {
 						if (player.isSneaking()) {
@@ -1328,7 +1328,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 				} else // right click
 				{
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 					if (player.isSneaking()) {
 
 						if (c.tubeMk1FiringDisplay == -1) {
@@ -1361,11 +1361,11 @@ public class NavyCraft_BlockListener implements Listener {
 				if (!c.radarOn) {
 					c.radarOn = true;
 					player.sendMessage(ChatColor.GREEN + "Radar ACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_ON, 0.5f, 1.0f);
 				} else {
 					c.radarOn = false;
 					player.sendMessage(ChatColor.RED + "Radar DEACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.BLOCK_STONE_BUTTON_CLICK_OFF, 0.5f, 1.0f);
 				}
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
@@ -1378,11 +1378,11 @@ public class NavyCraft_BlockListener implements Listener {
 				if (!c.sonarOn) {
 					c.sonarOn = true;
 					player.sendMessage(ChatColor.GREEN + "Sonar ACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				} else {
 					c.sonarOn = false;
 					player.sendMessage(ChatColor.RED + "Sonar DEACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				}
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
@@ -1395,11 +1395,11 @@ public class NavyCraft_BlockListener implements Listener {
 				if (!c.hfOn) {
 					c.hfOn = true;
 					player.sendMessage(ChatColor.GREEN + "High Frequency Sonar ACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				} else {
 					c.hfOn = false;
 					player.sendMessage(ChatColor.RED + "High Frequency Sonar DEACTIVATED!");
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				}
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
@@ -1427,7 +1427,7 @@ public class NavyCraft_BlockListener implements Listener {
 						c.sonarTargetRng = -1;
 					}
 
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				}
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
@@ -1438,7 +1438,7 @@ public class NavyCraft_BlockListener implements Listener {
 			Craft c = Craft.getCraft(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 			if ((c != null) && (Craft.getPlayerCraft(player) == c) && c.isDressed(player)) {
 				c.doPing = true;
-				player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+				CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
@@ -1478,7 +1478,7 @@ public class NavyCraft_BlockListener implements Listener {
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.flakGunnersList.add(player);
 			player.sendMessage(ChatColor.YELLOW + "Manning Flak-Gun! Left Click with Blaze Rod to fire!");
-			player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 		} else if (craftTypeName.equalsIgnoreCase("aa-gun")) {
 			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
@@ -1513,7 +1513,7 @@ public class NavyCraft_BlockListener implements Listener {
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.aaGunnersList.add(player);
 			player.sendMessage(ChatColor.YELLOW + "Manning AA-Gun! Left Click with Blaze Rod to fire!");
-			player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 
 		} else if (craftTypeName.equalsIgnoreCase("launcher")) {
@@ -1532,7 +1532,7 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
-				player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+				CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 			} else {
 				player.sendMessage(ChatColor.RED + "Start the vehicle before using this sign.");
@@ -1613,7 +1613,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 				CraftMover cm = new CraftMover(c, plugin);
 				cm.signUpdates(block);
-				player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+				CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 			} else {
 				player.sendMessage(ChatColor.RED + "Start the vehicle before using this sign.");
@@ -1650,7 +1650,7 @@ public class NavyCraft_BlockListener implements Listener {
 						c.engineIDIsOn.put(engNum, true);
 						c.engineIDSetOn.put(engNum, true);
 					}
-					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+					CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				}
 
 				CraftMover cm = new CraftMover(c, plugin);
@@ -2237,13 +2237,12 @@ public class NavyCraft_BlockListener implements Listener {
 
 				// taskNum = -1;
 				try {
-					World cw = loc.getWorld();
 					for (int i = 0; i < 8; i++) {
 						sleep(200);
 						if ((i % 2) == 0) {
-							cw.playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 1.2f);
+							CraftMover.playOtherSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 1.2f);
 						} else {
-							cw.playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 1);
+							CraftMover.playOtherSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 1);
 						}
 
 					}
@@ -2264,10 +2263,9 @@ public class NavyCraft_BlockListener implements Listener {
 
 				// taskNum = -1;
 				try {
-					World cw = loc.getWorld();
 					for (int i = 0; i < 2; i++) {
 						sleep(300);
-						cw.playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 2);
+						CraftMover.playOtherSound(loc, Sound.BLOCK_NOTE_PLING, 1.0f, 2);
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();

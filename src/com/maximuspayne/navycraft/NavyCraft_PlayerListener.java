@@ -493,7 +493,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);
 				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-				event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+				CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);
 
 			}
@@ -507,7 +507,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 			NavyCraft.explosiveEggsList.add(newEgg);
 			event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-			event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+			CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 					1.70f);			
 		}
 			// Flak Gunner...
@@ -517,7 +517,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);
 				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-				event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+				CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);	
 
 			//// else check for movement clicking
@@ -1126,9 +1126,6 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 
 		if (split[0].equalsIgnoreCase("navycraft") || split[0].equalsIgnoreCase("nc")) {
-			if (!PermissionInterface.CheckQuietPerm(player, "navycraft." + event.getMessage().substring(1))) {
-				return;
-			}
 			if (split.length >= 2) {
 				if (split[1].equalsIgnoreCase("types")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.basic") )
@@ -1174,13 +1171,37 @@ public class NavyCraft_PlayerListener implements Listener {
 					} catch (Exception ex) {
 						player.sendMessage(ChatColor.RED + "Invalid loglevel.");
 					}
-					event.setCancelled(true);
+		    		event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("config")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
 					NavyCraft.instance.configFile.ListSettings(player);
 					return;
+					
+				} else if (split[1].equalsIgnoreCase("spawntimer")) {
+ 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
+ 						return;
+ 					int timerMin = -1;
+ 					if (split.length == 3) {
+ 						try {
+ 							timerMin = Integer.parseInt(split[2]);
+ 						} catch (NumberFormatException e) {
+ 							player.sendMessage("Invalid timer value");
+ 							e.printStackTrace();
+ 						}
+ 					}
+ 					if ((timerMin >= 1) || (timerMin <= 60)) {
+ 
+ 						NavyCraft.spawnTime = timerMin;
+ 						player.sendMessage("Spawn time set to " + timerMin + " minutes.");
+ 					} else {
+ 						player.sendMessage("Invalid timer value..between 1 to 60 minutes");
+ 					}
+ 
+ 					event.setCancelled(true);
+ 					return;
+					
 					// Cleanup command
 				} else if (split[1].equalsIgnoreCase("cleanup")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
@@ -1319,6 +1340,77 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					event.setCancelled(true);
 					return;
+					
+				} else if (split[1].equalsIgnoreCase("loadShips")) {
+ 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
+ 						return;
+ 					for (int x = 1800; x <= 2000; x++) {
+ 						for (int y = 30; y <= 128; y++) {
+ 							for (int z = 1100; z <= 1700; z++) {
+ 								if (player.getWorld().getBlockAt(x, y, z).getTypeId() == 68) {
+ 									Block shipSignBlock = player.getWorld().getBlockAt(x, y, z);
+ 									Sign shipSign = (Sign) shipSignBlock.getState();
+ 									String signLine0 = shipSign.getLine(0).trim().toLowerCase()
+ 											.replaceAll(ChatColor.BLUE.toString(), "");
+ 									CraftType craftType = CraftType.getCraftType(signLine0);
+ 									if (craftType != null) {
+ 										String name = shipSign.getLine(1);// .replaceAll("§.",
+ 																			// "");
+ 
+ 										if (name.trim().equals("")) {
+ 											name = null;
+ 										}
+ 
+ 										int shipx = shipSignBlock.getX();
+ 										int shipy = shipSignBlock.getY();
+ 										int shipz = shipSignBlock.getZ();
+ 
+ 										int direction = shipSignBlock.getData();
+ 
+ 										// get the block the sign is attached to
+ 										shipx = shipx + (direction == 4 ? 1 : (direction == 5 ? 1 : 0));
+ 										shipz = shipz + (direction == 2 ? 1 : (direction == 3 ? 1 : 0));
+ 
+ 										float dr = 0;
+ 
+ 										switch (shipSignBlock.getData()) {
+ 										case (byte) 0x2:// n
+ 											dr = 180;
+ 											break;
+ 										case (byte) 0x3:// s
+ 											dr = 0;
+ 											break;
+ 										case (byte) 0x4:// w
+ 											dr = 90;
+ 											break;
+ 										case (byte) 0x5:// e
+ 											dr = 270;
+ 											break;
+ 										}
+ 										player.sendMessage("x=" + x + " y=" + y + " z=" + z);
+ 										Craft theCraft = NavyCraft.instance.createCraft(player, craftType, shipx, shipy,
+ 												shipz, name, dr, shipSignBlock, true);
+ 										if (theCraft != null) {
+ 											if (name != null) {
+ 												player.sendMessage(name + " activated!");
+ 											} else {
+ 												player.sendMessage(signLine0 + " activated!");
+ 											}
+ 											CraftMover cm = new CraftMover(theCraft, plugin);
+ 											cm.structureUpdate(null, false);
+ 										} else {
+ 											player.getWorld().getBlockAt(x, y, z).setTypeId(0);
+ 										}
+ 									}
+ 								}
+ 							}
+ 						}
+ 					}
+ 					player.sendMessage(ChatColor.GOLD + "All vehicles loaded in ocean area");
+ 					event.setCancelled(true);
+ 					return;
+ 				}
+					
 					// nc help
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
@@ -3345,26 +3437,164 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.setCancelled(true);
 				return;
 				
-			} else if (craftName.equalsIgnoreCase("engine")) {
-				if (split.length == 2) {
-					float inValue = 1.0f;
-					try {
-						inValue = Float.parseFloat(split[1]);
-						if ((inValue >= 0) && (inValue <= 100.0f)) {
-							NavyCraft.playerEngineVolumes.put(player, inValue);
-							player.sendMessage(ChatColor.GOLD + "Volume set - " + ChatColor.GREEN + inValue + "%");
-						} else {
-							player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+			} else if (craftName.equalsIgnoreCase("volume")) {	
+				if (split.length > 1) {
+					if (split[1].equalsIgnoreCase("help")) {
+						player.sendMessage(ChatColor.WHITE + "Volume v" + NavyCraft.version + " commands :");
+						player.sendMessage(ChatColor.GOLD + "/volume - status message");
+						player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
+						player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
+						player.sendMessage(ChatColor.YELLOW + "Types: engine, gun, other, all");
+					}
+					if (split[1].equalsIgnoreCase("engine")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to set engine volume.");
+							event.setCancelled(true);
+							return;
 						}
-					} catch (NumberFormatException e) {
-						player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+						if (split[2].equalsIgnoreCase("mute")) {
+							float inValue = 0.0f;
+							NavyCraft.playerEngineVolumes.put(player, inValue);
+							player.sendMessage(ChatColor.GOLD + "Engine volume muted");
+							event.setCancelled(true);
+							return;
+						}
+						{
+							if (split.length == 3) {
+								float inValue = 1.0f;
+								try {
+									inValue = Float.parseFloat(split[2]);
+									if ((inValue >= 0) && (inValue <= 100.0f)) {
+										NavyCraft.playerEngineVolumes.put(player, inValue);
+										player.sendMessage(ChatColor.GOLD + "Volume set for engines - " + ChatColor.GREEN + inValue + "%");
+									} else {
+										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+									}
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "Change engine volume with /volume engine <%> with % from 0 to 100");
+							}
+							event.setCancelled(true);
+							return;
+						}
+					}
+					if (split[1].equalsIgnoreCase("weapons")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to set gun volume.");
+							event.setCancelled(true);
+							return;
+						}
+						if (split[2].equalsIgnoreCase("mute")) {
+							float inValue = 0.0f;
+							NavyCraft.playerWeaponVolumes.put(player, inValue);
+							player.sendMessage(ChatColor.GOLD + "Gun volume muted");
+							event.setCancelled(true);
+							return;
+						}
+						{
+							if (split.length == 3) {
+								float inValue = 1.0f;
+								try {
+									inValue = Float.parseFloat(split[2]);
+									if ((inValue >= 0) && (inValue <= 100.0f)) {
+										NavyCraft.playerWeaponVolumes.put(player, inValue);
+										player.sendMessage(ChatColor.GOLD + "Volume set for weapons - " + ChatColor.GREEN + inValue + "%");
+									} else {
+										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+									}
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "Change weapon volume with /volume weapon <%> with % from 0 to 100");
+							}
+							event.setCancelled(true);
+							return;
+						}
+					}
+					if (split[1].equalsIgnoreCase("other")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to set other volume.");
+							event.setCancelled(true);
+							return;
+						}
+						if (split[2].equalsIgnoreCase("mute")) {
+							float inValue = 0.0f;
+							NavyCraft.playerOtherVolumes.put(player, inValue);
+							player.sendMessage(ChatColor.GOLD + "Other volumes muted");
+							event.setCancelled(true);
+							return;
+						}
+						{
+							if (split.length == 3) {
+								float inValue = 1.0f;
+								try {
+									inValue = Float.parseFloat(split[2]);
+									if ((inValue >= 0) && (inValue <= 100.0f)) {
+										NavyCraft.playerOtherVolumes.put(player, inValue);
+										player.sendMessage(ChatColor.GOLD + "Volume set for other - " + ChatColor.GREEN + inValue + "%");
+									} else {
+										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+									}
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "Change other volume with /volume other <%> with % from 0 to 100");
+							}
+							event.setCancelled(true);
+							return;
+						}
+					}
+					if (split[1].equalsIgnoreCase("all")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to set other volume.");
+							event.setCancelled(true);
+							return;
+						}
+						if (split[2].equalsIgnoreCase("mute")) {
+							float inValue = 0.0f;
+							NavyCraft.playerEngineVolumes.put(player, inValue);
+							NavyCraft.playerWeaponVolumes.put(player, inValue);
+							NavyCraft.playerOtherVolumes.put(player, inValue);
+							player.sendMessage(ChatColor.GOLD + "All volume muted");
+							event.setCancelled(true);
+							return;
+						}
+						{
+							if (split.length == 3) {
+								float inValue = 1.0f;
+								try {
+									inValue = Float.parseFloat(split[2]);
+									if ((inValue >= 0) && (inValue <= 100.0f)) {
+										NavyCraft.playerOtherVolumes.put(player, inValue);
+										NavyCraft.playerWeaponVolumes.put(player, inValue);
+										NavyCraft.playerEngineVolumes.put(player, inValue);
+										player.sendMessage(ChatColor.GOLD + "Volume set for all - " + ChatColor.GREEN + inValue + "%");
+									} else {
+										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+									}
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "Change all volume with /volume all <%> with % from 0 to 100");
+							}
+							event.setCancelled(true);
+							return;
+						}
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "Change engine volume with /engine <%> with % from 0 to 100");
-				}
-				
-				event.setCancelled(true);
-				return;
+					player.sendMessage(ChatColor.WHITE + "Volume v" + NavyCraft.version + " commands :");
+					player.sendMessage(ChatColor.GOLD + "/volume - status message");
+					player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
+					player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
+					player.sendMessage(ChatColor.YELLOW + "Types: engine, gun, other, all");
+					}
+					event.setCancelled(true);
+					return;
 			} else if (craftName.equalsIgnoreCase("explode")) {
 				if (PermissionInterface.CheckPerm(player, "navycraft.admin")) {
 					if (split.length == 2) {
@@ -3566,7 +3796,6 @@ public class NavyCraft_PlayerListener implements Listener {
 					i++;
 				}
 			}
-		}
 		return;
         }
 
@@ -4361,7 +4590,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.getPlayer().getWorld().playEffect(egg.getLocation(), Effect.SMOKE, 0);
 				// event.getPlayer().getWorld().playEffect(egg.getLocation(),
 				// Effect.CLICK1, 0);
-				event.getPlayer().getWorld().playSound(egg.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.00f);
+				CraftMover.playWeaponSound(egg.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.00f);
 
 				Craft otherCraft = Craft.getOtherCraft(null, event.getPlayer(), egg.getLocation().getBlockX(),
 						egg.getLocation().getBlockY(), egg.getLocation().getBlockZ());
