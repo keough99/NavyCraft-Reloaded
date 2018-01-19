@@ -38,7 +38,10 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 /**
  * MoveCraft plugin for Hey0 mod (hMod) by Yogoda
  * Ported to Bukkit by SycoPrime
- *
+ * Modified by Maximuspayne for NBZ
+ * Continuing to be modified by Solmex, for public use
+ * Licensed under Apache 2.0 
+ * 
  * You are free to modify it for your own server
  * or use part of the code for your own plugins.
  * You don't need to credit me if you do, but I would appreciate it :)
