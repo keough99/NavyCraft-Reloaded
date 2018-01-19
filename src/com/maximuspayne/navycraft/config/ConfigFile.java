@@ -14,7 +14,6 @@ public class ConfigFile {
 	public ConfigFile() {
 		ConfigSettings.put("CraftReleaseDelay", "15");
 		ConfigSettings.put("UniversalRemoteId", "294");
-		//ConfigSettings.put("WriteDefaultCraft", "true");
 		ConfigSettings.put("RequireOp", "true");
 		ConfigSettings.put("StructureBlocks",
 				"4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
@@ -31,6 +30,7 @@ public class ConfigFile {
 		ConfigSettings.put("DisableHyperSpaceField", "false");
 		ConfigSettings.put("EnabledWorlds", "null");
 		ConfigSettings.put("BattleWorlds", "null");
+<<<<<<< HEAD
 		
 		ConfigComments.put("CraftReleaseDelay", "<Number:15> The amount of time between when a user exists a craft and when" +
 				" the craft automatically releases.");
@@ -57,6 +57,8 @@ public class ConfigFile {
 		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in. Leave as null for all.");
 		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in. Leave as null for all. Not recommended as I have not tested what this can do to a server");
 		
+=======
+>>>>>>> aecebfd6d00c6bfb016d48a9cbd3c9f915f30c49
 		ConfigSettings.put("Ship1_StartX", "601");
 		ConfigSettings.put("Ship1_EndX", "1567");
 		ConfigSettings.put("Ship1_WidthX", "14");
