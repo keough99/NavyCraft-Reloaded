@@ -488,7 +488,7 @@ public class OneCannon{
 		}
 	    
 	    } else {
-		p.sendMessage("You have to wait for the Cannon to cool down!!");
+		p.sendMessage(ChatColor.RED + "You have to wait for the Cannon to cool down!");
 	    }
 	}
 
@@ -807,10 +807,8 @@ public class OneCannon{
 		    else if( cannonType == 9 )//bombs
 		    	cost=500;
 		    
-		    //p.sendMessage("test1.");
 			if( PermissionInterface.CheckEnabledWorld(p.getLocation()) )
 			{
-				//p.sendMessage("test2.");
 				if( ess.getUser(p).canAfford(new BigDecimal(cost)) )
 				{
 					p.sendMessage("Weapon purchased.");
@@ -825,7 +823,6 @@ public class OneCannon{
 				}
 			}else
 			{
-				//p.sendMessage("test2.");
 				inventory.setItem(4, new ItemStack( 388, 1));
 			}
     	}

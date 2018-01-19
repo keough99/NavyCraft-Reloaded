@@ -11,7 +11,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
 /**
- * Permissions support file to interface Nijikokun's Permissions plugin to MoveCraft
+ * Permissions support file to interface Nijikokun's Permissions plugin to NavyCraft
 */
 
 public class PermissionInterface {

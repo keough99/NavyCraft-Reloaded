@@ -96,7 +96,6 @@ public class NavyCraft_Timer {
 	  //  @Override
 		    public void run()
 		    {
-		    	//MoveCraft.instance.unboardCraft(player, craft);
 		    }
     	}
     	);

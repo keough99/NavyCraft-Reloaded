@@ -12,6 +12,8 @@ You can download the resource packs and some of the old worlds from the old NBZ 
 
 If you have any questions message me on discord using Solmex#7439
 
+If your really interested in the project join the [Discord](https://discord.gg/5XX3tyU)
+
 More information over at the [Wiki](https://github.com/Solmex72/NavyCraft-Reloaded/wiki)
 
 For buisness inquries or any problems email me at navycraft.reloaded@gmail.com

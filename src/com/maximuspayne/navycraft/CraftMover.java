@@ -372,28 +372,6 @@ public class CraftMover {
 
 			return;
 		}
-	
-
-		if (craft.inHyperSpace) {
-			if (dx > 0) {
-				dx = 1;
-			} else if (dx < 0) {
-				dx = -1;
-			}
-			if (dy > 0) {
-				dy = 1;
-			} else if (dy < 0) {
-				dy = -1;
-			}
-			if (dz > 0) {
-				dz = 1;
-			} else if (dz < 0) {
-				dz = -1;
-			}
-
-			Craft_Hyperspace.hyperSpaceMove(craft, dx, dy, dz);
-			return;
-		}
 
 		if (craft.type.obeysGravity && craft.onGround && craft.canMove(dx, dy - 1, dz) && (craft.engineBlocks.size() == 0)) {
 			dy -= 1;

@@ -602,11 +602,7 @@ public class Craft {
 	// check there is no blocks in the way
 	public boolean canMove(int dx, int dy, int dz) {
 
-		/*
-		 * MoveCraft.instance.DebugMessage("move dx : " + dx + " dy : " + dy + " dZ : " + dz);
-		 * MoveCraft.instance.DebugMessage("move speed : " + speed);
-		 * MoveCraft.instance.DebugMessage("move sizeX : " + sizeX + " sizeY : " + sizeY + " sizeZ : " + sizeZ);
-		 */
+
 		ArrayList<Chunk> checkChunks = new ArrayList<Chunk>();
 		if( dx > 0 && dz > 0 )
 		{
@@ -712,12 +708,10 @@ public class Craft {
 						//if (dy < 0 && blockId >= 8 && blockId <= 11) {
 						if (blockId >= 8 && blockId <= 11) {
 
-							// MoveCraft.instance.DebugMessage("found water at " + y);
 							if (y > newWaterLevel)
 								newWaterLevel = y;
 						} else if (dy > 0 && blockId == 0) { // get out of water, into air
 
-								// MoveCraft.instance.DebugMessage("found air at " + y);
 								if (y - 1 < newWaterLevel)
 									newWaterLevel = y - 1;
 							}

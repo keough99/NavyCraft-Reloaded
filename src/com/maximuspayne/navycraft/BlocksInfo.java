@@ -4,7 +4,7 @@ import org.bukkit.Material;
 
 /**
  * BlocksInfo file
- * Defines information on all known blocks that MoveCraft uses for various purposes.
+ * Defines information on all known blocks that NavyCraft uses for various purposes.
  * @author Joel (Yogoda)
  */
 public class BlocksInfo {

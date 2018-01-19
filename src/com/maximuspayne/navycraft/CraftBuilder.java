@@ -10,7 +10,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 
 /**
- * MoveCraft craft builder
+ * NavyCraft craft builder
  * Detects and "assembles" a craft from a series of blocks, from a specified origin block
  * @author Joel (Yogoda)
  */
