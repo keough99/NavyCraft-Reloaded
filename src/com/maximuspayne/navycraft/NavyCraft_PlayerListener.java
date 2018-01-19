@@ -493,7 +493,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);
 				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-				event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+				CraftMover.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);
 
 			}
@@ -507,7 +507,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 			NavyCraft.explosiveEggsList.add(newEgg);
 			event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-			event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+			CraftMover.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 					1.70f);			
 		}
 			// Flak Gunner...
@@ -517,7 +517,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);
 				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-				event.getPlayer().getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+				CraftMover.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);	
 
 			//// else check for movement clicking
@@ -3345,13 +3345,13 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.setCancelled(true);
 				return;
 				
-			} else if (craftName.equalsIgnoreCase("engine")) {
+			} else if (craftName.equalsIgnoreCase("volume")) {
 				if (split.length == 2) {
 					float inValue = 1.0f;
 					try {
 						inValue = Float.parseFloat(split[1]);
 						if ((inValue >= 0) && (inValue <= 100.0f)) {
-							NavyCraft.playerEngineVolumes.put(player, inValue);
+							NavyCraft.playerVolumes.put(player, inValue);
 							player.sendMessage(ChatColor.GOLD + "Volume set - " + ChatColor.GREEN + inValue + "%");
 						} else {
 							player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3360,7 +3360,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
 					}
 				} else {
-					player.sendMessage(ChatColor.YELLOW + "Change engine volume with /engine <%> with % from 0 to 100");
+					player.sendMessage(ChatColor.YELLOW + "Change volume with /volume <%> with % from 0 to 100");
 				}
 				
 				event.setCancelled(true);
@@ -4361,7 +4361,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.getPlayer().getWorld().playEffect(egg.getLocation(), Effect.SMOKE, 0);
 				// event.getPlayer().getWorld().playEffect(egg.getLocation(),
 				// Effect.CLICK1, 0);
-				event.getPlayer().getWorld().playSound(egg.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.00f);
+				CraftMover.playSound(egg.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.00f);
 
 				Craft otherCraft = Craft.getOtherCraft(null, event.getPlayer(), egg.getLocation().getBlockX(),
 						egg.getLocation().getBlockY(), egg.getLocation().getBlockZ());

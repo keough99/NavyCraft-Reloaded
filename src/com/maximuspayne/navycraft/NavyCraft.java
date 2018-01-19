@@ -140,7 +140,7 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int schedulerCounter = 0;
 	
-	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {
 		configFile = new ConfigFile();
