@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 import org.bukkit.ChatColor;
@@ -1524,7 +1523,7 @@ public class CraftMover {
 								NavyCraft.playerExp.put(p.getName(), playerNewExp);
 							}
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							checkRankWorld(p, playerNewExp, craft.world);
+							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
 					}
 					NavyCraft.saveExperience();
@@ -1553,7 +1552,7 @@ public class CraftMover {
 								NavyCraft.playerExp.put(p.getName(), playerNewExp);
 							}
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							checkRankWorld(p, playerNewExp, craft.world);
+							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
 					}
 					NavyCraft.saveExperience();
@@ -6895,42 +6894,6 @@ public class CraftMover {
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
 					{
 						NavyCraft_BlockListener.rewardExpCraft(newExp, topCraft);
-					}
-				}
-			}
-		}
-	}
-
-	public static void checkRankWorld(Player playerIn, int newExp, World world) {
-		String worldName = world.getName();
-		
-		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
-		if( pex==null )
-			return;
-		
-		for(String s:PermissionsEx.getUser(playerIn).getPermissions(worldName)) {
-			if( s.contains("navycraft") ) {
-				if( s.contains("exp") ) {
-					String[] split = s.split("\\.");
-					try {
-						int rankExp = Integer.parseInt(split[2]);
-						if( newExp >= rankExp ) {
-							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
-							
-							String rankName = "";
-							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
-							for( String group : groupNames ) {
-								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
-									rankName = group;
-									break;
-								}
-							}
-							plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
-						}
-							
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						System.out.println("Invalid perm-" + s);
 					}
 				}
 			}

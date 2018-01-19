@@ -1,8 +1,8 @@
 name: NavyCraft
 main: com.maximuspayne.navycraft.NavyCraft
-version: 3.0.0
+version: 2.8.1
 authors: [Maximuspayne, Solmex, Premejo, SycoPrime, Yogoda]
-depend: [WorldGuard,WorldEdit,Essentials]
+depend: [WorldGuard,WorldEdit,Essentials,PermissionsEx]
 
 commands:
    navycraft:

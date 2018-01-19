@@ -207,7 +207,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY
 							+ " rank points.");
-					CraftMover.checkRankWorld(p, newExp, p.getWorld());
+					NavyCraft_BlockListener.checkRankWorld(p, newExp, p.getWorld());
 					NavyCraft.saveExperience();
 				}
 			}
@@ -1422,21 +1422,21 @@ public class NavyCraft_PlayerListener implements Listener {
 							+ "set engine volume from 0-100");
 				}
 				
-				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
+				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") && !player.isOp() )
 				{
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft list : " + ChatColor.WHITE
+					player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
 						+ "list all craft");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft config : " + ChatColor.WHITE + "display config settings");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroyauto : " + ChatColor.WHITE + "destroys all auto ships");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft destroystuck : " + ChatColor.WHITE + "destroys stuck auto ships");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
-					player.sendMessage(ChatColor.DARK_AQUA + "/exp set [player] # : " + ChatColor.WHITE + "set players exp to #");
-					player.sendMessage(ChatColor.DARK_AQUA + "/exp add [player] # : " + ChatColor.WHITE + "add # to players current exp");
-					player.sendMessage(ChatColor.DARK_AQUA + "/exp remove [player] # : " + ChatColor.WHITE + "remove # to players current exp");
+					player.sendMessage(ChatColor.BLUE + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
+					player.sendMessage(ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
+					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
+					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft destroyauto : " + ChatColor.WHITE + "destroys all auto ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft destroystuck : " + ChatColor.WHITE + "destroys stuck auto ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
+					player.sendMessage(ChatColor.BLUE + "/exp set [player] # : " + ChatColor.WHITE + "set players exp to #");
+					player.sendMessage(ChatColor.BLUE + "/exp add [player] # : " + ChatColor.WHITE + "add # to players current exp");
+					player.sendMessage(ChatColor.BLUE + "/exp remove [player] # : " + ChatColor.WHITE + "remove # to players current exp");
 				}
 
 			}
@@ -1631,7 +1631,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.setCancelled(true);
 				return;
 				
-				} else if (craftName.equalsIgnoreCase("shipyard")) {
+				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
 						if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
@@ -2407,7 +2407,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.GOLD + "/shipyard private <id> - Allows only you and your members to select your vehicle");
 							player.sendMessage(ChatColor.GOLD + "/shipyard plist <player> - List the given player's plots");
 							player.sendMessage(ChatColor.GOLD + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
-							if (PermissionInterface.CheckPerm(player, "navycraft.admin") || player.isOp()) {
+							if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
 								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard player <player> - View a players plot status");
 								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
 							}
@@ -3527,6 +3527,105 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.setCancelled(true);
 				return;
 			} else if (craftName.equalsIgnoreCase("rank")) {	
+				if (split.length > 1) {
+					if (split[1].equalsIgnoreCase("help")) {
+						player.sendMessage(ChatColor.WHITE + "Rank v" + NavyCraft.version + " commands :");
+						player.sendMessage(ChatColor.GOLD + "/rank - view your rank");
+						player.sendMessage(ChatColor.GOLD + "/rank view <player> - view players exp");
+						if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
+						player.sendMessage(ChatColor.GOLD + "/rank set <player> <exp> - set a players exp");
+						player.sendMessage(ChatColor.GOLD + "/rank add <player> <exp> - give exp to a player");
+						player.sendMessage(ChatColor.GOLD + "/rank remove <player> <exp> - remove exp from a player");
+						}
+					}
+					if (split[1].equalsIgnoreCase("view")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to view players ranks.");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (split.length < 3) {
+							player.sendMessage(ChatColor.GOLD + "Usage - /rank view <player>");
+							player.sendMessage(ChatColor.GOLD + "Example - /rank view Solmex");
+							event.setCancelled(true);
+							return;
+						}
+						String p = split[2];
+						{
+						NavyCraft_BlockListener.showRank(player, p);
+						}
+						}
+					if (split[1].equalsIgnoreCase("set")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to set exp.");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (split.length < 4) {
+							player.sendMessage(ChatColor.GOLD + "Usage - /rank set <player> <exp>");
+							player.sendMessage(ChatColor.GOLD + "Example - /rank set Solmex 100");
+							event.setCancelled(true);
+							return;
+						}
+						int newExp = Math.abs(Integer.parseInt(split[3]));
+						String p = split[2];
+						{
+							NavyCraft_BlockListener.setExpPlayer(newExp, p);
+						}
+						{
+						NavyCraft_BlockListener.showRank(player, p);
+						}
+						}	
+					if (split[1].equalsIgnoreCase("add")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to add exp.");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (split.length < 4) {
+							player.sendMessage(ChatColor.GOLD + "Usage - /rank remove <player> <exp>");
+							player.sendMessage(ChatColor.GOLD + "Example - /rank add Solmex 100");
+							event.setCancelled(true);
+							return;
+						}
+						int newExp = Math.abs(Integer.parseInt(split[3]));
+						String p = split[2];
+						{
+							NavyCraft_BlockListener.addExpPlayer(newExp, p);
+						}
+						{
+							NavyCraft_BlockListener.showRank(player, p);
+						}
+						}
+					if (split[1].equalsIgnoreCase("remove")) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+							player.sendMessage(ChatColor.RED + "You do not have permission to remove exp.");
+							event.setCancelled(true);
+							return;
+						}
+
+						if (split.length < 4) {
+							player.sendMessage(ChatColor.GOLD + "Usage - /rank remove <player> <exp>");
+							player.sendMessage(ChatColor.GOLD + "Example - /rank remove Solmex 100");
+							event.setCancelled(true);
+							return;
+						}
+						int newExp = Math.abs(Integer.parseInt(split[3]));
+						String p = split[2];
+						{
+							NavyCraft_BlockListener.removeExpPlayer(newExp, p);
+						}
+						{
+						NavyCraft_BlockListener.showRank(player, p);
+						}
+						}
+					event.setCancelled(true);
+					return;
+					
+				} else {
 				pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 				if( pex != null ){
 					{
@@ -3537,6 +3636,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				event.setCancelled(true);
 				return;
+					}
 			} else if (craftType != null) {
 
 				if (processCommand(craftType, player, split) == true) {
@@ -3562,7 +3662,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 			}
 		return;
-}
+        }
 
 	@SuppressWarnings("deprecation")
 	public boolean processCommand(CraftType craftType, Player player, String[] split) {

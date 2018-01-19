@@ -61,6 +61,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
+import ru.tehkode.permissions.exceptions.RankingException;
 
 @SuppressWarnings({ "deprecation", "unused" })
 public class NavyCraft_BlockListener implements Listener {
@@ -69,6 +70,7 @@ public class NavyCraft_BlockListener implements Listener {
 	public static PermissionsEx pex;
 	public static WorldEditPlugin wep;
 	public static WorldGuardPlugin wgp;
+	public static CraftMover cm;
 	public static int lastSpawn = -1;
 
 	public NavyCraft_BlockListener(NavyCraft p) {
@@ -3950,6 +3952,41 @@ public class NavyCraft_BlockListener implements Listener {
 		if(!event.isCancelled())
 			AimCannonPlayerListener.onBlockDispense(event);
 	}
+	public static void showRank(Player player, String p) {
+		int exp = 0;
+		String worldName = null;
+		
+		NavyCraft.loadExperience();
+		
+		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+		
+		int rankExp=0;
+		for(String s:PermissionsEx.getUser(p).getPermissions(worldName)) {
+			if( s.contains("navycraft") ) {
+				if( s.contains("exp") ) {
+					String[] split = s.split("\\.");
+					try {
+						rankExp = Integer.parseInt(split[2]);	
+					} catch (Exception ex) {
+						System.out.println("Invalid perm-" + s);
+					}
+				}
+			}
+		}
+		
+		List<String> groupNames = PermissionsEx.getUser(p).getParentIdentifiers("navycraft");
+		for( String s : groupNames ) {
+			if( PermissionsEx.getPermissionManager().getGroup(s).getRankLadder().equalsIgnoreCase("navycraft") ) {
+				if (NavyCraft.playerExp.containsKey(p)) {
+					exp = NavyCraft.playerExp.get(p);
+				}
+				player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + s.toUpperCase()
+						+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp + "/" + rankExp
+						+ ChatColor.GRAY + " rank points.");
+				return;
+			}
+	   }
+	}
 	public static void getRank(Player player) {
 		int exp = 0;
 		String worldName = player.getWorld().getName();
@@ -3957,8 +3994,6 @@ public class NavyCraft_BlockListener implements Listener {
 		NavyCraft.loadExperience();
 		
 		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
-		if( pex==null )
-			return;
 		
 		int rankExp=0;
 		for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
@@ -3986,12 +4021,12 @@ public class NavyCraft_BlockListener implements Listener {
 				
 				if( exp >= rankExp )
 				{
-					CraftMover.checkRankWorld(player, exp, player.getWorld());
+					checkRankWorld(player, exp, player.getWorld());
 				}
 				return;
-			    }
-		    }
-	    }
+			}
+	   }
+	}
 	
 	//Need to add back battles support.
 	
@@ -4005,7 +4040,7 @@ public class NavyCraft_BlockListener implements Listener {
 		
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
-		CraftMover.checkRankWorld(player, newExp, player.getWorld());
+		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
 		NavyCraft.saveExperience();
 	}
 	
@@ -4022,14 +4057,72 @@ public class NavyCraft_BlockListener implements Listener {
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
 				}
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-				CraftMover.checkRankWorld(p, playerNewExp, craft.world);
+				checkRankWorld(p, playerNewExp, craft.world);
 			}
 			
 		}
 		NavyCraft.saveExperience();
+	}
+	
+	public static void setExpPlayer(int newExp, String p) {
+		NavyCraft.playerExp.put(p, newExp);
+		NavyCraft.saveExperience();
+	}
+	
+	public static void removeExpPlayer(int newExp, String p) {
+		if (NavyCraft.playerExp.containsKey(p)) {
+			newExp = NavyCraft.playerExp.get(p) - newExp;
+			NavyCraft.playerExp.put(p, newExp);
+		} else {
+			NavyCraft.playerExp.put(p, newExp);
+		}
+		NavyCraft.saveExperience();
+	}
+	
+	public static void addExpPlayer(int newExp, String p) {
+		if (NavyCraft.playerExp.containsKey(p)) {
+			newExp = NavyCraft.playerExp.get(p) + newExp;
+			NavyCraft.playerExp.put(p, newExp);
+		} else {
+			NavyCraft.playerExp.put(p, newExp);
+		}
+		NavyCraft.saveExperience();
+	}
+	public static void checkRankWorld(Player playerIn, int newExp, World world) {
+		String worldName = world.getName();
 		
+		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if( pex==null )
+			return;
 		
-		
+		for(String s:PermissionsEx.getUser(playerIn).getPermissions(worldName)) {
+			if( s.contains("navycraft") ) {
+				if( s.contains("exp") ) {
+					String[] split = s.split("\\.");
+					try {
+						int rankExp = Integer.parseInt(split[2]);
+						if( newExp >= rankExp ) {
+							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
+							
+							String rankName = "";
+							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
+							for( String group : groupNames ) {
+								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+									rankName = group;
+									break;
+								}
+							}
+							plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
+						}
+						
+							
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						System.out.println("Invalid perm-" + s);
+					}
+				}
+			}
+		}
 	}
 	
 	}
