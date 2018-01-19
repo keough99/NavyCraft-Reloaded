@@ -11,6 +11,7 @@ Follow Max's latest releases on SpigotMC: https://www.spigotmc.org/resources/nav
 You can download the resource packs and some of the old worlds from the old NBZ to help your setup here... http://navalbattlezone.com/downloads/
 
 If you have any questions message me on discord using Solmex#7439
+If your really interested in the project join the [Discord](https://discord.gg/5XX3tyU)
 
 More information over at the [Wiki](https://github.com/Solmex72/NavyCraft-Reloaded/wiki)
 
