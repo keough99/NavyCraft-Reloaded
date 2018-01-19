@@ -539,7 +539,7 @@ public class CraftType {
 
 				CraftType craftType = new CraftType(craftName);
 				
-				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalRemoteId"));
+				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalHelmId"));
 
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(

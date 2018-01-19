@@ -2678,7 +2678,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				return;
 			}else if ( craftName.equalsIgnoreCase("soldier") )
 			{
-				if( player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("BattleWorlds")) || player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("EnabledWorlds")) )
+				if( player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("BattleWorlds")) )
 				{
 					if( player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("BattleWorlds")) && NavyCraft.battleMode > 0 )
 					{
@@ -2714,7 +2714,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 				}else
 				{
-					player.sendMessage(ChatColor.RED + "You can only get this kit in the overworld.");
+					// use essentials instead to make a kit.
+					player.sendMessage(ChatColor.RED + "You can only get this kit during an official battle.");
 				}
 			}else if( craftName.equalsIgnoreCase("battle") )
 			{
@@ -2737,15 +2738,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						case 3:
 							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
 							break;
-						case 4:
-							battleTypeStr = "Normandy";
-							break;
-						case 5:
-							battleTypeStr = "Wake Island";
-							break;
-						case 6:
-							battleTypeStr = "Omaha";
-							break;
 						}
 						player.sendMessage("New Battle Queuing for " + battleTypeStr + "!");
 						if (NavyCraft.bluePlayers.contains(player.getName())) {
@@ -2757,9 +2749,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 
 						player.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any"  + ChatColor.YELLOW + "to queue!");
-						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red "
-								+ ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue "
-								+ ChatColor.WHITE + " and " + NavyCraft.anyPlayers.size() + " unassigned.");
+						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red " + ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue " + ChatColor.WHITE + " and " + NavyCraft.anyPlayers.size() + " unassigned.");
 						if (PermissionInterface.CheckQuietPerm(player, "navycraft.battle") || player.isOp()) {
 							player.sendMessage(ChatColor.GREEN + "Use /battle start to start battle");
 						}
@@ -2772,7 +2762,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
 							scoreUpdateStr = "Time Left: "
 									+ (int) ((NavyCraft.battleLength
-											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+								    - (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
 									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
 									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
 							break;
@@ -2781,7 +2771,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							scoreTarawa();
 							scoreUpdateStr = "Time Left: "
 									+ (int) ((NavyCraft.battleLength
-											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
 									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
 									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
 							break;
@@ -2789,18 +2779,9 @@ public class NavyCraft_PlayerListener implements Listener {
 							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
 							scoreUpdateStr = "Time Left: "
 									+ (int) ((NavyCraft.battleLength
-											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
+									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
 									+ "min  Score: " + ChatColor.RED + NavyCraft.redPoints + " Team Red  "
 									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
-							break;
-						case 4:
-							battleTypeStr = "Normandy";
-							break;
-						case 5:
-							battleTypeStr = "Wake Island";
-							break;
-						case 6:
-							battleTypeStr = "Omaha";
 							break;
 						}
 						player.sendMessage(ChatColor.RED + "Battle in progress!" + battleTypeStr);
@@ -2815,8 +2796,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (!NavyCraft.battleLockTeams) {
 							player.sendMessage(ChatColor.YELLOW + "You can join this battle by typing"  + ChatColor.YELLOW + "/battle " + ChatColor.RED + "red" + ChatColor.DARK_GRAY + "|" + ChatColor.BLUE + "blue" + ChatColor.DARK_GRAY + "|" + ChatColor.YELLOW + "any" );
 						}
-						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red "
-								+ ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue");
+						player.sendMessage("There are " + ChatColor.RED + NavyCraft.redPlayers.size() + " red "	+ ChatColor.WHITE + "and " + ChatColor.BLUE + NavyCraft.bluePlayers.size() + " blue");
 					}
 				} else {
 					if (split[1].equalsIgnoreCase("red")) {
@@ -2829,10 +2809,9 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							if (!NavyCraft.redPlayers.contains(player.getName())) {
 								NavyCraft.redPlayers.add(player.getName());
-								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED
-										+ " queues for the Red Team!");
+								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " queues for the Red Team!");
 							} else {
-								player.sendMessage("You are already on that team");
+								player.sendMessage(ChatColor.RED + "You are already on that team");
 							}
 						} else if (NavyCraft.battleMode > 0) {
 							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
@@ -2855,8 +2834,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 								if (!NavyCraft.redPlayers.contains(player.getName())) {
 									NavyCraft.redPlayers.add(player.getName());
-									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-											+ ChatColor.RED + " joins the Red Team!");
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " joins the Red Team!"); 
 									player.teleport(NavyCraft.redSpawn);
 								}
 							} else {
@@ -2874,16 +2852,13 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							if (!NavyCraft.bluePlayers.contains(player.getName())) {
 								NavyCraft.bluePlayers.add(player.getName());
-								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.BLUE
-										+ " queues for the Blue Team!");
+								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.BLUE + " queues for the Blue Team!");
 							} else {
 								player.sendMessage("You are already on that team");
 							}
 						} else if (NavyCraft.battleMode > 0) {
-							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
-									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
-								if (NavyCraft.redPlayers.contains(player.getName())
-										|| NavyCraft.bluePlayers.contains(player.getName())) {
+							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength - (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
+								if (NavyCraft.redPlayers.contains(player.getName()) || NavyCraft.bluePlayers.contains(player.getName())) {
 									player.sendMessage(ChatColor.RED + "Already on a team, first use" + ChatColor.YELLOW + "/battle exit");
 									event.setCancelled(true);
 									return;
@@ -2900,8 +2875,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 								if (!NavyCraft.bluePlayers.contains(player.getName())) {
 									NavyCraft.bluePlayers.add(player.getName());
-									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-											+ ChatColor.BLUE + " joins the Blue Team!");
+									plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()+ ChatColor.BLUE + " joins the Blue Team!");
 									player.teleport(NavyCraft.blueSpawn);
 								}
 							} else {
@@ -2919,16 +2893,13 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							if (!NavyCraft.anyPlayers.contains(player.getName())) {
 								NavyCraft.anyPlayers.add(player.getName());
-								plugin.getServer().broadcastMessage(
-										ChatColor.YELLOW + player.getName() + " queues for either Team!");
+								plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " queues for either Team!");
 							} else {
 								player.sendMessage(ChatColor.RED + "You are already on that team");
 							}
 						} else if (NavyCraft.battleMode > 0) {
-							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength
-									- (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
-								if (NavyCraft.redPlayers.contains(player.getName())
-										|| NavyCraft.bluePlayers.contains(player.getName())) {
+							if (!NavyCraft.battleLockTeams && ((NavyCraft.battleLength - (System.currentTimeMillis() - NavyCraft.battleStartTime)) > 300000)) {
+								if (NavyCraft.redPlayers.contains(player.getName())|| NavyCraft.bluePlayers.contains(player.getName())) {
 									player.sendMessage(ChatColor.RED + "Already on a team, first use " + ChatColor.YELLOW + "/battle exit");
 									event.setCancelled(true);
 									return;
@@ -2940,8 +2911,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 									if (!NavyCraft.bluePlayers.contains(player.getName())) {
 										NavyCraft.bluePlayers.add(player.getName());
-										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-												+ ChatColor.BLUE + " joins the Blue Team!");
+										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.BLUE + " joins the Blue Team!");
 										player.teleport(NavyCraft.blueSpawn);
 									}
 								} else if (NavyCraft.redPlayers.size() < NavyCraft.bluePlayers.size()) {
@@ -2950,8 +2920,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 									if (!NavyCraft.redPlayers.contains(player.getName())) {
 										NavyCraft.redPlayers.add(player.getName());
-										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-												+ ChatColor.RED + " joins the Red Team!");
+										plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " joins the Red Team!");
 										player.teleport(NavyCraft.redSpawn);
 									}
 								} else {
@@ -2961,8 +2930,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										}
 										if (!NavyCraft.redPlayers.contains(player.getName())) {
 											NavyCraft.redPlayers.add(player.getName());
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-													+ ChatColor.RED + " joins the Red Team!");
+											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " joins the Red Team!");
 											player.teleport(NavyCraft.redSpawn);
 										}
 									} else {
@@ -2971,8 +2939,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										}
 										if (!NavyCraft.bluePlayers.contains(player.getName())) {
 											NavyCraft.bluePlayers.add(player.getName());
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName()
-													+ ChatColor.BLUE + " joins the Blue Team!");
+											plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + ChatColor.BLUE + " joins the Blue Team!");
 											player.teleport(NavyCraft.blueSpawn);
 										}
 									}
@@ -2984,7 +2951,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					} else if (split[1].equalsIgnoreCase("help")) {
 						if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-							player.sendMessage(ChatColor.WHITE + "Battles v2.0 commands :");
+							player.sendMessage(ChatColor.WHITE + "Battles v" + NavyCraft.version  + " commands :");
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle (red,blue,any) " + " : " + ChatColor.WHITE
 									+ "joins the battle as red, blue, or any");
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle exit " + " : " + ChatColor.WHITE
@@ -2994,7 +2961,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.DARK_AQUA + "/team (text) " + " : " + ChatColor.WHITE
 									+ "displays a message to your team");
 						}
-						
 						if( PermissionInterface.CheckQuietPerm(player, "navycraft.battle") )
 						{
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle new : " + ChatColor.WHITE
@@ -3005,6 +2971,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle kick (player) : " + ChatColor.WHITE + "kicks a player from the battle");
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle kickall : " + ChatColor.WHITE + "kicks all players out of Battle World");
 							player.sendMessage(ChatColor.DARK_AQUA + "/battle lock : " + ChatColor.WHITE + "locks team joining");
+							player.sendMessage(ChatColor.DARK_AQUA + "/battle list : " + ChatColor.WHITE + "lists battle types");
 						}
 					
 						
@@ -3067,8 +3034,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
-							plugin.getServer().broadcastMessage(
-									ChatColor.YELLOW + testPlayer.getName() + " was kicked from the battle!");
+							plugin.getServer().broadcastMessage(ChatColor.YELLOW + testPlayer.getName() + " was kicked from the battle!");
 							if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
 								Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
 								testPlayer.teleport(spawnLoc);

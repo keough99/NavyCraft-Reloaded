@@ -105,7 +105,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 		// remove colors
 		craftTypeName = craftTypeName.replaceAll(ChatColor.BLUE.toString(), "");
-		int lotType = 0; /// 1=DD, 2=SUB1, 3=SUB2, 4=CL, 5=CA, 6=hangar1, 7=hangar2
+		int lotType = 0; /// 1=DD, 2=SUB1, 3=SUB2, 4=CL, 5=CA, 6=hangar1, 7=hangar2 8=tank1 9=tank2
 
 		// remove brackets
 		if (craftTypeName.startsWith("[")) {
@@ -322,6 +322,17 @@ public class NavyCraft_BlockListener implements Listener {
 					offsetY = 0;
 					offsetZ = -33;
 				} else if (lotType == 8) {
+					loc = block.getRelative(bf, 12).getLocation();
+					sizeX = 12;
+					sizeY = 7;
+					sizeZ = 19;
+					originX = 0;
+					originY = -1;
+					originZ = -18;
+					offsetX = -12;
+					offsetY = 0;
+					offsetZ = -20;
+				} else if (lotType == 9) {
 					loc = block.getRelative(bf, 12).getLocation();
 					sizeX = 12;
 					sizeY = 7;
@@ -921,7 +932,7 @@ public class NavyCraft_BlockListener implements Listener {
 						shiftForward = 32;
 						// shiftRight = 0;
 						// shiftForward = 0;
-						shiftUp = 7;
+						shiftUp = 14;
 						shiftDown = 0;
 					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK1")) {
 						shiftRight = 11;
@@ -929,9 +940,9 @@ public class NavyCraft_BlockListener implements Listener {
 						shiftUp = 7;
 						shiftDown = 0;
 					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK2")) {
-						shiftRight = 0;
-						shiftForward = 0;
-						shiftUp = 9;
+						shiftRight = 25;
+						shiftForward = 33;
+						shiftUp = 14;
 						shiftDown = 0;
 					} else {
 						player.sendMessage("Unknown lot type error2!");
@@ -2323,7 +2334,7 @@ public class NavyCraft_BlockListener implements Listener {
 		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR2")) {
 			shiftRight = 24;
 			shiftForward = 32;
-			shiftUp = 7;
+			shiftUp = 14;
 			shiftDown = 0;
 		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK1")) {
 			shiftRight = 11;
@@ -2888,12 +2899,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1567; x+=14 )
 		// for( int x=16; x<=1286; x+=14 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_WidthZ"));
+		int startX = 601;
+		int endX = 1567;
+		int widthX = 14;
+		int startZ = -408;
+		int endZ = -852;
+		int widthZ = 37;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-408; z>=-852; z-=37 )
@@ -2948,12 +2959,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1567; x+=14 )
 		// for( int x=16; x<=1286; x+=14 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship1_WidthZ"));
+		int startX = 601;
+		int endX = 1567;
+		int widthX = 14;
+		int startZ = -408;
+		int endZ = -852;
+		int widthZ = 37;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-408; z>=-852; z-=37 )
@@ -2975,12 +2986,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1421; x+=10 )
 		// for( int x=16; x<=1296; x+=10 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_WidthZ"));
+		int startX = 601;
+		int endX = 1421;
+		int widthX = 10;
+		int startZ = -356;
+		int endZ = -148;
+		int widthZ = 52;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-356; z<=-148; z+=52 )
@@ -3035,12 +3046,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1421; x+=10 )
 		// for( int x=16; x<=1296; x+=10 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship2_WidthZ"));
+		int startX = 601;
+		int endX = 1421;
+		int widthX = 10;
+		int startZ = -356;
+		int endZ = -148;
+		int widthZ = 52;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-356; z<=-148; z+=52 )
@@ -3062,12 +3073,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=549; x>=21; x-=12 )
 		// for( int x=-35; x>=-1091; x-=12 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_WidthZ"));
+		int startX = 549;
+		int endX = 21;
+		int widthX = 12;
+		int startZ = -329;
+		int endZ = -92;
+		int widthZ = 79;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-329; z<=-92; z+=79 )
@@ -3122,12 +3133,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=549; x>=21; x-=12 )
 		// for( int x=-35; x>=-1091; x-=12 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship3_WidthZ"));
+		int startX = 549;
+		int endX = 21;
+		int widthX = 12;
+		int startZ = -329;
+		int endZ = -92;
+		int widthZ = 79;
 		for (int x = startX; x <= endX; x += widthX) {
 			// for( int z=-329; z<=-92; z+=79 )
 			// for( int z=60; z<=297; z+=79 )
@@ -3148,12 +3159,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=543; x>=21; x-=18 )
 		// for( int x=-41; x>=-1085; x-=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_WidthZ"));
+		int startX = 543;
+		int endX = 21;
+		int widthX = 18;
+		int startZ = -408;
+		int endZ = -600;
+		int widthZ = 64;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-408; z>=-600; z-=64 )
@@ -3208,12 +3219,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=543; x>=21; x-=18 )
 		// for( int x=-41; x>=-1085; x-=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship4_WidthZ"));
+		int startX = 543;
+		int endX = 21;
+		int widthX = 18;
+		int startZ = -408;
+		int endZ = -600;
+		int widthZ = 64;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-408; z>=-600; z-=64 )
@@ -3235,12 +3246,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=1404; x>=656; x-=22 )
 		// for( int x=1270; x>=16; x-=22 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_WidthZ"));
+		int startX = 656;
+		int endX = 1426;
+		int widthX = 18;
+		int startZ = 562;
+		int endZ = 37;
+		int widthZ = 105;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=37; z<=142; z+=105 )
@@ -3295,12 +3306,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=1404; x>=656; x-=22 )
 		// for( int x=1270; x>=16; x-=22 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Ship5_WidthZ"));
+		int startX = 656;
+		int endX = 1426;
+		int widthX = 18;
+		int startZ = 562;
+		int endZ = 37;
+		int widthZ = 105;
 		for (int x = startX; x <= endX; x += widthX) {
 			// for( int z=37; z<=142; z+=105 )
 			// for( int z=349; z<=454; z+=105 )
@@ -3321,12 +3332,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=553; x>=-137; x-=23 )
 		// for( int x=-31; x>=-1067; x-=23 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_WidthZ"));
+		int startX = 553;
+		int endX = -137;
+		int widthX = 23;
+		int startZ = -766;
+		int endZ = -1191;
+		int widthZ = 25;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-766; z>=-1191; z-=25 )
@@ -3381,12 +3392,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=553; x>=-137; x-=23 )
 		// for( int x=-31; x>=-1067; x-=23 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar1_WidthZ"));
+		int startX = 553;
+		int endX = -137;
+		int widthX = 23;
+		int startZ = -766;
+		int endZ = -1191;
+		int widthZ = 25;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-766; z>=-1191; z-=25 )
@@ -3407,12 +3418,12 @@ public class NavyCraft_BlockListener implements Listener {
 	public static void loadHANGAR2Signs() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=2000; x>=2001; x-=1 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_WidthZ"));
+		int startX = -99;
+		int endX = -638;
+		int widthX = 49;
+		int startZ = 67;
+		int endZ = -117;
+		int widthZ = 46;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=2000; z>=2001; z-=1 )
@@ -3465,12 +3476,12 @@ public class NavyCraft_BlockListener implements Listener {
 	public static Block findHANGAR2Open() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=2000; x>=2001; x-=1 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Hangar2_WidthZ"));
+		int startX = -99;
+		int endX = -638;
+		int widthX = 49;
+		int startZ = 67;
+		int endZ = -117;
+		int widthZ = 46;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=2000; z>=2001; z-=1 )
@@ -3491,12 +3502,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=602; x<=908; x+=18 )
 		// for( int x=22; x<=832; x+=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_WidthZ"));
+		int startX = 602;
+		int endX = 926;
+		int widthX = 18;
+		int startZ = -953;
+		int endZ = -1385;
+		int widthZ = 24;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-953; z>=-1385; z-=24 )
@@ -3551,12 +3562,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=602; x<=908; x+=18 )
 		// for( int x=22; x<=832; x+=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank1_WidthZ"));
+		int startX = 602;
+		int endX = 926;
+		int widthX = 18;
+		int startZ = -953;
+		int endZ = -1385;
+		int widthZ = 24;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-953; z>=-1385; z-=24 )
@@ -3577,12 +3588,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=602; x<=908; x+=18 )
 		// for( int x=22; x<=832; x+=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_WidthZ"));
+		int startX = 960;
+		int endX = 1436;
+		int widthX = 34;
+		int startZ = -920;
+		int endZ = -1361;
+		int widthZ = 44;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-953; z>=-1385; z-=24 )
@@ -3637,12 +3648,12 @@ public class NavyCraft_BlockListener implements Listener {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=602; x<=908; x+=18 )
 		// for( int x=22; x<=832; x+=18 )
-		int startX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_StartX"));
-		int endX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_EndX"));
-		int widthX = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_WidthX"));
-		int startZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_StartZ"));
-		int endZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_EndZ"));
-		int widthZ = Integer.parseInt(NavyCraft.instance.ConfigSetting("Tank2_WidthZ"));
+		int startX = 960;
+		int endX = 1436;
+		int widthX = 34;
+		int startZ = -920;
+		int endZ = -1361;
+		int widthZ = 44;
 		for (int x = startX; x <= endX; x += widthX) {
 
 			// for( int z=-953; z>=-1385; z-=24 )
@@ -3727,19 +3738,11 @@ public class NavyCraft_BlockListener implements Listener {
 			worldName = plugin.getServer().getPlayer(player).getWorld().getName();
 		}
 		
-		String worldName1 = "";
-		if(plugin.ConfigSetting("BattleWorlds") != "null") {
-			String[] worlds = NavyCraft.instance.ConfigSetting("BattleWorlds").split(",");
-			worldName1 = worlds[0];
-		}else{
-			worldName1 = plugin.getServer().getPlayer(player).getWorld().getName();
-		}
-		
 		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		if( pex==null )
 			return;
 		
-		for(String s:PermissionsEx.getUser(player).getPermissions(worldName1)) {
+		for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
 			if( s.contains("navycraft") ) {
 				if( s.contains("ship1") )
 				{
