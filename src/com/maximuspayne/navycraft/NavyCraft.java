@@ -162,7 +162,7 @@ public class NavyCraft extends JavaPlugin {
 
 	public void onEnable() {
 		instance = this;
-
+		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(entityListener, this);

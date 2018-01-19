@@ -1125,13 +1125,10 @@ public class NavyCraft_PlayerListener implements Listener {
 			}
 		}
 
-		if (split[0].equalsIgnoreCase("movecraft") || split[0].equalsIgnoreCase("navycraft")
-				|| split[0].equalsIgnoreCase("nc")) {
-			/*if (!PermissionInterface.CheckQuietPerm(player, "navycraft." + event.getMessage().substring(1))) {
+		if (split[0].equalsIgnoreCase("navycraft") || split[0].equalsIgnoreCase("nc")) {
+			if (!PermissionInterface.CheckQuietPerm(player, "navycraft." + event.getMessage().substring(1))) {
 				return;
-			}*/
-			if (split[0].equalsIgnoreCase("movecraft"))
-				player.sendMessage(ChatColor.RED + "You mean /navycraft....also /nc works!");
+			}
 			if (split.length >= 2) {
 				if (split[1].equalsIgnoreCase("types")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.basic") )
@@ -1146,7 +1143,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
 					if (Craft.craftList.isEmpty()) {
-						player.sendMessage(ChatColor.YELLOW + "no player controlled craft");
+						player.sendMessage(ChatColor.YELLOW + "No player controlled craft");
 						// return true;
 					}
 
@@ -1175,7 +1172,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						Integer.parseInt(split[2]);
 						NavyCraft.instance.configFile.ConfigSettings.put("LogLevel", split[2]);
 					} catch (Exception ex) {
-						player.sendMessage("Invalid loglevel.");
+						player.sendMessage(ChatColor.RED + "Invalid loglevel.");
 					}
 					event.setCancelled(true);
 					return;
@@ -1184,28 +1181,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						return;
 					NavyCraft.instance.configFile.ListSettings(player);
 					return;
-				} else if (split[1].equalsIgnoreCase("spawntimer")) {
-					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
-						return;
-					int timerMin = -1;
-					if (split.length == 3) {
-						try {
-							timerMin = Integer.parseInt(split[2]);
-						} catch (NumberFormatException e) {
-							player.sendMessage("Invalid timer value");
-							e.printStackTrace();
-						}
-					}
-					if ((timerMin >= 1) || (timerMin <= 60)) {
-
-						NavyCraft.spawnTime = timerMin;
-						player.sendMessage("Spawn time set to " + timerMin + " minutes.");
-					} else {
-						player.sendMessage("Invalid timer value..between 1 to 60 minutes");
-					}
-
-					event.setCancelled(true);
-					return;
+					// Cleanup command
 				} else if (split[1].equalsIgnoreCase("cleanup")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
@@ -1258,6 +1234,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					event.setCancelled(true);
 					return;
+					//admin ship commands
 				} else if (split[1].equalsIgnoreCase("destroyShips")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
@@ -1342,75 +1319,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					event.setCancelled(true);
 					return;
-				} else if (split[1].equalsIgnoreCase("loadShips")) {
-					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
-						return;
-					for (int x = -1800; x <= 2000; x++) {
-						for (int y = 30; y <= 128; y++) {
-							for (int z = -1100; z <= 1700; z++) {
-								if (player.getWorld().getBlockAt(x, y, z).getTypeId() == 68) {
-									Block shipSignBlock = player.getWorld().getBlockAt(x, y, z);
-									Sign shipSign = (Sign) shipSignBlock.getState();
-									String signLine0 = shipSign.getLine(0).trim().toLowerCase()
-											.replaceAll(ChatColor.BLUE.toString(), "");
-									CraftType craftType = CraftType.getCraftType(signLine0);
-									if (craftType != null) {
-										String name = shipSign.getLine(1);// .replaceAll("§.",
-																			// "");
-
-										if (name.trim().equals("")) {
-											name = null;
-										}
-
-										int shipx = shipSignBlock.getX();
-										int shipy = shipSignBlock.getY();
-										int shipz = shipSignBlock.getZ();
-
-										int direction = shipSignBlock.getData();
-
-										// get the block the sign is attached to
-										shipx = shipx + (direction == 4 ? 1 : (direction == 5 ? -1 : 0));
-										shipz = shipz + (direction == 2 ? 1 : (direction == 3 ? -1 : 0));
-
-										float dr = 0;
-
-										switch (shipSignBlock.getData()) {
-										case (byte) 0x2:// n
-											dr = 180;
-											break;
-										case (byte) 0x3:// s
-											dr = 0;
-											break;
-										case (byte) 0x4:// w
-											dr = 90;
-											break;
-										case (byte) 0x5:// e
-											dr = 270;
-											break;
-										}
-										player.sendMessage("x=" + x + " y=" + y + " z=" + z);
-										Craft theCraft = NavyCraft.instance.createCraft(player, craftType, shipx, shipy,
-												shipz, name, dr, shipSignBlock, true);
-										if (theCraft != null) {
-											if (name != null) {
-												player.sendMessage(name + " activated!");
-											} else {
-												player.sendMessage(signLine0 + " activated!");
-											}
-											CraftMover cm = new CraftMover(theCraft, plugin);
-											cm.structureUpdate(null, false);
-										} else {
-											player.getWorld().getBlockAt(x, y, z).setTypeId(0);
-										}
-									}
-								}
-							}
-						}
-					}
-					player.sendMessage(ChatColor.GOLD + "All vehicles loaded in ocean area");
-					event.setCancelled(true);
-					return;
-				}
+					// nc help
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
 					player.sendMessage(ChatColor.WHITE + "NavyCraft v" + NavyCraft.version + " commands :");
@@ -1422,7 +1331,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							+ "set engine volume from 0-100");
 				}
 				
-				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") && !player.isOp() )
+				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
 				{
 					player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
 						+ "list all craft");
@@ -1434,16 +1343,11 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.BLUE + "/navycraft destroyauto : " + ChatColor.WHITE + "destroys all auto ships");
 					player.sendMessage(ChatColor.BLUE + "/navycraft destroystuck : " + ChatColor.WHITE + "destroys stuck auto ships");
 					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
-					player.sendMessage(ChatColor.BLUE + "/exp set [player] # : " + ChatColor.WHITE + "set players exp to #");
-					player.sendMessage(ChatColor.BLUE + "/exp add [player] # : " + ChatColor.WHITE + "add # to players current exp");
-					player.sendMessage(ChatColor.BLUE + "/exp remove [player] # : " + ChatColor.WHITE + "remove # to players current exp");
 				}
 
 			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("park")) {
-			// MoveCraft.instance.releaseCraft(player,
-			// Craft.getPlayerCraft(player));
 			Craft c = Craft.getPlayerCraft(player);
 			if ((c != null) && (c.captainName == player.getName())) {
 				c.releaseHelm();
@@ -1505,6 +1409,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
+			// radio command, useful for when raido plugin is implemented
 			 else if (craftName.equalsIgnoreCase("radio") || craftName.equalsIgnoreCase("ra")) {
 				Craft craft = Craft.getPlayerCraft(player);
 				if (craft == null) {
@@ -1515,7 +1420,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 				if (split.length == 1) {
 					if ((craft.radioSignLoc != null) && (craft.maxY >= 63) && craft.radioSetOn) {
-						player.sendMessage(ChatColor.GREEN + "Your radio is Active on frequency: " + ChatColor.GREEN + craft.radio1 + "" + craft.radio2 + ""
+						player.sendMessage(ChatColor.GREEN + "Your radio is active on frequency: " + ChatColor.GREEN + craft.radio1 + "" + craft.radio2 + ""
 								+ craft.radio3 + "" + craft.radio4);
 
 						int craftCount = 0;
@@ -1630,7 +1535,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				event.setCancelled(true);
 				return;
-				
+				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
 						if (split[1].equalsIgnoreCase("reward")) {
@@ -2408,8 +2313,8 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.GOLD + "/shipyard plist <player> - List the given player's plots");
 							player.sendMessage(ChatColor.GOLD + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
 							if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
-								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard player <player> - View a players plot status");
-								player.sendMessage(ChatColor.DARK_AQUA + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
+								player.sendMessage(ChatColor.BLUE + "/shipyard player <player> - View a players plot status");
+								player.sendMessage(ChatColor.BLUE + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
 							}
 						}
 					} else {
@@ -3533,9 +3438,9 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.GOLD + "/rank - view your rank");
 						player.sendMessage(ChatColor.GOLD + "/rank view <player> - view players exp");
 						if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
-						player.sendMessage(ChatColor.GOLD + "/rank set <player> <exp> - set a players exp");
-						player.sendMessage(ChatColor.GOLD + "/rank add <player> <exp> - give exp to a player");
-						player.sendMessage(ChatColor.GOLD + "/rank remove <player> <exp> - remove exp from a player");
+						player.sendMessage(ChatColor.BLUE + "/rank set <player> <exp> - set a players exp");
+						player.sendMessage(ChatColor.BLUE + "/rank add <player> <exp> - give exp to a player");
+						player.sendMessage(ChatColor.BLUE + "/rank remove <player> <exp> - remove exp from a player");
 						}
 					}
 					if (split[1].equalsIgnoreCase("view")) {
@@ -3661,6 +3566,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					i++;
 				}
 			}
+		}
 		return;
         }
 

@@ -4,6 +4,7 @@ package com.maximuspayne.navycraft.plugins;
 import com.maximuspayne.navycraft.CraftType;
 import com.maximuspayne.navycraft.NavyCraft;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -56,7 +57,7 @@ public class PermissionInterface {
 		    	return true;
 		    } else 
 		    {
-				player.sendMessage("You do not have permission to perform " + command);
+				player.sendMessage(ChatColor.RED + "You do not have permission to perform " + ChatColor.YELLOW + command);
 				return false;
 		    }
 	}
@@ -82,6 +83,20 @@ public class PermissionInterface {
 	public static boolean CheckEnabledWorld(Location loc) {
 		if(!plugin.ConfigSetting("EnabledWorlds").equalsIgnoreCase("null")) {
 			String[] worlds = NavyCraft.instance.ConfigSetting("EnabledWorlds").split(",");
+			for(int i = 0; i < worlds.length; i++) {
+				if( loc.getWorld().getName().equalsIgnoreCase(worlds[i]) )
+				{
+					return true;
+				}
+					
+			}
+			return false;
+		}
+		return true;
+	}
+	public static boolean CheckBattleWorld(Location loc) {
+		if(!plugin.ConfigSetting("BattleWorlds").equalsIgnoreCase("null")) {
+			String[] worlds = NavyCraft.instance.ConfigSetting("BattleWorlds").split(",");
 			for(int i = 0; i < worlds.length; i++) {
 				if( loc.getWorld().getName().equalsIgnoreCase(worlds[i]) )
 				{
