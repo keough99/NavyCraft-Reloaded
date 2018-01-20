@@ -122,6 +122,11 @@ public class OneCannon{
 
     public void Ignite(final Player p) {
 
+    	if (isIgnite()) {
+            p.sendMessage(ChatColor.RED + "You have to wait for the Cannon to cool down!");
+            return;
+        }
+    	
 	    Block b;
 
 	    if( cannonType == 6 )
@@ -214,7 +219,6 @@ public class OneCannon{
 	    if( ignite )
 	    {
 	    	fireThreadNew(delay, p);
-	    	ignite = false;
 	    	p.sendMessage("3 - Ready!");
 	    }
     }
@@ -308,6 +312,7 @@ public class OneCannon{
 			    look.setX(-0.5);
 		    }
 		    fireShell(look.multiply((float)(2*charged)), p);
+	    	ignite = false;
 	    }
 	    });
     }
@@ -346,78 +351,72 @@ public class OneCannon{
     }
     
     public void Fire(final Player p) {
-	ignite = false;
-	
-	setTimeout();
-	// Fire the TNT at player View Direction
-	new Thread() {
-	    @Override
-	    public void run() {
-		setPriority(Thread.MIN_PRIORITY);
-		try {
+    	
+    	setTimeout();
+    	// Fire the TNT at player View Direction
+    	new Thread() {
+    	    @Override
+    	    public void run() {
+    		setPriority(Thread.MIN_PRIORITY);
+    		try {
 
-			p.sendMessage("2 - Aim!");
+    		    sleep(1000);
+    		    sleep(500);
 
-		    
-		    sleep(1000);
-		    p.sendMessage("1 - Fire!!!");
-		    sleep(500);
+    		    Vector look;
+    		    look = p.getLocation().getDirection();
 
-		    Vector look;
-		    look = p.getLocation().getDirection();
-
-		    if (direction == BlockFace.WEST) {
-			if (look.getX() > -0.5)
-			    look.setX(-0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getZ() > 0.5)
-			    look.setZ(0.5);
-			if (look.getZ() < -0.5)
-			    look.setZ(-0.5);
-		    }
-		    if (direction == BlockFace.NORTH) {
-			if (look.getZ() > -0.5)
-			    look.setZ(-0.5);
-			if (look.getY() < 0.05)
-					look.setY(0.05);
-			if (look.getX() > 0.5)
-			    look.setX(0.5);
-			if (look.getX() < -0.5)
-			    look.setX(-0.5);
-		    }
-		    if (direction == BlockFace.EAST) {
-			if (look.getX() < 0.5)
-			    look.setX(0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getZ() > 0.5)
-			    look.setZ(0.5);
-			if (look.getZ() < -0.5)
-			    look.setZ(-0.5);
-		    }
-		    if (direction == BlockFace.SOUTH) {
-			if (look.getZ() < 0.5)
-			    look.setZ(0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getX() > 0.5)
-			    look.setX(0.5);
-			if (look.getX() < -0.5)
-			    look.setX(-0.5);
-		    }
-		    
-		    	
-		    
-		    fireUpdate(look.multiply((float)(2*charged)), p);
-
-		    
-		} catch (InterruptedException e) {
-		}
-	    }
-	}.start();
-    }
-    
+    		    if (direction == BlockFace.WEST) {
+    			if (look.getX() > -0.5)
+    			    look.setX(-0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getZ() > 0.5)
+    			    look.setZ(0.5);
+    			if (look.getZ() < -0.5)
+    			    look.setZ(-0.5);
+    		    }
+    		    if (direction == BlockFace.NORTH) {
+    			if (look.getZ() > -0.5)
+    			    look.setZ(-0.5);
+    			if (look.getY() < 0.05)
+    					look.setY(0.05);
+    			if (look.getX() > 0.5)
+    			    look.setX(0.5);
+    			if (look.getX() < -0.5)
+    			    look.setX(-0.5);
+    		    }
+    		    if (direction == BlockFace.EAST) {
+    			if (look.getX() < 0.5)
+    			    look.setX(0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getZ() > 0.5)
+    			    look.setZ(0.5);
+    			if (look.getZ() < -0.5)
+    			    look.setZ(-0.5);
+    		    }
+    		    if (direction == BlockFace.SOUTH) {
+    			if (look.getZ() < 0.5)
+    			    look.setZ(0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getX() > 0.5)
+    			    look.setX(0.5);
+    			if (look.getX() < -0.5)
+    			    look.setX(-0.5);
+    		    }
+    		    
+    		    	
+    		    
+    		    fireUpdate(look.multiply((float)(2*charged)), p);
+    	    	ignite = false;
+    		    
+    		} catch (InterruptedException e) {
+    		}
+    	    }
+    	}.start();
+        }
     public void fireUpdate(final Vector look, final Player p) {
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
 
