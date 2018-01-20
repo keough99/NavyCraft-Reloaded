@@ -11,7 +11,7 @@ Follow Max's latest releases on SpigotMC: https://www.spigotmc.org/resources/nav
 You can download the resource packs and some of the old worlds from the old NBZ to help your setup here... http://navalbattlezone.com/downloads/
 
 ## Builds
-[![CircleCI](https://circleci.com/gh/Solmex/NavyCraft-Reloaded.svg?style=svg)](https://circleci.com/gh/Solmex/NavyCraft-Reloaded)
+[![CircleCI](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded.svg?style=svg)](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded)
 
 ## Contact Info
 
