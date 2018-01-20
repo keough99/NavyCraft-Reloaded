@@ -1,3 +1,5 @@
+# NavyCraft-Reloaded
+
 Solmex's public release version of the popular NavyCraft plugin. Build, drive and fight with custom ships, airplanes, tanks, and submarines! This project works on making NavyCraft more user-friendly and open for server-operators to apply to their own server. We hope to make the plugin more stable and more configurable for our users.
 
 Help support this project and keep up to date at Max's GoFundMe page https://www.gofundme.com/navalbattlezone
@@ -9,6 +11,15 @@ This version features a better configuration setup. On first time run, the plugi
 Follow Max's latest releases on SpigotMC: https://www.spigotmc.org/resources/navycraft.42297/
 
 You can download the resource packs and some of the old worlds from the old NBZ to help your setup here... http://navalbattlezone.com/downloads/
+
+## License
+
+[Apache 2.0](https://raw.githubusercontent.com/Solmex72/NavyCraft-Reloaded/master/LICENSE)
+
+## Status
+NavyCraft was converted from an internal project to open source in a rush, so they are not yet well adapted for third party use. Improving this adaptation is my development priority, specifically:
+
+You can read up on the future of this plugin and some current ideas [here](https://github.com/Solmex72/NavyCraft-Reloaded/projects/1)
 
 ## Builds
 [![CircleCI](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded.svg?style=svg)](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded)
