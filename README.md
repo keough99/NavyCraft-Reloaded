@@ -21,7 +21,8 @@ You can read up on the future of this plugin and some current ideas [here](https
 ## Resources
 
 - Solmex Server files [here](https://github.com/Solmex72/NavyCraft-Server)
-- Schematics from NBZ [here](https://github.com/Solmex72/NBZ-Schematics)
+- Schematics from NBZ [here](https://github.com/Solmex72/NBZ-Schematics/blob/master/Schematics.zip)
+- Texture Pack for NC [here](https://github.com/Solmex72/NBZ-Schematics/blob/master/NavyCraft-Beta.zip)
 - Old NBZ Server files [here](http://navalbattlezone.com/downloads/)
 
 ## Builds
