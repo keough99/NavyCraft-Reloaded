@@ -4,22 +4,25 @@ Solmex's public release version of the popular NavyCraft plugin. Build, drive an
 
 Help support this project and keep up to date at Max's GoFundMe page https://www.gofundme.com/navalbattlezone
 
-This version is the complete version of NavyCraft, including Shipyard, and Ranking.
-
-This version features a better configuration setup. On first time run, the plugin will automatically generate new vehicle type files that are updated to the newest information. You can configure which EnabledWorlds the plugin will allow weapons to work in the navycraft.xml file (default is "null" to allow all worlds). Boat and airship type feature right-click style movement.
+This version features a better configuration setup. On first time run, the plugin will automatically generate new vehicle type files that are updated to the newest information. You can configure which EnabledWorlds the plugin will allow weapons to work in the navycraft.xml file (default is "WarWorld" to allow the default world which should be "WarWorld"). Boat and airship type feature right-click style movement.
 
 Follow Max's latest releases on SpigotMC: https://www.spigotmc.org/resources/navycraft.42297/
-
-You can download the resource packs and some of the old worlds from the old NBZ to help your setup here... http://navalbattlezone.com/downloads/
 
 ## License
 
 [Apache 2.0](https://raw.githubusercontent.com/Solmex72/NavyCraft-Reloaded/master/LICENSE)
 
 ## Status
+
 NavyCraft was converted from an internal project to open source in a rush, so they are not yet well adapted for third party use. Improving this adaptation is my development priority, specifically:
 
 You can read up on the future of this plugin and some current ideas [here](https://github.com/Solmex72/NavyCraft-Reloaded/projects/1)
+
+## Resources
+
+- Solmex Server files [here](https://github.com/Solmex72/NavyCraft-Server)
+- Schematics from NBZ [here](https://github.com/Solmex72/NBZ-Schematics)
+- Old NBZ Server files [here](http://navalbattlezone.com/downloads/)
 
 ## Builds
 [![CircleCI](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded.svg?style=svg)](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded)
