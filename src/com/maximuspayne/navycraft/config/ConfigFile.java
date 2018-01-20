@@ -27,8 +27,8 @@ public class ConfigFile {
 		ConfigSettings.put("HungryHungryDrill", "false");
 		ConfigSettings.put("WriteDefaultCraft", "true");
 		ConfigSettings.put("ForbiddenBlocks", "29,33,34,36,52,90,95,97,116,119,120,130,137,138,145,146");
-		ConfigSettings.put("EnabledWorlds", "null");
-		ConfigSettings.put("BattleWorlds", "null");
+		ConfigSettings.put("EnabledWorlds", "WarWorld, BattleWorld");
+		ConfigSettings.put("BattleWorld", "BattleWorld");
 		
 		ConfigComments.put("CraftReleaseDelay", "<Number:15> The amount of time between when a user exists a craft and when" +
 				" the craft automatically releases.");
@@ -51,8 +51,8 @@ public class ConfigFile {
 		ConfigComments.put("WriteDefaultCraft", "Whether or not to create the default craft type files on plugin enable.");
 		ConfigComments.put("ForbiddenBlocks", "Blocks that prevent craft from being created if they are anywhere in the craft" + 
 				" leave 'null' for none.");
-		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in. Leave as null for all.");
-		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in. Leave as null for all. Not recommended as I have not tested what this can do to a server");
+		ConfigComments.put("EnabledWorlds", "Defines which worlds the plugin's weapons will funciton in.");
+		ConfigComments.put("BattleWorlds", "Defines which worlds the plugin's battles will funciton in.");
 				
 		NavyCraft.instance.configFile = this;
 		

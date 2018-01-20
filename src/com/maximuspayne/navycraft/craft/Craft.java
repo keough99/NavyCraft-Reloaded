@@ -1438,7 +1438,7 @@ public class Craft {
 					this.setSpeed = 0;
 					this.turnProgress = 0;
 					this.rudder = 0;
-					player.sendMessage(ChatColor.RED + "Stopping Engines...");
+					player.sendMessage(ChatColor.RED + "Stopping Engines!");
 					this.enginesOn = false;
 					return;
 				}
@@ -1464,7 +1464,7 @@ public class Craft {
 					this.turnProgress = 0;
 					this.rudder = 0;
 					if( player != null )
-						player.sendMessage(ChatColor.RED + "Stopping Engines...");
+						player.sendMessage(ChatColor.RED + "Stopping Engines!");
 					this.enginesOn = false;
 					return;
 				}
@@ -1615,7 +1615,7 @@ public class Craft {
 				if( this.gear == 1 && (!this.onGround || this.setSpeed != 1) )
 				{
 					if( player != null )
-						player.sendMessage(ChatColor.RED + "Must be on ground and engine at idle to shift into 1...");
+						player.sendMessage(ChatColor.RED + "Must be on ground and engine at idle to shift into 1!");
 					this.gear = this.gear + 1;
 					return;
 				}

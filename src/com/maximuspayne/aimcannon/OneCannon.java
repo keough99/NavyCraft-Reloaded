@@ -215,7 +215,7 @@ public class OneCannon{
 	    {
 	    	fireThreadNew(delay, p);
 	    	ignite = false;
-	    	p.sendMessage("3 - Ready...");
+	    	p.sendMessage("3 - Ready!");
 	    }
     }
     
@@ -245,7 +245,7 @@ public class OneCannon{
 	  //  @Override
 	    public void run()
 	    {
-	    	p.sendMessage("2 - Aim...");
+	    	p.sendMessage("2 - Aim!");
 	    }
 	    });
     }
@@ -356,7 +356,7 @@ public class OneCannon{
 		setPriority(Thread.MIN_PRIORITY);
 		try {
 
-			p.sendMessage("2 - Aim...");
+			p.sendMessage("2 - Aim!");
 
 		    
 		    sleep(1000);
@@ -530,9 +530,9 @@ public class OneCannon{
 				//taskNum = -1;
     			try{
     				sleep(500);
-    				p.sendMessage("3 - Ready...");
+    				p.sendMessage("3 - Ready!");
     			    sleep(500);
-    			    p.sendMessage("2 - Aim...  ");
+    			    p.sendMessage("2 - Aim!  ");
     			    sleep(500);
     			    p.sendMessage("1 - Fire!!!");
     			    sleep(500);
@@ -1942,7 +1942,7 @@ public class OneCannon{
 								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
 									openTorpedoDoors(p, false, false);
 							}
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 							torp.dead = true;
 						}
 						
@@ -1961,7 +1961,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{
@@ -2692,7 +2692,7 @@ public class OneCannon{
 									openTorpedoDoors(p, false, false);
 							}
 							torp.dead = true;
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 						}
 	
 					}
@@ -2709,7 +2709,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{
@@ -3472,7 +3472,7 @@ public class OneCannon{
 			    			torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
 						}else
 						{
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 							torp.dead=true;
 							if( firingCraft != null ) {
 								firingCraft.tubeFiringMode.put(torp.tubeNum, -2);
@@ -3507,7 +3507,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{

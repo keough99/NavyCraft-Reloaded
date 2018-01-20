@@ -95,8 +95,8 @@ public class PermissionInterface {
 		return true;
 	}
 	public static boolean CheckBattleWorld(Location loc) {
-		if(!plugin.ConfigSetting("BattleWorlds").equalsIgnoreCase("null")) {
-			String[] worlds = NavyCraft.instance.ConfigSetting("BattleWorlds").split(",");
+		if(!plugin.ConfigSetting("BattleWorld").equalsIgnoreCase("null")) {
+			String[] worlds = NavyCraft.instance.ConfigSetting("BattleWorld").split(",");
 			for(int i = 0; i < worlds.length; i++) {
 				if( loc.getWorld().getName().equalsIgnoreCase(worlds[i]) )
 				{

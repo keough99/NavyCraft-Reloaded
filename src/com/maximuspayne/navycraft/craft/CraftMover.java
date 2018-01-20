@@ -1492,7 +1492,7 @@ public class CraftMover {
 			return;
 		
 		}
-
+// TODO This is really important if you ever want to test battles and score regions arent working. Eventually I will and probably will remove this and replace it with a kind reminder as to where the score region code is.
 			if (!craft.isDestroying && (NavyCraft.battleType == 3) && craft.isMerchantCraft && (checkMerchantScoreRegion(new Location(craft.world, craft.minX, craft.minY, craft.minZ), craft) || checkMerchantScoreRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ), craft))) {
 
 				if (craft.redTeam) {
@@ -5252,6 +5252,7 @@ public class CraftMover {
 		return false;
 	}
 
+	// TODO This is also important for score regions.
 	public boolean checkMerchantScoreRegion(Location loc, Craft merchant) {
 
 		wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
