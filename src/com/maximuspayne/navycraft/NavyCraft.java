@@ -848,49 +848,6 @@ public void updateCraft(int vehicleNum, int updateNum)
 			}
 		}
    }
-   
-	public void npcMerchantThread()
-	{
-		npcMerchantThread = new Thread(){
-			
-    	@Override
-			public void run() {
-    		
-    		setPriority(Thread.MIN_PRIORITY);
-    		
-			try{
-				int i=0;
-				sleep(30000);
-				while(!shutDown)
-				{
-					npcMerchantUpdate(i);
-					i++;
-					
-					sleep(spawnTime*60000);
-				}
-			}catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			}
-    	}; //, 20L);
-    	npcMerchantThread.start();
-    }
-	
-   public void npcMerchantUpdate(final int i)
-   {
-    	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
-    	//new Thread() {
-	  //  @Override
-		    public void run()
-		    {
-		    	if( NavyCraft.shutDown )
-					return;
-		    	
-		    	NavyCraft_BlockListener.autoSpawnSign(null, "");
-		    }
-    	}
-    	);
-	}
 
 	public static void loadRewardsFile()
 	{

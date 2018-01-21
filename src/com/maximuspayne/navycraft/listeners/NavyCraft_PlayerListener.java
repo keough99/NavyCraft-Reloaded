@@ -2723,9 +2723,9 @@ public class NavyCraft_PlayerListener implements Listener {
 				return;
 			}else if ( craftName.equalsIgnoreCase("soldier") )
 			{
-				if( player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("BattleWorld")) )
+				if( player.getWorld().getName().equalsIgnoreCase("BattleWorld") )
 				{
-					if( player.getWorld().getName().equalsIgnoreCase(plugin.ConfigSetting("BattleWorld")) && NavyCraft.battleMode > 0 )
+					if( player.getWorld().getName().equalsIgnoreCase("BattleWorld") && NavyCraft.battleMode > 0 )
 					{
 						if( !NavyCraft.playerKits.contains(player.getName()) )
 						{
@@ -3450,7 +3450,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.GOLD + "/volume - status message");
 						player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
 						player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
-						player.sendMessage(ChatColor.YELLOW + "Types: engine, gun, other, all");
+						player.sendMessage(ChatColor.YELLOW + "Types: engine, weapons, other, all");
 					}
 					if (split[1].equalsIgnoreCase("engine")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
@@ -3486,7 +3486,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							return;
 						}
 					}
-					if (split[1].equalsIgnoreCase("weapons")) {
+					if (split[1].equalsIgnoreCase("weapon")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to set gun volume.");
 							event.setCancelled(true);
@@ -4590,43 +4590,43 @@ public class NavyCraft_PlayerListener implements Listener {
 	public void endTunisia()
 	{
 		int blueTargetPoints=0;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-263,63,1066)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-263,63,1066)))
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-274,63,1065)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-274,63,1065)) )
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-299,63,1076)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-299,63,1076)) )
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-316,67,1072)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-316,67,1072)) )
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-332,67,1072)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-332,67,1072)) )
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-371,70,1065)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-371,70,1065)) )
 			blueTargetPoints += 500;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-344,63,1101)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-344,63,1101)) )
 			blueTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-344,84,1184)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-344,84,1184)) )
 			blueTargetPoints += 500;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-367,77,1178)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-367,77,1178)) )
 			blueTargetPoints += 200;
 		
 		int redTargetPoints=0;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-611,64,1529)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-611,64,1529)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-631,64,1539)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-631,64,1539)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-642,64,1539)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-642,64,1539)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-664,68,1537)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-664,68,1537)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-677,68,1537)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-677,68,1537)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-699,71,1489)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-699,71,1489)) )
 			redTargetPoints += 500;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-695,64,1522)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-695,64,1522)) )
 			redTargetPoints += 200;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-609,75,1478)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-609,75,1478)) )
 			redTargetPoints += 500;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-633,68,1468)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-633,68,1468)) )
 			redTargetPoints += 200;
 		int playerNewExp = 0;
 		if (redTargetPoints > 0) {
@@ -4708,58 +4708,58 @@ public class NavyCraft_PlayerListener implements Listener {
 		int redTargetPoints=0;
 		
 		//shore battiers
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(194,66,-1180)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(194,66,-1180)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
 		
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(179,66,-1110)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(179,66,-1110)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(163,66,-1064)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(163,66,-1064)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(125,66,-1023)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(125,66,-1023)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(82,66,-977)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(82,66,-977)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(171,66,-867)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(171,66,-867)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
 		
 		//buildings
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(186,65,-1079)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(186,65,-1079)) )
 			redTargetPoints+=300;
 		else
 			blueTargetPoints+=300;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(167,66,-1086)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(167,66,-1086)) )
 			redTargetPoints+=300;
 		else
 			blueTargetPoints+=300;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(197,60,-1066)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(197,60,-1066)) )
 			redTargetPoints+=500;
 		else
 			blueTargetPoints+=500;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,66,-1156)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,66,-1156)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,79,-1149)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,79,-1149)) )
 			redTargetPoints+=150;
 		else
 			blueTargetPoints+=150;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,79,-977)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,79,-977)) )
 			redTargetPoints+=150;
 		else
 			blueTargetPoints+=150;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,66,-984)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,66,-984)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
@@ -4775,58 +4775,58 @@ public class NavyCraft_PlayerListener implements Listener {
 		int redTargetPoints=0;
 		
 		//shore battiers
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(194,66,-1180)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(194,66,-1180)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
 		
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(179,66,-1110)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(179,66,-1110)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(163,66,-1064)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(163,66,-1064)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(125,66,-1023)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(125,66,-1023)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(82,66,-977)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(82,66,-977)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(171,66,-867)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(171,66,-867)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
 		
 		//buildings
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(186,65,-1079)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(186,65,-1079)) )
 			redTargetPoints+=300;
 		else
 			blueTargetPoints+=300;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(167,66,-1086)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(167,66,-1086)) )
 			redTargetPoints+=300;
 		else
 			blueTargetPoints+=300;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(197,60,-1066)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(197,60,-1066)) )
 			redTargetPoints+=500;
 		else
 			blueTargetPoints+=500;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,66,-1156)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,66,-1156)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,79,-1149)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,79,-1149)) )
 			redTargetPoints+=150;
 		else
 			blueTargetPoints+=150;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,79,-977)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,79,-977)) )
 			redTargetPoints+=150;
 		else
 			blueTargetPoints+=150;
-		if( checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,66,-984)) )
+		if( checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,66,-984)) )
 			redTargetPoints+=200;
 		else
 			blueTargetPoints+=200;
@@ -4958,42 +4958,42 @@ public class NavyCraft_PlayerListener implements Listener {
 	public boolean checkTunisia()
 	{
 		//red
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-263,63,1066)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-263,63,1066)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-274,63,1065)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-274,63,1065)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-299,63,1076)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-299,63,1076)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-316,67,1072)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-316,67,1072)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-332,67,1072)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-332,67,1072)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-371,70,1065)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-371,70,1065)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-344,63,1101)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-344,63,1101)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-344,84,1184)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-344,84,1184)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-367,77,1178)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-367,77,1178)) )
 			return false;
 		//blue
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-611,64,1529)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-611,64,1529)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-631,64,1539)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-631,64,1539)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-642,64,1539)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-642,64,1539)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-664,68,1537)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-664,68,1537)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-677,68,1537)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-677,68,1537)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-699,71,1489)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-699,71,1489)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-695,64,1522)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-695,64,1522)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-609,75,1478)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-609,75,1478)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(-633,68,1468)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(-633,68,1468)) )
 			return false;
 		return true;
 	}
@@ -5001,33 +5001,33 @@ public class NavyCraft_PlayerListener implements Listener {
 	public boolean checkTarawa()
 	{
 		//shore battiers
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(194,66,-1180)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(194,66,-1180)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(179,66,-1110)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(179,66,-1110)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(163,66,-1064)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(163,66,-1064)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(125,66,-1023)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(125,66,-1023)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(82,66,-977)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(82,66,-977)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(171,66,-867)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(171,66,-867)) )
 			return false;
 		
 		//buildings
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(186,65,-1079)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(186,65,-1079)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(167,66,-1086)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(167,66,-1086)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(197,60,-1066)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(197,60,-1066)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,66,-1156)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,66,-1156)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(201,79,-1149)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(201,79,-1149)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,79,-977)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,79,-977)) )
 			return false;
-		if( !checkForTarget(plugin.getServer().getWorld(plugin.ConfigSetting("BattleWorld")).getBlockAt(220,66,-984)) )
+		if( !checkForTarget(plugin.getServer().getWorld("BattleWorld").getBlockAt(220,66,-984)) )
 			return false;
 		return true;
 	}
