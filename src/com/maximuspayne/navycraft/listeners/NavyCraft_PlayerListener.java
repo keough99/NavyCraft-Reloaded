@@ -3767,14 +3767,9 @@ public class NavyCraft_PlayerListener implements Listener {
 					return;
 					
 				} else {
-				pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
-				if( pex != null ){
 					{
 						NavyCraft_BlockListener.getRank(player);
 					}
-				} else {
-					player.sendMessage(ChatColor.RED + "PermissionsEX Not installed");
-				}
 				event.setCancelled(true);
 				return;
 					}

@@ -756,7 +756,7 @@ public class NavyCraft_BlockListener implements Listener {
 			String typeString = sign.getLine(1).trim().toLowerCase();
 			typeString = typeString.replaceAll(ChatColor.BLUE.toString(), "");
 			if (!typeString.isEmpty() && !typeString.equalsIgnoreCase(Craft.playerClipboardsType.get(player)) && !typeString.equalsIgnoreCase(Craft.playerClipboardsLot.get(player))) {
-				player.sendMessage(ChatColor.AQUA + player.getName() + ChatColor.RED + ", you cannot spawn this type of vehicle here.");
+				player.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + ", you cannot spawn this type of vehicle here.");
 				return;
 			}
 
@@ -3967,9 +3967,17 @@ public class NavyCraft_BlockListener implements Listener {
 						+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp + "/" + rankExp
 						+ ChatColor.GRAY + " rank points.");
 				return;
-			}
-	   }
+	   } else { 
+			String[] groupName = PermissionsEx.getUser(p).getGroupsNames();
+			for( String g : groupName ) {
+			player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
+			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + "no"
+			+ ChatColor.GRAY + " rank points.");
+	return;
+	       }
+		}
 	}
+}
 	public static void getRank(Player player) {
 		int exp = 0;
 		String worldName = player.getWorld().getName();
@@ -4001,7 +4009,12 @@ public class NavyCraft_BlockListener implements Listener {
 				player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + s.toUpperCase()
 						+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp + "/" + rankExp
 						+ ChatColor.GRAY + " rank points.");
-				
+			   } else { 
+					String[] groupName = PermissionsEx.getUser(player).getGroupsNames();
+					for( String g : groupName ) {
+					player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + g.toUpperCase()
+					+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp
+					+ ChatColor.GRAY + " rank points.");
 				if( exp >= rankExp )
 				{
 					checkRankWorld(player, exp, player.getWorld());
@@ -4010,6 +4023,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 	   }
 	}
+}
 	
 	public static void rewardExpPlayer(int newExp, Player player) {
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {
