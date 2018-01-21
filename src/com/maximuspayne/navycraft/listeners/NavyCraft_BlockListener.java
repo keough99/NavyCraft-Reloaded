@@ -689,7 +689,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(3, lotStr);
 						sign2.update();
 			
-						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + " Claimed!");
+						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.YELLOW + " Claimed!");
 			
 					} else {
 						player.sendMessage("World Guard error");
@@ -699,6 +699,10 @@ public class NavyCraft_BlockListener implements Listener {
 					player.sendMessage(ChatColor.DARK_RED + "Sign error: Check Second Sign?");
 					return;
 				}
+		} else if (craftTypeName.equalsIgnoreCase("*battle*")) {
+			{
+				player.sendMessage(ChatColor.DARK_RED + "This sign is unfinished, Please discontinue use until the developer has had time to further develop this sign type.");
+			}
 
 		} else if (craftTypeName.equalsIgnoreCase("*spawn*") && (block.getRelative(BlockFace.DOWN, 1).getTypeId() == 22)) {
 			int rotate = -1;
