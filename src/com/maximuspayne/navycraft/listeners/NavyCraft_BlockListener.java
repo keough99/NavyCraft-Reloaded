@@ -3971,7 +3971,7 @@ public class NavyCraft_BlockListener implements Listener {
 			String[] groupName = PermissionsEx.getUser(p).getGroupsNames();
 			for( String g : groupName ) {
 			player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
-			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + "no"
+			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp
 			+ ChatColor.GRAY + " rank points.");
 	return;
 	       }
