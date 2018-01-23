@@ -43,7 +43,9 @@ public class TeleportFix implements Listener {
 				String version;
 
 		        version = Bukkit.getServer().getClass().getPackage().getName();
-		        if (version.contains("v1_11")) {
+		        if (version.contains("v1_10")) {
+		        	TeleportFix_1_10.updateEntities(getPlayersWithin(player, visibleDistance));
+		    	} else if (version.contains("v1_11")) {
 		        	TeleportFix_1_11.updateEntities(getPlayersWithin(player, visibleDistance));
 
 		        } else if (version.contains("v1_12")) {
@@ -79,7 +81,9 @@ public class TeleportFix implements Listener {
 		String version;
 
         version = Bukkit.getServer().getClass().getPackage().getName();
-        if (version.contains("v1_11")) {
+        if (version.contains("v1_10")) {
+        	TeleportFix_1_10.updateNMSChunks(craft);
+	    } else if (version.contains("v1_11")) {
         	TeleportFix_1_11.updateNMSChunks(craft);
 
         } else if (version.contains("v1_12")) {
@@ -95,7 +99,9 @@ public class TeleportFix implements Listener {
 		String version;
 
         version = Bukkit.getServer().getClass().getPackage().getName();
-        if (version.contains("v1_11")) {
+        if (version.contains("v1_10")) {
+        	TeleportFix_1_10.updateNMSLight(light, oldLight);
+        } else if (version.contains("v1_11")) {
         	TeleportFix_1_11.updateNMSLight(light, oldLight);
 
         } else if (version.contains("v1_12")) {
