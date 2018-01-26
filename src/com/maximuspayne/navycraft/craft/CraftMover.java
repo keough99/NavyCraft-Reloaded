@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,7 +36,14 @@ import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannon;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.aimcannon.Weapon;
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.Pump;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
+import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -1485,7 +1492,7 @@ public class CraftMover {
 			return;
 		
 		}
-
+// TODO This is really important if you ever want to test battles and score regions arent working. Eventually I will and probably will remove this and replace it with a kind reminder as to where the score region code is.
 			if (!craft.isDestroying && (NavyCraft.battleType == 3) && craft.isMerchantCraft && (checkMerchantScoreRegion(new Location(craft.world, craft.minX, craft.minY, craft.minZ), craft) || checkMerchantScoreRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ), craft))) {
 
 				if (craft.redTeam) {
@@ -5245,6 +5252,7 @@ public class CraftMover {
 		return false;
 	}
 
+	// TODO This is also important for score regions.
 	public boolean checkMerchantScoreRegion(Location loc, Craft merchant) {
 
 		wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");

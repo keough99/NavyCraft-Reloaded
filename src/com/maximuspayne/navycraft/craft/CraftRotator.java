@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,10 @@ import org.bukkit.util.Vector;
 
 import com.maximuspayne.aimcannon.AimCannon;
 import com.maximuspayne.aimcannon.OneCannon;
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.Pump;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
 
 public class CraftRotator {
 	public Plugin plugin;

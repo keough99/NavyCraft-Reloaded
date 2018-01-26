@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.blocks;
 
 /*
  * To change this template, choose Tools | Templates
@@ -9,13 +9,12 @@ package com.maximuspayne.navycraft;
  * 
  * @author Joel
  */
+//a simple class to store a block location 
+public class BlockLoc {
 
-// a simple class to store a block location
-class BlockLoc {
-
-	int x;
-	int y;
-	int z;
+	public int x;
+	public int y;
+	public int z;
 
 	public BlockLoc(int x, int y, int z) {
 

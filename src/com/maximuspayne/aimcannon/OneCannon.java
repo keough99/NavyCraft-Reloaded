@@ -24,10 +24,10 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.maximuspayne.navycraft.Craft;
-import com.maximuspayne.navycraft.CraftMover;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.craft.Craft;
+import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 
 public class OneCannon{
@@ -122,6 +122,11 @@ public class OneCannon{
 
     public void Ignite(final Player p) {
 
+    	if (isIgnite()) {
+            p.sendMessage(ChatColor.RED + "You have to wait for the Cannon to cool down!");
+            return;
+        }
+    	
 	    Block b;
 
 	    if( cannonType == 6 )
@@ -214,8 +219,7 @@ public class OneCannon{
 	    if( ignite )
 	    {
 	    	fireThreadNew(delay, p);
-	    	ignite = false;
-	    	p.sendMessage("3 - Ready...");
+	    	p.sendMessage("3 - Ready!");
 	    }
     }
     
@@ -245,7 +249,7 @@ public class OneCannon{
 	  //  @Override
 	    public void run()
 	    {
-	    	p.sendMessage("2 - Aim...");
+	    	p.sendMessage("2 - Aim!");
 	    }
 	    });
     }
@@ -308,6 +312,7 @@ public class OneCannon{
 			    look.setX(-0.5);
 		    }
 		    fireShell(look.multiply((float)(2*charged)), p);
+	    	ignite = false;
 	    }
 	    });
     }
@@ -346,78 +351,72 @@ public class OneCannon{
     }
     
     public void Fire(final Player p) {
-	ignite = false;
-	
-	setTimeout();
-	// Fire the TNT at player View Direction
-	new Thread() {
-	    @Override
-	    public void run() {
-		setPriority(Thread.MIN_PRIORITY);
-		try {
+    	
+    	setTimeout();
+    	// Fire the TNT at player View Direction
+    	new Thread() {
+    	    @Override
+    	    public void run() {
+    		setPriority(Thread.MIN_PRIORITY);
+    		try {
 
-			p.sendMessage("2 - Aim...");
+    		    sleep(1000);
+    		    sleep(500);
 
-		    
-		    sleep(1000);
-		    p.sendMessage("1 - Fire!!!");
-		    sleep(500);
+    		    Vector look;
+    		    look = p.getLocation().getDirection();
 
-		    Vector look;
-		    look = p.getLocation().getDirection();
-
-		    if (direction == BlockFace.WEST) {
-			if (look.getX() > -0.5)
-			    look.setX(-0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getZ() > 0.5)
-			    look.setZ(0.5);
-			if (look.getZ() < -0.5)
-			    look.setZ(-0.5);
-		    }
-		    if (direction == BlockFace.NORTH) {
-			if (look.getZ() > -0.5)
-			    look.setZ(-0.5);
-			if (look.getY() < 0.05)
-					look.setY(0.05);
-			if (look.getX() > 0.5)
-			    look.setX(0.5);
-			if (look.getX() < -0.5)
-			    look.setX(-0.5);
-		    }
-		    if (direction == BlockFace.EAST) {
-			if (look.getX() < 0.5)
-			    look.setX(0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getZ() > 0.5)
-			    look.setZ(0.5);
-			if (look.getZ() < -0.5)
-			    look.setZ(-0.5);
-		    }
-		    if (direction == BlockFace.SOUTH) {
-			if (look.getZ() < 0.5)
-			    look.setZ(0.5);
-			if (look.getY() < 0.05)
-				look.setY(0.05);
-			if (look.getX() > 0.5)
-			    look.setX(0.5);
-			if (look.getX() < -0.5)
-			    look.setX(-0.5);
-		    }
-		    
-		    	
-		    
-		    fireUpdate(look.multiply((float)(2*charged)), p);
-
-		    
-		} catch (InterruptedException e) {
-		}
-	    }
-	}.start();
-    }
-    
+    		    if (direction == BlockFace.WEST) {
+    			if (look.getX() > -0.5)
+    			    look.setX(-0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getZ() > 0.5)
+    			    look.setZ(0.5);
+    			if (look.getZ() < -0.5)
+    			    look.setZ(-0.5);
+    		    }
+    		    if (direction == BlockFace.NORTH) {
+    			if (look.getZ() > -0.5)
+    			    look.setZ(-0.5);
+    			if (look.getY() < 0.05)
+    					look.setY(0.05);
+    			if (look.getX() > 0.5)
+    			    look.setX(0.5);
+    			if (look.getX() < -0.5)
+    			    look.setX(-0.5);
+    		    }
+    		    if (direction == BlockFace.EAST) {
+    			if (look.getX() < 0.5)
+    			    look.setX(0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getZ() > 0.5)
+    			    look.setZ(0.5);
+    			if (look.getZ() < -0.5)
+    			    look.setZ(-0.5);
+    		    }
+    		    if (direction == BlockFace.SOUTH) {
+    			if (look.getZ() < 0.5)
+    			    look.setZ(0.5);
+    			if (look.getY() < 0.05)
+    				look.setY(0.05);
+    			if (look.getX() > 0.5)
+    			    look.setX(0.5);
+    			if (look.getX() < -0.5)
+    			    look.setX(-0.5);
+    		    }
+    		    
+    		    	
+    		    
+    		    fireUpdate(look.multiply((float)(2*charged)), p);
+    	    	ignite = false;
+    		    
+    		} catch (InterruptedException e) {
+    		}
+    	    }
+    	}.start();
+        }
     public void fireUpdate(final Vector look, final Player p) {
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
 
@@ -530,9 +529,9 @@ public class OneCannon{
 				//taskNum = -1;
     			try{
     				sleep(500);
-    				p.sendMessage("3 - Ready...");
+    				p.sendMessage("3 - Ready!");
     			    sleep(500);
-    			    p.sendMessage("2 - Aim...  ");
+    			    p.sendMessage("2 - Aim!  ");
     			    sleep(500);
     			    p.sendMessage("1 - Fire!!!");
     			    sleep(500);
@@ -1942,7 +1941,7 @@ public class OneCannon{
 								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
 									openTorpedoDoors(p, false, false);
 							}
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 							torp.dead = true;
 						}
 						
@@ -1961,7 +1960,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{
@@ -2692,7 +2691,7 @@ public class OneCannon{
 									openTorpedoDoors(p, false, false);
 							}
 							torp.dead = true;
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 						}
 	
 					}
@@ -2709,7 +2708,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{
@@ -3472,7 +3471,7 @@ public class OneCannon{
 			    			torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
 						}else
 						{
-							p.sendMessage("Dud Torpedo! Too close...");
+							p.sendMessage("Dud Torpedo! Too close.");
 							torp.dead=true;
 							if( firingCraft != null ) {
 								firingCraft.tubeFiringMode.put(torp.tubeNum, -2);
@@ -3507,7 +3506,7 @@ public class OneCannon{
 					
 		    		if( !torp.active )
 		    		{
-		    			p.sendMessage("Dud Torpedo! Too close...");
+		    			p.sendMessage("Dud Torpedo! Too close.");
 						torp.dead = true;
 						if( firingCraft != null )
 						{

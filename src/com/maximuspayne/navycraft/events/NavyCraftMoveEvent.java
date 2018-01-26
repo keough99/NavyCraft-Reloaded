@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.util.Vector;
 
-import com.maximuspayne.navycraft.Craft;
+import com.maximuspayne.navycraft.craft.Craft;
 
 public class NavyCraftMoveEvent extends Event implements Cancellable {
 

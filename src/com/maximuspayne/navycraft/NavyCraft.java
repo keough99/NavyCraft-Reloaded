@@ -28,8 +28,18 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.config.ConfigFile;
+import com.maximuspayne.navycraft.craft.Craft;
+import com.maximuspayne.navycraft.craft.CraftBuilder;
+import com.maximuspayne.navycraft.craft.CraftMover;
+import com.maximuspayne.navycraft.craft.CraftType;
+import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_EntityListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_InventoryListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -53,11 +63,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 public class NavyCraft extends JavaPlugin {
 
 	static final String pluginName = "NavyCraft";
-	static String version;
+	public static String version;
 	public static NavyCraft instance;
 
 	public static Logger logger = Logger.getLogger("Minecraft");
-	boolean DebugMode = false;
+	public boolean DebugMode = false;
 
 	public ConfigFile configFile;
 
@@ -111,21 +121,21 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int spawnTime=10;
 	
-	public static HashMap<String, ArrayList<Sign>> playerDDSigns = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSUB1Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerCLSigns = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSUB2Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerCASigns = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP3Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP4Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP5Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerHANGAR1Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
 	
-	public static HashMap<String, Integer> playerDDRewards = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> playerSUB1Rewards = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> playerSUB2Rewards = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> playerCLRewards = new HashMap<String, Integer>();
-	public static HashMap<String, Integer> playerCARewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSHIP1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSHIP2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSHIP3Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSHIP4Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerSHIP5Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerHANGAR1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerHANGAR2Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerTANK1Rewards = new HashMap<String, Integer>();
@@ -838,49 +848,6 @@ public void updateCraft(int vehicleNum, int updateNum)
 			}
 		}
    }
-   
-	public void npcMerchantThread()
-	{
-		npcMerchantThread = new Thread(){
-			
-    	@Override
-			public void run() {
-    		
-    		setPriority(Thread.MIN_PRIORITY);
-    		
-			try{
-				int i=0;
-				sleep(30000);
-				while(!shutDown)
-				{
-					npcMerchantUpdate(i);
-					i++;
-					
-					sleep(spawnTime*60000);
-				}
-			}catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			}
-    	}; //, 20L);
-    	npcMerchantThread.start();
-    }
-	
-   public void npcMerchantUpdate(final int i)
-   {
-    	this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
-    	//new Thread() {
-	  //  @Override
-		    public void run()
-		    {
-		    	if( NavyCraft.shutDown )
-					return;
-		    	
-		    	NavyCraft_BlockListener.autoSpawnSign(null, "");
-		    }
-    	}
-    	);
-	}
 
 	public static void loadRewardsFile()
 	{
@@ -908,43 +875,43 @@ public void updateCraft(int vehicleNum, int updateNum)
 						return;
 					}
 					
-					if( strings[1].equalsIgnoreCase("dd") || strings[1].equalsIgnoreCase("ship1") )
+					if(strings[1].equalsIgnoreCase("ship1") )
 					{
-						if( playerDDRewards.containsKey(strings[0]) )
-							 playerDDRewards.put(strings[0], playerDDRewards.get(strings[0]) + 1);
+						if( playerSHIP1Rewards.containsKey(strings[0]) )
+							 playerSHIP1Rewards.put(strings[0], playerSHIP1Rewards.get(strings[0]) + 1);
 						else
-							 playerDDRewards.put(strings[0], 1);
-					}else if( strings[1].equalsIgnoreCase("sub1") || strings[1].equalsIgnoreCase("ship2") )
+							 playerSHIP1Rewards.put(strings[0], 1);
+					}else if(strings[1].equalsIgnoreCase("ship2") )
 					{
 						{
-							if( playerSUB1Rewards.containsKey(strings[0]) )
-								playerSUB1Rewards.put(strings[0], playerSUB1Rewards.get(strings[0]) + 1);
+							if( playerSHIP2Rewards.containsKey(strings[0]) )
+								playerSHIP2Rewards.put(strings[0], playerSHIP2Rewards.get(strings[0]) + 1);
 							else
-								playerSUB1Rewards.put(strings[0], 1);
+								playerSHIP2Rewards.put(strings[0], 1);
 						}
-					}else if( strings[1].equalsIgnoreCase("sub2") || strings[1].equalsIgnoreCase("ship3") )
+					}else if(strings[1].equalsIgnoreCase("ship3") )
 					{
 						{
-							if( playerSUB2Rewards.containsKey(strings[0]) )
-								playerSUB2Rewards.put(strings[0], playerSUB2Rewards.get(strings[0]) + 1);
+							if( playerSHIP3Rewards.containsKey(strings[0]) )
+								playerSHIP3Rewards.put(strings[0], playerSHIP3Rewards.get(strings[0]) + 1);
 							else
-								playerSUB2Rewards.put(strings[0], 1);
+								playerSHIP3Rewards.put(strings[0], 1);
 						}
-					}else if( strings[1].equalsIgnoreCase("cl") || strings[1].equalsIgnoreCase("ship4") )
+					}else if(strings[1].equalsIgnoreCase("ship4") )
 					{
 						{
-							if( playerCLRewards.containsKey(strings[0]) )
-								playerCLRewards.put(strings[0], playerCLRewards.get(strings[0]) + 1);
+							if( playerSHIP4Rewards.containsKey(strings[0]) )
+								playerSHIP4Rewards.put(strings[0], playerSHIP4Rewards.get(strings[0]) + 1);
 							else
-								playerCLRewards.put(strings[0], 1);
+								playerSHIP4Rewards.put(strings[0], 1);
 						}
-					}else if( strings[1].equalsIgnoreCase("ca") || strings[1].equalsIgnoreCase("ship5") )
+					}else if(strings[1].equalsIgnoreCase("ship5") )
 					{
 						{
-							if( playerCARewards.containsKey(strings[0]) )
-								playerCARewards.put(strings[0], playerCARewards.get(strings[0]) + 1);
+							if( playerSHIP5Rewards.containsKey(strings[0]) )
+								playerSHIP5Rewards.put(strings[0], playerSHIP5Rewards.get(strings[0]) + 1);
 							else
-								playerCARewards.put(strings[0], 1);
+								playerSHIP5Rewards.put(strings[0], 1);
 						}
 					}else if( strings[1].equalsIgnoreCase("hangar1") )
 					{

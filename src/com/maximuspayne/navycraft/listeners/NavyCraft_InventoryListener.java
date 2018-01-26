@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;

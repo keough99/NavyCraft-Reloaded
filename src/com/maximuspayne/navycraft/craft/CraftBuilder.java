@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft;
+package com.maximuspayne.navycraft.craft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
+
+import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.blocks.BlockLoc;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
 
 /**
  * NavyCraft craft builder
@@ -676,17 +681,17 @@ public class CraftBuilder {
 					return false;
 
 				if(craft.type.canNavigate && !craft.type.canFly && craft.waterType == 0 && !craft.type.canDig && !craft.type.isTerrestrial){
-					NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is not on water...");
+					NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is not on water!");
 					return false;
 				} else
 
 					if(craft.type.canDive && !craft.type.canFly && craft.waterType == 0 && !craft.type.canDig){
-						NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is not into water...");
+						NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is not into water!");
 						return false;
 					} else
 						//the airplane / airship is into water
 						if(craft.type.canFly && !craft.type.canNavigate && !craft.type.canDive && craft.waterLevel > -1){
-							NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is into water...");
+							NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.name + " is into water!");
 							return false;
 						}
 
