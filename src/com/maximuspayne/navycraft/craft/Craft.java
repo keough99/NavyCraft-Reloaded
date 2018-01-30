@@ -184,8 +184,6 @@ public class Craft {
 	public boolean blueTeam = false;
 	public boolean redTeam = false;
 	
-	public boolean isAutoCraft = false;
-	
 	public long abandonTime=0;
 	//long lastUpdate=0;
 	public boolean recentlyUpdated = false;
@@ -268,7 +266,6 @@ public class Craft {
 	public boolean isMovingPlayers = false;
 	
 	public int noCaptain=0;
-	public int stuckAutoTimer=0;
 	
 	
 	public static HashMap<String, Craft> reboardNames = new HashMap<String, Craft>();

@@ -188,7 +188,6 @@ public class NavyCraft_Timer extends BukkitRunnable {
 
 @Override
 public void run() {
-	// TODO Auto-generated method stub
 	
 }
    

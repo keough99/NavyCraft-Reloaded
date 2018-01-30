@@ -597,7 +597,7 @@ public class CraftBuilder {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean detect(Craft craft, int X, int Y, int Z, boolean autoShip){
+	public static boolean detect(Craft craft, int X, int Y, int Z){
 		waitStopMakingThatCraft = false;
 		CraftBuilder.craft = craft;
 
@@ -726,8 +726,6 @@ public class CraftBuilder {
 						return false;
 					}
 				}
-
-				if( !autoShip )
 				{
 					Player captain = NavyCraft.instance.getServer().getPlayer(craft.captainName);
 					craft.buildCrew(captain, false);

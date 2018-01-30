@@ -42,7 +42,6 @@ public class NavyCraftTurnEvent extends Event implements Cancellable {
 
 	@Override
 	public HandlerList getHandlers() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

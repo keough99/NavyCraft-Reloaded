@@ -154,7 +154,7 @@ public class NavyCraft extends JavaPlugin {
 	public static int schedulerCounter = 0;
 	
 	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
-	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerGunVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {
@@ -226,7 +226,7 @@ public class NavyCraft extends JavaPlugin {
 		return this.DebugMode;
 	}
 
-	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock, boolean autoShip) {
+	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock) {
 		//if( npcMerchantThread == null )
 			//npcMerchantThread();
 		
@@ -241,12 +241,9 @@ public class NavyCraft extends JavaPlugin {
 
 		
 		// auto-detect and create the craft
-		if (!CraftBuilder.detect(craft, x, y, z, autoShip)) {
+		if (!CraftBuilder.detect(craft, x, y, z)) {
 			return null;
 		}
-		
-		if( autoShip )
-			craft.captainName = null;
 
 		CraftMover cm = new CraftMover(craft, this);
 		cm.structureUpdate(null,false);
@@ -288,8 +285,6 @@ public class NavyCraft extends JavaPlugin {
 		{
 			craft.speedChange(player, true);
 		}
-		
-		if( !autoShip )
 		{
 			craft.driverName = craft.captainName;
 			if(craft.type.listenItem == true)
