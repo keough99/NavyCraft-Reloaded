@@ -488,7 +488,7 @@ public class Craft {
 		
 		// all craft types can move through air and flowing water/lava
 		if ( blockId == 0 ||
-				(blockId >= 8 && blockId <= 11) ||
+				(blockId >= 8 && blockId <= 11 && data != 0) ||
 				//blockId == 78 || 
 				BlocksInfo.coversGrass(blockId)) //snow cover
 			return true;
