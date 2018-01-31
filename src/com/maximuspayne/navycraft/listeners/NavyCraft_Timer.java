@@ -6,11 +6,11 @@ import java.util.TimerTask;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.maximuspayne.navycraft.craft.Craft;
 
-public class NavyCraft_Timer extends BukkitRunnable {
+public class NavyCraft_Timer {
+	//needs to be migrated to bukkitscheduler. meh.
 	
 	Plugin plugin;
 	Timer timer;
@@ -185,11 +185,6 @@ public class NavyCraft_Timer extends BukkitRunnable {
     	}
     	);
 	 }
-
-@Override
-public void run() {
-	
-}
    
 
 }

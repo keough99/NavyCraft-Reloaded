@@ -154,7 +154,7 @@ public class NavyCraft extends JavaPlugin {
 	public static int schedulerCounter = 0;
 	
 	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
-	public static HashMap<Player, Float> playerGunVolumes = new HashMap<Player, Float>();
+	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {

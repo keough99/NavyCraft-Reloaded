@@ -1258,7 +1258,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 
 						NavyCraft.cleanupPlayers.add(player.getName());
-						player.sendMessage(ChatColor.GREEN + "Entering cleanup mode.");
+						player.sendMessage("Entering cleanup mode.");
 					}
 					event.setCancelled(true);
 					return;
@@ -1300,18 +1300,6 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.GREEN + "All vehicles destroyed");
 					event.setCancelled(true);
 					return;
-				} else if (split[1].equalsIgnoreCase("destroyabandoned")) {
-					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
-						return;
-					for (Craft c : Craft.craftList) {
-					if (c.abandoned = true)
-						c.doDestroy = true;
-						player.sendMessage(ChatColor.GREEN + "All abandoned vehicles destroyed");
-						event.setCancelled(true);
-					if (c.abandoned != true);
-					player.sendMessage(ChatColor.RED + "No abandoned vehicles!");
-					}
-					return;
 				} else if (split[1].equalsIgnoreCase("removeships")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
@@ -1350,43 +1338,14 @@ public class NavyCraft_PlayerListener implements Listener {
 					event.setCancelled(true);
 					return;
 				}
-			} else if (split[1].equalsIgnoreCase("help")) {
-				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-					player.sendMessage(ChatColor.WHITE + "NavyCraft v" + NavyCraft.version + " commands :");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft" + " : " + ChatColor.WHITE + "status message");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft help" + " : " + ChatColor.WHITE + "help message");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft types " + " : " + ChatColor.WHITE + "list the types of craft available");
-					player.sendMessage(ChatColor.DARK_AQUA + "/[craft type] " + " : " + ChatColor.WHITE + "commands specific to the craft type try /ship help");
-					player.sendMessage(ChatColor.DARK_AQUA + "/volume" + " : " + ChatColor.WHITE + "view volume settings");
-					player.sendMessage(ChatColor.DARK_AQUA + "/rank" + " : " + ChatColor.WHITE + "view rank commands");
-					player.sendMessage(ChatColor.DARK_AQUA + "/sign undo " + " : " + ChatColor.WHITE + "undo a sign you paid for");
-				}
-				
-				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
-				{
-					player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
-						+ "list all craft");
-					player.sendMessage(ChatColor.BLUE + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
-					player.sendMessage(ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
-					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
-					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft destroyabandoned: " + ChatColor.WHITE + "destroys all abandoned ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
-				}
-
-			}
-			event.setCancelled(true);
 					// nc help
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
 					player.sendMessage(ChatColor.WHITE + "NavyCraft v" + NavyCraft.version + " commands :");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft" + " : " + ChatColor.WHITE + "status message");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft help" + " : " + ChatColor.WHITE + "help message");
 					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft types " + " : " + ChatColor.WHITE + "list the types of craft available");
 					player.sendMessage(ChatColor.DARK_AQUA + "/[craft type] " + " : " + ChatColor.WHITE + "commands specific to the craft type try /ship help");
-					player.sendMessage(ChatColor.DARK_AQUA + "/volume" + " : " + ChatColor.WHITE + "view volume settings");
-					player.sendMessage(ChatColor.DARK_AQUA + "/rank" + " : " + ChatColor.WHITE + "view rank commands");
+					player.sendMessage(ChatColor.DARK_AQUA + "/volume" + " : " + ChatColor.WHITE + "volume help");
+					player.sendMessage(ChatColor.DARK_AQUA + "/rank" + " : " + ChatColor.WHITE + "rank status message");
 					player.sendMessage(ChatColor.DARK_AQUA + "/sign undo " + " : " + ChatColor.WHITE + "undo a sign you paid for");
 				}
 				
@@ -1399,9 +1358,10 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
 					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
 					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft destroyabandoned: " + ChatColor.WHITE + "destroys all abandoned ships");
 					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
 				}
+
+			}
 			event.setCancelled(true);
 		}
 			String craftName = split[0];
@@ -3366,7 +3326,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.GOLD + "/volume - status message");
 						player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
 						player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
-						player.sendMessage(ChatColor.YELLOW + "Types: engine, guns, other, all");
+						player.sendMessage(ChatColor.YELLOW + "Types: engine, weapons, other, all");
 					}
 					if (split[1].equalsIgnoreCase("engine")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
@@ -3402,7 +3362,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							return;
 						}
 					}
-					if (split[1].equalsIgnoreCase("gun")) {
+					if (split[1].equalsIgnoreCase("weapon")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to set gun volume.");
 							event.setCancelled(true);
@@ -3410,7 +3370,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
-							NavyCraft.playerGunVolumes.put(player, inValue);
+							NavyCraft.playerWeaponVolumes.put(player, inValue);
 							player.sendMessage(ChatColor.GOLD + "Gun volume muted");
 							event.setCancelled(true);
 							return;
@@ -3421,7 +3381,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								try {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
-										NavyCraft.playerGunVolumes.put(player, inValue);
+										NavyCraft.playerWeaponVolumes.put(player, inValue);
 										player.sendMessage(ChatColor.GOLD + "Volume set for weapons - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3468,7 +3428,8 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							event.setCancelled(true);
 							return;
-						}					}
+						}
+					}
 					if (split[1].equalsIgnoreCase("all")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to set other volume.");
@@ -3478,7 +3439,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerEngineVolumes.put(player, inValue);
-							NavyCraft.playerGunVolumes.put(player, inValue);
+							NavyCraft.playerWeaponVolumes.put(player, inValue);
 							NavyCraft.playerOtherVolumes.put(player, inValue);
 							player.sendMessage(ChatColor.GOLD + "All volume muted");
 							event.setCancelled(true);
@@ -3491,7 +3452,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerOtherVolumes.put(player, inValue);
-										NavyCraft.playerGunVolumes.put(player, inValue);
+										NavyCraft.playerWeaponVolumes.put(player, inValue);
 										NavyCraft.playerEngineVolumes.put(player, inValue);
 										player.sendMessage(ChatColor.GOLD + "Volume set for all - " + ChatColor.GREEN + inValue + "%");
 									} else {

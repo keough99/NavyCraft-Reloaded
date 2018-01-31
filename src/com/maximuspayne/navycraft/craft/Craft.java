@@ -485,7 +485,7 @@ public class Craft {
 		
 		// all craft types can move through air and flowing water/lava
 		if ( blockId == 0 ||
-				(blockId >= 8 && blockId <= 11 && data != 0) ||
+				(blockId >= 8 && blockId <= 11) ||
 				//blockId == 78 || 
 				BlocksInfo.coversGrass(blockId)) //snow cover
 			return true;
@@ -1258,10 +1258,10 @@ public class Craft {
 				|| blockID == 62 || blockID == 63 || blockID == 64 || blockID == 65 || blockID == 68 || blockID == 69 || blockID == 70 || blockID == 72 || blockID == 73 || blockID == 74 
 				|| blockID == 77 || blockID == 78 || blockID == 79 || blockID == 80 || blockID == 82 || blockID == 84 || blockID == 85 || blockID == 91 || blockID == 96 || blockID == 101 || blockID == 107
 				|| blockID == 108 || blockID == 110 || blockID == 113 || blockID == 117 || blockID == 118 || blockID == 125 || blockID == 126 
-				|| blockID == 128 || blockID == 159 || blockID == 172 || blockID == 134 || blockID == 135 || blockID == 136 || blockID == 138 || blockID == 143 || blockID == 146 || blockID == 147 || blockID == 148 || blockID == 154 || blockID == 158 ||  blockID == 160 || blockID == 251)
+				|| blockID == 128 || blockID == 159 || blockID == 172 || blockID == 134 || blockID == 135 || blockID == 136 || blockID == 138 || blockID == 143 || blockID == 146 || blockID == 147 || blockID == 148 || blockID == 154 || blockID == 158)
 		{
 			return 1;
-		}else if( blockID == 46 || blockID == 129 || blockID == 152 || blockID == 252 )
+		}else if( blockID == 46 || blockID == 129 || blockID == 152 )
 		{
 			return -1;
 		}else if( blockID == 153 || blockID == 170 || blockID == 173 )
@@ -1294,7 +1294,7 @@ public class Craft {
 				|| blockID == 74 || blockID == 159 || blockID == 84 || blockID == 125 || blockID == 126 || blockID == 134 || blockID == 135 || blockID == 136 )
 		{
 			return 0.25f;
-		}else if( blockID == 35 || blockID == 85 || blockID == 107 || blockID == 159 )
+		}else if( blockID == 35 || blockID == 85 || blockID == 107 )
 		{
 			return 0.17f;
 		}else if( blockID != 0 && (blockID < 8 || blockID > 11) ) 

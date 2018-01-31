@@ -67,7 +67,6 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
-import net.ess3.api.MaxMoneyException;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 import ru.tehkode.permissions.exceptions.RankingException;
 
@@ -750,6 +749,7 @@ public class NavyCraft_BlockListener implements Listener {
 				return;
 			}
 
+			boolean isAutoSpawn = false;
 			boolean isMerchantSpawn = false;
 			String freeString = sign.getLine(2).trim().toLowerCase();
 			freeString = freeString.replaceAll(ChatColor.BLUE.toString(), "");
@@ -855,7 +855,7 @@ public class NavyCraft_BlockListener implements Listener {
 				int shiftUp = 0;
 				int shiftDown = 0;
 
-				if (isMerchantSpawn) {
+				if (isAutoSpawn || isMerchantSpawn) {
 					if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP1")) {
 						shiftRight = 12;
 						shiftForward = 28;
@@ -980,8 +980,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 										CraftMover cm = new CraftMover(theCraft, plugin);
 										cm.structureUpdate(null, false);
-										
-										 if (isMerchantSpawn) {
+										if (isMerchantSpawn) {
 											theCraft.isMerchantCraft = true;
 
 											if (theCraft.redTeam) {
@@ -1651,6 +1650,7 @@ public class NavyCraft_BlockListener implements Listener {
 						player.sendMessage(ChatColor.RED + "You do not have permission to use this type of vehicle.");
 						return;
 					}
+
 					if (player.getItemInHand().getTypeId() > 0) {
 						player.sendMessage(ChatColor.RED + "Have nothing in your hand before using this.");
 						return;
@@ -3498,17 +3498,6 @@ public class NavyCraft_BlockListener implements Listener {
 	   }
 	}
 }
-	
-	public static void rewardCashPlayer(int newCash, Player player) {
-		Essentials ess;
-		ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-		if (ess == null) { return; }
-		try {
-			ess.getUser(player).giveMoney(new BigDecimal(newCash));
-		} catch (MaxMoneyException e) {
-			e.printStackTrace();
-		}
-		}
 	
 	public static void rewardExpPlayer(int newExp, Player player) {
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {

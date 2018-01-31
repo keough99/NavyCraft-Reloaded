@@ -5309,10 +5309,11 @@ public class CraftMover {
 				craft.noCaptain = 0;
 			}
 		}
+
 	}
 
 
-	//cruise movement update, update turn progress, update vehicle engines power and speed
+	//cruise movement update, update turn progress, update vehicle engines power and speed, update autocrafts
 	//calls calculateMove, called by moveUpdate
 	public void cruiseUpdate() { 
 
@@ -5654,7 +5655,7 @@ public class CraftMover {
 		craft.lastDZ = dz;
 		calculateMove(dx, dy, dz);
 		cruiseUpdate = false;
-}
+	}
 
 	public static void battleLogger(String str) {
 
@@ -6108,8 +6109,8 @@ public class CraftMover {
 	{
 		for( Player p : loc.getWorld().getPlayers() )
 		{
-			if( NavyCraft.playerGunVolumes.containsKey(p) )
-				p.playSound(loc,  sound,  volume*NavyCraft.playerGunVolumes.get(p)*.01f,  pitch);
+			if( NavyCraft.playerWeaponVolumes.containsKey(p) )
+				p.playSound(loc,  sound,  volume*NavyCraft.playerWeaponVolumes.get(p)*.01f,  pitch);
 			else
 				p.playSound(loc,  sound,  volume,  pitch);
 		}
