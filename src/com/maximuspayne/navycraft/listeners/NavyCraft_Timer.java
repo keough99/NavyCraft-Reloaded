@@ -6,11 +6,11 @@ import java.util.TimerTask;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.maximuspayne.navycraft.craft.Craft;
 
-public class NavyCraft_Timer {
-	//needs to be migrated to bukkitscheduler. meh.
+public class NavyCraft_Timer extends BukkitRunnable{
 	
 	Plugin plugin;
 	Timer timer;
@@ -29,18 +29,12 @@ public class NavyCraft_Timer {
 		timer = new Timer();
 		if(state.equals("engineCheck"))
 			timer.scheduleAtFixedRate(new EngineTask(), 1000, 1000);
-		else if(state.equals("engineCheck"))
-			timer.schedule(new AutoMoveTask(forward), 1000);
 		else if(state.equals("abandonCheck"))
 			timer.scheduleAtFixedRate(new ReleaseTask(), seconds * 1000, 60000);
 		else if(state.equals("takeoverCheck"))
 			timer.scheduleAtFixedRate(new TakeoverTask(), seconds * 1000, 60000);
 		else if(state.equals("takeoverCaptainCheck"))
 			timer.scheduleAtFixedRate(new TakeoverCaptainTask(), seconds * 1000, 60000);
-	}
-	
-	public void SetState(String newState) {
-		//state = newState;
 	}
 	
 	public void Destroy() {
@@ -57,28 +51,9 @@ public class NavyCraft_Timer {
 			return;
 		}
 	}
-	
-	class AutoMoveTask extends TimerTask {
-		boolean MovingForward = false;
-		
-		public void run() {
-			craft.WayPointTravel(MovingForward);
-			timer.schedule(new AutoMoveTask(MovingForward), 1000);
-		}
-		
-		public AutoMoveTask(boolean Forward) {
-			MovingForward = Forward;
-		}
-	}
 
 	class ReleaseTask extends TimerTask {
-		public void run() {
-			/*
-			if(state.equals("engineCheck")) {
-				craft.engineTick();
-			}else
-			if(state.equals("abandonCheck")) {
-			*/				
+		public void run() {			
 				if(craft != null && craft.isNameOnBoard.containsKey(player.getName()) ) {
 					if( !craft.isNameOnBoard.get(player.getName()) )
 						releaseCraftSync();
@@ -86,16 +61,12 @@ public class NavyCraft_Timer {
 				}
 				timer.cancel();
 				return;
-				
-			//}
 		}
 	}
 	
    public void releaseCraftSync()
     {
     	plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
-    	//new Thread() {
-	  //  @Override
 		    public void run()
 		    {
 		    }
@@ -104,38 +75,27 @@ public class NavyCraft_Timer {
 	 }
    
 	class TakeoverTask extends TimerTask {
-		public void run() {
-			/*
-			if(state.equals("engineCheck")) {
-				craft.engineTick();
-			}else
-			if(state.equals("abandonCheck")) {
-			*/				
-
+		public void run() {	
 				takeoverCraftSync();
 					
 
 				timer.cancel();
 				return;
-				
-			//}
 		}
 	}
 	
    public void takeoverCraftSync()
     {
     	plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
-    	//new Thread() {
-	  //  @Override
 		    public void run()
 		    {
 		    	if( craft.abandoned && player != null && player.isOnline() && craft.isOnCraft(player, false) )
 		    	{
 		    		craft.releaseCraft();
-		    		player.sendMessage(ChatColor.YELLOW + "Vehicle released! Take command.");
+		    		player.sendMessage(ChatColor.GREEN + "Vehicle released! Take command.");
 		    	}else
 		    	{
-		    		player.sendMessage(ChatColor.YELLOW + "Takeover failed.");
+		    		player.sendMessage(ChatColor.RED + "Takeover failed.");
 		    	}
 		    	
 		    	
@@ -145,39 +105,28 @@ public class NavyCraft_Timer {
 	 }
    
 	class TakeoverCaptainTask extends TimerTask {
-		public void run() {
-			/*
-			if(state.equals("engineCheck")) {
-				craft.engineTick();
-			}else
-			if(state.equals("abandonCheck")) {
-			*/				
+		public void run() {				
 
 				takeoverCaptainCraftSync();
 					
 
 				timer.cancel();
 				return;
-				
-			//}
 		}
 	}
 	
    public void takeoverCaptainCraftSync()
     {
     	plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
-
-    	//new Thread() {
-	  //  @Override
 		    public void run()
 		    {
 		    	if( craft.captainAbandoned && player != null && player.isOnline() && craft.isOnCraft(player, false) )
 		    	{
 		    		craft.releaseCraft();
-		    		player.sendMessage(ChatColor.YELLOW + "Vehicle released! Take command.");
+		    		player.sendMessage(ChatColor.GREEN + "Vehicle released! Take command.");
 		    	}else
 		    	{
-		    		player.sendMessage(ChatColor.YELLOW + "Takeover failed.");
+		    		player.sendMessage(ChatColor.RED + "Takeover failed.");
 		    	}
 		    	
 		    	
@@ -185,6 +134,12 @@ public class NavyCraft_Timer {
     	}
     	);
 	 }
+
+@Override
+public void run() {
+	// TODO Auto-generated method stub
+	
+}
    
 
 }

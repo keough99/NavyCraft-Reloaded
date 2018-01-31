@@ -235,7 +235,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			if (player.getInventory().contains(Material.BLAZE_ROD)) {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
-			player.sendMessage(ChatColor.YELLOW + "You get off the Flak-Gun.");
+			player.sendMessage(ChatColor.GOLD + "You get off the Flak-Gun.");
 		}
 
 		if (NavyCraft.aaGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
@@ -244,7 +244,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			if (player.getInventory().contains(Material.BLAZE_ROD)) {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
-			player.sendMessage(ChatColor.YELLOW + "You get off the AA-Gun.");
+			player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
 			
 		} else if (NavyCraft.searchLightMap.containsKey(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
 				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
@@ -254,7 +254,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			if (player.getInventory().contains(Material.BLAZE_ROD)) {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
-			player.sendMessage(ChatColor.YELLOW + "You get off the searchlight.");
+			player.sendMessage(ChatColor.GOLD + "You get off the searchlight.");
 			
 
 		}else if (craft != null) {
@@ -351,7 +351,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				if (player.getInventory().contains(Material.GOLD_SWORD)) {
 					player.getInventory().remove(Material.GOLD_SWORD);
 				}
-				player.sendMessage(ChatColor.YELLOW + "You release the helm.");
+				player.sendMessage(ChatColor.GOLD + "You release the helm.");
 			}
 		}
 	}
@@ -403,7 +403,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.teleport(newLoc);
 					player.setItemInHand(new ItemStack(369, 1));
 					NavyCraft.searchLightMap.put(player, newLoc);
-					player.sendMessage(ChatColor.YELLOW + "Manning Searchlight! Left Click with Blaze Rod to point!");
+					player.sendMessage(ChatColor.GOLD + "Manning Searchlight! Left Click with Blaze Rod to point!");
 					player.getWorld().playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				}
 				
@@ -1185,20 +1185,20 @@ public class NavyCraft_PlayerListener implements Listener {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
 					if (Craft.craftList.isEmpty()) {
-						player.sendMessage(ChatColor.YELLOW + "No player controlled craft");
+						player.sendMessage(ChatColor.RED + "No player controlled craft");
 						// return true;
 					}
 
 					for (Craft craft : Craft.craftList) {
 
-						player.sendMessage(ChatColor.YELLOW + "" + craft.craftID + "-" + craft.name + " commanded by " + craft.captainName + " : "
+						player.sendMessage(ChatColor.YELLOW + "" + craft.craftID + " - " + craft.name + " commanded by " + craft.captainName + ": "
 								+ craft.blockCount + " blocks");
 					}
 				} else if (split[1].equalsIgnoreCase("reload")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
 						return;
 					NavyCraft.instance.loadProperties();
-					player.sendMessage(ChatColor.YELLOW + "NavyCraft configuration reloaded");
+					player.sendMessage(ChatColor.GREEN + "NavyCraft configuration reloaded");
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("debug")) {
@@ -1224,29 +1224,6 @@ public class NavyCraft_PlayerListener implements Listener {
 					NavyCraft.instance.configFile.ListSettings(player);
 					return;
 					
-				} else if (split[1].equalsIgnoreCase("spawntimer")) {
- 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
- 						return;
- 					int timerMin = -1;
- 					if (split.length == 3) {
- 						try {
- 							timerMin = Integer.parseInt(split[2]);
- 						} catch (NumberFormatException e) {
- 							player.sendMessage("Invalid timer value");
- 							e.printStackTrace();
- 						}
- 					}
- 					if ((timerMin >= 1) || (timerMin <= 60)) {
- 
- 						NavyCraft.spawnTime = timerMin;
- 						player.sendMessage("Spawn time set to " + timerMin + " minutes.");
- 					} else {
- 						player.sendMessage("Invalid timer value..between 1 to 60 minutes");
- 					}
- 
- 					event.setCancelled(true);
- 					return;
-					
 					// Cleanup command
 				} else if (split[1].equalsIgnoreCase("cleanup")) {
 					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
@@ -1260,18 +1237,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						NavyCraft.cleanupPlayers.add(player.getName());
 						player.sendMessage("Entering cleanup mode.");
 					}
-					event.setCancelled(true);
-					return;
-				} else if (split[1].equalsIgnoreCase("listShips") || split[1].equalsIgnoreCase("ls")) {
-					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
-						return;
-					for (Craft c : Craft.craftList) {
-							if (c.customName != null) {
-								player.sendMessage(c.craftID + "-" + c.customName);
-							} else {
-								player.sendMessage(c.craftID + "-" + c.name);
-							}
-						}
 					event.setCancelled(true);
 					return;
 				} else if (split[1].equalsIgnoreCase("weapons")) {
@@ -2997,7 +2962,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						plugin.getServer().broadcastMessage(
-								ChatColor.YELLOW + player.getName() + " evicts everyone from Battle World!");
+								ChatColor.YELLOW + player.getName() + " evicts everyone from the Battle!");
 
 					} else if (split[1].equalsIgnoreCase("cancel")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.battle") && !player.isOp()) {
@@ -3549,11 +3514,25 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.WHITE + "Rank v" + NavyCraft.version + " commands :");
 						player.sendMessage(ChatColor.GOLD + "/rank - view your rank");
 						player.sendMessage(ChatColor.GOLD + "/rank view <player> - view players exp");
+						player.sendMessage(ChatColor.GOLD + "/rank list - list ranks in the plugin");
 						if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
 						player.sendMessage(ChatColor.BLUE + "/rank set <player> <exp> - set a players exp");
 						player.sendMessage(ChatColor.BLUE + "/rank add <player> <exp> - give exp to a player");
 						player.sendMessage(ChatColor.BLUE + "/rank remove <player> <exp> - remove exp from a player");
 						}
+					}
+					if (split[1].equalsIgnoreCase("list")) {
+						player.sendMessage(ChatColor.WHITE + "Rank list :");
+						player.sendMessage(ChatColor.DARK_AQUA + "Ensign - 0 EXP");
+						player.sendMessage(ChatColor.GREEN + "LT. JT - 1000 EXP");
+						player.sendMessage(ChatColor.DARK_GREEN + "Lieutenant - 6000");
+						player.sendMessage(ChatColor.WHITE + "Lt. Cmdr - 18000");
+						player.sendMessage(ChatColor.DARK_PURPLE + "Commander - 54000");
+						player.sendMessage(ChatColor.YELLOW + "Captian - 162000");
+						player.sendMessage(ChatColor.GOLD + "R Admiral - 486000");
+						player.sendMessage(ChatColor.GOLD + "R Admiral+ - 1458000");
+						player.sendMessage(ChatColor.GOLD + "Vice Admiral - 1858000");
+						player.sendMessage(ChatColor.GOLD + "Admiral - 2000000");
 					}
 					if (split[1].equalsIgnoreCase("view")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {

@@ -354,7 +354,7 @@ public class NavyCraft_BlockListener implements Listener {
 				Craft.playerClipboardsRank.put(player, rankReq);
 				Craft.playerClipboardsType.put(player, spawnName);
 				Craft.playerClipboardsLot.put(player, lotStr);
-				player.sendMessage(ChatColor.YELLOW + "Selected vehicle : " + ChatColor.WHITE + spawnName.toUpperCase());
+				player.sendMessage(ChatColor.GREEN + "Selected vehicle: " + ChatColor.WHITE + spawnName.toUpperCase());
 
 			} else {
 				player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Second Sign?");
@@ -689,7 +689,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(3, lotStr);
 						sign2.update();
 			
-						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.YELLOW + " Claimed!");
+						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
 			
 					} else {
 						player.sendMessage("World Guard error");
@@ -740,7 +740,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 
 			if (!Craft.playerClipboards.containsKey(player)) {
-				player.sendMessage(ChatColor.YELLOW + "Go to the Shipyard and select a vehicle first.");
+				player.sendMessage(ChatColor.RED + "Go to the Shipyard and select a vehicle first.");
 				return;
 			}
 
@@ -845,7 +845,7 @@ public class NavyCraft_BlockListener implements Listener {
 				ch.setTransform(transform);
 				es.flushQueue();
 
-				player.sendMessage(ChatColor.YELLOW + "Spawned vehicle : " + ChatColor.WHITE + Craft.playerClipboardsType.get(player).toUpperCase());
+				player.sendMessage(ChatColor.GREEN + "Spawned vehicle: " + ChatColor.WHITE + Craft.playerClipboardsType.get(player).toUpperCase());
 
 
 				es.setBlockChangeLimit(oldLimit);
@@ -1016,14 +1016,14 @@ public class NavyCraft_BlockListener implements Listener {
 				if (player.getInventory().contains(Material.BLAZE_ROD)) {
 					player.getInventory().remove(Material.BLAZE_ROD);
 				}
-				player.sendMessage(ChatColor.YELLOW + "You get off the AA-Gun.");
+				player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
 			}
 			if (NavyCraft.flakGunnersList.contains(player)) {
 				NavyCraft.flakGunnersList.remove(player);
 				if (player.getInventory().contains(Material.BLAZE_ROD)) {
 					player.getInventory().remove(Material.BLAZE_ROD);
 				}
-				player.sendMessage(ChatColor.YELLOW + "You get off the Flak-Gun.");
+				player.sendMessage(ChatColor.GOLD + "You get off the Flak-Gun.");
 			}
 
 			Craft c = Craft.getCraft(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
@@ -1046,7 +1046,7 @@ public class NavyCraft_BlockListener implements Listener {
 							player.teleport(newLoc);
 							p.user = player;
 						} else if (!p.destroyed && (p.scopeLoc != null)) {
-							player.sendMessage(ChatColor.YELLOW + "Raise Periscope First.");
+							player.sendMessage(ChatColor.RED + "Raise Periscope First.");
 						} else {
 							player.sendMessage(ChatColor.RED + "Periscope destroyed!");
 						}
@@ -1102,7 +1102,7 @@ public class NavyCraft_BlockListener implements Listener {
 					for (String s : c.crewNames) {
 						Player p = plugin.getServer().getPlayer(s);
 						if (p != null) {
-							p.sendMessage(ChatColor.YELLOW + "Surface the boat!");
+							p.sendMessage(ChatColor.GREEN + "Surface the boat!");
 						}
 					}
 
@@ -1446,7 +1446,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.flakGunnersList.add(player);
-			player.sendMessage(ChatColor.YELLOW + "Manning Flak-Gun! Left Click with Blaze Rod to fire!");
+			player.sendMessage(ChatColor.GOLD + "Manning Flak-Gun! Left Click with Blaze Rod to fire!");
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 		} else if (craftTypeName.equalsIgnoreCase("aa-gun")) {
@@ -1481,7 +1481,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.aaGunnersList.add(player);
-			player.sendMessage(ChatColor.YELLOW + "Manning AA-Gun! Left Click with Blaze Rod to fire!");
+			player.sendMessage(ChatColor.GOLD + "Manning AA-Gun! Left Click with Blaze Rod to fire!");
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 
@@ -1666,7 +1666,7 @@ public class NavyCraft_BlockListener implements Listener {
 						if (!testCraft.takingOver) {
 							Craft.takeoverTimerThread(player, testCraft);
 						}
-						player.sendMessage(ChatColor.YELLOW + "This vehicle will become abandoned in 2 minutes.");
+						player.sendMessage(ChatColor.RED + "This vehicle will become abandoned in 2 minutes.");
 						return;
 					} else if (testCraft.captainAbandoned && testCraft.crewNames.contains(player.getName()) && (testCraft.captainName != null)) {
 						testCraft.captainName = player.getName();
@@ -3411,6 +3411,7 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 	public static void showRank(Player player, String p) {
 		int exp = 0;
+		int exp1 = 0;
 		String worldName = null;
 		
 		NavyCraft.loadExperience();
@@ -3442,10 +3443,11 @@ public class NavyCraft_BlockListener implements Listener {
 						+ ChatColor.GRAY + " rank points.");
 				return;
 	   } else { 
+		   exp1 = NavyCraft.playerExp.get(p);
 			String[] groupName = PermissionsEx.getUser(p).getGroupsNames();
 			for( String g : groupName ) {
 			player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
-			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp
+			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp1
 			+ ChatColor.GRAY + " rank points.");
 	return;
 	       }
@@ -3454,6 +3456,7 @@ public class NavyCraft_BlockListener implements Listener {
 }
 	public static void getRank(Player player) {
 		int exp = 0;
+		int exp1 = 0;
 		String worldName = player.getWorld().getName();
 		
 		NavyCraft.loadExperience();
@@ -3483,16 +3486,19 @@ public class NavyCraft_BlockListener implements Listener {
 				player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + s.toUpperCase()
 						+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp + "/" + rankExp
 						+ ChatColor.GRAY + " rank points.");
+				if( exp >= rankExp )
+				{
+							checkRankWorld(player, exp, player.getWorld());
+				}
 			   } else { 
+					if (NavyCraft.playerExp.containsKey(player.getName())) {
+					exp1 = NavyCraft.playerExp.get(player.getName());
+					}
 					String[] groupName = PermissionsEx.getUser(player).getGroupsNames();
 					for( String g : groupName ) {
 					player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + g.toUpperCase()
-					+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp
+					+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp1
 					+ ChatColor.GRAY + " rank points.");
-				if( exp >= rankExp )
-				{
-					checkRankWorld(player, exp, player.getWorld());
-				}
 				return;
 			}
 	   }

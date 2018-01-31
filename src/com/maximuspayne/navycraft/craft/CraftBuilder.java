@@ -298,7 +298,7 @@ public class CraftBuilder {
 			//detect all connected empty blocks
 			do{
 				if(!createAirBubble() && NavyCraft.instance.ConfigSetting("allowHoles").equalsIgnoreCase("false") && craft.type.canDive){
-					NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.YELLOW + "This " + craft.type.name + " has holes, it needs to be waterproof");
+					NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.type.name + " has holes, it needs to be waterproof");
 					return false;
 				}
 			}
@@ -730,9 +730,9 @@ public class CraftBuilder {
 					Player captain = NavyCraft.instance.getServer().getPlayer(craft.captainName);
 					craft.buildCrew(captain, false);
 					if( craft.customName != null )
-						captain.sendMessage(ChatColor.YELLOW +  "You Launch the " + ChatColor.WHITE + craft.customName.toUpperCase() + ChatColor.YELLOW + " class!");
+						captain.sendMessage(ChatColor.GOLD +  "You Launch the " + ChatColor.WHITE + craft.customName.toUpperCase() + ChatColor.GOLD + " class!");
 					else
-						captain.sendMessage(ChatColor.YELLOW +  "You Launch the " + ChatColor.WHITE + craft.name.toUpperCase() + ChatColor.YELLOW + " class!");
+						captain.sendMessage(ChatColor.GOLD +  "You Launch the " + ChatColor.WHITE + craft.name.toUpperCase() + ChatColor.GOLD + " class!");
 				}
 			}
 

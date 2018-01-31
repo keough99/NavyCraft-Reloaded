@@ -517,13 +517,13 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						if (craft.captainName != null) {
 							Player p = plugin.getServer().getPlayer(craft.captainName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						craft.doDestroy = true;
@@ -534,13 +534,13 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						if (craft.captainName != null) {
 							Player p = plugin.getServer().getPlayer(craft.captainName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						return;
@@ -565,7 +565,7 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is blocked.");
+								p.sendMessage(ChatColor.RED + "That direction is blocked.");
 							}
 						}
 						return;
@@ -1454,15 +1454,15 @@ public class CraftMover {
 						Essentials ess;
 						ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
 						if (ess == null) {
-							p.sendMessage("Essentials Economy error");
+							p.sendMessage(ChatColor.DARK_RED + "Essentials Economy error");
 							return;
 						}
 						if (!PermissionInterface.CheckQuietPerm(p, "navycraft.free") && ess.getUser(p).canAfford(new BigDecimal(craft.vehicleCost))) {
-							p.sendMessage("Vehicle purchased.");
+							p.sendMessage(ChatColor.GREEN + "Vehicle purchased.");
 							ess.getUser(p).takeMoney(new BigDecimal(craft.vehicleCost));
 
 						} else if (PermissionInterface.CheckQuietPerm(p, "navycraft.free")) {
-							p.sendMessage("Vehicle given for free!");
+							p.sendMessage(ChatColor.GREEN + "Vehicle given for free!");
 						} else {
 							p.sendMessage(ChatColor.RED + "You cannot afford this vehicle, destroying vehicle.");
 							craft.doDestroy = true;
@@ -1501,7 +1501,7 @@ public class CraftMover {
 					}
 					NavyCraft.saveExperience();
 
-					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.YELLOW + "5000 points!");
+					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.redPoints += 5000;
 
 					for (String s : craft.crewNames) {
@@ -1530,7 +1530,7 @@ public class CraftMover {
 					}
 					NavyCraft.saveExperience();
 
-					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.YELLOW + "5000 points!");
+					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.bluePoints += 5000;
 
 					for (String s : craft.crewNames) {
