@@ -1235,7 +1235,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 
 						NavyCraft.cleanupPlayers.add(player.getName());
-						player.sendMessage("Entering cleanup mode.");
+						player.sendMessage(ChatColor.GREEN + "Entering cleanup mode.");
 					}
 					event.setCancelled(true);
 					return;

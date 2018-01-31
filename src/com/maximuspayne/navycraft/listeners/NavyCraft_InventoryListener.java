@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.plugin.Plugin;
 
+import com.maximuspayne.navycraft.plugins.PermissionInterface;
+
 public class NavyCraft_InventoryListener implements Listener {
 
 
@@ -46,12 +48,17 @@ public class NavyCraft_InventoryListener implements Listener {
     		if( event.getWhoClicked().getType() == EntityType.PLAYER )
     		{
     			Player p = (Player)event.getWhoClicked();
+    			if (p.isOp() && PermissionInterface.CheckPerm(p, "navycraft.admin")) {
+    			event.setCancelled(false);
+    			return;
+    			} else {
     			p.sendMessage("Sorry, you are not allowed to craft this item. Purchase it from the shop instead.");
     		}
-    		event.setCancelled(false);
+    		event.setCancelled(true);
     	}
  
     }
     
+}
 }
 
