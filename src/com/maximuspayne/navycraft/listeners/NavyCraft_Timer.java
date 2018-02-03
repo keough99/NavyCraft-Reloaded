@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.maximuspayne.navycraft.craft.Craft;
 
-public class NavyCraft_Timer extends BukkitRunnable{
+public class NavyCraft_Timer extends BukkitRunnable {
 	
 	Plugin plugin;
 	Timer timer;
