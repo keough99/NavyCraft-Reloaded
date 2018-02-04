@@ -127,6 +127,11 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP3Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP4Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP5Signs = new HashMap<String, ArrayList<Sign>>();
 	
 	public static HashMap<String, Integer> playerSHIP1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerSHIP2Rewards = new HashMap<String, Integer>();
@@ -137,6 +142,12 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, Integer> playerHANGAR2Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerTANK1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerTANK2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP3Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP4Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP5Rewards = new HashMap<String, Integer>();
+	
 	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
 	
 	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();
@@ -927,6 +938,44 @@ public void updateCraft(int vehicleNum, int updateNum)
 							else
 								playerTANK2Rewards.put(strings[0], 1);
 						}
+					}else if(strings[1].equalsIgnoreCase("MAP1") )
+						{
+							if( playerMAP1Rewards.containsKey(strings[0]) )
+								 playerMAP1Rewards.put(strings[0], playerMAP1Rewards.get(strings[0]) + 1);
+							else
+								 playerMAP1Rewards.put(strings[0], 1);
+						}else if(strings[1].equalsIgnoreCase("MAP2") )
+						{
+							{
+								if( playerMAP2Rewards.containsKey(strings[0]) )
+									playerMAP2Rewards.put(strings[0], playerMAP2Rewards.get(strings[0]) + 1);
+								else
+									playerMAP2Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP3") )
+						{
+							{
+								if( playerMAP3Rewards.containsKey(strings[0]) )
+									playerMAP3Rewards.put(strings[0], playerMAP3Rewards.get(strings[0]) + 1);
+								else
+									playerMAP3Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP4") )
+						{
+							{
+								if( playerMAP4Rewards.containsKey(strings[0]) )
+									playerMAP4Rewards.put(strings[0], playerMAP4Rewards.get(strings[0]) + 1);
+								else
+									playerMAP4Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP5") )
+						{
+							{
+								if( playerMAP5Rewards.containsKey(strings[0]) )
+									playerMAP5Rewards.put(strings[0], playerMAP5Rewards.get(strings[0]) + 1);
+								else
+									playerMAP5Rewards.put(strings[0], 1);
+							}
 					}else
 					{
 						System.out.println("Player Reward Load Error: Unknown Reward");

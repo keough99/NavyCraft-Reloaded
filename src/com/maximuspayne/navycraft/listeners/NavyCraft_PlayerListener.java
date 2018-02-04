@@ -1535,7 +1535,12 @@ public class NavyCraft_PlayerListener implements Listener {
 							    !typeString.equalsIgnoreCase("HANGAR1") &&
 							    !typeString.equalsIgnoreCase("HANGAR2") && 
 							    !typeString.equalsIgnoreCase("TANK1") && 
-							    !typeString.equalsIgnoreCase("TANK2")) {
+							    !typeString.equalsIgnoreCase("TANK2") &&
+								!typeString.equalsIgnoreCase("MAP1") &&
+								!typeString.equalsIgnoreCase("MAP2") &&
+							    !typeString.equalsIgnoreCase("MAP3") &&
+								!typeString.equalsIgnoreCase("MAP4") &&
+								!typeString.equalsIgnoreCase("MAP5")) {
 								player.sendMessage(ChatColor.RED + "Unknown lot type");
 								event.setCancelled(true);
 								return;
@@ -1616,6 +1621,36 @@ public class NavyCraft_PlayerListener implements Listener {
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
 								}
 							}
+							if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerMAP1Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP1");
+								}
+							}
+							if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerMAP2Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP2");
+								}
+							}
+							if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerMAP3Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP3");
+								}
+							}
+							if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerMAP4Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP4");
+								}
+							}
+							if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
+								for (Sign s : NavyCraft.playerMAP5Signs.get(player.getName())) {
+									player.sendMessage(
+											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP5");
+								}
+							}
 
 						} else if (split[1].equalsIgnoreCase("tp")) {
 							if (split.length == 3) {
@@ -1670,6 +1705,16 @@ public class NavyCraft_PlayerListener implements Listener {
 									tpBlock = NavyCraft_BlockListener.findTANK1Open();
 								} else if (typeString.equalsIgnoreCase("TANK2")) {
 									tpBlock = NavyCraft_BlockListener.findTANK2Open();
+								} else if (typeString.equalsIgnoreCase("MAP1")) {
+									tpBlock = NavyCraft_BlockListener.findMAP1Open();
+								} else if (typeString.equalsIgnoreCase("MAP2")) {
+									tpBlock = NavyCraft_BlockListener.findMAP2Open();
+								} else if (typeString.equalsIgnoreCase("MAP3")) {
+									tpBlock = NavyCraft_BlockListener.findMAP3Open();
+								} else if (typeString.equalsIgnoreCase("MAP4")) {
+									tpBlock = NavyCraft_BlockListener.findMAP4Open();
+								} else if (typeString.equalsIgnoreCase("MAP5")) {
+									tpBlock = NavyCraft_BlockListener.findMAP5Open();
 								} else {
 									player.sendMessage(ChatColor.RED + "Unknown lot type");
 									event.setCancelled(true);
@@ -2094,19 +2139,19 @@ public class NavyCraft_PlayerListener implements Listener {
 												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 									}
 								}
-								if (NavyCraft.playerSHIP4Signs.containsKey(p)) {
-									int numSHIP4s = NavyCraft.playerSHIP4Signs.get(p).size();
-									if (NavyCraft.playerSHIP4Rewards.containsKey(p)) {
-										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
-												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+								if (NavyCraft.playerSHIP5Signs.containsKey(p)) {
+									int numSHIP5s = NavyCraft.playerSHIP5Signs.get(p).size();
+									if (NavyCraft.playerSHIP5Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 									} else {
-										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSHIP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
-												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numSHIP4s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 									}
 								} else {
-									if (NavyCraft.playerSHIP4Rewards.containsKey(p)) {
+									if (NavyCraft.playerSHIP5Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
-												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 									}
 								}
 								if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
@@ -2167,6 +2212,81 @@ public class NavyCraft_PlayerListener implements Listener {
 									if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
 												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerMAP1Signs.containsKey(p)) {
+									int numMAP1s = NavyCraft.playerMAP1Signs.get(p).size();
+									if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerMAP2Signs.containsKey(p)) {
+									int numMAP2s = NavyCraft.playerMAP2Signs.get(p).size();
+									if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerMAP3Signs.containsKey(p)) {
+									int numMAP3s = NavyCraft.playerMAP3Signs.get(p).size();
+									if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP3Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP3Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerMAP4Signs.containsKey(p)) {
+									int numMAP4s = NavyCraft.playerMAP4Signs.get(p).size();
+									if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								}
+								if (NavyCraft.playerMAP5Signs.containsKey(p)) {
+									int numMAP5s = NavyCraft.playerMAP5Signs.get(p).size();
+									if (NavyCraft.playerMAP5Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									} else {
+										player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+									}
+								} else {
+									if (NavyCraft.playerMAP5Rewards.containsKey(p)) {
+										player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 									}
 								}
 							} else {
@@ -2232,6 +2352,36 @@ public class NavyCraft_PlayerListener implements Listener {
 									for (Sign s : NavyCraft.playerTANK2Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
+									}
+								}
+								if (NavyCraft.playerMAP1Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerMAP1Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP1");
+									}
+								}
+								if (NavyCraft.playerMAP2Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerMAP2Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP2");
+									}
+								}
+								if (NavyCraft.playerMAP3Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerMAP3Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP3");
+									}
+								}
+								if ( NavyCraft.playerMAP4Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerMAP4Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP4");
+									}
+								}
+								if (NavyCraft.playerMAP5Signs.containsKey(p)) {
+									for (Sign s : NavyCraft.playerMAP5Signs.get(p)) {
+										player.sendMessage(
+												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP5");
 									}
 								}
 							} else {
@@ -2425,6 +2575,81 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
 										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerTANK2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerMAP1Signs.containsKey(p)) {
+							int numMAP1s = NavyCraft.playerMAP1Signs.get(p).size();
+							if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP1Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerMAP2Signs.containsKey(p)) {
+							int numMAP2s = NavyCraft.playerMAP2Signs.get(p).size();
+							if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP2Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerMAP3Signs.containsKey(p)) {
+							int numMAP3s = NavyCraft.playerMAP3Signs.get(p).size();
+							if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP3Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP3Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerMAP4Signs.containsKey(p)) {
+							int numMAP4s = NavyCraft.playerMAP4Signs.get(p).size();
+							if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP4Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						}
+						if (NavyCraft.playerMAP5Signs.containsKey(p)) {
+							int numMAP5s = NavyCraft.playerMAP5Signs.get(p).size();
+							if (NavyCraft.playerMAP5Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							} else {
+								player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
+							}
+						} else {
+							if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
+								player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
+										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerMAP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 							}
 						}
 					}
