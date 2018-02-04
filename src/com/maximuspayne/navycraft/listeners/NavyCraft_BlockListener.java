@@ -3157,8 +3157,8 @@ public class NavyCraft_BlockListener implements Listener {
 		NavyCraft.playerTANK2Rewards.clear();
 
 		String worldName = "";
-		if(plugin.ConfigSetting("EnabledWorlds") != "null") {
-			String[] worlds = NavyCraft.instance.ConfigSetting("EnabledWorlds").split(",");
+		if(plugin.getConfig().getString("EnabledWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
 			worldName = worlds[0];
 		}else{
 			worldName = plugin.getServer().getPlayer(player).getWorld().getName();

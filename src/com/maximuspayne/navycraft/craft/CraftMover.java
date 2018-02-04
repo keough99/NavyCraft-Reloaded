@@ -950,26 +950,19 @@ public class CraftMover {
 		restoreSupportBlocks(craft.dx, craft.dy, craft.dz);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void move3(boolean scheduledMove) {
 
 		playerTeleports.clear();
 
 		craft.isMovingPlayers = true;
 
-		Player pl = null;
 		if (craft.driverName != null) {
-			pl = plugin.getServer().getPlayer(craft.driverName);
 		}
 
 		for (Entity e : craft.checkEntities) {
-
-			if (NavyCraft.instance.ConfigSetting("TryNudge").equalsIgnoreCase("true") && ((craft.type.listenMovement == false) || ((pl != null) && (e != pl)))) {
-				movePlayer(e, craft.dx, craft.dy, craft.dz);
-			} else {
+			//tp player on ship
 				teleportPlayer(e, craft.dx, craft.dy, craft.dz);
 			}
-		}
 
 		teleportUpdate();
 		
@@ -1343,9 +1336,8 @@ public class CraftMover {
 
 		restoreSupportBlocks(dx, dy, dz);
 
-		Player p = null;
 		if (craft.driverName != null) {
-			p = plugin.getServer().getPlayer(craft.driverName);
+			plugin.getServer().getPlayer(craft.driverName);
 		}
 
 		playerTeleports.clear();
@@ -1353,12 +1345,9 @@ public class CraftMover {
 		craft.isMovingPlayers = true;
 
 		for (Entity e : checkEntities) {
-			if (NavyCraft.instance.ConfigSetting("TryNudge").equalsIgnoreCase("true") && ((craft.type.listenMovement == false) || ((p != null) && (e != p)))) {
-				movePlayer(e, dx, dy, dz);
-			} else {
+			//tp player on a ship
 				teleportPlayer(e, dx, dy, dz);
 			}
-		}
 
 		for (Chunk checkChunk : craft.checkedChunks) {
 			craft.world.refreshChunk(checkChunk.getX(), checkChunk.getZ());

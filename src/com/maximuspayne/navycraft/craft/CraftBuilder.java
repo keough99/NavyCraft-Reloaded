@@ -297,7 +297,7 @@ public class CraftBuilder {
 
 			//detect all connected empty blocks
 			do{
-				if(!createAirBubble() && NavyCraft.instance.ConfigSetting("allowHoles").equalsIgnoreCase("false") && craft.type.canDive){
+				if(!createAirBubble() && NavyCraft.instance.getConfig().getString("AllowHoles").equalsIgnoreCase("false") && craft.type.canDive){
 					NavyCraft.instance.getServer().getPlayer(craft.captainName).sendMessage(ChatColor.RED + "This " + craft.type.name + " has holes, it needs to be waterproof");
 					return false;
 				}

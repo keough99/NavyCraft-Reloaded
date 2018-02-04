@@ -482,14 +482,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 
 
-				if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true") && (playerCraft != null)) {
+				if ((NavyCraft.instance.getConfig().getString("RequireHelm") == "true") && (playerCraft != null)) {
 					playerCraft.addBlock(block, false);
 				}
 
 			}
 
 			if ((playerCraft != null) && (playerCraft.driverName == player.getName())) {
-				if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true")
+				if ((NavyCraft.instance.getConfig().getString("RequireHelm") == "true")
 						&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
 					return;
 				}
@@ -555,7 +555,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			//// else check for movement clicking
 		} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
 				&& (playerCraft.driverName == player.getName()) && (playerCraft.type.listenItem == true)) {
-			if ((NavyCraft.instance.ConfigSetting("RequireHelm") == "true")
+			if ((NavyCraft.instance.getConfig().getString("RequireHelm") == "true")
 					&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
 				return;
 			}
@@ -607,7 +607,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		// the craft won't budge if you have any tool in the hand
 		if (!craft.haveControl) {
 			if (((item == craft.type.HelmControllerItem)
-					|| (item == Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalHelmId"))))
+					|| (item == Integer.parseInt(NavyCraft.instance.getConfig().getString("HelmID"))))
 					&& !craft.isOnCraft(player, true)) {
 				if (craft.haveControl) {
 				} else {
@@ -1046,11 +1046,11 @@ public class NavyCraft_PlayerListener implements Listener {
 					&& NavyCraft.cleanupPlayers.contains(player.getName())
 					&& PermissionInterface.CheckEnabledWorld(player.getLocation())
 					&& !NavyCraft.checkSafeDockRegion(player.getLocation())) {
-				HashSet<Byte> hs = new HashSet<>();
-				hs.add((byte) 0x0);
-				hs.add((byte) 0x8);
-				hs.add((byte) 0x9);
-				Block block = player.getTargetBlock(hs, 200);
+				Set<Material> transp = new HashSet<>();
+				transp.add(Material.AIR);
+				transp.add(Material.STATIONARY_WATER);
+				transp.add(Material.WATER);
+				Block block = player.getTargetBlock(transp, 300);
 
 				if (block != null) {
 					System.out.println("Golden Shovel used:" + player.getName() + " X:" + block.getX() + " Y:"
@@ -1212,16 +1212,11 @@ public class NavyCraft_PlayerListener implements Listener {
 						return;
 					try {
 						Integer.parseInt(split[2]);
-						NavyCraft.instance.configFile.ConfigSettings.put("LogLevel", split[2]);
+						NavyCraft.instance.getConfig().set("LogLevel", split[2]);
 					} catch (Exception ex) {
 						player.sendMessage(ChatColor.RED + "Invalid loglevel.");
 					}
 		    		event.setCancelled(true);
-					return;
-				} else if (split[1].equalsIgnoreCase("config")) {
-					if( !PermissionInterface.CheckPerm(player, "navycraft.admin") )
-						return;
-					NavyCraft.instance.configFile.ListSettings(player);
 					return;
 					
 					// Cleanup command

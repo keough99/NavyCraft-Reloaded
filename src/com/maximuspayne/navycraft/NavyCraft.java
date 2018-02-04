@@ -29,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
-import com.maximuspayne.navycraft.config.ConfigFile;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftBuilder;
 import com.maximuspayne.navycraft.craft.CraftMover;
@@ -68,8 +67,6 @@ public class NavyCraft extends JavaPlugin {
 
 	public static Logger logger = Logger.getLogger("Minecraft");
 	public boolean DebugMode = false;
-
-	public ConfigFile configFile;
 
 	public static ArrayList<Player> aaGunnersList = new ArrayList<Player>();
 	public static ArrayList<Player> flakGunnersList = new ArrayList<Player>();
@@ -158,8 +155,7 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {
-		configFile = new ConfigFile();
-
+		getConfig().options().copyDefaults(true);
 		File dir = getDataFolder();
 		if (!dir.exists())
 			dir.mkdir();
@@ -196,7 +192,8 @@ public class NavyCraft extends JavaPlugin {
 		structureUpdateScheduler();
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
-	}
+		getConfig().options().copyDefaults(true);
+		}
 
 	public void onDisable() {
 		shutDown = true;
@@ -221,7 +218,7 @@ public class NavyCraft extends JavaPlugin {
 		 */
 		
 		//if(this.DebugMode == true)
-		if(Integer.parseInt(this.ConfigSetting("LogLevel")) >= messageLevel)
+		if(Integer.parseInt(this.getConfig().getString("LogLevel")) >= messageLevel)
 			System.out.println(message);
 		return this.DebugMode;
 	}
@@ -511,20 +508,10 @@ public class NavyCraft extends JavaPlugin {
 		}
     	return false;
 	}
-	
-	public String ConfigSetting(String setting) {
-		if(configFile.ConfigSettings.containsKey(setting))
-			return configFile.ConfigSettings.get(setting);
-		else {
-			System.out.println("Solmex needs to be notified that a non-existing config setting '" + setting + 
-					"' was attempted to be accessed.");
-			return "";
-		}
-	}
 
 	@SuppressWarnings("deprecation")
 	public void dropItem(Block block) {		
-		if(NavyCraft.instance.ConfigSetting("HungryHungryDrill").equalsIgnoreCase("true"))
+		if(NavyCraft.instance.getConfig().getString("Drill").equalsIgnoreCase("true"))
 			return;
 
 		int itemToDrop = BlocksInfo.getDropItem(block.getTypeId());

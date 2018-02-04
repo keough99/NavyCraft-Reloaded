@@ -12,8 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="jars/BKCommonLib-1.12.2-v3.jar"/>
-	<classpathentry kind="lib" path="jars/craftbukkit-1.10.2-R0.1-SNAPSHOT-latest.jar"/>
-	<classpathentry kind="lib" path="jars/craftbukkit-1.11.2.jar"/>
 	<classpathentry kind="lib" path="jars/craftbukkit-1.12.2.jar"/>
 	<classpathentry kind="lib" path="jars/Essentials-2.x-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="jars/EssentialsChat-2.x-SNAPSHOT.jar"/>
@@ -22,8 +20,6 @@
 	<classpathentry kind="lib" path="jars/multiverse-inventories_1.9.jar"/>
 	<classpathentry kind="lib" path="jars/PermissionsEx-1.23.4.jar"/>
 	<classpathentry kind="lib" path="jars/ProtocolLib.jar"/>
-	<classpathentry kind="lib" path="jars/spigot-1.10.2-R0.1-SNAPSHOT-latest.jar"/>
-	<classpathentry kind="lib" path="jars/spigot-1.11.2.jar"/>
 	<classpathentry kind="lib" path="jars/spigot-1.12.2.jar"/>
 	<classpathentry kind="lib" path="jars/Vault.jar"/>
 	<classpathentry kind="lib" path="jars/worldedit-bukkit-6.1.7.3.jar"/>
