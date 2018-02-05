@@ -251,12 +251,6 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 				}
 
-				wep = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
-				if (wep == null) {
-					player.sendMessage("WorldEdit error");
-					return;
-				}
-
 				EditSession es = wep.createEditSession(player);
 
 				Location loc;

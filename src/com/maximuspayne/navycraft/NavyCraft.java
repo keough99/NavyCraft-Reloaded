@@ -164,6 +164,8 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
+	
+	public static boolean destroyingPlot = false;
 
 	public void loadProperties() {
 		getConfig().options().copyDefaults(true);
