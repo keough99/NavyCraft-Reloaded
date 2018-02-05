@@ -43,12 +43,7 @@ public class TeleportFix implements Listener {
 				String version;
 
 		        version = Bukkit.getServer().getClass().getPackage().getName();
-		        if (version.contains("v1_10")) {
-		        	TeleportFix_1_10.updateEntities(getPlayersWithin(player, visibleDistance));
-		    	} else if (version.contains("v1_11")) {
-		        	TeleportFix_1_11.updateEntities(getPlayersWithin(player, visibleDistance));
-
-		        } else if (version.contains("v1_12")) {
+		        if (version.contains("v1_12")) {
 		        	TeleportFix_1_12.updateEntities(getPlayersWithin(player, visibleDistance));
 		        }
 		        //Commented out until 1.13 release
@@ -81,16 +76,11 @@ public class TeleportFix implements Listener {
 		String version;
 
         version = Bukkit.getServer().getClass().getPackage().getName();
-        if (version.contains("v1_10")) {
-        	TeleportFix_1_10.updateNMSChunks(craft);
-	    } else if (version.contains("v1_11")) {
-        	TeleportFix_1_11.updateNMSChunks(craft);
-
-        } else if (version.contains("v1_12")) {
+        if (version.contains("v1_12")) {
         	TeleportFix_1_12.updateNMSChunks(craft);
         //Commented out until 1.13 release
         }/*else if (version.contains("v1_13")) {
-    	TeleportFix_1_12.updateNMSChunks(craft);
+    	TeleportFix_1_13.updateNMSChunks(craft);
         }*/
 		
 	}
@@ -99,12 +89,7 @@ public class TeleportFix implements Listener {
 		String version;
 
         version = Bukkit.getServer().getClass().getPackage().getName();
-        if (version.contains("v1_10")) {
-        	TeleportFix_1_10.updateNMSLight(light, oldLight);
-        } else if (version.contains("v1_11")) {
-        	TeleportFix_1_11.updateNMSLight(light, oldLight);
-
-        } else if (version.contains("v1_12")) {
+        if (version.contains("v1_12")) {
         	TeleportFix_1_12.updateNMSLight(light, oldLight);
         	//Commented out until 1.13 release
         }/*else if (version.contains("v1_13")) {

@@ -9,6 +9,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.plugin.Plugin;
 
+import com.maximuspayne.navycraft.plugins.PermissionInterface;
+
+import net.md_5.bungee.api.ChatColor;
+
 public class NavyCraft_InventoryListener implements Listener {
 
 
@@ -46,12 +50,17 @@ public class NavyCraft_InventoryListener implements Listener {
     		if( event.getWhoClicked().getType() == EntityType.PLAYER )
     		{
     			Player p = (Player)event.getWhoClicked();
-    			p.sendMessage("Sorry, you are not allowed to craft this item. Purchase it from the shop instead.");
+    			if (p.isOp() && PermissionInterface.CheckPerm(p, "navycraft.admin")) {
+    			event.setCancelled(false);
+    			return;
+    			} else {
+    			p.sendMessage(ChatColor.RED + "Sorry, you are not allowed to craft this item. " + ChatColor.YELLOW + "Purchase it from the shop instead.");
     		}
-    		event.setCancelled(false);
+    		event.setCancelled(true);
     	}
  
     }
     
+}
 }
 

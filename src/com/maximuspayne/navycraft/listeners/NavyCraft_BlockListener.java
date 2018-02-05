@@ -198,6 +198,16 @@ public class NavyCraft_BlockListener implements Listener {
 					lotType = 8;
 				} else if (lotStr.equalsIgnoreCase("TANK2")) {
 					lotType = 9;
+				} else if (lotStr.equalsIgnoreCase("MAP1")) {
+					lotType = 10;
+				} else if (lotStr.equalsIgnoreCase("MAP2")) {
+					lotType = 11;
+				} else if (lotStr.equalsIgnoreCase("MAP3")) {
+					lotType = 12;
+				} else if (lotStr.equalsIgnoreCase("MAP4")) {
+					lotType = 13;
+				} else if (lotStr.equalsIgnoreCase("MAP5")) {
+					lotType = 14;
 				} else {
 					player.sendMessage(ChatColor.RED + "Sign error: lot type");
 					return;
@@ -316,13 +326,53 @@ public class NavyCraft_BlockListener implements Listener {
 					originY = -1;
 					originZ = -18;
 				} else if (lotType == 9) {
-					loc = block.getRelative(bf, 12).getLocation();
-					sizeX = 12;
-					sizeY = 7;
-					sizeZ = 19;
+					loc = block.getRelative(bf, 27).getLocation();
+					sizeX = 27;
+					sizeY = 9;
+					sizeZ = 33;
 					originX = 0;
 					originY = -1;
-					originZ = -18;
+					originZ = -32;
+				} else if (lotType == 10) {
+					loc = block.getRelative(bf, 100).getLocation();
+					sizeX = 100;
+					sizeY = 255;
+					sizeZ = 100;
+					originX = 0;
+					originY = -63;
+					originZ = -99;
+				} else if (lotType == 11) {
+					loc = block.getRelative(bf, 150).getLocation();
+					sizeX = 150;
+					sizeY = 255;
+					sizeZ = 150;
+					originX = 0;
+					originY = -63;
+					originZ = -149;
+				} else if (lotType == 12) {
+					loc = block.getRelative(bf, 200).getLocation();
+					sizeX = 200;
+					sizeY = 255;
+					sizeZ = 200;
+					originX = 0;
+					originY = -63;
+					originZ = -199;
+				} else if (lotType == 13) {
+					loc = block.getRelative(bf, 250).getLocation();
+					sizeX = 250;
+					sizeY = 255;
+					sizeZ = 250;
+					originX = 0;
+					originY = -63;
+					originZ = -249;
+				} else if (lotType == 14) {
+					loc = block.getRelative(bf, 500).getLocation();
+					sizeX = 500;
+					sizeY = 255;
+					sizeZ = 500;
+					originX = 0;
+					originY = -63;
+					originZ = -499;
 				} else
 
 				{
@@ -335,7 +385,7 @@ public class NavyCraft_BlockListener implements Listener {
 				BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 				try {
 
-					if ((lotType >= 6) && (lotType <= 8)) {
+					if ((lotType >= 6) && (lotType <= 14)) {
 						clipboard.setOrigin(new Vector(block.getX() + 1, block.getY(), (block.getZ() - sizeZ) + 1));
 					} else {
 						clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
@@ -354,7 +404,7 @@ public class NavyCraft_BlockListener implements Listener {
 				Craft.playerClipboardsRank.put(player, rankReq);
 				Craft.playerClipboardsType.put(player, spawnName);
 				Craft.playerClipboardsLot.put(player, lotStr);
-				player.sendMessage(ChatColor.YELLOW + "Selected vehicle : " + ChatColor.WHITE + spawnName.toUpperCase());
+				player.sendMessage(ChatColor.GREEN + "Selected vehicle: " + ChatColor.WHITE + spawnName.toUpperCase());
 
 			} else {
 				player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Second Sign?");
@@ -415,6 +465,16 @@ public class NavyCraft_BlockListener implements Listener {
 						lotType = 8;
 					} else if (lotStr.equalsIgnoreCase("TANK2")) {
 						lotType = 9;
+					} else if (lotStr.equalsIgnoreCase("MAP1")) {
+						lotType = 10;
+					} else if (lotStr.equalsIgnoreCase("MAP2")) {
+						lotType = 11;
+					} else if (lotStr.equalsIgnoreCase("MAP3")) {
+						lotType = 12;
+					} else if (lotStr.equalsIgnoreCase("MAP4")) {
+						lotType = 13;
+					} else if (lotStr.equalsIgnoreCase("MAP5")) {
+						lotType = 14;
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + "Sign Error: Lot Type");
 						return;
@@ -619,27 +679,147 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 9) {
-						loc = block.getRelative(bf, 12).getLocation();
-						sizeX = 12;
-						sizeY = 7;
-						sizeZ = 19;
+						loc = block.getRelative(bf, 27).getLocation();
+						sizeX = 27;
+						sizeY = 9;
+						sizeZ = 33;
 						originX = 0;
 						originY = -1;
-						originZ = -18;
-						offsetX = -12;
+						originZ = -32;
+						offsetX = -27;
 						offsetY = 0;
-						offsetZ = -20;
+						offsetZ = -34;
 			
-						int numT1s = 0;
-						int numRewT1s = 0;
+						int numT2s = 0;
+						int numRewT2s = 0;
 						if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
-							numT1s = NavyCraft.playerTANK2Signs.get(player.getName()).size();
+							numT2s = NavyCraft.playerTANK2Signs.get(player.getName()).size();
 						}
 						if (NavyCraft.playerTANK2Rewards.containsKey(player.getName())) {
-							numRewT1s = NavyCraft.playerTANK2Rewards.get(player.getName());
+							numRewT2s = NavyCraft.playerTANK2Rewards.get(player.getName());
 						}
-						if (numT1s >= numRewT1s) {
-							player.sendMessage("You have no TANK1 reward plots available.");
+						if (numT2s >= numRewT2s) {
+							player.sendMessage("You have no TANK2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 10) {
+						loc = block.getRelative(bf, 100).getLocation();
+						sizeX = 100;
+						sizeY = 255;
+						sizeZ = 100;
+						originX = 0;
+						originY = -63;
+						originZ = -99;
+						offsetX = -100;
+						offsetY = 0;
+						offsetZ = -101;
+			
+						int numM1s = 0;
+						int numRewM1s = 0;
+						if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
+							numM1s = NavyCraft.playerMAP1Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP1Rewards.containsKey(player.getName())) {
+							numRewM1s = NavyCraft.playerMAP1Rewards.get(player.getName());
+						}
+						if (numM1s >= numRewM1s) {
+							player.sendMessage("You have no MAP1 reward plots available.");
+							return;
+						}
+					} else if (lotType == 11) {
+						loc = block.getRelative(bf, 150).getLocation();
+						sizeX = 150;
+						sizeY = 255;
+						sizeZ = 150;
+						originX = 0;
+						originY = -63;
+						originZ = -149;
+						offsetX = -150;
+						offsetY = 0;
+						offsetZ = -151;
+			
+						int numM2s = 0;
+						int numRewM2s = 0;
+						if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
+							numM2s = NavyCraft.playerMAP2Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP2Rewards.containsKey(player.getName())) {
+							numRewM2s = NavyCraft.playerMAP2Rewards.get(player.getName());
+						}
+						if (numM2s >= numRewM2s) {
+							player.sendMessage("You have no MAP2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 12) {
+						loc = block.getRelative(bf, 200).getLocation();
+						sizeX = 200;
+						sizeY = 255;
+						sizeZ = 200;
+						originX = 0;
+						originY = -63;
+						originZ = -199;
+						offsetX = -200;
+						offsetY = 0;
+						offsetZ = -201;
+			
+						int numM3s = 0;
+						int numRewM3s = 0;
+						if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
+							numM3s = NavyCraft.playerMAP3Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP3Rewards.containsKey(player.getName())) {
+							numRewM3s = NavyCraft.playerMAP3Rewards.get(player.getName());
+						}
+						if (numM3s >= numRewM3s) {
+							player.sendMessage("You have no MAP3 reward plots available.");
+							return;
+						}
+					} else if (lotType == 13) {
+						loc = block.getRelative(bf, 250).getLocation();
+						sizeX = 250;
+						sizeY = 255;
+						sizeZ = 250;
+						originX = 0;
+						originY = -63;
+						originZ = -249;
+						offsetX = -250;
+						offsetY = 0;
+						offsetZ = -251;
+			
+						int numM4s = 0;
+						int numRewM4s = 0;
+						if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
+							numM4s = NavyCraft.playerMAP4Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP4Rewards.containsKey(player.getName())) {
+							numRewM4s = NavyCraft.playerMAP4Rewards.get(player.getName());
+						}
+						if (numM4s >= numRewM4s) {
+							player.sendMessage("You have no MAP4 reward plots available.");
+							return;
+						}
+					} else if (lotType == 14) {
+						loc = block.getRelative(bf, 500).getLocation();
+						sizeX = 500;
+						sizeY = 255;
+						sizeZ = 500;
+						originX = 0;
+						originY = -63;
+						originZ = -499;
+						offsetX = -500;
+						offsetY = 0;
+						offsetZ = -501;
+			
+						int numM5s = 0;
+						int numRewM5s = 0;
+						if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
+							numM5s = NavyCraft.playerMAP5Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP5Rewards.containsKey(player.getName())) {
+							numRewM5s = NavyCraft.playerMAP5Rewards.get(player.getName());
+						}
+						if (numM5s >= numRewM5s) {
+							player.sendMessage("You have no MAP5 reward plots available.");
 							return;
 						}
 					} else
@@ -689,7 +869,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(3, lotStr);
 						sign2.update();
 			
-						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.YELLOW + " Claimed!");
+						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
 			
 					} else {
 						player.sendMessage("World Guard error");
@@ -740,7 +920,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 
 			if (!Craft.playerClipboards.containsKey(player)) {
-				player.sendMessage(ChatColor.YELLOW + "Go to the Shipyard and select a vehicle first.");
+				player.sendMessage(ChatColor.RED + "Go to the Shipyard and select a vehicle first.");
 				return;
 			}
 
@@ -749,7 +929,6 @@ public class NavyCraft_BlockListener implements Listener {
 				return;
 			}
 
-			boolean isAutoSpawn = false;
 			boolean isMerchantSpawn = false;
 			String freeString = sign.getLine(2).trim().toLowerCase();
 			freeString = freeString.replaceAll(ChatColor.BLUE.toString(), "");
@@ -818,7 +997,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 			try {
 				int oldLimit = es.getBlockChangeLimit();
-				es.setBlockChangeLimit(50000);
+				es.setBlockChangeLimit(100000);
 
 				ClipboardHolder ch = Craft.playerClipboards.get(player);
 
@@ -845,7 +1024,7 @@ public class NavyCraft_BlockListener implements Listener {
 				ch.setTransform(transform);
 				es.flushQueue();
 
-				player.sendMessage(ChatColor.YELLOW + "Spawned vehicle : " + ChatColor.WHITE + Craft.playerClipboardsType.get(player).toUpperCase());
+				player.sendMessage(ChatColor.GREEN + "Spawned vehicle: " + ChatColor.WHITE + Craft.playerClipboardsType.get(player).toUpperCase());
 
 
 				es.setBlockChangeLimit(oldLimit);
@@ -854,8 +1033,7 @@ public class NavyCraft_BlockListener implements Listener {
 				int shiftForward = 0;
 				int shiftUp = 0;
 				int shiftDown = 0;
-
-				if (isAutoSpawn || isMerchantSpawn) {
+				{
 					if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP1")) {
 						shiftRight = 12;
 						shiftForward = 28;
@@ -902,8 +1080,33 @@ public class NavyCraft_BlockListener implements Listener {
 						shiftDown = 0;
 					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK2")) {
 						shiftRight = 25;
-						shiftForward = 33;
-						shiftUp = 14;
+						shiftForward = 34;
+						shiftUp = 9;
+						shiftDown = 0;
+					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP1")) {
+						shiftRight = 25;
+						shiftForward = 34;
+						shiftUp = 9;
+						shiftDown = 0;
+					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP2")) {
+						shiftRight = 25;
+						shiftForward = 34;
+						shiftUp = 9;
+						shiftDown = 0;
+					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP3")) {
+						shiftRight = 25;
+						shiftForward = 34;
+						shiftUp = 9;
+						shiftDown = 0;
+					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP4")) {
+						shiftRight = 25;
+						shiftForward = 34;
+						shiftUp = 9;
+						shiftDown = 0;
+					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP5")) {
+						shiftRight = 25;
+						shiftForward = 34;
+						shiftUp = 9;
 						shiftDown = 0;
 					} else {
 						player.sendMessage("Unknown lot type error2!");
@@ -976,42 +1179,11 @@ public class NavyCraft_BlockListener implements Listener {
 												dr = 270;
 												break;
 										}
-										Craft theCraft = NavyCraft.instance.createCraft(player, craftType, shipx, shipy, shipz, name, dr, shipSignBlock, true);
+										Craft theCraft = NavyCraft.instance.createCraft(player, craftType, shipx, shipy, shipz, name, dr, shipSignBlock);
 
 										CraftMover cm = new CraftMover(theCraft, plugin);
 										cm.structureUpdate(null, false);
-
-										if (isAutoSpawn) {
-											theCraft.isAutoCraft = true;
-											theCraft.speedChange(null, true);
-											theCraft.speedChange(null, true);
-											theCraft.speedChange(null, true);
-											theCraft.speedChange(null, true);
-
-											double randomNum = Math.random();
-											String speedStr = "LOW";
-											if (randomNum >= .3) {
-												theCraft.gearChange(null, true);
-												speedStr = "MODERATE";
-											}
-											if (randomNum >= .7) {
-												theCraft.gearChange(null, true);
-												speedStr = "HIGH";
-											}
-											String dirStr = "EAST";
-											if (randomNum >= .8) {
-												theCraft.rudderChange(null, 1, false);
-												dirStr = "SOUTH-EAST";
-											} else if (randomNum <= .2) {
-												theCraft.rudderChange(null, -1, false);
-												dirStr = "NORTH-EAST";
-											}
-
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + "**ENEMY MERCHANT ALERT**");
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + "Enemy Maru Ammo Carrier sighted near west central side of ocean...");
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + "coordinates x=-30 z=-300, headed " + dirStr + " at " + speedStr + " speed...");
-											plugin.getServer().broadcastMessage(ChatColor.YELLOW + "player who sinks this vehicle will win a cash reward!");
-										} else if (isMerchantSpawn) {
+										if (isMerchantSpawn) {
 											theCraft.isMerchantCraft = true;
 
 											if (theCraft.redTeam) {
@@ -1047,14 +1219,14 @@ public class NavyCraft_BlockListener implements Listener {
 				if (player.getInventory().contains(Material.BLAZE_ROD)) {
 					player.getInventory().remove(Material.BLAZE_ROD);
 				}
-				player.sendMessage(ChatColor.YELLOW + "You get off the AA-Gun.");
+				player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
 			}
 			if (NavyCraft.flakGunnersList.contains(player)) {
 				NavyCraft.flakGunnersList.remove(player);
 				if (player.getInventory().contains(Material.BLAZE_ROD)) {
 					player.getInventory().remove(Material.BLAZE_ROD);
 				}
-				player.sendMessage(ChatColor.YELLOW + "You get off the Flak-Gun.");
+				player.sendMessage(ChatColor.GOLD + "You get off the Flak-Gun.");
 			}
 
 			Craft c = Craft.getCraft(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
@@ -1077,7 +1249,7 @@ public class NavyCraft_BlockListener implements Listener {
 							player.teleport(newLoc);
 							p.user = player;
 						} else if (!p.destroyed && (p.scopeLoc != null)) {
-							player.sendMessage(ChatColor.YELLOW + "Raise Periscope First.");
+							player.sendMessage(ChatColor.RED + "Raise Periscope First.");
 						} else {
 							player.sendMessage(ChatColor.RED + "Periscope destroyed!");
 						}
@@ -1133,7 +1305,7 @@ public class NavyCraft_BlockListener implements Listener {
 					for (String s : c.crewNames) {
 						Player p = plugin.getServer().getPlayer(s);
 						if (p != null) {
-							p.sendMessage(ChatColor.YELLOW + "Surface the boat!");
+							p.sendMessage(ChatColor.GREEN + "Surface the boat!");
 						}
 					}
 
@@ -1477,7 +1649,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.flakGunnersList.add(player);
-			player.sendMessage(ChatColor.YELLOW + "Manning Flak-Gun! Left Click with Blaze Rod to fire!");
+			player.sendMessage(ChatColor.GOLD + "Manning Flak-Gun! Left Click with Blaze Rod to fire!");
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 		} else if (craftTypeName.equalsIgnoreCase("aa-gun")) {
@@ -1512,7 +1684,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 			player.setItemInHand(new ItemStack(369, 1));
 			NavyCraft.aaGunnersList.add(player);
-			player.sendMessage(ChatColor.YELLOW + "Manning AA-Gun! Left Click with Blaze Rod to fire!");
+			player.sendMessage(ChatColor.GOLD + "Manning AA-Gun! Left Click with Blaze Rod to fire!");
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 
@@ -1682,10 +1854,6 @@ public class NavyCraft_BlockListener implements Listener {
 						return;
 					}
 
-					if (testCraft.isAutoCraft && !player.isOp()) {
-						player.sendMessage(ChatColor.RED + "You cannot drive an auto-pilot vehicle.");
-						return;
-					}
 					if (player.getItemInHand().getTypeId() > 0) {
 						player.sendMessage(ChatColor.RED + "Have nothing in your hand before using this.");
 						return;
@@ -1701,7 +1869,7 @@ public class NavyCraft_BlockListener implements Listener {
 						if (!testCraft.takingOver) {
 							Craft.takeoverTimerThread(player, testCraft);
 						}
-						player.sendMessage(ChatColor.YELLOW + "This vehicle will become abandoned in 2 minutes.");
+						player.sendMessage(ChatColor.RED + "This vehicle will become abandoned in 2 minutes.");
 						return;
 					} else if (testCraft.captainAbandoned && testCraft.crewNames.contains(player.getName()) && (testCraft.captainName != null)) {
 						testCraft.captainName = player.getName();
@@ -1850,7 +2018,7 @@ public class NavyCraft_BlockListener implements Listener {
 						break;
 				}
 				player.setItemInHand(new ItemStack(283, 1));
-				Craft theCraft = NavyCraft.instance.createCraft(player, craftType, x, y, z, name, dr, block, false);
+				Craft theCraft = NavyCraft.instance.createCraft(player, craftType, x, y, z, name, dr, block);
 
 
 				if (theCraft != null) {
@@ -3131,6 +3299,439 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		return null;
 	}
+		
+		public static void loadMAP1Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1567; x+=14 )
+			// for( int x=16; x<=1286; x+=14 )
+			int startX = 601;
+			int endX = 1567;
+			int widthX = 14;
+			int startZ = -408;
+			int endZ = -852;
+			int widthZ = 37;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-408; z>=-852; z-=37 )
+				// for( int z=-18; z>=-462; z-=37 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP1Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP1Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP1Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP1Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1567; x+=14 )
+			// for( int x=16; x<=1286; x+=14 )
+			int startX = 601;
+			int endX = 1567;
+			int widthX = 14;
+			int startZ = -408;
+			int endZ = -852;
+			int widthZ = 37;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-408; z>=-852; z-=37 )
+				// for( int z=-18; z>=-462; z-=37 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP2Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1421; x+=10 )
+			// for( int x=16; x<=1296; x+=10 )
+			int startX = 601;
+			int endX = 1421;
+			int widthX = 10;
+			int startZ = -356;
+			int endZ = -148;
+			int widthZ = 52;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-356; z<=-148; z+=52 )
+				// for( int z=33; z<=241; z+=52 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP2Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP2Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP2Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1421; x+=10 )
+			// for( int x=16; x<=1296; x+=10 )
+			int startX = 601;
+			int endX = 1421;
+			int widthX = 10;
+			int startZ = -356;
+			int endZ = -148;
+			int widthZ = 52;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-356; z<=-148; z+=52 )
+				// for( int z=33; z<=241; z+=52 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP3Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=549; x>=21; x-=12 )
+			// for( int x=-35; x>=-1091; x-=12 )
+			int startX = 549;
+			int endX = 21;
+			int widthX = 12;
+			int startZ = -329;
+			int endZ = -92;
+			int widthZ = 79;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-329; z<=-92; z+=79 )
+				// for( int z=60; z<=297; z+=79 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP3Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP3Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP3Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP3Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP3Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=549; x>=21; x-=12 )
+			// for( int x=-35; x>=-1091; x-=12 )
+			int startX = 549;
+			int endX = 21;
+			int widthX = 12;
+			int startZ = -329;
+			int endZ = -92;
+			int widthZ = 79;
+			for (int x = startX; x >= endX; x -= widthX) {
+				// for( int z=-329; z<=-92; z+=79 )
+				// for( int z=60; z<=297; z+=79 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP4Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=543; x>=21; x-=18 )
+			// for( int x=-41; x>=-1085; x-=18 )
+			int startX = 543;
+			int endX = 21;
+			int widthX = 18;
+			int startZ = -408;
+			int endZ = -600;
+			int widthZ = 64;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-408; z>=-600; z-=64 )
+				// for( int z=-18; z>=-210; z-=64 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+						String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP4Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP4Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP4Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP4Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP4Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=543; x>=21; x-=18 )
+			// for( int x=-41; x>=-1085; x-=18 )
+			int startX = 543;
+			int endX = 21;
+			int widthX = 18;
+			int startZ = -408;
+			int endZ = -600;
+			int widthZ = 64;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-408; z>=-600; z-=64 )
+				// for( int z=-18; z>=-210; z-=64 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP5Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=1404; x>=656; x-=22 )
+			// for( int x=1270; x>=16; x-=22 )
+			int startX = 656;
+			int endX = 1426;
+			int widthX = 18;
+			int startZ = 142;
+			int endZ = 37;
+			int widthZ = 105;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=37; z<=142; z+=105 )
+				// for( int z=349; z<=454; z+=105 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+						String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP5Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP5Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP5Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP5Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP5Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=1404; x>=656; x-=22 )
+			// for( int x=1270; x>=16; x-=22 )
+			int startX = 656;
+			int endX = 1426;
+			int widthX = 18;
+			int startZ = 142;
+			int endZ = 37;
+			int widthZ = 105;
+			for (int x = startX; x <= endX; x += widthX) {
+				// for( int z=37; z<=142; z+=105 )
+				// for( int z=349; z<=454; z+=105 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
 
 	public static void loadShipyard() {
 		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
@@ -3169,6 +3770,26 @@ public class NavyCraft_BlockListener implements Listener {
 			NavyCraft.playerTANK2Signs.get(s).clear();
 		}
 		NavyCraft.playerTANK2Signs.clear();
+		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
+			NavyCraft.playerSHIP1Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP1Signs.clear();
+		for (String s : NavyCraft.playerMAP2Signs.keySet()) {
+			NavyCraft.playerMAP2Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP2Signs.clear();
+		for (String s : NavyCraft.playerMAP3Signs.keySet()) {
+			NavyCraft.playerMAP3Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP3Signs.clear();
+		for (String s : NavyCraft.playerMAP4Signs.keySet()) {
+			NavyCraft.playerMAP4Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP4Signs.clear();
+		for (String s : NavyCraft.playerMAP5Signs.keySet()) {
+			NavyCraft.playerMAP5Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP5Signs.clear();
 		loadSHIP1Signs();
 		loadSHIP2Signs();
 		loadSHIP3Signs();
@@ -3178,6 +3799,11 @@ public class NavyCraft_BlockListener implements Listener {
 		loadHANGAR2Signs();
 		loadTANK1Signs();
 		loadTANK2Signs();
+		loadMAP1Signs();
+		loadMAP2Signs();
+		loadMAP3Signs();
+		loadMAP4Signs();
+		loadMAP5Signs();
 	}
 	
 	public static void loadRewards(String player) {
@@ -3190,10 +3816,15 @@ public class NavyCraft_BlockListener implements Listener {
 		NavyCraft.playerHANGAR2Rewards.clear();
 		NavyCraft.playerTANK1Rewards.clear();
 		NavyCraft.playerTANK2Rewards.clear();
+		NavyCraft.playerMAP1Rewards.clear();
+		NavyCraft.playerMAP2Rewards.clear();
+		NavyCraft.playerMAP3Rewards.clear();
+		NavyCraft.playerMAP4Rewards.clear();
+		NavyCraft.playerMAP5Rewards.clear();
 
 		String worldName = "";
-		if(plugin.ConfigSetting("EnabledWorlds") != "null") {
-			String[] worlds = NavyCraft.instance.ConfigSetting("EnabledWorlds").split(",");
+		if(plugin.getConfig().getString("EnabledWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
 			worldName = worlds[0];
 		}else{
 			worldName = plugin.getServer().getPlayer(player).getWorld().getName();
@@ -3286,6 +3917,51 @@ public class NavyCraft_BlockListener implements Listener {
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
+				} else if( s.contains("map1") )
+					{
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							NavyCraft.playerMAP1Rewards.put(player, num);
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s + " " + s.split(".").length);
+						}
+					}else if( s.contains("map2") )
+					{
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							NavyCraft.playerMAP2Rewards.put(player, num);
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					}else if( s.contains("map3") )
+					{
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							NavyCraft.playerMAP3Rewards.put(player, num);
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					}else if( s.contains("map4") )
+					{
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							NavyCraft.playerMAP4Rewards.put(player, num);
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					}else if( s.contains("map5") )
+					{
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							NavyCraft.playerMAP5Rewards.put(player, num);
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
 				}
 			}
 		}
@@ -3360,6 +4036,41 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
+		if ((foundSign == null) && NavyCraft.playerMAP1Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP3Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP4Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP5Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
 		return foundSign;
 	}
 
@@ -3428,6 +4139,41 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
+		if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
 		return foundHighest;
 	}
 
@@ -3446,6 +4192,7 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 	public static void showRank(Player player, String p) {
 		int exp = 0;
+		int exp1 = 0;
 		String worldName = null;
 		
 		NavyCraft.loadExperience();
@@ -3477,10 +4224,11 @@ public class NavyCraft_BlockListener implements Listener {
 						+ ChatColor.GRAY + " rank points.");
 				return;
 	   } else { 
+		   exp1 = NavyCraft.playerExp.get(p);
 			String[] groupName = PermissionsEx.getUser(p).getGroupsNames();
 			for( String g : groupName ) {
 			player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
-			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp
+			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp1
 			+ ChatColor.GRAY + " rank points.");
 	return;
 	       }
@@ -3489,6 +4237,7 @@ public class NavyCraft_BlockListener implements Listener {
 }
 	public static void getRank(Player player) {
 		int exp = 0;
+		int exp1 = 0;
 		String worldName = player.getWorld().getName();
 		
 		NavyCraft.loadExperience();
@@ -3518,16 +4267,19 @@ public class NavyCraft_BlockListener implements Listener {
 				player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + s.toUpperCase()
 						+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp + "/" + rankExp
 						+ ChatColor.GRAY + " rank points.");
+				if( exp >= rankExp )
+				{
+							checkRankWorld(player, exp, player.getWorld());
+				}
 			   } else { 
+					if (NavyCraft.playerExp.containsKey(player.getName())) {
+					exp1 = NavyCraft.playerExp.get(player.getName());
+					}
 					String[] groupName = PermissionsEx.getUser(player).getGroupsNames();
 					for( String g : groupName ) {
 					player.sendMessage(ChatColor.GRAY + "Your rank is " + ChatColor.WHITE + g.toUpperCase()
-					+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp
+					+ ChatColor.GRAY + " and you have " + ChatColor.WHITE + exp1
 					+ ChatColor.GRAY + " rank points.");
-				if( exp >= rankExp )
-				{
-					checkRankWorld(player, exp, player.getWorld());
-				}
 				return;
 			}
 	   }

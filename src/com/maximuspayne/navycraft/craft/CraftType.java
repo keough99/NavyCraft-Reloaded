@@ -62,14 +62,14 @@ public class CraftType {
 	public CraftType(String name) {
 		this.name = name;
 		
-		String[] bob = NavyCraft.instance.ConfigSetting("StructureBlocks").split(",");
+		String[] bob = NavyCraft.instance.getConfig().getString("StructureBlocks").split(",");
 		short[] juan = new short[bob.length + 1];
 		for(int i = 0; i < bob.length; i++)
 			juan[i] = Short.parseShort(bob[i]);
 		structureBlocks = juan;
 		
-		if(NavyCraft.instance.ConfigSetting("ForbiddenBlocks") != "null") {
-			bob = NavyCraft.instance.ConfigSetting("ForbiddenBlocks").split(",");
+		if(NavyCraft.instance.getConfig().getString("ForbiddenBlocks") != "null") {
+			bob = NavyCraft.instance.getConfig().getString("ForbiddenBlocks").split(",");
 			juan = new short[bob.length];
 			for(int i = 0; i < bob.length; i++) {
 				try {
@@ -540,7 +540,7 @@ public class CraftType {
 
 				CraftType craftType = new CraftType(craftName);
 				
-				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.ConfigSetting("UniversalHelmId"));
+				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.getConfig().getString("HelmID"));
 
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(
@@ -568,7 +568,7 @@ public class CraftType {
 			}
 		}
 
-		if(NavyCraft.instance.configFile.ConfigSettings.get("WriteDefaultCraft").equalsIgnoreCase("true"))
+		if(NavyCraft.instance.getConfig().getString("WriteDefaultCraft").equalsIgnoreCase("true"))
 			loadDefaultCraftTypes();
 	}
 }

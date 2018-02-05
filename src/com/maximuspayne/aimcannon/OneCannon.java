@@ -237,7 +237,6 @@ public class OneCannon{
 					fire3(p);
 					
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
     		}

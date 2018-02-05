@@ -184,8 +184,6 @@ public class Craft {
 	public boolean blueTeam = false;
 	public boolean redTeam = false;
 	
-	public boolean isAutoCraft = false;
-	
 	public long abandonTime=0;
 	//long lastUpdate=0;
 	public boolean recentlyUpdated = false;
@@ -268,7 +266,6 @@ public class Craft {
 	public boolean isMovingPlayers = false;
 	
 	public int noCaptain=0;
-	public int stuckAutoTimer=0;
 	
 	
 	public static HashMap<String, Craft> reboardNames = new HashMap<String, Craft>();
@@ -489,7 +486,7 @@ public class Craft {
 		// all craft types can move through air and flowing water/lava
 		if ( blockId == 0 ||
 				(blockId >= 8 && blockId <= 11) ||
-				//blockId == 78 || 
+				blockId == 78 || 
 				BlocksInfo.coversGrass(blockId)) //snow cover
 			return true;
 
@@ -932,8 +929,8 @@ public class Craft {
 				Player p = NavyCraft.instance.getServer().getPlayer(s);
 				if( p != null && s != this.captainName )
 				{
-					p.sendMessage(ChatColor.YELLOW +  "You join the crew of the " + ChatColor.WHITE + this.name.toUpperCase() + ChatColor.YELLOW + " class under the command of " + newCaptain.getDisplayName() + "!");
-					newCaptain.sendMessage(p.getDisplayName() + ChatColor.YELLOW + " joins your crew!");
+					p.sendMessage(ChatColor.GOLD +  "You join the crew of the " + ChatColor.WHITE + this.name.toUpperCase() + ChatColor.GOLD + " class under the command of " + newCaptain.getDisplayName() + "!");
+					newCaptain.sendMessage(p.getDisplayName() + ChatColor.GOLD + " joins your crew!");
 				}
 			}
 		}else
@@ -943,8 +940,8 @@ public class Craft {
 				Player p = NavyCraft.instance.getServer().getPlayer(s);
 				if( p != null && s != this.captainName )
 				{
-					p.sendMessage(ChatColor.YELLOW +  "You join the " + ChatColor.WHITE + this.name.toUpperCase() + ChatColor.YELLOW + " under the command of " + newCaptain.getDisplayName() + "!");
-					newCaptain.sendMessage(p.getDisplayName() + ChatColor.YELLOW + " joins your crew!");
+					p.sendMessage(ChatColor.GOLD +  "You join the " + ChatColor.WHITE + this.name.toUpperCase() + ChatColor.YELLOW + " under the command of " + newCaptain.getDisplayName() + "!");
+					newCaptain.sendMessage(p.getDisplayName() + ChatColor.GOLD + " joins your crew!");
 				}
 			}
 		}
@@ -1430,7 +1427,7 @@ public class Craft {
 					if( NavyCraft.checkSpawnRegion(new Location(this.world, this.minX, this.minY, this.minZ)) || NavyCraft.checkSpawnRegion(new Location(this.world, this.maxX, this.maxY, this.maxZ)) )
 					{
 						if( player != null )
-							player.sendMessage(ChatColor.YELLOW + "Cannot stop engines until clear of safe dock area.");
+							player.sendMessage(ChatColor.RED + "Cannot stop engines until clear of safe dock area.");
 						this.setSpeed = this.setSpeed + 1;
 						return;
 					}
@@ -1449,14 +1446,14 @@ public class Craft {
 				{
 					this.setSpeed = this.setSpeed + 1;
 					if( player != null )
-						player.sendMessage(ChatColor.YELLOW + "Can't reduce speed to zero in this gear");
+						player.sendMessage(ChatColor.RED + "Can't reduce speed to zero in this gear");
 				}
 				if( this.setSpeed <= 0 )
 				{
 					if( NavyCraft.checkSpawnRegion(new Location(this.world, this.minX, this.minY, this.minZ)) || NavyCraft.checkSpawnRegion(new Location(this.world, this.maxX, this.maxY, this.maxZ)) )
 					{
 						if( player != null )
-							player.sendMessage(ChatColor.YELLOW + "Cannot stop engines until clear of safe dock area.");
+							player.sendMessage(ChatColor.RED + "Cannot stop engines until clear of safe dock area.");
 						this.setSpeed = this.setSpeed + 1;
 						return;
 					}
@@ -1805,13 +1802,13 @@ public class Craft {
 							if( craft.captainName != null )
 								plugin.getServer().broadcastMessage(ChatColor.WHITE + craft.captainName + ChatColor.GOLD + "'s " + ChatColor.WHITE + craft.customName + ChatColor.GOLD + " was abandoned.");
 							else
-								plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + ChatColor.WHITE + craft.customName + ChatColor.YELLOW + " was abandoned.");
+								plugin.getServer().broadcastMessage(ChatColor.GOLD + "The " + ChatColor.WHITE + craft.customName + ChatColor.GOLD + " was abandoned.");
 						}else
 						{
 							if( craft.captainName != null )
-								plugin.getServer().broadcastMessage(ChatColor.WHITE + craft.captainName + ChatColor.YELLOW + "'s " + ChatColor.WHITE + craft.name + ChatColor.YELLOW + " was abandoned.");
+								plugin.getServer().broadcastMessage(ChatColor.WHITE + craft.captainName + ChatColor.GOLD + "'s " + ChatColor.WHITE + craft.name + ChatColor.GOLD + " was abandoned.");
 							else
-								plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + ChatColor.WHITE + craft.name + ChatColor.YELLOW + " was abandoned.");
+								plugin.getServer().broadcastMessage(ChatColor.GOLD + "The " + ChatColor.WHITE + craft.name + ChatColor.GOLD + " was abandoned.");
 						}
 						player.sendMessage(ChatColor.GREEN + "Vehicle abandoned! You may now take command.");
 						craft.releaseCraft();

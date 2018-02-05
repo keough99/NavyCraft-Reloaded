@@ -29,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
-import com.maximuspayne.navycraft.config.ConfigFile;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftBuilder;
 import com.maximuspayne.navycraft.craft.CraftMover;
@@ -68,8 +67,6 @@ public class NavyCraft extends JavaPlugin {
 
 	public static Logger logger = Logger.getLogger("Minecraft");
 	public boolean DebugMode = false;
-
-	public ConfigFile configFile;
 
 	public static ArrayList<Player> aaGunnersList = new ArrayList<Player>();
 	public static ArrayList<Player> flakGunnersList = new ArrayList<Player>();
@@ -130,6 +127,11 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
 	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP3Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP4Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP5Signs = new HashMap<String, ArrayList<Sign>>();
 	
 	public static HashMap<String, Integer> playerSHIP1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerSHIP2Rewards = new HashMap<String, Integer>();
@@ -140,6 +142,12 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, Integer> playerHANGAR2Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerTANK1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerTANK2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP1Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP2Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP3Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP4Rewards = new HashMap<String, Integer>();
+	public static HashMap<String, Integer> playerMAP5Rewards = new HashMap<String, Integer>();
+	
 	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
 	
 	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();
@@ -158,8 +166,7 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 
 	public void loadProperties() {
-		configFile = new ConfigFile();
-
+		getConfig().options().copyDefaults(true);
 		File dir = getDataFolder();
 		if (!dir.exists())
 			dir.mkdir();
@@ -196,7 +203,8 @@ public class NavyCraft extends JavaPlugin {
 		structureUpdateScheduler();
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
-	}
+		getConfig().options().copyDefaults(true);
+		}
 
 	public void onDisable() {
 		shutDown = true;
@@ -221,12 +229,12 @@ public class NavyCraft extends JavaPlugin {
 		 */
 		
 		//if(this.DebugMode == true)
-		if(Integer.parseInt(this.ConfigSetting("LogLevel")) >= messageLevel)
+		if(Integer.parseInt(this.getConfig().getString("LogLevel")) >= messageLevel)
 			System.out.println(message);
 		return this.DebugMode;
 	}
 
-	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock, boolean autoShip) {
+	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock) {
 		//if( npcMerchantThread == null )
 			//npcMerchantThread();
 		
@@ -241,12 +249,9 @@ public class NavyCraft extends JavaPlugin {
 
 		
 		// auto-detect and create the craft
-		if (!CraftBuilder.detect(craft, x, y, z, autoShip)) {
+		if (!CraftBuilder.detect(craft, x, y, z)) {
 			return null;
 		}
-		
-		if( autoShip )
-			craft.captainName = null;
 
 		CraftMover cm = new CraftMover(craft, this);
 		cm.structureUpdate(null,false);
@@ -288,8 +293,6 @@ public class NavyCraft extends JavaPlugin {
 		{
 			craft.speedChange(player, true);
 		}
-		
-		if( !autoShip )
 		{
 			craft.driverName = craft.captainName;
 			if(craft.type.listenItem == true)
@@ -516,20 +519,10 @@ public class NavyCraft extends JavaPlugin {
 		}
     	return false;
 	}
-	
-	public String ConfigSetting(String setting) {
-		if(configFile.ConfigSettings.containsKey(setting))
-			return configFile.ConfigSettings.get(setting);
-		else {
-			System.out.println("Solmex needs to be notified that a non-existing config setting '" + setting + 
-					"' was attempted to be accessed.");
-			return "";
-		}
-	}
 
 	@SuppressWarnings("deprecation")
 	public void dropItem(Block block) {		
-		if(NavyCraft.instance.ConfigSetting("HungryHungryDrill").equalsIgnoreCase("true"))
+		if(NavyCraft.instance.getConfig().getString("Drill").equalsIgnoreCase("true"))
 			return;
 
 		int itemToDrop = BlocksInfo.getDropItem(block.getTypeId());
@@ -945,6 +938,44 @@ public void updateCraft(int vehicleNum, int updateNum)
 							else
 								playerTANK2Rewards.put(strings[0], 1);
 						}
+					}else if(strings[1].equalsIgnoreCase("MAP1") )
+						{
+							if( playerMAP1Rewards.containsKey(strings[0]) )
+								 playerMAP1Rewards.put(strings[0], playerMAP1Rewards.get(strings[0]) + 1);
+							else
+								 playerMAP1Rewards.put(strings[0], 1);
+						}else if(strings[1].equalsIgnoreCase("MAP2") )
+						{
+							{
+								if( playerMAP2Rewards.containsKey(strings[0]) )
+									playerMAP2Rewards.put(strings[0], playerMAP2Rewards.get(strings[0]) + 1);
+								else
+									playerMAP2Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP3") )
+						{
+							{
+								if( playerMAP3Rewards.containsKey(strings[0]) )
+									playerMAP3Rewards.put(strings[0], playerMAP3Rewards.get(strings[0]) + 1);
+								else
+									playerMAP3Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP4") )
+						{
+							{
+								if( playerMAP4Rewards.containsKey(strings[0]) )
+									playerMAP4Rewards.put(strings[0], playerMAP4Rewards.get(strings[0]) + 1);
+								else
+									playerMAP4Rewards.put(strings[0], 1);
+							}
+						}else if(strings[1].equalsIgnoreCase("MAP5") )
+						{
+							{
+								if( playerMAP5Rewards.containsKey(strings[0]) )
+									playerMAP5Rewards.put(strings[0], playerMAP5Rewards.get(strings[0]) + 1);
+								else
+									playerMAP5Rewards.put(strings[0], 1);
+							}
 					}else
 					{
 						System.out.println("Player Reward Load Error: Unknown Reward");

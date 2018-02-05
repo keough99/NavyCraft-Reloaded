@@ -49,7 +49,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import net.ess3.api.MaxMoneyException;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CraftMover {
@@ -518,13 +517,13 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						if (craft.captainName != null) {
 							Player p = plugin.getServer().getPlayer(craft.captainName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						craft.doDestroy = true;
@@ -535,13 +534,13 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						if (craft.captainName != null) {
 							Player p = plugin.getServer().getPlayer(craft.captainName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is protected.");
+								p.sendMessage(ChatColor.RED + "That direction is protected.");
 							}
 						}
 						return;
@@ -566,7 +565,7 @@ public class CraftMover {
 						if (craft.driverName != null) {
 							Player p = plugin.getServer().getPlayer(craft.driverName);
 							if (p != null) {
-								p.sendMessage(ChatColor.YELLOW + "That direction is blocked.");
+								p.sendMessage(ChatColor.RED + "That direction is blocked.");
 							}
 						}
 						return;
@@ -951,26 +950,19 @@ public class CraftMover {
 		restoreSupportBlocks(craft.dx, craft.dy, craft.dz);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void move3(boolean scheduledMove) {
 
 		playerTeleports.clear();
 
 		craft.isMovingPlayers = true;
 
-		Player pl = null;
 		if (craft.driverName != null) {
-			pl = plugin.getServer().getPlayer(craft.driverName);
 		}
 
 		for (Entity e : craft.checkEntities) {
-
-			if (NavyCraft.instance.ConfigSetting("TryNudge").equalsIgnoreCase("true") && ((craft.type.listenMovement == false) || ((pl != null) && (e != pl)))) {
-				movePlayer(e, craft.dx, craft.dy, craft.dz);
-			} else {
+			//tp player on ship
 				teleportPlayer(e, craft.dx, craft.dy, craft.dz);
 			}
-		}
 
 		teleportUpdate();
 		
@@ -1344,9 +1336,8 @@ public class CraftMover {
 
 		restoreSupportBlocks(dx, dy, dz);
 
-		Player p = null;
 		if (craft.driverName != null) {
-			p = plugin.getServer().getPlayer(craft.driverName);
+			plugin.getServer().getPlayer(craft.driverName);
 		}
 
 		playerTeleports.clear();
@@ -1354,12 +1345,9 @@ public class CraftMover {
 		craft.isMovingPlayers = true;
 
 		for (Entity e : checkEntities) {
-			if (NavyCraft.instance.ConfigSetting("TryNudge").equalsIgnoreCase("true") && ((craft.type.listenMovement == false) || ((p != null) && (e != p)))) {
-				movePlayer(e, dx, dy, dz);
-			} else {
+			//tp player on a ship
 				teleportPlayer(e, dx, dy, dz);
 			}
-		}
 
 		for (Chunk checkChunk : craft.checkedChunks) {
 			craft.world.refreshChunk(checkChunk.getX(), checkChunk.getZ());
@@ -1455,30 +1443,20 @@ public class CraftMover {
 						Essentials ess;
 						ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
 						if (ess == null) {
-							p.sendMessage("Essentials Economy error");
+							p.sendMessage(ChatColor.DARK_RED + "Essentials Economy error");
 							return;
 						}
 						if (!PermissionInterface.CheckQuietPerm(p, "navycraft.free") && ess.getUser(p).canAfford(new BigDecimal(craft.vehicleCost))) {
-							p.sendMessage("Vehicle purchased.");
+							p.sendMessage(ChatColor.GREEN + "Vehicle purchased.");
 							ess.getUser(p).takeMoney(new BigDecimal(craft.vehicleCost));
 
 						} else if (PermissionInterface.CheckQuietPerm(p, "navycraft.free")) {
-							p.sendMessage("Vehicle given for free!");
+							p.sendMessage(ChatColor.GREEN + "Vehicle given for free!");
 						} else {
 							p.sendMessage(ChatColor.RED + "You cannot afford this vehicle, destroying vehicle.");
 							craft.doDestroy = true;
 							return;
 						}
-					} else {
-						if (!craft.isAutoCraft) {
-							craft.doDestroy = true;
-							return;
-						}
-					}
-				} else {
-					if (!craft.isAutoCraft) {
-						craft.doDestroy = true;
-						return;
 					}
 				}
 			}
@@ -1512,7 +1490,7 @@ public class CraftMover {
 					}
 					NavyCraft.saveExperience();
 
-					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.YELLOW + "5000 points!");
+					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.redPoints += 5000;
 
 					for (String s : craft.crewNames) {
@@ -1541,7 +1519,7 @@ public class CraftMover {
 					}
 					NavyCraft.saveExperience();
 
-					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.YELLOW + "5000 points!");
+					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.bluePoints += 5000;
 
 					for (String s : craft.crewNames) {
@@ -5290,7 +5268,7 @@ public class CraftMover {
 	@SuppressWarnings("deprecation")
 	public void moveUpdate() {
 
-		if ((craft.noCaptain < 200) && (craft.stuckAutoTimer < 20)) {
+		if ((craft.noCaptain < 200)) {
 			if ((!craft.enginesOn && (craft.speed == 0)) || craft.sinking) {
 				if (craft.driverName != null) {
 					Player p = plugin.getServer().getPlayer(craft.driverName);
@@ -5314,20 +5292,11 @@ public class CraftMover {
 				cruiseUpdate();
 
 			}
-			if ((craft.captainName == null) && !craft.type.canZamboni && craft.isAutoCraft) {
+			if ((craft.captainName == null) && !craft.type.canZamboni) {
 				craft.noCaptain++;
 			} else if (craft.noCaptain > 0) {
 				craft.noCaptain = 0;
 			}
-
-			if (craft.isAutoCraft && (craft.speed == 0)) {
-				craft.stuckAutoTimer++;
-			} else if (craft.isAutoCraft && (craft.stuckAutoTimer > 0)) {
-				craft.stuckAutoTimer = 0;
-			}
-		} else {
-			craft.enginesOn = false;
-			craft.isMoving = false;
 		}
 
 	}
@@ -5335,7 +5304,6 @@ public class CraftMover {
 
 	//cruise movement update, update turn progress, update vehicle engines power and speed, update autocrafts
 	//calls calculateMove, called by moveUpdate
-	@SuppressWarnings("deprecation")
 	public void cruiseUpdate() { 
 
 		if (craft.isDestroying || cruiseUpdate || ((craft.speed == 0) && (craft.setSpeed == 0))) { return; }
@@ -5672,948 +5640,6 @@ public class CraftMover {
 			}
 		}
 
-		if (craft.isAutoCraft) {
-			if (!NavyCraft.checkSafeDockRegion(craft.getLocation()) && (craft.turnProgress == 0)) {
-				int lrDir, start, forDir, horizCenter, vertCenter;
-				boolean lrX = false;
-				switch (craft.rotation) {
-					case 180:
-						horizCenter = (int) (craft.minX + (craft.sizeX / 2.0f));
-						vertCenter = (int) (craft.minY + (craft.sizeY / 2.0f));
-						lrDir = -1;
-						lrX = true;
-						start = craft.maxZ;
-						forDir = 1;
-						break;
-					case 90:
-						horizCenter = (int) (craft.minZ + (craft.sizeZ / 2.0f));
-						vertCenter = (int) (craft.minY + (craft.sizeY / 2.0f));
-						lrDir = 1;
-						start = craft.maxX;
-						forDir = 1;
-						break;
-					case 270:
-						horizCenter = (int) (craft.minZ + (craft.sizeZ / 2.0f));
-						vertCenter = (int) (craft.minY + (craft.sizeY / 2.0f));
-						lrDir = -1;
-						start = craft.minX;
-						forDir = -1;
-						break;
-					default:
-						horizCenter = (int) (craft.minX + (craft.sizeX / 2.0f));
-						vertCenter = (int) (craft.minY + (craft.sizeY / 2.0f));
-						lrDir = 1;
-						lrX = true;
-						start = craft.minZ;
-						forDir = -1;
-						break;
-				}
-
-				int k = 0;
-				boolean obstacleFound = false;
-				boolean applyLeft = false;
-				while ((k < 40) && !obstacleFound) {
-					int i = 0;
-					while ((i < 16) && !obstacleFound) {
-						int j = 0;
-						while ((j < 24) && !obstacleFound) {
-							if (lrX) {
-								int refX;
-								if (lrDir < 0) {
-									refX = horizCenter + (8 - i);
-								} else {
-									refX = (horizCenter + (i)) - 8;
-								}
-								int refY = (vertCenter + j) - 12;
-								int refZ = start + forDir + (k * forDir);
-
-
-								if (detectableMat(craft.world.getBlockAt(refX, refY, refZ).getTypeId())) {
-									obstacleFound = true;
-									if (i > 8) {
-										applyLeft = true;
-									}
-								}
-							} else {
-								int refZ;
-								if (lrDir < 0) {
-									refZ = horizCenter + (8 - i);
-								} else {
-									refZ = (horizCenter + (i)) - 8;
-								}
-								int refY = (vertCenter + j) - 12;
-								int refX = start + forDir + (k * forDir);
-
-								if (detectableMat(craft.world.getBlockAt(refX, refY, refZ).getTypeId())) {
-									obstacleFound = true;
-									if (i > 8) {
-										applyLeft = true;
-									}
-								}
-							}
-							j++;
-						}
-						i++;
-					}
-					k++;
-				}
-
-				if (obstacleFound && (craft.turnProgress == 0)) {
-
-					if (applyLeft) {
-
-						if (craft.rudder != -1) {
-							craft.rudder = -1;
-						}
-					} else {
-
-						if (craft.rudder != 1) {
-							craft.rudder = 1;
-						}
-					}
-				} else if (craft.turnProgress == 0) {
-
-
-					if (craft.routeID.equalsIgnoreCase("AB1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < (-900 - (Math.random() * 100))) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (-500 + (Math.random() * 100))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > -60) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("AB2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < (-600 - (Math.random() * 200))) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > -60) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("AB3")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < 450) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (-900 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < (-600 - (Math.random() * 200))) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockX() > -60) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("AC1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < 1050) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (-900 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < -750) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("AC2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < -300) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (1100 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < -750) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("AC3")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() < 1450) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (800 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < (900 - (Math.random() * 200))) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockX() > (1400 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 4) {
-							if (craft.getLocation().getBlockZ() < -750) {
-								if (craft.rotation == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("CB1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < 50) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("CB2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < (1000 - (Math.random() * 300))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockZ() < (-1300 - (Math.random() * 200))) {
-								if (craft.rotation == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockX() < 50) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("CA1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < -1500) {
-								if (craft.rotation == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() > 1400) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("CA2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < (1600 - (Math.random() * 200))) {
-								if (craft.rotation == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockZ() > (200 + (Math.random() * 200))) {
-								if (craft.rotation == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockX() < (1000 - (Math.random() * 200))) {
-								if (craft.rotation == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockZ() > 1490) {
-								if (craft.rotation == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() < -1450) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("BC1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() > -1500) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > (400 + (Math.random() * 300))) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() < -1800) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockX() > 1500) {
-								if ((craft.rotation % 360) == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 4) {
-							if (craft.getLocation().getBlockZ() > -750) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("BC2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() > (-1200 + (Math.random() * 200))) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() > 1500) {
-								if ((craft.rotation % 360) == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() > -750) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("BA1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() > -600) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() < -1450) {
-								if ((craft.rotation % 360) == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() > 1400) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("BA2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockZ() > -600) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockX() < -800) {
-								if ((craft.rotation % 360) == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockZ() > 1000) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockX() < -1450) {
-								if ((craft.rotation % 360) == 180) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() > 1400) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("D1")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < 1100) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockZ() < 1400) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() < -1400) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("D2")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < 1100) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockZ() < 0) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockX() < 500) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockZ() < -500) {
-								if ((craft.rotation % 360) == 270) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 4) {
-							if (craft.getLocation().getBlockX() < 50) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockZ() < -1550) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					} else if (craft.routeID.equalsIgnoreCase("D3")) {
-						if (craft.routeStage == 0) {
-							if (craft.getLocation().getBlockX() < 1100) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 1) {
-							if (craft.getLocation().getBlockZ() < 700) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 2) {
-							if (craft.getLocation().getBlockX() > 1400) {
-								if ((craft.rotation % 360) == 0) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, -1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else if (craft.routeStage == 3) {
-							if (craft.getLocation().getBlockZ() < -750) {
-								if ((craft.rotation % 360) == 90) {
-									craft.routeStage++;
-								} else {
-									craft.rudderChange(null, 1, true);
-								}
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						} else {
-							if (craft.getLocation().getBlockX() > 1750) {
-								craft.doDestroy = true;
-								return;
-							} else {
-								if (craft.rudder != 0) {
-									craft.rudder = 0;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
 		craft.lastDX = dx;
 		craft.lastDZ = dz;
 		calculateMove(dx, dy, dz);
@@ -6815,44 +5841,7 @@ public class CraftMover {
 				}
 			}
 
-			if (craft.isAutoCraft) {
-				Essentials ess;
-				ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-				if (ess == null) { return; }
-
-				if (topPlayer != null) {
-					if (craft.crewHistory.contains(topPlayer.getName())) { return; }
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives a $" + craft.sinkValue + " bonus!");
-					try {
-						ess.getUser(topPlayer).giveMoney(new BigDecimal(craft.sinkValue));
-					} catch (MaxMoneyException e) {
-						e.printStackTrace();
-					}
-				} else if ((topCraft != null) && (topCraft != craft)) {
-					for (String s : topCraft.crewNames) {
-						if (craft.crewHistory.contains(s)) { return; }
-					}
-
-					String dispName;
-					if (topCraft.customName != null) {
-						dispName = topCraft.customName;
-					} else {
-						dispName = topCraft.name;
-					}
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName.toUpperCase() + ChatColor.YELLOW + " receives a $" + craft.sinkValue + " bonus!");
-					for (String s : topCraft.crewNames) {
-						Player p = plugin.getServer().getPlayer(s);
-						if (p != null) {
-							try {
-								ess.getUser(p).giveMoney(new BigDecimal(craft.sinkValue));
-							} catch (MaxMoneyException e) {
-							}
-						}
-					}
-				}
-			}
-
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180) || craft.isAutoCraft)) {
+			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
 				if (topPlayer != null) {
 					if (craft.crewHistory.contains(topPlayer.getName()) && !topPlayer.isOp()) { return; }
 					int newExp = craft.blockCountStart;
