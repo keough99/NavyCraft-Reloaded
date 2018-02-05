@@ -1949,6 +1949,79 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard clear <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the plot" );
 							}
+						} else if (split[1].equalsIgnoreCase("schematic")) {	
+							if (split.length > 2) {
+								if (split[2].equalsIgnoreCase("help")) {
+									player.sendMessage(ChatColor.WHITE + "Schematics v" + NavyCraft.version + " commands :");
+									player.sendMessage(ChatColor.GOLD + "/shipyard schematic list - view your schematics");
+									player.sendMessage(ChatColor.GOLD + "/shipyard schematic save <id> <name> - save your plot into schematics");
+									player.sendMessage(ChatColor.GOLD + "/shipyard schematic load <name> <id> - load your schematics into plots");
+									player.sendMessage(ChatColor.GOLD + "/shipyard schematic delete <name> - delete your schematics");
+								} if (split[2].equalsIgnoreCase("list")) {
+									player.sendMessage("Placeholder Message, Command not developed!");
+								}
+									if (split[2].equalsIgnoreCase("save")) {
+									if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+										player.sendMessage(ChatColor.RED + "You do not have permission to add exp.");
+										event.setCancelled(true);
+										return;
+									}
+
+									if (split.length < 5) {
+										player.sendMessage(ChatColor.GOLD + "Usage - /shipyard schematic save <id> <name>");
+										player.sendMessage(ChatColor.GOLD + "Example - /shipyard schematic save 1 RCB90 ");
+										event.setCancelled(true);
+										return;
+									}
+									player.sendMessage("Placeholder Message, Command not developed!");
+									}
+								if (split[2].equalsIgnoreCase("load")) {
+									if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+										player.sendMessage(ChatColor.RED + "You do not have permission to add exp.");
+										event.setCancelled(true);
+										return;
+									}
+
+									if (split.length < 5) {
+										player.sendMessage(ChatColor.GOLD + "Usage - /shipyard schematic load <id> <name>");
+										player.sendMessage(ChatColor.GOLD + "Example - /shipyard schematic load 1 RCB90 ");
+										event.setCancelled(true);
+										return;
+									}
+									player.sendMessage("Placeholder Message, Command not developed!");
+									}
+								if (split[2].equalsIgnoreCase("delete")) {
+									if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+										player.sendMessage(ChatColor.RED + "You do not have permission to add exp.");
+										event.setCancelled(true);
+										return;
+									}
+
+									if (split.length < 4) {
+										player.sendMessage(ChatColor.GOLD + "Usage - /shipyard schematic delete <id>");
+										player.sendMessage(ChatColor.GOLD + "Example - /shipyard schematic delete 1");
+										event.setCancelled(true);
+										return;
+									}
+									player.sendMessage("Placeholder Message, Command not developed!");
+									}
+									{
+										player.sendMessage(ChatColor.WHITE + "Schematics v" + NavyCraft.version + " commands :");
+										player.sendMessage(ChatColor.GOLD + "/shipyard schematic list - view your schematics");
+										player.sendMessage(ChatColor.GOLD + "/shipyard schematic save <id> <name> - save your plot into schematics");
+										player.sendMessage(ChatColor.GOLD + "/shipyard schematic load <name> <id> - load your schematics into plots");
+										player.sendMessage(ChatColor.GOLD + "/shipyard schematic delete <name> - delete your schematics");
+									}
+								event.setCancelled(true);
+								return;
+								
+							} else {
+								{
+									NavyCraft_BlockListener.getRank(player);
+								}
+							event.setCancelled(true);
+							return;
+								}
 						} else if (split[1].equalsIgnoreCase("unclaim")) {
 							if (split.length > 2) {
 								int tpId = -1;
