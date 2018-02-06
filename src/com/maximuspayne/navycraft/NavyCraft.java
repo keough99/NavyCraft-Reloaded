@@ -12,6 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -43,6 +46,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.huskehhh.mysql.mysql.MySQL;
+import java.sql.Statement;
 
 /**
  * MoveCraft plugin for Hey0 mod (hMod) by Yogoda
@@ -194,6 +199,8 @@ public class NavyCraft extends JavaPlugin {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		version = pdfFile.getVersion();
 
+		getConfig().options().copyDefaults(true);
+		
 		BlocksInfo.loadBlocksInfo();
 		loadProperties();
 		PermissionInterface.setupPermissions(this);
@@ -203,9 +210,18 @@ public class NavyCraft extends JavaPlugin {
         manager.registerEvents(new TeleportFix(this, this.getServer()), this);
 		
 		structureUpdateScheduler();
+		
+		try {
+			c = MySQL.openConnection();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
-		getConfig().options().copyDefaults(true);
 		}
 
 	public void onDisable() {
@@ -214,7 +230,9 @@ public class NavyCraft extends JavaPlugin {
 		System.out.println(pdfFile.getName() + " " + version + " plugin disabled");
 	}
 
-
+	MySQL MySQL = new MySQL(getConfig().getString("Hostname"), getConfig().getString("Port"), getConfig().getString("Database"), getConfig().getString("User"), getConfig().getString("Password"));
+	static Connection c = null;
+	
 	public void ToggleDebug() {
 		this.DebugMode = !this.DebugMode;
 		System.out.println("Debug mode set to " + this.DebugMode);
@@ -538,88 +556,14 @@ public class NavyCraft extends JavaPlugin {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public static void loadExperience()
 	{
-		String path = File.separator + "NCExp.txt";
-        File file = new File(path);
-        
-        FileReader fr;
-        BufferedReader reader;
-		try {
-			fr = new FileReader(file.getName());
-			reader = new BufferedReader(fr);
-
-	        String line = null;        
-	        try {
-	        	playerExp.clear();
-	        	
-				while ((line=reader.readLine()) != null) {
-					String[] strings = line.split(",");
-					if( strings.length != 2 )
-					{
-						System.out.println("Player EXP Load Error3");
-						return;
-					}
-					playerExp.put(strings[0], Integer.valueOf(strings[1]));
-					
-				}
-
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Player EXP Load Error2");
-			}
-	        
-	        reader.close();  // Close to unlock.
-
-		} catch (FileNotFoundException e) {
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Player EXP Load Error4");
-		}
 	}
 	
 	
 	@SuppressWarnings("resource")
 	public static void saveExperience()
 	{
-		String path = File.separator + "NCExp.txt";
-        File file = new File(path);
-        FileWriter fw;
-        BufferedWriter writer;
-	
-		try {
-			fw = new FileWriter(file.getName());
-			writer = new BufferedWriter(fw);
-	        String line = null;
-	        
-	        if( playerExp.isEmpty() )
-	        {
-	        	System.out.println("Player Save Exp Error1");
-	        	return;
-	        }
-	        
-			for( String s : playerExp.keySet() )
-			{
-				line = s + "," + playerExp.get(s).toString();
-				try {
-					writer.write(line);
-					writer.newLine();
-				} catch (IOException e) {
-					System.out.println("Player Save Exp Error2");
-					e.printStackTrace();
-					return;
-				}	
-			}
-			
-			writer.close();
-		} catch (IOException e2) {
-			System.out.println("Player Save Exp Error4");
-			e2.printStackTrace();
-			return;
-		}
 	}
    
    public void structureUpdateScheduler()

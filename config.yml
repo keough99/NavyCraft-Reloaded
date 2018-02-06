@@ -35,3 +35,11 @@ StructureBlocks: 4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45
 
 #Whether or not to create the default craft type files on plugin enable.
 WriteDefaultCraft: true
+
+#MYSQL - REQUIRED
+#This is code for MYSQL which is used by the Shipyard Plugin.
+Username: root
+Database: navycraft
+Password: password
+Hostname: localhost
+Port: 3306
