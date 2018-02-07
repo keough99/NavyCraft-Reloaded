@@ -3,6 +3,7 @@ package com.maximuspayne.navycraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.*;
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -46,7 +48,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.huskehhh.mysql.mysql.MySQL;
 import java.sql.Statement;
 
 /**
@@ -170,7 +171,10 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
 	
-	public static boolean destroyingPlot = false;
+    private Connection connection;
+    private String host, database, username, password;
+    private int port;
+  
 
 	public void loadProperties() {
 		getConfig().options().copyDefaults(true);
@@ -187,6 +191,7 @@ public class NavyCraft extends JavaPlugin {
 		
 	}
 
+	@SuppressWarnings("unused")
 	public void onEnable() {
 		instance = this;
 		
@@ -208,18 +213,22 @@ public class NavyCraft extends JavaPlugin {
 		PluginManager manager = getServer().getPluginManager();
 		 
         manager.registerEvents(new TeleportFix(this, this.getServer()), this);
+        
+        host = getConfig().getString("Host");
+        port = getConfig().getInt("Port");
+        database = getConfig().getString("Database");
+        username = getConfig().getString("Username");
+        password = getConfig().getString("Password");  
+        try {     
+            openConnection();
+            Statement statement = connection.createStatement();          
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 		
 		structureUpdateScheduler();
-		
-		try {
-			c = MySQL.openConnection();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
 		}
@@ -227,11 +236,9 @@ public class NavyCraft extends JavaPlugin {
 	public void onDisable() {
 		shutDown = true;
 		PluginDescriptionFile pdfFile = this.getDescription();
+
 		System.out.println(pdfFile.getName() + " " + version + " plugin disabled");
 	}
-
-	MySQL MySQL = new MySQL(getConfig().getString("Hostname"), getConfig().getString("Port"), getConfig().getString("Database"), getConfig().getString("User"), getConfig().getString("Password"));
-	static Connection c = null;
 	
 	public void ToggleDebug() {
 		this.DebugMode = !this.DebugMode;
@@ -252,6 +259,20 @@ public class NavyCraft extends JavaPlugin {
 		if(Integer.parseInt(this.getConfig().getString("LogLevel")) >= messageLevel)
 			System.out.println(message);
 		return this.DebugMode;
+	}
+	
+	public void openConnection() throws SQLException, ClassNotFoundException {
+	    if (connection != null && !connection.isClosed()) {
+	        return;
+	    }
+	 
+	    synchronized (this) {
+	        if (connection != null && !connection.isClosed()) {
+	            return;
+	        } 
+	        Class.forName("com.mysql.jdbc.Driver");
+	        connection = DriverManager.getConnection("jdbc:mysql://" + this.host+ ":" + this.port + "/" + this.database, this.username, this.password);
+	    }
 	}
 
 	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock) {
@@ -558,6 +579,12 @@ public class NavyCraft extends JavaPlugin {
 
 	public static void loadExperience()
 	{
+		ResultSet result = statement.executeQuery("SELECT * FROM PlayerData WHERE EXP = 0;");
+		List<String> expPlayers = new ArrayList<String>();
+		while (result.next()) {
+		    String name = result.getString("PLAYERNAME");
+		    expPlayers.add(name);
+		}
 	}
 	
 	
