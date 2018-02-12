@@ -35,3 +35,10 @@ StructureBlocks: 4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45
 
 #Whether or not to create the default craft type files on plugin enable.
 WriteDefaultCraft: true
+
+#MYSQL
+host: localhost
+username: root
+password: 1234
+database: navycraft
+port: 3306

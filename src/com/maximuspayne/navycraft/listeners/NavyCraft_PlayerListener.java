@@ -1677,6 +1677,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;

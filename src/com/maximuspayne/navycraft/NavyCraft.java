@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -176,12 +177,16 @@ public class NavyCraft extends JavaPlugin {
 		
 	}
 	
+    private Connection connection;
+    private String host, database, username, password;
+    private int port;
+	
 	public void onLoad() {
 		
 	}
 
 	public void onEnable() {
-		instance = this;
+		instance = this; 
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
@@ -201,9 +206,26 @@ public class NavyCraft extends JavaPlugin {
         manager.registerEvents(new TeleportFix(this, this.getServer()), this);
 		
 		structureUpdateScheduler();
+		
+		getConfig().options().copyDefaults(true);
+		
+        host = getConfig().getString(host);
+        port = 3306;
+        database = getConfig().getString(database);
+        username = getConfig().getString(username);
+        password = getConfig().getString(password); 
+        
+        try {     
+            openConnection();
+            Statement statement = connection.createStatement();          
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
-		getConfig().options().copyDefaults(true);
 		}
 
 	public void onDisable() {
@@ -217,6 +239,19 @@ public class NavyCraft extends JavaPlugin {
 		this.DebugMode = !this.DebugMode;
 		System.out.println("Debug mode set to " + this.DebugMode);
 	}
+	
+	   public void openConnection() throws SQLException, ClassNotFoundException {
+		    if (connection != null && !connection.isClosed()) {
+		        return;
+		    }
+		 
+		    synchronized (this) {
+		        if (connection != null && !connection.isClosed()) {
+		            return;
+		        }
+		        Class.forName("com.mysql.jdbc.Driver");
+		        connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+		    }
 
 	public boolean DebugMessage(String message, int messageLevel) {
 		/* Message Levels:
