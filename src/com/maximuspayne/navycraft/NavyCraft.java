@@ -3,7 +3,6 @@ package com.maximuspayne.navycraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.*;
 import java.io.BufferedReader;
@@ -13,10 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -48,7 +43,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import java.sql.Statement;
 
 /**
  * MoveCraft plugin for Hey0 mod (hMod) by Yogoda
@@ -124,20 +118,22 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int spawnTime=10;
 	
-	public static HashMap<String, ArrayList<Sign>> playerSHIP1Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSHIP2Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSHIP3Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSHIP4Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerSHIP5Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerHANGAR1Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerMAP1Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerMAP2Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerMAP3Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerMAP4Signs = new HashMap<String, ArrayList<Sign>>();
-	public static HashMap<String, ArrayList<Sign>> playerMAP5Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerUniversalSigns = new HashMap<String, ArrayList<Sign>>();
+	
+	public static HashMap<String, ArrayList<File>> playerSHIP1Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerSHIP2Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerSHIP3Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerSHIP4Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerSHIP5Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerHANGAR1Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerHANGAR2Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerTANK1Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerTANK2Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerMAP1Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerMAP2Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerMAP3Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerMAP4Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<File>> playerMAP5Schematics = new HashMap<String, ArrayList<File>>();
 	
 	public static HashMap<String, Integer> playerSHIP1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerSHIP2Rewards = new HashMap<String, Integer>();
@@ -154,6 +150,7 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, Integer> playerMAP4Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerMAP5Rewards = new HashMap<String, Integer>();
 	
+	public static HashMap<Sign, Integer> playerSchematicIndex = new HashMap<Sign, Integer>();
 	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
 	
 	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();
@@ -170,11 +167,6 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<Player, Float> playerEngineVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerWeaponVolumes = new HashMap<Player, Float>();
 	public static HashMap<Player, Float> playerOtherVolumes = new HashMap<Player, Float>();
-	
-    private Connection connection;
-    private String host, database, username, password;
-    private int port;
-  
 
 	public void loadProperties() {
 		getConfig().options().copyDefaults(true);
@@ -191,7 +183,6 @@ public class NavyCraft extends JavaPlugin {
 		
 	}
 
-	@SuppressWarnings("unused")
 	public void onEnable() {
 		instance = this;
 		
@@ -204,8 +195,6 @@ public class NavyCraft extends JavaPlugin {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		version = pdfFile.getVersion();
 
-		getConfig().options().copyDefaults(true);
-		
 		BlocksInfo.loadBlocksInfo();
 		loadProperties();
 		PermissionInterface.setupPermissions(this);
@@ -213,33 +202,20 @@ public class NavyCraft extends JavaPlugin {
 		PluginManager manager = getServer().getPluginManager();
 		 
         manager.registerEvents(new TeleportFix(this, this.getServer()), this);
-        
-        host = getConfig().getString("Host");
-        port = getConfig().getInt("Port");
-        database = getConfig().getString("Database");
-        username = getConfig().getString("Username");
-        password = getConfig().getString("Password");  
-        try {     
-            openConnection();
-            Statement statement = connection.createStatement();          
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 		
 		structureUpdateScheduler();
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
+		getConfig().options().copyDefaults(true);
 		}
 
 	public void onDisable() {
 		shutDown = true;
 		PluginDescriptionFile pdfFile = this.getDescription();
-
 		System.out.println(pdfFile.getName() + " " + version + " plugin disabled");
 	}
-	
+
+
 	public void ToggleDebug() {
 		this.DebugMode = !this.DebugMode;
 		System.out.println("Debug mode set to " + this.DebugMode);
@@ -259,20 +235,6 @@ public class NavyCraft extends JavaPlugin {
 		if(Integer.parseInt(this.getConfig().getString("LogLevel")) >= messageLevel)
 			System.out.println(message);
 		return this.DebugMode;
-	}
-	
-	public void openConnection() throws SQLException, ClassNotFoundException {
-	    if (connection != null && !connection.isClosed()) {
-	        return;
-	    }
-	 
-	    synchronized (this) {
-	        if (connection != null && !connection.isClosed()) {
-	            return;
-	        } 
-	        Class.forName("com.mysql.jdbc.Driver");
-	        connection = DriverManager.getConnection("jdbc:mysql://" + this.host+ ":" + this.port + "/" + this.database, this.username, this.password);
-	    }
 	}
 
 	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock) {
@@ -577,13 +539,46 @@ public class NavyCraft extends JavaPlugin {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public static void loadExperience()
 	{
-		ResultSet result = statement.executeQuery("SELECT * FROM PlayerData WHERE EXP = 0;");
-		List<String> expPlayers = new ArrayList<String>();
-		while (result.next()) {
-		    String name = result.getString("PLAYERNAME");
-		    expPlayers.add(name);
+		String path = File.separator + "NCExp.txt";
+        File file = new File(path);
+        
+        FileReader fr;
+        BufferedReader reader;
+		try {
+			fr = new FileReader(file.getName());
+			reader = new BufferedReader(fr);
+
+	        String line = null;        
+	        try {
+	        	playerExp.clear();
+	        	
+				while ((line=reader.readLine()) != null) {
+					String[] strings = line.split(",");
+					if( strings.length != 2 )
+					{
+						System.out.println("Player EXP Load Error3");
+						return;
+					}
+					playerExp.put(strings[0], Integer.valueOf(strings[1]));
+					
+				}
+
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Player EXP Load Error2");
+			}
+	        
+	        reader.close();  // Close to unlock.
+
+		} catch (FileNotFoundException e) {
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Player EXP Load Error4");
 		}
 	}
 	
@@ -591,6 +586,41 @@ public class NavyCraft extends JavaPlugin {
 	@SuppressWarnings("resource")
 	public static void saveExperience()
 	{
+		String path = File.separator + "NCExp.txt";
+        File file = new File(path);
+        FileWriter fw;
+        BufferedWriter writer;
+	
+		try {
+			fw = new FileWriter(file.getName());
+			writer = new BufferedWriter(fw);
+	        String line = null;
+	        
+	        if( playerExp.isEmpty() )
+	        {
+	        	System.out.println("Player Save Exp Error1");
+	        	return;
+	        }
+	        
+			for( String s : playerExp.keySet() )
+			{
+				line = s + "," + playerExp.get(s).toString();
+				try {
+					writer.write(line);
+					writer.newLine();
+				} catch (IOException e) {
+					System.out.println("Player Save Exp Error2");
+					e.printStackTrace();
+					return;
+				}	
+			}
+			
+			writer.close();
+		} catch (IOException e2) {
+			System.out.println("Player Save Exp Error4");
+			e2.printStackTrace();
+			return;
+		}
 	}
    
    public void structureUpdateScheduler()
