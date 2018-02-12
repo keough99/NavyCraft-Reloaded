@@ -150,7 +150,7 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, Integer> playerMAP4Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerMAP5Rewards = new HashMap<String, Integer>();
 	
-	public static HashMap<Sign, Integer> playerSchematicIndex = new HashMap<Sign, Integer>();
+	public static HashMap<File, Integer> playerSchematicIndex = new HashMap<File, Integer>();
 	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
 	
 	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();

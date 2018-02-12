@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -2288,15 +2289,16 @@ public class NavyCraft_BlockListener implements Listener {
 		return null;
 	}
 	public static void loadSHIP1Schematics(Player player) {
-		String maxId = maxId2(player);
+		int maxId = maxIdS(player);
 		String lotStr = "SHIP1";
 
-	    String file = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
 	    	if (file == null) 
 	    	{
 	    	System.out.println("Either dir does not exist or is not a directory");
 	    	}
-	    	String[] parts = file.split("-");
+	    	String[] parts = files.split("-");
 	    	String p = parts[0]; // player
 	    	String ls = parts[1]; // lotstr
 	    	String mxid = parts[2]; // maxId
@@ -2306,15 +2308,217 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 
-						if (!NavyCraft.playerSHIP1Schematics.containsKey(player)) {
+						if (!NavyCraft.playerSHIP1Schematics.containsKey(p)) {
 							NavyCraft.playerSHIP1Schematics.put(p, new ArrayList<File>());
-							NavyCraft.playerSHIP1Schematics.get(player).add(selectSign);
-							NavyCraft.playerSignIndex.put(selectSign, idNum);
+							NavyCraft.playerSHIP1Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadSHIP2Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "SHIP2";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+	    	
+					if (p != player.getName()) {
+						player.sendMessage(ChatColor.RED + "You don't have permission to load this plot!");
+							return;
+						}
+
+						if (!NavyCraft.playerSHIP2Schematics.containsKey(p)) {
+							NavyCraft.playerSHIP2Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerSHIP2Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadSHIP3Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "SHIP3";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+	    	
+					if (p != player.getName()) {
+						player.sendMessage(ChatColor.RED + "You don't have permission to load this plot!");
+							return;
+						}
+
+						if (!NavyCraft.playerSHIP3Schematics.containsKey(p)) {
+							NavyCraft.playerSHIP3Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerSHIP3Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadSHIP4Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "SHIP4";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+	    	
+					if (p != player.getName()) {
+						player.sendMessage(ChatColor.RED + "You don't have permission to load this plot!");
+							return;
+						}
+
+						if (!NavyCraft.playerSHIP4Schematics.containsKey(p)) {
+							NavyCraft.playerSHIP4Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerSHIP4Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
 						}
 
 					}
 
-	public static void loadSchematics(String player) {
+	public static void loadSHIP5Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "SHIP5";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+	    	
+					if (p != player.getName()) {
+						player.sendMessage(ChatColor.RED + "You don't have permission to load this plot!");
+							return;
+						}
+
+						if (!NavyCraft.playerSHIP5Schematics.containsKey(p)) {
+							NavyCraft.playerSHIP5Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerSHIP5Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadHANGAR1Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "HANGAR1";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+	    	
+					if (p != player.getName()) {
+						player.sendMessage(ChatColor.RED + "You don't have permission to load this plot!");
+							return;
+						}
+
+						if (!NavyCraft.playerHANGAR1Schematics.containsKey(p)) {
+							NavyCraft.playerHANGAR1Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerHANGAR1Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadHANGAR2Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "HANGAR2";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+
+						if (!NavyCraft.playerHANGAR2Schematics.containsKey(p)) {
+							NavyCraft.playerHANGAR2Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerHANGAR2Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadTANK1Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "TANK1";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+
+						if (!NavyCraft.playerTANK1Schematics.containsKey(p)) {
+							NavyCraft.playerTANK1Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerTANK1Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	public static void loadTANK2Schematics(Player player) {
+		int maxId = maxIdS(player);
+		String lotStr = "TANK2";
+
+	    String files = "/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId;
+	    File file = new File ("/schematics/Shipyard/" + player + "-" + lotStr + "-" + maxId);
+	    	if (file == null) 
+	    	{
+	    	System.out.println("Either dir does not exist or is not a directory");
+	    	}
+	    	String[] parts = files.split("-");
+	    	String p = parts[0]; // player
+	    	String ls = parts[1]; // lotstr
+	    	String mxid = parts[2]; // maxId
+
+						if (!NavyCraft.playerTANK2Schematics.containsKey(p)) {
+							NavyCraft.playerTANK2Schematics.put(p, new ArrayList<File>());
+							NavyCraft.playerTANK2Schematics.get(p).add(file);
+							NavyCraft.playerSchematicIndex.put(file, maxId);
+						}
+
+					}
+	
+	public static void loadSchematics(Player player) {
 		for (String s : NavyCraft.playerSHIP1Schematics.keySet()) {
 			NavyCraft.playerSHIP1Schematics.get(s).clear();
 		}
@@ -2354,37 +2558,15 @@ public class NavyCraft_BlockListener implements Listener {
 		for (String s : NavyCraft.playerSHIP1Schematics.keySet()) {
 			NavyCraft.playerSHIP1Schematics.get(s).clear();
 		}
-		NavyCraft.playerMAP1Schematics.clear();
-		for (String s : NavyCraft.playerMAP2Schematics.keySet()) {
-			NavyCraft.playerMAP2Schematics.get(s).clear();
-		}
-		NavyCraft.playerMAP2Schematics.clear();
-		for (String s : NavyCraft.playerMAP3Schematics.keySet()) {
-			NavyCraft.playerMAP3Schematics.get(s).clear();
-		}
-		NavyCraft.playerMAP3Schematics.clear();
-		for (String s : NavyCraft.playerMAP4Schematics.keySet()) {
-			NavyCraft.playerMAP4Schematics.get(s).clear();
-		}
-		NavyCraft.playerMAP4Schematics.clear();
-		for (String s : NavyCraft.playerMAP5Schematics.keySet()) {
-			NavyCraft.playerMAP5Schematics.get(s).clear();
-		}
-		NavyCraft.playerMAP5Schematics.clear();
 		loadSHIP1Schematics(player);
-		loadSHIP2Schematics();
-		loadSHIP3Schematics();
-		loadSHIP4Schematics();
-		loadSHIP5Schematics();
-		loadHANGAR1Schematics();
-		loadHANGAR2Schematics();
-		loadTANK1Schematics();
-		loadTANK2Schematics();
-		loadMAP1Schematics();
-		loadMAP2Schematics();
-		loadMAP3Schematics();
-		loadMAP4Schematics();
-		loadMAP5Schematics();
+		loadSHIP2Schematics(player);
+		loadSHIP3Schematics(player);
+		loadSHIP4Schematics(player);
+		loadSHIP5Schematics(player);
+		loadHANGAR1Schematics(player);
+		loadHANGAR2Schematics(player);
+		loadTANK1Schematics(player);
+		loadTANK2Schematics(player);
 	}
 	
 	public static void saveSchematic(Player player, String lotStr) {
@@ -2621,7 +2803,7 @@ public class NavyCraft_BlockListener implements Listener {
 		return foundHighest;
 	}
 	
-	public static String maxId2(Player player) {
+	public static int maxIdS(Player player) {
 		int foundHighest = -1;
 		if (NavyCraft.playerSHIP1Schematics.containsKey(player.getName())) {
 			for (File s : NavyCraft.playerSHIP1Schematics.get(player.getName())) {
@@ -2721,8 +2903,7 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-		String foundHighest2 = String.valueOf(foundHighest);
-		return foundHighest2;
+		return foundHighest;
 	}
 
 
