@@ -1563,8 +1563,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.GREEN + "Plot Rewarded.");
 
 						} else if (split[1].equalsIgnoreCase("list")) {
-							NavyCraft_BlockListener.loadSchematics(player);
-							NavyCraft_BlockListener.loadShipyard();
+							NavyCraft_FileListener.loadSchematics(player);
 							NavyCraft_BlockListener.loadRewards(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Schematics:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -2009,7 +2008,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("player")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadSchematics(player);
+								NavyCraft_FileListener.loadSchematics(player);
 								NavyCraft_BlockListener.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
@@ -2229,7 +2228,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("plist")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadSchematics(player);
+								NavyCraft_FileListener.loadSchematics(player);
 								NavyCraft_BlockListener.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
@@ -2373,7 +2372,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 					} else {
-						NavyCraft_BlockListener.loadSchematics(player);
+						NavyCraft_FileListener.loadSchematics(player);
 						NavyCraft_BlockListener.loadRewards(player.getName());
 						String p = player.getName();
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
