@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -68,18 +66,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.schematic.SchematicFormat;
-import com.sk89q.worldedit.session.ClipboardHolder;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 import ru.tehkode.permissions.exceptions.RankingException;
@@ -240,7 +226,6 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 
 					if (tpId > -1) {
-						NavyCraft_BlockListener.loadShipyard();
 
 						Sign foundSign = null;
 						foundSign = NavyCraft_BlockListener.findSign(ownerName, tpId);
@@ -461,19 +446,45 @@ public class NavyCraft_BlockListener implements Listener {
 					String lotStr = sign2.getLine(3).trim().toLowerCase();
 					lotStr = lotStr.replaceAll(ChatColor.BLUE.toString(), "");
 			
-					if (lotStr.equalsIgnoreCase("Universal")) {
+					if (lotStr.equalsIgnoreCase("SHIP1")) {
 						lotType = 1;
+					} else if (lotStr.equalsIgnoreCase("SHIP2")) {
+						lotType = 2;
+					} else if (lotStr.equalsIgnoreCase("SHIP3")) {
+						lotType = 3;
+					} else if (lotStr.equalsIgnoreCase("SHIP4")) {
+						lotType = 4;
+					} else if (lotStr.equalsIgnoreCase("SHIP5")) {
+						lotType = 5;
+					} else if (lotStr.equalsIgnoreCase("HANGAR1")) {
+						lotType = 6;
+					} else if (lotStr.equalsIgnoreCase("HANGAR2")) {
+						lotType = 7;
+					} else if (lotStr.equalsIgnoreCase("TANK1")) {
+						lotType = 8;
+					} else if (lotStr.equalsIgnoreCase("TANK2")) {
+						lotType = 9;
+					} else if (lotStr.equalsIgnoreCase("MAP1")) {
+						lotType = 10;
+					} else if (lotStr.equalsIgnoreCase("MAP2")) {
+						lotType = 11;
+					} else if (lotStr.equalsIgnoreCase("MAP3")) {
+						lotType = 12;
+					} else if (lotStr.equalsIgnoreCase("MAP4")) {
+						lotType = 13;
+					} else if (lotStr.equalsIgnoreCase("MAP5")) {
+						lotType = 14;
 					} else {
 						player.sendMessage(ChatColor.DARK_RED + "Sign Error: Lot Type");
 						return;
 					}
-			
-					loadShipyard();
+
 					loadRewards(player.getName());
 			
 					Location loc;
 					int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
 					if (lotType == 1) {
+						loadSHIP1Yard();
 						loc = block.getRelative(bf, 28).getLocation();
 						sizeX = 13;
 						sizeY = 28;
@@ -485,16 +496,342 @@ public class NavyCraft_BlockListener implements Listener {
 						offsetY = -7;
 						offsetZ = -29;
 			
-						int numUnis = 0;
-						int numRewUnis = 1;
-						if (NavyCraft.playerUniversalSigns.containsKey(player.getName())) {
-							numUnis = NavyCraft.playerUniversalSigns.get(player.getName()).size();
+						int numSHIP1s = 0;
+						int numRewSHIP1s = 1;
+						if (NavyCraft.playerSHIP1Signs.containsKey(player.getName())) {
+							numSHIP1s = NavyCraft.playerSHIP1Signs.get(player.getName()).size();
 						}
 						if (NavyCraft.playerSHIP1Rewards.containsKey(player.getName())) {
-							numRewUnis = NavyCraft.playerSHIP1Rewards.get(player.getName());
+							numRewSHIP1s = NavyCraft.playerSHIP1Rewards.get(player.getName());
 						}
-						if (numUnis >= numRewUnis) {
-							player.sendMessage("Please unclaim your claimed universal plot to claim another.");
+						if (numSHIP1s >= numRewSHIP1s) {
+							player.sendMessage("You have no SHIP1 reward plots available.");
+							return;
+						}
+			
+					} else if (lotType == 2) {
+						loadSHIP2Yard();
+						loc = block.getRelative(bf, 43).getLocation();
+						sizeX = 9;
+						sizeY = 28;
+						sizeZ = 43;
+						originX = 0;
+						originY = -8;
+						originZ = 0;
+						offsetX = 0;
+						offsetY = -7;
+						offsetZ = -44;
+			
+						int numSHIP2s = 0;
+						int numRewSHIP2s = 0;
+						if (NavyCraft.playerSHIP2Signs.containsKey(player.getName())) {
+							numSHIP2s = NavyCraft.playerSHIP2Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerSHIP2Rewards.containsKey(player.getName())) {
+							numRewSHIP2s = NavyCraft.playerSHIP2Rewards.get(player.getName());
+						}
+						if (numSHIP2s >= numRewSHIP2s) {
+							player.sendMessage("You have no SHIP2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 3) {
+						loadSHIP3Yard();
+						loc = block.getRelative(bf, 70).getLocation();
+						sizeX = 11;
+						sizeY = 28;
+						sizeZ = 70;
+						originX = 0;
+						originY = -8;
+						originZ = 0;
+						offsetX = 0;
+						offsetY = -7;
+						offsetZ = -71;
+			
+						int numSHIP3s = 0;
+						int numRewSHIP3s = 0;
+						if (NavyCraft.playerSHIP3Signs.containsKey(player.getName())) {
+							numSHIP3s = NavyCraft.playerSHIP3Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerSHIP3Rewards.containsKey(player.getName())) {
+							numRewSHIP3s = NavyCraft.playerSHIP3Rewards.get(player.getName());
+						}
+						if (numSHIP3s >= numRewSHIP3s) {
+							player.sendMessage("You have no SHIP3 reward plots available.");
+							return;
+						}
+					} else if (lotType == 4) {
+						loadSHIP4Yard();
+						loc = block.getRelative(bf, 55).getLocation();
+						sizeX = 17;
+						sizeY = 28;
+						sizeZ = 55;
+						originX = 0;
+						originY = -8;
+						originZ = 0;
+						offsetX = 0;
+						offsetY = -7;
+						offsetZ = -56;
+			
+						int numSHIP4s = 0;
+						int numRewSHIP4s = 0;
+						if (NavyCraft.playerSHIP4Signs.containsKey(player.getName())) {
+							numSHIP4s = NavyCraft.playerSHIP4Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerSHIP4Rewards.containsKey(player.getName())) {
+							numRewSHIP4s = NavyCraft.playerSHIP4Rewards.get(player.getName());
+						}
+						if (numSHIP4s >= numRewSHIP4s) {
+							player.sendMessage("You have no SHIP4 reward plots available.");
+							return;
+						}
+					} else if (lotType == 5) {
+						loadSHIP5Yard();
+						loc = block.getRelative(bf, 98).getLocation();
+						sizeX = 17;
+						sizeY = 28;
+						sizeZ = 98;
+						originX = 0;
+						originY = -8;
+						originZ = 0;
+						offsetX = 0;
+						offsetY = -7;
+						offsetZ = -99;
+			
+						int numSHIP5s = 0;
+						int numRewSHIP5s = 0;
+						if (NavyCraft.playerSHIP5Signs.containsKey(player.getName())) {
+							numSHIP5s = NavyCraft.playerSHIP5Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerSHIP5Rewards.containsKey(player.getName())) {
+							numRewSHIP5s = NavyCraft.playerSHIP5Rewards.get(player.getName());
+						}
+						if (numSHIP5s >= numRewSHIP5s) {
+							player.sendMessage("You have no SHIP5 reward plots available.");
+							return;
+						}
+					} else if (lotType == 6) {
+						loadHANGAR1Yard();
+						loc = block.getRelative(bf, 17).getLocation();
+						sizeX = 17;
+						sizeY = 7;
+						sizeZ = 19;
+						originX = 0;
+						originY = -1;
+						originZ = -18;
+						offsetX = -17;
+						offsetY = 0;
+						offsetZ = -20;
+			
+						int numH1s = 0;
+						int numRewH1s = 0;
+						if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
+							numH1s = NavyCraft.playerHANGAR1Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerHANGAR1Rewards.containsKey(player.getName())) {
+							numRewH1s = NavyCraft.playerHANGAR1Rewards.get(player.getName());
+						}
+						if (numH1s >= numRewH1s) {
+							player.sendMessage("You have no HANGAR1 reward plots available.");
+							return;
+						}
+					} else if (lotType == 7) {
+						loadHANGAR2Yard();
+						loc = block.getRelative(bf, 25).getLocation();
+						sizeX = 25;
+						sizeY = 7;
+						sizeZ = 32;
+						originX = 0;
+						originY = -1;
+						originZ = -31;
+						offsetX = -25;
+						offsetY = 0;
+						offsetZ = -33;
+			
+						int numH2s = 0;
+						int numRewH2s = 0;
+						if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
+							numH2s = NavyCraft.playerHANGAR2Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerHANGAR2Rewards.containsKey(player.getName())) {
+							numRewH2s = NavyCraft.playerHANGAR2Rewards.get(player.getName());
+						}
+						if (numH2s >= numRewH2s) {
+							player.sendMessage("You have no HANGAR2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 8) {
+						loadTANK1Yard();
+						loc = block.getRelative(bf, 12).getLocation();
+						sizeX = 12;
+						sizeY = 7;
+						sizeZ = 19;
+						originX = 0;
+						originY = -1;
+						originZ = -18;
+						offsetX = -12;
+						offsetY = 0;
+						offsetZ = -20;
+			
+						int numT1s = 0;
+						int numRewT1s = 0;
+						if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
+							numT1s = NavyCraft.playerTANK1Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerTANK1Rewards.containsKey(player.getName())) {
+							numRewT1s = NavyCraft.playerTANK1Rewards.get(player.getName());
+						}
+						if (numT1s >= numRewT1s) {
+							player.sendMessage("You have no TANK1 reward plots available.");
+							return;
+						}
+					} else if (lotType == 9) {
+						loadTANK2Yard();
+						loc = block.getRelative(bf, 27).getLocation();
+						sizeX = 27;
+						sizeY = 9;
+						sizeZ = 33;
+						originX = 0;
+						originY = -1;
+						originZ = -32;
+						offsetX = -27;
+						offsetY = 0;
+						offsetZ = -34;
+			
+						int numT2s = 0;
+						int numRewT2s = 0;
+						if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
+							numT2s = NavyCraft.playerTANK2Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerTANK2Rewards.containsKey(player.getName())) {
+							numRewT2s = NavyCraft.playerTANK2Rewards.get(player.getName());
+						}
+						if (numT2s >= numRewT2s) {
+							player.sendMessage("You have no TANK2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 10) {
+						loadMAP1Yard();
+						loc = block.getRelative(bf, 100).getLocation();
+						sizeX = 100;
+						sizeY = 255;
+						sizeZ = 100;
+						originX = 0;
+						originY = -63;
+						originZ = -99;
+						offsetX = -100;
+						offsetY = 0;
+						offsetZ = -101;
+			
+						int numM1s = 0;
+						int numRewM1s = 0;
+						if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
+							numM1s = NavyCraft.playerMAP1Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP1Rewards.containsKey(player.getName())) {
+							numRewM1s = NavyCraft.playerMAP1Rewards.get(player.getName());
+						}
+						if (numM1s >= numRewM1s) {
+							player.sendMessage("You have no MAP1 reward plots available.");
+							return;
+						}
+					} else if (lotType == 11) {
+						loadMAP2Yard();
+						loc = block.getRelative(bf, 150).getLocation();
+						sizeX = 150;
+						sizeY = 255;
+						sizeZ = 150;
+						originX = 0;
+						originY = -63;
+						originZ = -149;
+						offsetX = -150;
+						offsetY = 0;
+						offsetZ = -151;
+			
+						int numM2s = 0;
+						int numRewM2s = 0;
+						if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
+							numM2s = NavyCraft.playerMAP2Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP2Rewards.containsKey(player.getName())) {
+							numRewM2s = NavyCraft.playerMAP2Rewards.get(player.getName());
+						}
+						if (numM2s >= numRewM2s) {
+							player.sendMessage("You have no MAP2 reward plots available.");
+							return;
+						}
+					} else if (lotType == 12) {
+						loadMAP3Yard();
+						loc = block.getRelative(bf, 200).getLocation();
+						sizeX = 200;
+						sizeY = 255;
+						sizeZ = 200;
+						originX = 0;
+						originY = -63;
+						originZ = -199;
+						offsetX = -200;
+						offsetY = 0;
+						offsetZ = -201;
+			
+						int numM3s = 0;
+						int numRewM3s = 0;
+						if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
+							numM3s = NavyCraft.playerMAP3Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP3Rewards.containsKey(player.getName())) {
+							numRewM3s = NavyCraft.playerMAP3Rewards.get(player.getName());
+						}
+						if (numM3s >= numRewM3s) {
+							player.sendMessage("You have no MAP3 reward plots available.");
+							return;
+						}
+					} else if (lotType == 13) {
+						loadMAP4Yard();
+						loc = block.getRelative(bf, 250).getLocation();
+						sizeX = 250;
+						sizeY = 255;
+						sizeZ = 250;
+						originX = 0;
+						originY = -63;
+						originZ = -249;
+						offsetX = -250;
+						offsetY = 0;
+						offsetZ = -251;
+			
+						int numM4s = 0;
+						int numRewM4s = 0;
+						if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
+							numM4s = NavyCraft.playerMAP4Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP4Rewards.containsKey(player.getName())) {
+							numRewM4s = NavyCraft.playerMAP4Rewards.get(player.getName());
+						}
+						if (numM4s >= numRewM4s) {
+							player.sendMessage("You have no MAP4 reward plots available.");
+							return;
+						}
+					} else if (lotType == 14) {
+						loadMAP5Yard();
+						loc = block.getRelative(bf, 500).getLocation();
+						sizeX = 500;
+						sizeY = 255;
+						sizeZ = 500;
+						originX = 0;
+						originY = -63;
+						originZ = -499;
+						offsetX = -500;
+						offsetY = 0;
+						offsetZ = -501;
+			
+						int numM5s = 0;
+						int numRewM5s = 0;
+						if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
+							numM5s = NavyCraft.playerMAP5Signs.get(player.getName()).size();
+						}
+						if (NavyCraft.playerMAP5Rewards.containsKey(player.getName())) {
+							numRewM5s = NavyCraft.playerMAP5Rewards.get(player.getName());
+						}
+						if (numM5s >= numRewM5s) {
+							player.sendMessage("You have no MAP5 reward plots available.");
 							return;
 						}
 					} else
@@ -510,6 +847,8 @@ public class NavyCraft_BlockListener implements Listener {
 					wgp = (WorldGuardPlugin)plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 					if (wgp != null) {
 						RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
+			
+						// ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
 			
 						String regionName = "--" + player.getName() + "-" + (maxId(player) + 1);
 			
@@ -543,7 +882,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.update();
 			
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
-			
+						loadShipyard();
 					} else {
 						player.sendMessage("World Guard error");
 					}
@@ -2202,7 +2541,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 
-	public static void loadUniversalSigns() {
+	public static void loadSHIP1Signs() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1567; x+=14 )
 		// for( int x=16; x<=1286; x+=14 )
@@ -2247,12 +2586,12 @@ public class NavyCraft_BlockListener implements Listener {
 							continue;
 						}
 
-						if (!NavyCraft.playerUniversalSigns.containsKey(playerName)) {
-							NavyCraft.playerUniversalSigns.put(playerName, new ArrayList<Sign>());
-							NavyCraft.playerUniversalSigns.get(playerName).add(selectSign);
+						if (!NavyCraft.playerSHIP1Signs.containsKey(playerName)) {
+							NavyCraft.playerSHIP1Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerSHIP1Signs.get(playerName).add(selectSign);
 							NavyCraft.playerSignIndex.put(selectSign, idNum);
 						} else {
-							NavyCraft.playerUniversalSigns.get(playerName).add(selectSign);
+							NavyCraft.playerSHIP1Signs.get(playerName).add(selectSign);
 						NavyCraft.playerSignIndex.put(selectSign, idNum);
 						}
 
@@ -2262,7 +2601,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 
-	public static Block findUniversalOpen() {
+	public static Block findSHIP1Open() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1567; x+=14 )
 		// for( int x=16; x<=1286; x+=14 )
@@ -2288,13 +2627,1280 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 		return null;
 	}
-	
 
-	public static void loadShipyard() {
-		for (String s : NavyCraft.playerUniversalSigns.keySet()) {
-			NavyCraft.playerUniversalSigns.get(s).clear();
+	public static void loadSHIP2Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=601; x<=1421; x+=10 )
+		// for( int x=16; x<=1296; x+=10 )
+		int startX = 601;
+		int endX = 1421;
+		int widthX = 10;
+		int startZ = -356;
+		int endZ = -148;
+		int widthZ = 52;
+		for (int x = startX; x <= endX; x += widthX) {
+
+			// for( int z=-356; z<=-148; z+=52 )
+			// for( int z=33; z<=241; z+=52 )
+			for (int z = startZ; z <= endZ; z += widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0);
+					String sign2Line2 = selectSign2.getLine(2);
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerSHIP2Signs.containsKey(playerName)) {
+							NavyCraft.playerSHIP2Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerSHIP2Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerSHIP2Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
 		}
-		loadUniversalSigns();
+	}
+
+	public static Block findSHIP2Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=601; x<=1421; x+=10 )
+		// for( int x=16; x<=1296; x+=10 )
+		int startX = 601;
+		int endX = 1421;
+		int widthX = 10;
+		int startZ = -356;
+		int endZ = -148;
+		int widthZ = 52;
+		for (int x = startX; x <= endX; x += widthX) {
+
+			// for( int z=-356; z<=-148; z+=52 )
+			// for( int z=33; z<=241; z+=52 )
+			for (int z = startZ; z <= endZ; z += widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadSHIP3Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=549; x>=21; x-=12 )
+		// for( int x=-35; x>=-1091; x-=12 )
+		int startX = 549;
+		int endX = 21;
+		int widthX = 12;
+		int startZ = -329;
+		int endZ = -92;
+		int widthZ = 79;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-329; z<=-92; z+=79 )
+			// for( int z=60; z<=297; z+=79 )
+			for (int z = startZ; z <= endZ; z += widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0);
+					String sign2Line2 = selectSign2.getLine(2);
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerSHIP3Signs.containsKey(playerName)) {
+							NavyCraft.playerSHIP3Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerSHIP3Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerSHIP3Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	public static Block findSHIP3Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=549; x>=21; x-=12 )
+		// for( int x=-35; x>=-1091; x-=12 )
+		int startX = 549;
+		int endX = 21;
+		int widthX = 12;
+		int startZ = -329;
+		int endZ = -92;
+		int widthZ = 79;
+		for (int x = startX; x >= endX; x -= widthX) {
+			// for( int z=-329; z<=-92; z+=79 )
+			// for( int z=60; z<=297; z+=79 )
+			for (int z = startZ; z <= endZ; z += widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadSHIP4Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=543; x>=21; x-=18 )
+		// for( int x=-41; x>=-1085; x-=18 )
+		int startX = 543;
+		int endX = 21;
+		int widthX = 18;
+		int startZ = -408;
+		int endZ = -600;
+		int widthZ = 64;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-408; z>=-600; z-=64 )
+			// for( int z=-18; z>=-210; z-=64 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerSHIP4Signs.containsKey(playerName)) {
+							NavyCraft.playerSHIP4Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerSHIP4Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerSHIP4Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	public static Block findSHIP4Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=543; x>=21; x-=18 )
+		// for( int x=-41; x>=-1085; x-=18 )
+		int startX = 543;
+		int endX = 21;
+		int widthX = 18;
+		int startZ = -408;
+		int endZ = -600;
+		int widthZ = 64;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-408; z>=-600; z-=64 )
+			// for( int z=-18; z>=-210; z-=64 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadSHIP5Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=1404; x>=656; x-=22 )
+		// for( int x=1270; x>=16; x-=22 )
+		int startX = 656;
+		int endX = 1426;
+		int widthX = 18;
+		int startZ = 142;
+		int endZ = 37;
+		int widthZ = 105;
+		for (int x = startX; x <= endX; x += widthX) {
+
+			// for( int z=37; z<=142; z+=105 )
+			// for( int z=349; z<=454; z+=105 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerSHIP5Signs.containsKey(playerName)) {
+							NavyCraft.playerSHIP5Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerSHIP5Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerSHIP5Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	public static Block findSHIP5Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=1404; x>=656; x-=22 )
+		// for( int x=1270; x>=16; x-=22 )
+		int startX = 656;
+		int endX = 1426;
+		int widthX = 18;
+		int startZ = 142;
+		int endZ = 37;
+		int widthZ = 105;
+		for (int x = startX; x <= endX; x += widthX) {
+			// for( int z=37; z<=142; z+=105 )
+			// for( int z=349; z<=454; z+=105 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadHANGAR1Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = 553;
+		int endX = -137;
+		int widthX = 23;
+		int startZ = -766;
+		int endZ = -1191;
+		int widthZ = 25;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerHANGAR1Signs.containsKey(playerName)) {
+							NavyCraft.playerHANGAR1Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerHANGAR1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerHANGAR1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	public static Block findHANGAR1Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = 553;
+		int endX = -137;
+		int widthX = 23;
+		int startZ = -766;
+		int endZ = -1191;
+		int widthZ = 25;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadHANGAR2Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = -99;
+		int endX = -1177;
+		int widthX = 49;
+		int startZ = 67;
+		int endZ = -117;
+		int widthZ = 46;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerHANGAR2Signs.containsKey(playerName)) {
+							NavyCraft.playerHANGAR2Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerHANGAR2Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerHANGAR2Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	public static Block findHANGAR2Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = -99;
+		int endX = -1177;
+		int widthX = 49;
+		int startZ = 67;
+		int endZ = -117;
+		int widthZ = 46;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+
+	public static void loadTANK1Signs() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=602; x<=908; x+=18 )
+		// for( int x=22; x<=832; x+=18 )
+		int startX = 602;
+		int endX = 926;
+		int widthX = 18;
+		int startZ = -953;
+		int endZ = -1385;
+		int widthZ = 24;
+		for (int x = startX; x <= endX; x += widthX) {
+		for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					Sign selectSign2 = (Sign) selectSignBlock2.getState();
+					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+					if (signLine0.equalsIgnoreCase("*select*")) {
+						String playerName = selectSign.getLine(1);
+						String playerName2 = selectSign.getLine(2);
+
+						if ((playerName2 != null) && !playerName2.isEmpty()) {
+							playerName = playerName + playerName2;
+						}
+
+						if (playerName == null) {
+							continue;
+						}
+
+						int idNum = -1;
+						try {
+							idNum = Integer.parseInt(sign2Line2);
+						} catch (NumberFormatException nfe) {
+							continue;
+						}
+						if (idNum == -1) {
+							continue;
+						}
+
+						if (!NavyCraft.playerTANK1Signs.containsKey(playerName)) {
+							NavyCraft.playerTANK1Signs.put(playerName, new ArrayList<Sign>());
+							NavyCraft.playerTANK1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						} else {
+							NavyCraft.playerTANK1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+
+	public static Block findTANK1Open() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=602; x<=908; x+=18 )
+		// for( int x=22; x<=832; x+=18 )
+		int startX = 602;
+		int endX = 926;
+		int widthX = 18;
+		int startZ = -953;
+		int endZ = -1385;
+		int widthZ = 24;
+		for (int x = startX; x <= endX; x += widthX) {
+		for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+				}
+			}
+		}
+		return null;
+	}
+		public static void loadTANK2Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=602; x<=908; x+=18 )
+			// for( int x=22; x<=832; x+=18 )
+			int startX = 960;
+			int endX = 1436;
+			int widthX = 34;
+			int startZ = -920;
+			int endZ = -1361;
+			int widthZ = 44;
+			for (int x = startX; x <= endX; x += widthX) {
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+						String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerTANK2Signs.containsKey(playerName)) {
+								NavyCraft.playerTANK2Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerTANK2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerTANK2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findTANK2Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=602; x<=908; x+=18 )
+			// for( int x=22; x<=832; x+=18 )
+			int startX = 960;
+			int endX = 1436;
+			int widthX = 34;
+			int startZ = -920;
+			int endZ = -1361;
+			int widthZ = 44;
+			for (int x = startX; x <= endX; x += widthX) {
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+		return null;
+	}
+		
+		public static void loadMAP1Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1567; x+=14 )
+			// for( int x=16; x<=1286; x+=14 )
+			int startX = 601;
+			int endX = 1567;
+			int widthX = 14;
+			int startZ = -408;
+			int endZ = -852;
+			int widthZ = 37;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-408; z>=-852; z-=37 )
+				// for( int z=-18; z>=-462; z-=37 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP1Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP1Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP1Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP1Signs.get(playerName).add(selectSign);
+							NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP1Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1567; x+=14 )
+			// for( int x=16; x<=1286; x+=14 )
+			int startX = 601;
+			int endX = 1567;
+			int widthX = 14;
+			int startZ = -408;
+			int endZ = -852;
+			int widthZ = 37;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-408; z>=-852; z-=37 )
+				// for( int z=-18; z>=-462; z-=37 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP2Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1421; x+=10 )
+			// for( int x=16; x<=1296; x+=10 )
+			int startX = 601;
+			int endX = 1421;
+			int widthX = 10;
+			int startZ = -356;
+			int endZ = -148;
+			int widthZ = 52;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-356; z<=-148; z+=52 )
+				// for( int z=33; z<=241; z+=52 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP2Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP2Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP2Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP2Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=601; x<=1421; x+=10 )
+			// for( int x=16; x<=1296; x+=10 )
+			int startX = 601;
+			int endX = 1421;
+			int widthX = 10;
+			int startZ = -356;
+			int endZ = -148;
+			int widthZ = 52;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=-356; z<=-148; z+=52 )
+				// for( int z=33; z<=241; z+=52 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP3Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=549; x>=21; x-=12 )
+			// for( int x=-35; x>=-1091; x-=12 )
+			int startX = 549;
+			int endX = 21;
+			int widthX = 12;
+			int startZ = -329;
+			int endZ = -92;
+			int widthZ = 79;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-329; z<=-92; z+=79 )
+				// for( int z=60; z<=297; z+=79 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0);
+						String sign2Line2 = selectSign2.getLine(2);
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP3Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP3Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP3Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP3Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP3Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=549; x>=21; x-=12 )
+			// for( int x=-35; x>=-1091; x-=12 )
+			int startX = 549;
+			int endX = 21;
+			int widthX = 12;
+			int startZ = -329;
+			int endZ = -92;
+			int widthZ = 79;
+			for (int x = startX; x >= endX; x -= widthX) {
+				// for( int z=-329; z<=-92; z+=79 )
+				// for( int z=60; z<=297; z+=79 )
+				for (int z = startZ; z <= endZ; z += widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP4Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=543; x>=21; x-=18 )
+			// for( int x=-41; x>=-1085; x-=18 )
+			int startX = 543;
+			int endX = 21;
+			int widthX = 18;
+			int startZ = -408;
+			int endZ = -600;
+			int widthZ = 64;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-408; z>=-600; z-=64 )
+				// for( int z=-18; z>=-210; z-=64 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+						String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP4Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP4Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP4Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP4Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP4Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=543; x>=21; x-=18 )
+			// for( int x=-41; x>=-1085; x-=18 )
+			int startX = 543;
+			int endX = 21;
+			int widthX = 18;
+			int startZ = -408;
+			int endZ = -600;
+			int widthZ = 64;
+			for (int x = startX; x >= endX; x -= widthX) {
+
+				// for( int z=-408; z>=-600; z-=64 )
+				// for( int z=-18; z>=-210; z-=64 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+		public static void loadMAP5Signs() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=1404; x>=656; x-=22 )
+			// for( int x=1270; x>=16; x-=22 )
+			int startX = 656;
+			int endX = 1426;
+			int widthX = 18;
+			int startZ = 142;
+			int endZ = 37;
+			int widthZ = 105;
+			for (int x = startX; x <= endX; x += widthX) {
+
+				// for( int z=37; z<=142; z+=105 )
+				// for( int z=349; z<=454; z+=105 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						Sign selectSign2 = (Sign) selectSignBlock2.getState();
+						String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+						String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+
+						if (signLine0.equalsIgnoreCase("*select*")) {
+							String playerName = selectSign.getLine(1);
+							String playerName2 = selectSign.getLine(2);
+
+							if ((playerName2 != null) && !playerName2.isEmpty()) {
+								playerName = playerName + playerName2;
+							}
+
+							if (playerName == null) {
+								continue;
+							}
+
+							int idNum = -1;
+							try {
+								idNum = Integer.parseInt(sign2Line2);
+							} catch (NumberFormatException nfe) {
+								continue;
+							}
+							if (idNum == -1) {
+								continue;
+							}
+
+							if (!NavyCraft.playerMAP5Signs.containsKey(playerName)) {
+								NavyCraft.playerMAP5Signs.put(playerName, new ArrayList<Sign>());
+								NavyCraft.playerMAP5Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							} else {
+								NavyCraft.playerMAP5Signs.get(playerName).add(selectSign);
+								NavyCraft.playerSignIndex.put(selectSign, idNum);
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		public static Block findMAP5Open() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=1404; x>=656; x-=22 )
+			// for( int x=1270; x>=16; x-=22 )
+			int startX = 656;
+			int endX = 1426;
+			int widthX = 18;
+			int startZ = 142;
+			int endZ = 37;
+			int widthZ = 105;
+			for (int x = startX; x <= endX; x += widthX) {
+				// for( int z=37; z<=142; z+=105 )
+				// for( int z=349; z<=454; z+=105 )
+				for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 64, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) { return selectSignBlock; }
+					}
+				}
+			}
+			return null;
+		}
+
+	public static void loadSHIP1Yard() {
+		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
+			NavyCraft.playerSHIP1Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP1Signs.clear();
+	}
+	public static void loadSHIP2Yard() {
+		for (String s : NavyCraft.playerSHIP2Signs.keySet()) {
+			NavyCraft.playerSHIP2Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP2Signs.clear();
+	}
+	public static void loadSHIP3Yard() {
+		for (String s : NavyCraft.playerSHIP3Signs.keySet()) {
+			NavyCraft.playerSHIP3Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP3Signs.clear();
+	}
+	public static void loadSHIP4Yard() {
+		for (String s : NavyCraft.playerSHIP4Signs.keySet()) {
+			NavyCraft.playerSHIP4Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP4Signs.clear();
+	}
+	public static void loadSHIP5Yard() {
+		for (String s : NavyCraft.playerSHIP5Signs.keySet()) {
+			NavyCraft.playerSHIP5Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP5Signs.clear();
+	}
+	public static void loadHANGAR1Yard() {
+		for (String s : NavyCraft.playerHANGAR1Signs.keySet()) {
+			NavyCraft.playerHANGAR1Signs.get(s).clear();
+		}
+		NavyCraft.playerHANGAR1Signs.clear();
+	}
+	public static void loadHANGAR2Yard() {
+		for (String s : NavyCraft.playerHANGAR2Signs.keySet()) {
+			NavyCraft.playerHANGAR2Signs.get(s).clear();
+		}
+		NavyCraft.playerHANGAR2Signs.clear();
+	}
+	public static void loadTANK1Yard() {
+		for (String s : NavyCraft.playerTANK1Signs.keySet()) {
+			NavyCraft.playerTANK1Signs.get(s).clear();
+		}
+		NavyCraft.playerTANK1Signs.clear();
+	}
+	public static void loadTANK2Yard() {
+		for (String s : NavyCraft.playerTANK2Signs.keySet()) {
+			NavyCraft.playerTANK2Signs.get(s).clear();
+		}
+		NavyCraft.playerTANK2Signs.clear();
+	}
+	public static void loadMAP1Yard() {
+		for (String s : NavyCraft.playerMAP1Signs.keySet()) {
+			NavyCraft.playerMAP1Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP1Signs.clear();
+	}
+	public static void loadMAP2Yard() {
+		for (String s : NavyCraft.playerMAP2Signs.keySet()) {
+			NavyCraft.playerMAP2Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP2Signs.clear();
+	}
+	public static void loadMAP3Yard() {
+		for (String s : NavyCraft.playerMAP3Signs.keySet()) {
+			NavyCraft.playerMAP3Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP3Signs.clear();
+	}
+	public static void loadMAP4Yard() {
+		for (String s : NavyCraft.playerMAP4Signs.keySet()) {
+			NavyCraft.playerMAP4Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP4Signs.clear();
+	}
+	public static void loadMAP5Yard() {
+		for (String s : NavyCraft.playerMAP5Signs.keySet()) {
+			NavyCraft.playerMAP5Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP5Signs.clear();
+	}
+		
+	public static void loadShipyard() {
+		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
+			NavyCraft.playerSHIP1Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP1Signs.clear();
+		for (String s : NavyCraft.playerSHIP2Signs.keySet()) {
+			NavyCraft.playerSHIP2Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP2Signs.clear();
+		for (String s : NavyCraft.playerSHIP3Signs.keySet()) {
+			NavyCraft.playerSHIP3Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP3Signs.clear();
+		for (String s : NavyCraft.playerSHIP4Signs.keySet()) {
+			NavyCraft.playerSHIP4Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP4Signs.clear();
+		for (String s : NavyCraft.playerSHIP5Signs.keySet()) {
+			NavyCraft.playerSHIP5Signs.get(s).clear();
+		}
+		NavyCraft.playerSHIP5Signs.clear();
+		for (String s : NavyCraft.playerHANGAR1Signs.keySet()) {
+			NavyCraft.playerHANGAR1Signs.get(s).clear();
+		}
+		NavyCraft.playerHANGAR1Signs.clear();
+		for (String s : NavyCraft.playerHANGAR2Signs.keySet()) {
+			NavyCraft.playerHANGAR2Signs.get(s).clear();
+		}
+		NavyCraft.playerHANGAR2Signs.clear();
+		for (String s : NavyCraft.playerTANK1Signs.keySet()) {
+			NavyCraft.playerTANK1Signs.get(s).clear();
+		}
+		NavyCraft.playerTANK1Signs.clear();
+		for (String s : NavyCraft.playerTANK2Signs.keySet()) {
+			NavyCraft.playerTANK2Signs.get(s).clear();
+		}
+		NavyCraft.playerTANK2Signs.clear();
+		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
+			NavyCraft.playerSHIP1Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP1Signs.clear();
+		for (String s : NavyCraft.playerMAP2Signs.keySet()) {
+			NavyCraft.playerMAP2Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP2Signs.clear();
+		for (String s : NavyCraft.playerMAP3Signs.keySet()) {
+			NavyCraft.playerMAP3Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP3Signs.clear();
+		for (String s : NavyCraft.playerMAP4Signs.keySet()) {
+			NavyCraft.playerMAP4Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP4Signs.clear();
+		for (String s : NavyCraft.playerMAP5Signs.keySet()) {
+			NavyCraft.playerMAP5Signs.get(s).clear();
+		}
+		NavyCraft.playerMAP5Signs.clear();
+		loadSHIP1Signs();
+		loadSHIP2Signs();
+		loadSHIP3Signs();
+		loadSHIP4Signs();
+		loadSHIP5Signs();
+		loadHANGAR1Signs();
+		loadHANGAR2Signs();
+		loadTANK1Signs();
+		loadTANK2Signs();
+		loadMAP1Signs();
+		loadMAP2Signs();
+		loadMAP3Signs();
+		loadMAP4Signs();
+		loadMAP5Signs();
 	}
 	
 	public static void loadRewards(String player) {
@@ -2464,8 +4070,99 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	public static Sign findSign(String player, int id) {
 		Sign foundSign = null;
-		if (NavyCraft.playerUniversalSigns.containsKey(player)) {
-			for (Sign s : NavyCraft.playerUniversalSigns.get(player)) {
+		if (NavyCraft.playerSHIP1Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerSHIP1Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerSHIP2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerSHIP2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerSHIP3Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerSHIP3Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerSHIP4Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerSHIP4Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerSHIP5Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerSHIP5Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerHANGAR1Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerHANGAR1Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerHANGAR2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerHANGAR2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerTANK1Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerTANK1Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerTANK2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP1Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP2Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP3Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP4Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(player)) {
+				if (id == NavyCraft.playerSignIndex.get(s)) {
+					foundSign = s;
+				}
+			}
+		}
+		if ((foundSign == null) && NavyCraft.playerMAP5Signs.containsKey(player)) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(player)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
@@ -2476,8 +4173,99 @@ public class NavyCraft_BlockListener implements Listener {
 
 	public static int maxId(Player player) {
 		int foundHighest = -1;
-		if (NavyCraft.playerUniversalSigns.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerUniversalSigns.get(player.getName())) {
+		if (NavyCraft.playerSHIP1Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerSHIP1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerSHIP2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerSHIP2Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerSHIP3Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerSHIP3Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerSHIP4Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerSHIP4Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerSHIP5Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerSHIP5Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerHANGAR1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerHANGAR2Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerTANK1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(player.getName())) {
+				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
+					foundHighest = NavyCraft.playerSignIndex.get(s);
+				}
+			}
+		}
+		if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(player.getName())) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
@@ -2485,7 +4273,6 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 		return foundHighest;
 	}
-
 
 
 	@EventHandler(priority = EventPriority.HIGH)

@@ -36,7 +36,6 @@ import com.maximuspayne.navycraft.craft.CraftType;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_EntityListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_InventoryListener;
-import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
@@ -78,7 +77,6 @@ public class NavyCraft extends JavaPlugin {
 	
 	public final NavyCraft_PlayerListener playerListener = new NavyCraft_PlayerListener(this);
 	public final NavyCraft_BlockListener blockListener = new NavyCraft_BlockListener(this);
-	public final NavyCraft_FileListener fileListener = new NavyCraft_FileListener(this);
 	public final NavyCraft_EntityListener entityListener = new NavyCraft_EntityListener(this);
 	public final NavyCraft_InventoryListener inventoryListener = new NavyCraft_InventoryListener(this);
 	
@@ -120,22 +118,20 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int spawnTime=10;
 	
-	public static HashMap<String, ArrayList<Sign>> playerUniversalSigns = new HashMap<String, ArrayList<Sign>>();
-	
-	public static HashMap<String, ArrayList<File>> playerSHIP1Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerSHIP2Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerSHIP3Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerSHIP4Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerSHIP5Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerHANGAR1Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerHANGAR2Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerTANK1Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerTANK2Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerMAP1Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerMAP2Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerMAP3Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerMAP4Schematics = new HashMap<String, ArrayList<File>>();
-	public static HashMap<String, ArrayList<File>> playerMAP5Schematics = new HashMap<String, ArrayList<File>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP3Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP4Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerSHIP5Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerHANGAR1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerHANGAR2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerTANK1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerTANK2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP1Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP2Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP3Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP4Signs = new HashMap<String, ArrayList<Sign>>();
+	public static HashMap<String, ArrayList<Sign>> playerMAP5Signs = new HashMap<String, ArrayList<Sign>>();
 	
 	public static HashMap<String, Integer> playerSHIP1Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerSHIP2Rewards = new HashMap<String, Integer>();
@@ -152,7 +148,6 @@ public class NavyCraft extends JavaPlugin {
 	public static HashMap<String, Integer> playerMAP4Rewards = new HashMap<String, Integer>();
 	public static HashMap<String, Integer> playerMAP5Rewards = new HashMap<String, Integer>();
 	
-	public static HashMap<File, Integer> playerSchematicIndex = new HashMap<File, Integer>();
 	public static HashMap<Sign, Integer> playerSignIndex = new HashMap<Sign, Integer>();
 	
 	public static HashMap<String, Integer> playerExp = new HashMap<String, Integer>();
@@ -192,7 +187,6 @@ public class NavyCraft extends JavaPlugin {
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(entityListener, this);
 		pm.registerEvents(blockListener, this);
-		pm.registerEvents(fileListener, this);
 		pm.registerEvents(inventoryListener, this);
 		
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -207,10 +201,6 @@ public class NavyCraft extends JavaPlugin {
         manager.registerEvents(new TeleportFix(this, this.getServer()), this);
 		
 		structureUpdateScheduler();
-		
-        File dir = new File(getDataFolder(), "/schematics/");
-        if (!dir.exists())
-            dir.mkdirs();
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
 		getConfig().options().copyDefaults(true);
