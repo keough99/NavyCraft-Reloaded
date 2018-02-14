@@ -1,18 +1,23 @@
 package com.maximuspayne.navycraft.listeners;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.craft.Craft;
 
 public class NavyCraft_Timer extends BukkitRunnable {
 	
-	Plugin plugin;
+	static Plugin plugin;
 	Timer timer;
 	Craft craft;
 	Player player;
@@ -134,13 +139,17 @@ public class NavyCraft_Timer extends BukkitRunnable {
     	}
     	);
 	 }
+   public void loadShipyard() {
+   	plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
+	    public void run()
+	    {
+	   NavyCraft_BlockListener.loadShipyard();
+	    }
+   } );
+   }
 
 @Override
 public void run() {
-	// TODO Auto-generated method stub
 	
 }
-   
-
 }
-
