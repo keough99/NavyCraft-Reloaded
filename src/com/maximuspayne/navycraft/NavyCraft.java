@@ -12,8 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Egg;
@@ -177,10 +175,6 @@ public class NavyCraft extends JavaPlugin {
 		
 	}
 	
-    private Connection connection;
-    private String host, database, username, password;
-    private int port;
-	
 	public void onLoad() {
 		
 	}
@@ -208,22 +202,6 @@ public class NavyCraft extends JavaPlugin {
 		structureUpdateScheduler();
 		
 		getConfig().options().copyDefaults(true);
-		
-        host = getConfig().getString(host);
-        port = 3306;
-        database = getConfig().getString(database);
-        username = getConfig().getString(username);
-        password = getConfig().getString(password); 
-        
-        try {     
-            openConnection();
-            Statement statement = connection.createStatement();          
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 		System.out.println(pdfFile.getName() + " " + version + " plugin enabled");
 		}
@@ -240,18 +218,6 @@ public class NavyCraft extends JavaPlugin {
 		System.out.println("Debug mode set to " + this.DebugMode);
 	}
 	
-	   public void openConnection() throws SQLException, ClassNotFoundException {
-		    if (connection != null && !connection.isClosed()) {
-		        return;
-		    }
-		 
-		    synchronized (this) {
-		        if (connection != null && !connection.isClosed()) {
-		            return;
-		        }
-		        Class.forName("com.mysql.jdbc.Driver");
-		        connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
-		    }
 
 	public boolean DebugMessage(String message, int messageLevel) {
 		/* Message Levels:
@@ -1040,6 +1006,157 @@ public void updateCraft(int vehicleNum, int updateNum)
 	public static void saveRewardsFile(String s)
 	{
 		String path = File.separator + "PlayerPlotRewards.txt";
+        File file = new File(path);
+        FileWriter fw;
+        BufferedWriter writer;
+	
+		try {
+			fw = new FileWriter(file.getName(), true);
+			writer = new BufferedWriter(fw);
+	        
+			try {
+				writer.write(s);
+				writer.newLine();
+			} catch (IOException e) {
+				System.out.println("Player Save Reward Error1");
+				e.printStackTrace();
+				writer.close();
+				return;
+			}
+			
+			writer.close();
+		} catch (IOException e2) {
+			System.out.println("Player Save Reward Error2");
+			e2.printStackTrace();
+			return;
+		}
+	}
+	
+	public static void loadShipyardFile()
+	{
+		String path = File.separator + "ShipyardPlots.txt";
+       File file = new File(path);
+       
+       
+       FileReader fr;
+       BufferedReader reader;
+		try {
+			fr = new FileReader(file.getName());
+			reader = new BufferedReader(fr);
+
+	        String line = null;
+	        
+	        try {
+	        	
+				while ((line=reader.readLine()) != null) 
+				{
+					String[] strings = line.split(",");
+					if( strings.length != 4 )
+					{
+						System.out.println("Player Reward Load Error1");
+						reader.close(); 
+						return;
+					}
+					
+					if(strings[0].equalsIgnoreCase("ship1") )
+					{
+						String SHIP1X = strings[1];
+						String SHIP1Y = strings[2];
+						String SHIP1Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("ship2") )
+					{
+						String SHIP2X = strings[1];
+						String SHIP2Y = strings[2];
+						String SHIP2Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("ship3") )
+					{
+						String SHIP3X = strings[1];
+						String SHIP3Y = strings[2];
+						String SHIP3Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("ship4") )
+					{
+						String SHIP4X = strings[1];
+						String SHIP4Y = strings[2];
+						String SHIP4Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("ship5") )
+					{
+						String SHIP5X = strings[1];
+						String SHIP5Y = strings[2];
+						String SHIP5Z = strings[3];
+					}else if( strings[0].equalsIgnoreCase("hangar1") )
+					{
+						String HANGAR1X = strings[1];
+						String HANGAR1Y = strings[2];
+						String HANGAR1Z = strings[3];
+					}else if( strings[0].equalsIgnoreCase("hangar2") )
+					{
+						String HANGAR2X = strings[1];
+						String HANGAR2Y = strings[2];
+						String HANGAR2Z = strings[3];
+					}else if( strings[0].equalsIgnoreCase("tank1") )
+					{
+						String TANK1X = strings[1];
+						String TANK1Y = strings[2];
+						String TANK1Z = strings[3];
+					}else if( strings[0].equalsIgnoreCase("tank2") )
+					{
+						String TANK2X = strings[1];
+						String TANK2Y = strings[2];
+						String TANK2Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("MAP1") )
+					{
+						String MAP1X = strings[1];
+						String MAP1Y = strings[2];
+						String MAP1Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("MAP2") )
+					{
+						String MAP2X = strings[1];
+						String MAP2Y = strings[2];
+						String MAP2Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("MAP3") )
+					{
+						String MAP3X = strings[1];
+						String MAP3Y = strings[2];
+						String MAP3Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("MAP4") )
+					{
+						String MAP4X = strings[1];
+						String MAP4Y = strings[2];
+						String MAP4Z = strings[3];
+					}else if(strings[0].equalsIgnoreCase("MAP5") )
+					{
+						String MAP5X = strings[1];
+						String MAP5Y = strings[2];
+						String MAP5Z = strings[3];
+					}else
+					{
+						System.out.println("Player Plot Load Error: Unknown Reward");
+					}
+					
+				}
+
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Player Reward Load Error2");
+				return;
+			}
+	        
+	        reader.close();  // Close to unlock.
+
+		} catch (FileNotFoundException e) {
+			//System.out.println("Player Reward Load Error3");
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Player Reward Load Error4");
+			return;
+		}
+	}
+	
+	public static void saveShipyardFile(String s)
+	{
+		String path = File.separator + "ShipyardPlots.txt";
         File file = new File(path);
         FileWriter fw;
         BufferedWriter writer;
