@@ -484,7 +484,6 @@ public class NavyCraft_BlockListener implements Listener {
 					Location loc;
 					int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
 					if (lotType == 1) {
-						loadSHIP1Yard();
 						loc = block.getRelative(bf, 28).getLocation();
 						sizeX = 13;
 						sizeY = 28;
@@ -510,7 +509,6 @@ public class NavyCraft_BlockListener implements Listener {
 						}
 			
 					} else if (lotType == 2) {
-						loadSHIP2Yard();
 						loc = block.getRelative(bf, 43).getLocation();
 						sizeX = 9;
 						sizeY = 28;
@@ -535,7 +533,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 3) {
-						loadSHIP3Yard();
 						loc = block.getRelative(bf, 70).getLocation();
 						sizeX = 11;
 						sizeY = 28;
@@ -560,7 +557,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 4) {
-						loadSHIP4Yard();
 						loc = block.getRelative(bf, 55).getLocation();
 						sizeX = 17;
 						sizeY = 28;
@@ -585,7 +581,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 5) {
-						loadSHIP5Yard();
 						loc = block.getRelative(bf, 98).getLocation();
 						sizeX = 17;
 						sizeY = 28;
@@ -610,7 +605,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 6) {
-						loadHANGAR1Yard();
 						loc = block.getRelative(bf, 17).getLocation();
 						sizeX = 17;
 						sizeY = 7;
@@ -635,7 +629,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 7) {
-						loadHANGAR2Yard();
 						loc = block.getRelative(bf, 25).getLocation();
 						sizeX = 25;
 						sizeY = 7;
@@ -660,7 +653,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 8) {
-						loadTANK1Yard();
 						loc = block.getRelative(bf, 12).getLocation();
 						sizeX = 12;
 						sizeY = 7;
@@ -685,7 +677,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 9) {
-						loadTANK2Yard();
 						loc = block.getRelative(bf, 27).getLocation();
 						sizeX = 27;
 						sizeY = 9;
@@ -710,7 +701,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 10) {
-						loadMAP1Yard();
 						loc = block.getRelative(bf, 100).getLocation();
 						sizeX = 100;
 						sizeY = 255;
@@ -735,7 +725,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 11) {
-						loadMAP2Yard();
 						loc = block.getRelative(bf, 150).getLocation();
 						sizeX = 150;
 						sizeY = 255;
@@ -760,7 +749,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 12) {
-						loadMAP3Yard();
 						loc = block.getRelative(bf, 200).getLocation();
 						sizeX = 200;
 						sizeY = 255;
@@ -785,7 +773,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 13) {
-						loadMAP4Yard();
 						loc = block.getRelative(bf, 250).getLocation();
 						sizeX = 250;
 						sizeY = 255;
@@ -810,7 +797,6 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 14) {
-						loadMAP5Yard();
 						loc = block.getRelative(bf, 500).getLocation();
 						sizeX = 500;
 						sizeY = 255;
@@ -3744,91 +3730,6 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 			return null;
 		}
-
-	public static void loadSHIP1Yard() {
-		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
-			NavyCraft.playerSHIP1Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP1Signs.clear();
-	}
-	public static void loadSHIP2Yard() {
-		for (String s : NavyCraft.playerSHIP2Signs.keySet()) {
-			NavyCraft.playerSHIP2Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP2Signs.clear();
-	}
-	public static void loadSHIP3Yard() {
-		for (String s : NavyCraft.playerSHIP3Signs.keySet()) {
-			NavyCraft.playerSHIP3Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP3Signs.clear();
-	}
-	public static void loadSHIP4Yard() {
-		for (String s : NavyCraft.playerSHIP4Signs.keySet()) {
-			NavyCraft.playerSHIP4Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP4Signs.clear();
-	}
-	public static void loadSHIP5Yard() {
-		for (String s : NavyCraft.playerSHIP5Signs.keySet()) {
-			NavyCraft.playerSHIP5Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP5Signs.clear();
-	}
-	public static void loadHANGAR1Yard() {
-		for (String s : NavyCraft.playerHANGAR1Signs.keySet()) {
-			NavyCraft.playerHANGAR1Signs.get(s).clear();
-		}
-		NavyCraft.playerHANGAR1Signs.clear();
-	}
-	public static void loadHANGAR2Yard() {
-		for (String s : NavyCraft.playerHANGAR2Signs.keySet()) {
-			NavyCraft.playerHANGAR2Signs.get(s).clear();
-		}
-		NavyCraft.playerHANGAR2Signs.clear();
-	}
-	public static void loadTANK1Yard() {
-		for (String s : NavyCraft.playerTANK1Signs.keySet()) {
-			NavyCraft.playerTANK1Signs.get(s).clear();
-		}
-		NavyCraft.playerTANK1Signs.clear();
-	}
-	public static void loadTANK2Yard() {
-		for (String s : NavyCraft.playerTANK2Signs.keySet()) {
-			NavyCraft.playerTANK2Signs.get(s).clear();
-		}
-		NavyCraft.playerTANK2Signs.clear();
-	}
-	public static void loadMAP1Yard() {
-		for (String s : NavyCraft.playerMAP1Signs.keySet()) {
-			NavyCraft.playerMAP1Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP1Signs.clear();
-	}
-	public static void loadMAP2Yard() {
-		for (String s : NavyCraft.playerMAP2Signs.keySet()) {
-			NavyCraft.playerMAP2Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP2Signs.clear();
-	}
-	public static void loadMAP3Yard() {
-		for (String s : NavyCraft.playerMAP3Signs.keySet()) {
-			NavyCraft.playerMAP3Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP3Signs.clear();
-	}
-	public static void loadMAP4Yard() {
-		for (String s : NavyCraft.playerMAP4Signs.keySet()) {
-			NavyCraft.playerMAP4Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP4Signs.clear();
-	}
-	public static void loadMAP5Yard() {
-		for (String s : NavyCraft.playerMAP5Signs.keySet()) {
-			NavyCraft.playerMAP5Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP5Signs.clear();
-	}
 		
 	public static void loadShipyard() {
 		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {

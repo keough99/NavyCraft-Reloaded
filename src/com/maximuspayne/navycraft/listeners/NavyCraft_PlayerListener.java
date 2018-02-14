@@ -1562,103 +1562,90 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.GREEN + "Plot Rewarded.");
 
 						} else if (split[1].equalsIgnoreCase("list")) {
+							NavyCraft_BlockListener.loadShipyard();
 							NavyCraft_BlockListener.loadRewards(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
 
 							if (NavyCraft.playerSHIP1Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadSHIP1Yard();
 								for (Sign s : NavyCraft.playerSHIP1Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP1");
 								}
 							}
 							if (NavyCraft.playerSHIP2Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadSHIP2Yard();
 								for (Sign s : NavyCraft.playerSHIP2Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP2");
 								}
 							}
 							if (NavyCraft.playerSHIP3Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadSHIP3Yard();
 								for (Sign s : NavyCraft.playerSHIP3Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP3");
 								}
 							}
 							if (NavyCraft.playerSHIP4Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadSHIP4Yard();
 								for (Sign s : NavyCraft.playerSHIP4Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP4");
 								}
 							}
 							if (NavyCraft.playerSHIP5Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadSHIP5Yard();
 								for (Sign s : NavyCraft.playerSHIP5Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP5");
 								}
 							}
 							if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadHANGAR1Yard();
 								for (Sign s : NavyCraft.playerHANGAR1Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR1");
 								}
 							}
 							if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadHANGAR2Yard();
 								for (Sign s : NavyCraft.playerHANGAR2Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR2");
 								}
 							}
 							if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadTANK1Yard();
 								for (Sign s : NavyCraft.playerTANK1Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK1");
 								}
 							}
 							if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadTANK2Yard();
 								for (Sign s : NavyCraft.playerTANK2Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
 								}
 							}
 							if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadMAP1Yard();
 								for (Sign s : NavyCraft.playerMAP1Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP1");
 								}
 							}
 							if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadMAP2Yard();
 								for (Sign s : NavyCraft.playerMAP2Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP2");
 								}
 							}
 							if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadMAP3Yard();
 								for (Sign s : NavyCraft.playerMAP3Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP3");
 								}
 							}
 							if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadMAP4Yard();
 								for (Sign s : NavyCraft.playerMAP4Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP4");
 								}
 							}
 							if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
-								NavyCraft_BlockListener.loadMAP5Yard();
 								for (Sign s : NavyCraft.playerMAP5Signs.get(player.getName())) {
 									player.sendMessage(
 											ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP5");
@@ -1755,6 +1742,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1799,6 +1787,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1853,6 +1842,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1906,6 +1896,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1976,6 +1967,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2007,6 +1999,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2049,6 +2042,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2082,10 +2076,10 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("player")) {
 							if (split.length == 3) {
 								String p = split[2];
+								NavyCraft_BlockListener.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
 								if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP1Yard();
 									int numSHIP1s = NavyCraft.playerSHIP1Signs.get(p).size();
 									if (NavyCraft.playerSHIP1Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2101,7 +2095,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerSHIP2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP2Yard();
 									int numSHIP2s = NavyCraft.playerSHIP2Signs.get(p).size();
 									if (NavyCraft.playerSHIP2Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2117,7 +2110,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerSHIP3Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP3Yard();
 									int numSHIP3s = NavyCraft.playerSHIP3Signs.get(p).size();
 									if (NavyCraft.playerSHIP3Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2133,7 +2125,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerSHIP4Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP4Yard();
 									int numSHIP4s = NavyCraft.playerSHIP4Signs.get(p).size();
 									if (NavyCraft.playerSHIP4Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2149,7 +2140,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerSHIP5Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP5Yard();
 									int numSHIP5s = NavyCraft.playerSHIP5Signs.get(p).size();
 									if (NavyCraft.playerSHIP5Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2165,7 +2155,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadHANGAR1Yard();
 									int numHANGAR1s = NavyCraft.playerHANGAR1Signs.get(p).size();
 									if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2181,7 +2170,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadHANGAR2Yard();
 									int numHANGAR2s = NavyCraft.playerHANGAR2Signs.get(p).size();
 									if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2197,7 +2185,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerTANK1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadTANK1Yard();
 									int numTANK1s = NavyCraft.playerTANK1Signs.get(p).size();
 									if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2213,7 +2200,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerTANK2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadTANK2Yard();
 									int numTANK2s = NavyCraft.playerTANK2Signs.get(p).size();
 									if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2229,7 +2215,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerMAP1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP1Yard();
 									int numMAP1s = NavyCraft.playerMAP1Signs.get(p).size();
 									if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2245,7 +2230,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerMAP2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP2Yard();
 									int numMAP2s = NavyCraft.playerMAP2Signs.get(p).size();
 									if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2261,7 +2245,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerMAP3Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP3Yard();
 									int numMAP3s = NavyCraft.playerMAP3Signs.get(p).size();
 									if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2277,7 +2260,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerMAP4Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP4Yard();
 									int numMAP4s = NavyCraft.playerMAP4Signs.get(p).size();
 									if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2293,7 +2275,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 								if (NavyCraft.playerMAP5Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP5Yard();
 									int numMAP5s = NavyCraft.playerMAP5Signs.get(p).size();
 									if (NavyCraft.playerMAP5Rewards.containsKey(p)) {
 										player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2314,103 +2295,90 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("plist")) {
 							if (split.length == 3) {
 								String p = split[2];
+								NavyCraft_BlockListener.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
 								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
 
 								if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP1Yard();
 									for (Sign s : NavyCraft.playerSHIP1Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP1");
 									}
 								}
 								if (NavyCraft.playerSHIP2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP2Yard();
 									for (Sign s : NavyCraft.playerSHIP2Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP2");
 									}
 								}
 								if (NavyCraft.playerSHIP3Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP3Yard();
 									for (Sign s : NavyCraft.playerSHIP3Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP3");
 									}
 								}
 								if ( NavyCraft.playerSHIP4Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP4Yard();
 									for (Sign s : NavyCraft.playerSHIP4Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP4");
 									}
 								}
 								if (NavyCraft.playerSHIP5Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadSHIP5Yard();
 									for (Sign s : NavyCraft.playerSHIP5Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " SHIP5");
 									}
 								}
 								if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadHANGAR1Yard();
 									for (Sign s : NavyCraft.playerHANGAR1Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR1");
 									}
 								}
 								if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadHANGAR2Yard();
 									for (Sign s : NavyCraft.playerHANGAR2Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " HANGAR2");
 									}
 								}
 								if (NavyCraft.playerTANK1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadTANK1Yard();
 									for (Sign s : NavyCraft.playerTANK1Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK1");
 									}
 								}
 								if (NavyCraft.playerTANK2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadTANK2Yard();
 									for (Sign s : NavyCraft.playerTANK2Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TANK2");
 									}
 								}
 								if (NavyCraft.playerMAP1Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP1Yard();
 									for (Sign s : NavyCraft.playerMAP1Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP1");
 									}
 								}
 								if (NavyCraft.playerMAP2Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP2Yard();
 									for (Sign s : NavyCraft.playerMAP2Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP2");
 									}
 								}
 								if (NavyCraft.playerMAP3Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP3Yard();
 									for (Sign s : NavyCraft.playerMAP3Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP3");
 									}
 								}
 								if ( NavyCraft.playerMAP4Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP4Yard();
 									for (Sign s : NavyCraft.playerMAP4Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP4");
 									}
 								}
 								if (NavyCraft.playerMAP5Signs.containsKey(p)) {
-									NavyCraft_BlockListener.loadMAP5Yard();
 									for (Sign s : NavyCraft.playerMAP5Signs.get(p)) {
 										player.sendMessage(
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP5");
@@ -2431,6 +2399,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									return;
 								}
 								if (tpId > -1) {
+									NavyCraft_BlockListener.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(p);
 
 									Sign foundSign = null;
@@ -2469,11 +2438,11 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 					} else {
+						NavyCraft_BlockListener.loadShipyard();
 						NavyCraft_BlockListener.loadRewards(player.getName());
 						String p = player.getName();
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 						if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadSHIP1Yard();
 							int numSHIP1s = NavyCraft.playerSHIP1Signs.get(p).size();
 							if (NavyCraft.playerSHIP1Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2489,7 +2458,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerSHIP2Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadSHIP2Yard();
 							int numSHIP2s = NavyCraft.playerSHIP2Signs.get(p).size();
 							if (NavyCraft.playerSHIP2Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2505,7 +2473,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerSHIP3Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadSHIP3Yard();
 							int numSHIP3s = NavyCraft.playerSHIP3Signs.get(p).size();
 							if (NavyCraft.playerSHIP3Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2521,7 +2488,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerSHIP4Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadSHIP4Yard();
 							int numSHIP4s = NavyCraft.playerSHIP4Signs.get(p).size();
 							if (NavyCraft.playerSHIP4Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2537,7 +2503,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerSHIP5Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadSHIP5Yard();
 							int numSHIP5s = NavyCraft.playerSHIP5Signs.get(p).size();
 							if (NavyCraft.playerSHIP5Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2553,7 +2518,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerHANGAR1Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadHANGAR1Yard();
 							int numHANGAR1s = NavyCraft.playerHANGAR1Signs.get(p).size();
 							if (NavyCraft.playerHANGAR1Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "HANGAR1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2569,7 +2533,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerHANGAR2Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadHANGAR2Yard();
 							int numHANGAR2s = NavyCraft.playerHANGAR2Signs.get(p).size();
 							if (NavyCraft.playerHANGAR2Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "HANGAR2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numHANGAR2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2585,7 +2548,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerTANK1Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadTANK1Yard();
 							int numTANK1s = NavyCraft.playerTANK1Signs.get(p).size();
 							if (NavyCraft.playerTANK1Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "TANK1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2601,7 +2563,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerTANK2Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadTANK2Yard();
 							int numTANK2s = NavyCraft.playerTANK2Signs.get(p).size();
 							if (NavyCraft.playerTANK2Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "TANK2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numTANK2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2617,7 +2578,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerMAP1Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadMAP1Yard();
 							int numMAP1s = NavyCraft.playerMAP1Signs.get(p).size();
 							if (NavyCraft.playerMAP1Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "MAP1 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP1s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2633,7 +2593,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerMAP2Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadMAP2Yard();
 							int numMAP2s = NavyCraft.playerMAP2Signs.get(p).size();
 							if (NavyCraft.playerMAP2Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "MAP2 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP2s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2649,7 +2608,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerMAP3Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadMAP3Yard();
 							int numMAP3s = NavyCraft.playerMAP3Signs.get(p).size();
 							if (NavyCraft.playerMAP3Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "MAP3 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP3s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2665,7 +2623,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerMAP4Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadMAP4Yard();
 							int numMAP4s = NavyCraft.playerMAP4Signs.get(p).size();
 							if (NavyCraft.playerMAP4Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "MAP4 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP4s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -2681,7 +2638,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						if (NavyCraft.playerMAP5Signs.containsKey(p)) {
-							NavyCraft_BlockListener.loadMAP5Yard();
 							int numMAP5s = NavyCraft.playerMAP5Signs.get(p).size();
 							if (NavyCraft.playerMAP5Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "MAP5 " + ChatColor.DARK_GRAY + "[" +  ChatColor.GREEN + numMAP5s + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
@@ -5305,5 +5261,4 @@ public class NavyCraft_PlayerListener implements Listener {
 
 
 }
-
 
