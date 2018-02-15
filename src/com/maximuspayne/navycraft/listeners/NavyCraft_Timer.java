@@ -13,6 +13,7 @@ import com.maximuspayne.navycraft.craft.Craft;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
+@SuppressWarnings("deprecation")
 public class NavyCraft_Timer extends BukkitRunnable {
 	
 	Plugin plugin;
@@ -141,7 +142,7 @@ public class NavyCraft_Timer extends BukkitRunnable {
    
 	public static void loadRewards(String player) {
 	   	NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new Runnable(){
-		    public void run() {
+			public void run() {
 		NavyCraft.playerSHIP1Rewards.clear();
 		NavyCraft.playerSHIP2Rewards.clear();
 		NavyCraft.playerSHIP3Rewards.clear();

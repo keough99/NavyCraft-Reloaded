@@ -1579,7 +1579,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_Timer.loadShipyard();
-							NavyCraft_BlockListener.loadRewards(player.getName());
+							NavyCraft_Timer.loadRewards(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
 
@@ -1681,7 +1681,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -1759,7 +1759,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -1804,7 +1804,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -1859,7 +1859,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -1913,7 +1913,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -1979,7 +1979,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -2062,7 +2062,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -2094,7 +2094,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -2137,7 +2137,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(player.getName());
+									NavyCraft_Timer.loadRewards(player.getName());
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
@@ -2171,7 +2171,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (split.length == 3) {
 								String p = split[2];
 								NavyCraft_Timer.loadShipyard();
-								NavyCraft_BlockListener.loadRewards(p);
+								NavyCraft_Timer.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
 								if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
 									int numSHIP1s = NavyCraft.playerSHIP1Signs.get(p).size();
@@ -2390,7 +2390,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (split.length == 3) {
 								String p = split[2];
 								NavyCraft_Timer.loadShipyard();
-								NavyCraft_BlockListener.loadRewards(p);
+								NavyCraft_Timer.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
 								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
 
@@ -2494,7 +2494,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 								if (tpId > -1) {
 									NavyCraft_Timer.loadShipyard();
-									NavyCraft_BlockListener.loadRewards(p);
+									NavyCraft_Timer.loadRewards(p);
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(p, tpId);
@@ -2533,7 +2533,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 					} else {
 						NavyCraft_Timer.loadShipyard();
-						NavyCraft_BlockListener.loadRewards(player.getName());
+						NavyCraft_Timer.loadRewards(player.getName());
 						String p = player.getName();
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 						if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
