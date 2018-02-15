@@ -1031,84 +1031,7 @@ public class NavyCraft_BlockListener implements Listener {
 				int shiftForward = 0;
 				int shiftUp = 0;
 				int shiftDown = 0;
-				{
-					if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP1")) {
-						shiftRight = 12;
-						shiftForward = 28;
 						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP2")) {
-						shiftRight = 8;
-						shiftForward = 43;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP3")) {
-						shiftRight = 10;
-						shiftForward = 70;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP4")) {
-						shiftRight = 16;
-						shiftForward = 55;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP5")) {
-						shiftRight = 16;
-						shiftForward = 98;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR1")) {
-						shiftRight = 16;
-						shiftForward = 19;
-						// shiftRight = 0;
-						// shiftForward = 0;
-						shiftUp = 7;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR2")) {
-						shiftRight = 24;
-						shiftForward = 32;
-						// shiftRight = 0;
-						// shiftForward = 0;
-						shiftUp = 14;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK1")) {
-						shiftRight = 11;
-						shiftForward = 19;
-						shiftUp = 7;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK2")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP1")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP2")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP3")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP4")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP5")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else {
-						player.sendMessage("Unknown lot type error2!");
-					}
 
 					Block rightLimit = block.getRelative(bf2, shiftRight).getRelative(bf, shiftForward).getRelative(BlockFace.UP, shiftUp);
 					Block leftLimit = block.getRelative(bf, 1).getRelative(BlockFace.DOWN, shiftDown);
@@ -1199,8 +1122,6 @@ public class NavyCraft_BlockListener implements Listener {
 								}
 							}
 						}
-					}
-					player.sendMessage("No ship sign located!");
 				}
 
 			} catch (MaxChangedBlocksException e) {
