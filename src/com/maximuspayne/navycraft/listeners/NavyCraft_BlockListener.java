@@ -1031,7 +1031,6 @@ public class NavyCraft_BlockListener implements Listener {
 				int shiftForward = 0;
 				int shiftUp = 0;
 				int shiftDown = 0;
-						shiftUp = 20;
 
 					Block rightLimit = block.getRelative(bf2, shiftRight).getRelative(bf, shiftForward).getRelative(BlockFace.UP, shiftUp);
 					Block leftLimit = block.getRelative(bf, 1).getRelative(BlockFace.DOWN, shiftDown);
