@@ -1,7 +1,5 @@
 package com.maximuspayne.navycraft.listeners;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,10 +28,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
 import com.maximuspayne.navycraft.NavyCraft;
@@ -43,34 +38,26 @@ import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
-import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.schematic.SchematicFormat;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.util.io.file.FilenameException;
-import com.sk89q.worldedit.world.registry.LegacyWorldData;
-import com.sk89q.worldedit.world.registry.WorldData;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-import ru.tehkode.permissions.exceptions.RankingException;
 
-@SuppressWarnings({ "deprecation", "unused" })
+@SuppressWarnings({ "deprecation"})
 public class NavyCraft_BlockListener implements Listener {
 	public static Craft updatedCraft = null;
 	private static NavyCraft plugin;
@@ -259,7 +246,7 @@ public class NavyCraft_BlockListener implements Listener {
 				EditSession es = wep.createEditSession(player);
 
 				Location loc;
-				int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
+				int sizeX, sizeY, sizeZ, originX, originY, originZ;
 				if (lotType == 1) {
 					loc = block.getRelative(bf, 28).getLocation();
 					sizeX = 13;
@@ -482,7 +469,7 @@ public class NavyCraft_BlockListener implements Listener {
 					loadRewards(player.getName());
 			
 					Location loc;
-					int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
+					int sizeX, sizeY, sizeZ, originX, originY, originZ;
 					if (lotType == 1) {
 						loc = block.getRelative(bf, 28).getLocation();
 						sizeX = 13;
@@ -491,9 +478,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -29;
 			
 						int numSHIP1s = 0;
 						int numRewSHIP1s = 1;
@@ -516,9 +500,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -44;
 			
 						int numSHIP2s = 0;
 						int numRewSHIP2s = 0;
@@ -540,9 +521,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -71;
 			
 						int numSHIP3s = 0;
 						int numRewSHIP3s = 0;
@@ -564,9 +542,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -56;
 			
 						int numSHIP4s = 0;
 						int numRewSHIP4s = 0;
@@ -588,9 +563,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -99;
 			
 						int numSHIP5s = 0;
 						int numRewSHIP5s = 0;
@@ -612,9 +584,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -18;
-						offsetX = -17;
-						offsetY = 0;
-						offsetZ = -20;
 			
 						int numH1s = 0;
 						int numRewH1s = 0;
@@ -636,9 +605,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -31;
-						offsetX = -25;
-						offsetY = 0;
-						offsetZ = -33;
 			
 						int numH2s = 0;
 						int numRewH2s = 0;
@@ -660,10 +626,7 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -18;
-						offsetX = -12;
-						offsetY = 0;
-						offsetZ = -20;
-			
+						
 						int numT1s = 0;
 						int numRewT1s = 0;
 						if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
@@ -684,9 +647,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -32;
-						offsetX = -27;
-						offsetY = 0;
-						offsetZ = -34;
 			
 						int numT2s = 0;
 						int numRewT2s = 0;
@@ -708,9 +668,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -99;
-						offsetX = -100;
-						offsetY = 0;
-						offsetZ = -101;
 			
 						int numM1s = 0;
 						int numRewM1s = 0;
@@ -732,9 +689,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -149;
-						offsetX = -150;
-						offsetY = 0;
-						offsetZ = -151;
 			
 						int numM2s = 0;
 						int numRewM2s = 0;
@@ -756,9 +710,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -199;
-						offsetX = -200;
-						offsetY = 0;
-						offsetZ = -201;
 			
 						int numM3s = 0;
 						int numRewM3s = 0;
@@ -780,9 +731,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -249;
-						offsetX = -250;
-						offsetY = 0;
-						offsetZ = -251;
 			
 						int numM4s = 0;
 						int numRewM4s = 0;
@@ -804,9 +752,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -499;
-						offsetX = -500;
-						offsetY = 0;
-						offsetZ = -501;
 			
 						int numM5s = 0;
 						int numRewM5s = 0;
@@ -2957,7 +2902,7 @@ public class NavyCraft_BlockListener implements Listener {
 			for (int z = startZ; z >= endZ; z -= widthZ) {
 				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
 					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					syworld.getBlockAt(x + 1, 64, z);
 					Sign selectSign = (Sign) selectSignBlock.getState();
 					String signLine0 = selectSign.getLine(0);
 
@@ -3045,7 +2990,7 @@ public class NavyCraft_BlockListener implements Listener {
 			for (int z = startZ; z >= endZ; z -= widthZ) {
 				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
 					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					syworld.getBlockAt(x + 1, 64, z);
 					Sign selectSign = (Sign) selectSignBlock.getState();
 					String signLine0 = selectSign.getLine(0);
 

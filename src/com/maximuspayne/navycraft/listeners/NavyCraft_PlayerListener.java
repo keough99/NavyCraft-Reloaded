@@ -64,6 +64,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.ess3.api.MaxMoneyException;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
+@SuppressWarnings("deprecation")
 public class NavyCraft_PlayerListener implements Listener {
 
 	private static NavyCraft plugin;
@@ -189,7 +190,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		String deathMsg = event.getDeathMessage();
@@ -356,7 +357,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
@@ -586,7 +587,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 
 
-	@SuppressWarnings("deprecation")
+	
 	public void playerUsedAnItem(Player player, Craft craft) {
 
 		// minimum time between 2 swings
@@ -921,7 +922,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerAnimation(PlayerAnimationEvent event) {
 		if (event.getAnimationType() == PlayerAnimationType.ARM_SWING) {
@@ -1091,7 +1092,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
@@ -1297,32 +1298,47 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					event.setCancelled(true);
 					return;
+				} else if (split[1].equalsIgnoreCase("help")) {
+					if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
+						player.sendMessage(ChatColor.GOLD + "NavyCraft v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+						player.sendMessage(ChatColor.AQUA + "/navycraft types " + " : " + ChatColor.WHITE + "list the types of craft available");
+						player.sendMessage(ChatColor.AQUA + "/[craft type] " + " : " + ChatColor.WHITE + "commands specific to the craft type try /ship help");
+						player.sendMessage(ChatColor.AQUA + "/volume" + " : " + ChatColor.WHITE + "volume help");
+						player.sendMessage(ChatColor.AQUA + "/rank" + " : " + ChatColor.WHITE + "rank status message");
+						player.sendMessage(ChatColor.AQUA + "/sign undo " + " : " + ChatColor.WHITE + "undo a sign you paid for");
+					}
+					
+					if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
+					{
+						player.sendMessage(ChatColor.RED + "NavyCraft Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + " commands :");
+						player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
+							+ "list all craft");
+						player.sendMessage(ChatColor.BLUE + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
+						player.sendMessage(ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
+						player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
+						player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
+						player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
+						player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
+					}
+					event.setCancelled(true);
 				}
 					// nc help
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-					player.sendMessage(ChatColor.WHITE + "NavyCraft v" + NavyCraft.version + " commands :");
-					player.sendMessage(ChatColor.DARK_AQUA + "/navycraft types " + " : " + ChatColor.WHITE + "list the types of craft available");
-					player.sendMessage(ChatColor.DARK_AQUA + "/[craft type] " + " : " + ChatColor.WHITE + "commands specific to the craft type try /ship help");
-					player.sendMessage(ChatColor.DARK_AQUA + "/volume" + " : " + ChatColor.WHITE + "volume help");
-					player.sendMessage(ChatColor.DARK_AQUA + "/rank" + " : " + ChatColor.WHITE + "rank status message");
-					player.sendMessage(ChatColor.DARK_AQUA + "/sign undo " + " : " + ChatColor.WHITE + "undo a sign you paid for");
+					player.sendMessage(ChatColor.GOLD + "NavyCraft v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+					player.sendMessage(ChatColor.AQUA + "/navycraft types " + " : " + ChatColor.WHITE + "list the types of craft available");
+					player.sendMessage(ChatColor.AQUA + "/[craft type] " + " : " + ChatColor.WHITE + "commands specific to the craft type try /ship help");
+					player.sendMessage(ChatColor.AQUA + "/volume" + " : " + ChatColor.WHITE + "volume help");
+					player.sendMessage(ChatColor.AQUA + "/rank" + " : " + ChatColor.WHITE + "rank status message");
+					player.sendMessage(ChatColor.AQUA + "/sign undo " + " : " + ChatColor.WHITE + "undo a sign you paid for");
 				}
 				
 				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
 				{
-					player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
-						+ "list all craft");
-					player.sendMessage(ChatColor.BLUE + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
-					player.sendMessage(ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
-					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
-					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
-					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
+					player.sendMessage(ChatColor.BLUE + "Do /nc help for admin commands!");
 				}
-
+				event.setCancelled(true);
 			}
-			event.setCancelled(true);
 		}
 			String craftName = split[0];
 
@@ -3135,27 +3151,28 @@ public class NavyCraft_PlayerListener implements Listener {
 
 					} else if (split[1].equalsIgnoreCase("help")) {
 						if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-							player.sendMessage(ChatColor.WHITE + "Battles v" + NavyCraft.version  + " commands :");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle (red,blue,any) " + " : " + ChatColor.WHITE
+							player.sendMessage(ChatColor.GOLD + "Battles v" + NavyCraft.version  + " commands :");
+							player.sendMessage(ChatColor.AQUA + "/battle (red,blue,any) " + " : " + ChatColor.WHITE
 									+ "joins the battle as red, blue, or any");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle exit " + " : " + ChatColor.WHITE
+							player.sendMessage(ChatColor.AQUA + "/battle exit " + " : " + ChatColor.WHITE
 									+ "exits the battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/team " + " : " + ChatColor.WHITE
+							player.sendMessage(ChatColor.AQUA + "/team " + " : " + ChatColor.WHITE
 									+ "displays your team");
-							player.sendMessage(ChatColor.DARK_AQUA + "/team (text) " + " : " + ChatColor.WHITE
+							player.sendMessage(ChatColor.AQUA + "/team (text) " + " : " + ChatColor.WHITE
 									+ "displays a message to your team");
 						}
 						if( PermissionInterface.CheckQuietPerm(player, "navycraft.battle") )
 						{
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle new : " + ChatColor.WHITE
+							player.sendMessage(ChatColor.RED + "Battles Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + "commands :");
+							player.sendMessage(ChatColor.BLUE + "/battle new : " + ChatColor.WHITE
 								+ "queues a battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle start : " + ChatColor.WHITE + "starts a queued battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle cancel : " + ChatColor.WHITE + "cancels a queued battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle end : " + ChatColor.WHITE + "ends a battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle kick (player) : " + ChatColor.WHITE + "kicks a player from the battle");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle kickall : " + ChatColor.WHITE + "kicks all players out of Battle World");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle lock : " + ChatColor.WHITE + "locks team joining");
-							player.sendMessage(ChatColor.DARK_AQUA + "/battle list : " + ChatColor.WHITE + "lists battle types");
+							player.sendMessage(ChatColor.BLUE + "/battle start : " + ChatColor.WHITE + "starts a queued battle");
+							player.sendMessage(ChatColor.BLUE + "/battle cancel : " + ChatColor.WHITE + "cancels a queued battle");
+							player.sendMessage(ChatColor.BLUE + "/battle end : " + ChatColor.WHITE + "ends a battle");
+							player.sendMessage(ChatColor.BLUE + "/battle kick (player) : " + ChatColor.WHITE + "kicks a player from the battle");
+							player.sendMessage(ChatColor.BLUE + "/battle kickall : " + ChatColor.WHITE + "kicks all players out of Battle World");
+							player.sendMessage(ChatColor.BLUE + "/battle lock : " + ChatColor.WHITE + "locks team joining");
+							player.sendMessage(ChatColor.BLUE + "/battle list : " + ChatColor.WHITE + "lists battle types");
 						}
 					
 						
@@ -3585,10 +3602,10 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (craftName.equalsIgnoreCase("volume")) {	
 				if (split.length > 1) {
 					if (split[1].equalsIgnoreCase("help")) {
-						player.sendMessage(ChatColor.WHITE + "Volume v" + NavyCraft.version + " commands :");
-						player.sendMessage(ChatColor.GOLD + "/volume - status message");
-						player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
-						player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
+						player.sendMessage(ChatColor.GOLD + "Volume v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+						player.sendMessage(ChatColor.AQUA + "/volume - status message");
+						player.sendMessage(ChatColor.AQUA + "/volume <type> <volume> - sets volume for type");
+						player.sendMessage(ChatColor.AQUA + "/volume <type> mute - mutes volume");
 						player.sendMessage(ChatColor.YELLOW + "Types: engine, weapons, other, all");
 					}
 					if (split[1].equalsIgnoreCase("engine")) {
@@ -3732,8 +3749,8 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 					}
 				} else {
-					player.sendMessage(ChatColor.WHITE + "Volume v" + NavyCraft.version + " commands :");
-					player.sendMessage(ChatColor.GOLD + "/volume - status message");
+					player.sendMessage(ChatColor.GOLD + "Volume v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+					player.sendMessage(ChatColor.AQUA + "/volume - status message");
 					player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
 					player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
 					player.sendMessage(ChatColor.YELLOW + "Types: engine, gun, other, all");
@@ -3809,11 +3826,12 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (craftName.equalsIgnoreCase("rank")) {	
 				if (split.length > 1) {
 					if (split[1].equalsIgnoreCase("help")) {
-						player.sendMessage(ChatColor.WHITE + "Rank v" + NavyCraft.version + " commands :");
-						player.sendMessage(ChatColor.GOLD + "/rank - view your rank");
-						player.sendMessage(ChatColor.GOLD + "/rank view <player> - view players exp");
-						player.sendMessage(ChatColor.GOLD + "/rank list - list ranks in the plugin");
+						player.sendMessage(ChatColor.GOLD + "Rank v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+						player.sendMessage(ChatColor.AQUA + "/rank - view your rank");
+						player.sendMessage(ChatColor.AQUA + "/rank view <player> - view players exp");
+						player.sendMessage(ChatColor.AQUA + "/rank list - list ranks in the plugin");
 						if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
+						player.sendMessage(ChatColor.RED + "Rank Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + "commands :");
 						player.sendMessage(ChatColor.BLUE + "/rank set <player> <exp> - set a players exp");
 						player.sendMessage(ChatColor.BLUE + "/rank add <player> <exp> - give exp to a player");
 						player.sendMessage(ChatColor.BLUE + "/rank remove <player> <exp> - remove exp from a player");
@@ -3953,7 +3971,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		return;
         }
 
-	@SuppressWarnings("deprecation")
+	
 	public boolean processCommand(CraftType craftType, Player player, String[] split) {
 
 		Craft craft = Craft.getPlayerCraft(player);
@@ -4437,14 +4455,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				return true;
 			} else {
 				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-					player.sendMessage(ChatColor.WHITE + "Vehicle Commands v" + NavyCraft.version + " :");
-					player.sendMessage(ChatColor.GOLD + "/ship - Ship Status");
-					player.sendMessage(ChatColor.GOLD + "/ship tp - Teleport to your vehicle (1 min cooldown)");
-					player.sendMessage(ChatColor.GOLD + "/ship leave - Leave the crew of your ship");
-					player.sendMessage(ChatColor.GOLD + "/radio <message> - (or /ra) Send radio message (if equipped)");
-					player.sendMessage(ChatColor.GOLD + "/radio - (or /ra) Radio status");
-					player.sendMessage(ChatColor.GOLD + "/crew <message> - Send message to your crew");
-					player.sendMessage(ChatColor.GOLD + "/crew - Crew status");
+					player.sendMessage(ChatColor.GOLD + "Vehicle Commands v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " :");
+					player.sendMessage(ChatColor.AQUA + "/ship - Ship Status");
+					player.sendMessage(ChatColor.AQUA + "/ship tp - Teleport to your vehicle (1 min cooldown)");
+					player.sendMessage(ChatColor.AQUA + "/ship leave - Leave the crew of your ship");
+					player.sendMessage(ChatColor.AQUA + "/radio <message> - (or /ra) Send radio message (if equipped)");
+					player.sendMessage(ChatColor.AQUA + "/radio - (or /ra) Radio status");
+					player.sendMessage(ChatColor.AQUA + "/crew <message> - Send message to your crew");
+					player.sendMessage(ChatColor.AQUA + "/crew - Crew status");
 					player.sendMessage(ChatColor.DARK_AQUA + "/ship release - (Cpt) Release your command of the ship");
 					player.sendMessage(ChatColor.DARK_AQUA + "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
 					player.sendMessage(ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
@@ -4463,7 +4481,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				return true;
 			}
-		}
 
 		if (craft != null) {
 			player.sendMessage(ChatColor.GOLD + "Vehicle Status");
@@ -4490,8 +4507,10 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		return true;
 	}
+ return true;
+	}
 
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerEggThrow(PlayerEggThrowEvent event) {
 		// event.getEgg().remove();
@@ -4732,7 +4751,7 @@ public class NavyCraft_PlayerListener implements Listener {
 	}
 
 
-	@SuppressWarnings("deprecation")
+	
 	public void endTunisia()
 	{
 		int blueTargetPoints=0;
@@ -4914,7 +4933,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		NavyCraft.bluePoints = blueTargetPoints;
 	}
 	
-	@SuppressWarnings("deprecation")
+	
 	public void endTarawa()
 	{
 		int blueTargetPoints=0;	
@@ -5178,7 +5197,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public static boolean checkForTarget(Block targetSignCheck) {
 		if (targetSignCheck.getTypeId() == 68) {
 			Sign sign = (Sign) targetSignCheck.getState();
@@ -5319,7 +5338,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		td.start();
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void playerSinkUpdate(final Craft craft) {
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			if (craft != null) {

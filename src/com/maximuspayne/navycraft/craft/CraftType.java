@@ -507,15 +507,6 @@ public class CraftType {
 		writer.newLine();
 	}
 
-	@SuppressWarnings("unused")
-	private static void writeAttribute(BufferedWriter writer, String attribute,
-			double value, boolean force) throws IOException {
-		if (value == 0 && !force)
-			return;
-		writer.write(attribute + "=" + value);
-		writer.newLine();		
-	}
-
 	private static void writeAttribute(BufferedWriter writer, String attribute,
 			boolean value, boolean force) throws IOException {
 		if (!value && !force)

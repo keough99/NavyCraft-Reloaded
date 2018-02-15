@@ -30,6 +30,7 @@ import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 
+@SuppressWarnings("deprecation")
 public class OneCannon{
 	public WorldGuardPlugin wgp;
 	NavyCraft nc;
@@ -625,7 +626,7 @@ public class OneCannon{
     {
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
  
-	    @SuppressWarnings("deprecation")
+
 		public void run()
 	    {
 	    	
@@ -651,7 +652,7 @@ public class OneCannon{
     }
 
     
-	@SuppressWarnings("deprecation")
+	
 	public void colorTorpedoes()
     {
     	//color wool
@@ -769,7 +770,7 @@ public class OneCannon{
     	}
     }
 
-    @SuppressWarnings("deprecation")
+    
 	public boolean Charge(Player p, boolean leftClick) 
     {
     	Dispenser dispenser = (Dispenser) loc.getBlock().getState();
@@ -1042,7 +1043,7 @@ public class OneCannon{
     	}
     }
     
-    @SuppressWarnings("deprecation")
+    
 	public boolean loadTorpedo(boolean left)
     {
     	Block b;
@@ -1128,7 +1129,7 @@ public class OneCannon{
     {
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
  
-	    @SuppressWarnings("deprecation")
+
 		public void run()
 	    {
 	    	Block warhead = b;
@@ -1405,7 +1406,7 @@ public class OneCannon{
     	});
     }
 
-    @SuppressWarnings("deprecation")
+    
 	public void openTorpedoDoors(Player p, boolean inner, boolean leftInner)
     {
     	if( checkProtectedRegion(p, p.getLocation()) )
@@ -1621,7 +1622,7 @@ public class OneCannon{
     }
     
  
-    @SuppressWarnings("deprecation")
+    
 	public void fireTorpedoMk1(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left){
 
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
@@ -1698,7 +1699,6 @@ public class OneCannon{
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
     	//new Thread() {
 	  //  @Override
-	    @SuppressWarnings({ "deprecation" })
 		public void run()
 	    {
 
@@ -2067,7 +2067,7 @@ public class OneCannon{
     
     
 
-    @SuppressWarnings("deprecation")
+    
 	public void fireTorpedoMk2(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left){
     	//final int taskNum;
     	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
@@ -2445,7 +2445,6 @@ public class OneCannon{
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
     	//new Thread() {
 	  //  @Override
-	    @SuppressWarnings({ "deprecation" })
 		public void run()
 	    {
 	    	//getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
@@ -2815,7 +2814,7 @@ public class OneCannon{
     }
     
     
-    @SuppressWarnings("deprecation")
+    
 	public void fireTorpedoMk3(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left){
     	//final int taskNum;
     	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
@@ -3187,7 +3186,6 @@ public class OneCannon{
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
     	//new Thread() {
 	  //  @Override
-	    @SuppressWarnings({ "deprecation" })
 		public void run()
 	    {
 
@@ -3788,7 +3786,7 @@ public class OneCannon{
     	}
     }
     
-    @SuppressWarnings("deprecation")
+    
 	public boolean checkTubeLoaded(boolean left)
     {
     	Block b;
@@ -4341,7 +4339,7 @@ public class OneCannon{
     }
     
     
-    @SuppressWarnings("deprecation")
+    
 	public void turnCannonLayer(Boolean right, Player p, int offsetY) {
 		// Get data
 		int[][] arr = new int[7][7];
@@ -4522,7 +4520,7 @@ public class OneCannon{
     	return false;
 	}
     
-    @SuppressWarnings("deprecation")
+    
 	public void fireDCButton(Player p, boolean leftClick)
     {
     	if( checkProtectedRegion(p, p.getLocation()) )
@@ -4646,7 +4644,7 @@ public class OneCannon{
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
     	//new Thread() {
 	  //  @Override
-	    @SuppressWarnings("deprecation")
+
 		public void run()
 	    {
 	    		if ( stopFall1 && dc.dcDirection == 1 )

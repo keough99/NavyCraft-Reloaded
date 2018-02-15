@@ -58,6 +58,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
  * If you do cool modifications, please tell me so I can integrate it :)
  */
 
+@SuppressWarnings({"deprecation","resource"})
 public class NavyCraft extends JavaPlugin {
 
 	static final String pluginName = "NavyCraft";
@@ -181,6 +182,8 @@ public class NavyCraft extends JavaPlugin {
 
 	public void onEnable() {
 		instance = this; 
+		
+		this.saveDefaultConfig();
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(playerListener, this);
@@ -521,7 +524,6 @@ public class NavyCraft extends JavaPlugin {
     	return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void dropItem(Block block) {		
 		if(NavyCraft.instance.getConfig().getString("Drill").equalsIgnoreCase("true"))
 			return;
@@ -537,7 +539,6 @@ public class NavyCraft extends JavaPlugin {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public static void loadExperience()
 	{
 		String path = File.separator + "NCExp.txt";
@@ -581,7 +582,6 @@ public class NavyCraft extends JavaPlugin {
 	}
 	
 	
-	@SuppressWarnings("resource")
 	public static void saveExperience()
 	{
 		String path = File.separator + "NCExp.txt";
@@ -724,7 +724,6 @@ public class NavyCraft extends JavaPlugin {
    	, 4, 1);
 	 }
    
-   @SuppressWarnings("deprecation")
 public void updateCraft(int vehicleNum, int updateNum)
    {
 	   int vehicleCount = Craft.craftList.size();
@@ -1032,7 +1031,6 @@ public void updateCraft(int vehicleNum, int updateNum)
 		}
 	}
    
-	@SuppressWarnings("deprecation")
 	public static void explosion(int explosionRadius, Block warhead, boolean signs)
 	{
 		short powerMatrix[][][];
