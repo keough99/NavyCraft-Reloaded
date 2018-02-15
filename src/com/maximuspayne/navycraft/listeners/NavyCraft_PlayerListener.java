@@ -1562,7 +1562,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.GREEN + "Plot Rewarded.");
 
 						} else if (split[1].equalsIgnoreCase("list")) {
-							NavyCraft_BlockListener.loadShipyard();
+							NavyCraft_Timer.loadShipyard();
 							NavyCraft_BlockListener.loadRewards(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -1664,7 +1664,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1742,7 +1742,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1787,7 +1787,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1842,7 +1842,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1896,7 +1896,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1949,6 +1949,84 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard clear <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the plot" );
 							}
+							
+						} else if (split[1].equalsIgnoreCase("unclaim")) {
+							if (split.length == 3) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1) {
+									NavyCraft_Timer.loadShipyard();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("shipyard"));
+											String regionName = "--" + player.getName() + "-" + tpId;
+
+											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
+											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
+											int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
+											int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
+											int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
+											int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+
+											for (int x = startX; x <= endX; x++) {
+												for (int z = startZ; z <= endZ; z++) {
+													for (int y = startY; y <= 62; y++) {
+														plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
+																.setType(Material.AIR);
+
+													}
+													int startYy;
+													if (startY > 63) {
+														startYy = startY;
+													} else {
+														startYy = 63;
+													}
+													for (int y = startYy; y <= endY; y++) {
+														plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
+																.setType(Material.AIR);
+													}
+												}
+											}
+											regionManager.removeRegion(regionName);
+												foundSign.setLine(0, "*Claim*");
+												foundSign.setLine(1, "");
+												foundSign.setLine(2, "");
+												foundSign.setLine(3, "");
+												foundSign.update();
+											try {
+												regionManager.save();
+											} catch (StorageException e) {
+												e.printStackTrace();
+											}
+											
+											player.sendMessage(ChatColor.GREEN + "Plot Unclaimed.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the plot" );
+							}
+							
 						} else if (split[1].equalsIgnoreCase("rename")) {
 							if (split.length > 3) {
 								int tpId = -1;
@@ -1967,7 +2045,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1999,7 +2077,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2042,7 +2120,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2076,7 +2154,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("player")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadShipyard();
+								NavyCraft_Timer.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
 								if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
@@ -2295,7 +2373,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("plist")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadShipyard();
+								NavyCraft_Timer.loadShipyard();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
 								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -2399,7 +2477,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									return;
 								}
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard();
+									NavyCraft_Timer.loadShipyard();
 									NavyCraft_BlockListener.loadRewards(p);
 
 									Sign foundSign = null;
@@ -2438,7 +2516,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 					} else {
-						NavyCraft_BlockListener.loadShipyard();
+						NavyCraft_Timer.loadShipyard();
 						NavyCraft_BlockListener.loadRewards(player.getName());
 						String p = player.getName();
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");

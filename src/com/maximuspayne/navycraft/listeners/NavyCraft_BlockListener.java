@@ -868,7 +868,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.update();
 			
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
-						loadShipyard();
+						NavyCraft_Timer.loadShipyard();
 					} else {
 						player.sendMessage("World Guard error");
 					}
@@ -3731,79 +3731,6 @@ public class NavyCraft_BlockListener implements Listener {
 			return null;
 		}
 		
-	public static void loadShipyard() {
-		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
-			NavyCraft.playerSHIP1Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP1Signs.clear();
-		for (String s : NavyCraft.playerSHIP2Signs.keySet()) {
-			NavyCraft.playerSHIP2Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP2Signs.clear();
-		for (String s : NavyCraft.playerSHIP3Signs.keySet()) {
-			NavyCraft.playerSHIP3Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP3Signs.clear();
-		for (String s : NavyCraft.playerSHIP4Signs.keySet()) {
-			NavyCraft.playerSHIP4Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP4Signs.clear();
-		for (String s : NavyCraft.playerSHIP5Signs.keySet()) {
-			NavyCraft.playerSHIP5Signs.get(s).clear();
-		}
-		NavyCraft.playerSHIP5Signs.clear();
-		for (String s : NavyCraft.playerHANGAR1Signs.keySet()) {
-			NavyCraft.playerHANGAR1Signs.get(s).clear();
-		}
-		NavyCraft.playerHANGAR1Signs.clear();
-		for (String s : NavyCraft.playerHANGAR2Signs.keySet()) {
-			NavyCraft.playerHANGAR2Signs.get(s).clear();
-		}
-		NavyCraft.playerHANGAR2Signs.clear();
-		for (String s : NavyCraft.playerTANK1Signs.keySet()) {
-			NavyCraft.playerTANK1Signs.get(s).clear();
-		}
-		NavyCraft.playerTANK1Signs.clear();
-		for (String s : NavyCraft.playerTANK2Signs.keySet()) {
-			NavyCraft.playerTANK2Signs.get(s).clear();
-		}
-		NavyCraft.playerTANK2Signs.clear();
-		for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
-			NavyCraft.playerSHIP1Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP1Signs.clear();
-		for (String s : NavyCraft.playerMAP2Signs.keySet()) {
-			NavyCraft.playerMAP2Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP2Signs.clear();
-		for (String s : NavyCraft.playerMAP3Signs.keySet()) {
-			NavyCraft.playerMAP3Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP3Signs.clear();
-		for (String s : NavyCraft.playerMAP4Signs.keySet()) {
-			NavyCraft.playerMAP4Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP4Signs.clear();
-		for (String s : NavyCraft.playerMAP5Signs.keySet()) {
-			NavyCraft.playerMAP5Signs.get(s).clear();
-		}
-		NavyCraft.playerMAP5Signs.clear();
-		loadSHIP1Signs();
-		loadSHIP2Signs();
-		loadSHIP3Signs();
-		loadSHIP4Signs();
-		loadSHIP5Signs();
-		loadHANGAR1Signs();
-		loadHANGAR2Signs();
-		loadTANK1Signs();
-		loadTANK2Signs();
-		loadMAP1Signs();
-		loadMAP2Signs();
-		loadMAP3Signs();
-		loadMAP4Signs();
-		loadMAP5Signs();
-	}
-	
 	public static void loadRewards(String player) {
 		NavyCraft.playerSHIP1Rewards.clear();
 		NavyCraft.playerSHIP2Rewards.clear();
