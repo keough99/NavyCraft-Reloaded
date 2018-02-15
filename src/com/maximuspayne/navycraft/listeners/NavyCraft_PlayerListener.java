@@ -1521,7 +1521,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				return;
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
-					if (split.length > 1) {
 						if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
@@ -1697,6 +1696,28 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard tp <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to a plot id");
+							}
+							
+						} else if (split[1].equalsIgnoreCase("help")) {
+							player.sendMessage(ChatColor.GOLD + "Shipyard v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
+							player.sendMessage(ChatColor.AQUA + "/shipyard - Status message");
+							player.sendMessage(ChatColor.AQUA + "/shipyard list - List your current plots");
+							player.sendMessage(ChatColor.AQUA + "/shipyard info <id> - Information about plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard open <plot type> - Teleport to an unclaimed plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard unclaim <id> - Unclaimes a plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard tp <id> - Teleport to the plot id number");
+							player.sendMessage(ChatColor.AQUA + "/shipyard addmember <id> <player> - Gives player permission to that plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard remmember <id> <player> - Removes player permission to that plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard clear <id> - Destroys all blocks within the plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard rename <id> <custom name> - Renames the plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard public <id> - Allows any player to select your vehicle");
+							player.sendMessage(ChatColor.AQUA + "/shipyard private <id> - Allows only you and your members to select your vehicle");
+							player.sendMessage(ChatColor.AQUA + "/shipyard plist <player> - List the given player's plots");
+							player.sendMessage(ChatColor.AQUA + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
+							if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
+								player.sendMessage(ChatColor.RED + "Shipyard Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + " commands :");
+								player.sendMessage(ChatColor.BLUE + "/shipyard player <player> - View a players plot status");
+								player.sendMessage(ChatColor.BLUE + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
 							}
 						} else if (split[1].equalsIgnoreCase("open")) {
 							if (split.length == 3) {
@@ -2511,26 +2532,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard ptp <playerName> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to a player's plot id");
 							}
-						} else {
-							player.sendMessage(ChatColor.WHITE + "Shipyard v" + NavyCraft.version + " commands :");
-							player.sendMessage(ChatColor.GOLD + "/shipyard - Status message");
-							player.sendMessage(ChatColor.GOLD + "/shipyard list - List your current plots");
-							player.sendMessage(ChatColor.GOLD + "/shipyard info <id> - Information about plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard open <plot type> - teleport to an unclaimed plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard tp <id> - Teleport to the plot id number");
-							player.sendMessage(ChatColor.GOLD + "/shipyard addmember <id> <player> - Gives player permission to that plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard remmember <id> <player> - Removes player permission to that plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard clear <id> - Destroys all blocks within the plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard rename <id> <custom name> - Renames the plot");
-							player.sendMessage(ChatColor.GOLD + "/shipyard public <id> - Allows any player to select your vehicle");
-							player.sendMessage(ChatColor.GOLD + "/shipyard private <id> - Allows only you and your members to select your vehicle");
-							player.sendMessage(ChatColor.GOLD + "/shipyard plist <player> - List the given player's plots");
-							player.sendMessage(ChatColor.GOLD + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
-							if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
-								player.sendMessage(ChatColor.BLUE + "/shipyard player <player> - View a players plot status");
-								player.sendMessage(ChatColor.BLUE + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
-							}
-						}
+							
 					} else {
 						NavyCraft_Timer.loadShipyard();
 						NavyCraft_Timer.loadRewards(player.getName());
