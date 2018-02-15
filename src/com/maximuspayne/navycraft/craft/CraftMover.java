@@ -51,6 +51,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
+@SuppressWarnings("deprecation")
 public class CraftMover {
 	private Craft craft;
 	public static Plugin plugin;
@@ -78,7 +79,7 @@ public class CraftMover {
 		plugin = p;
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void setBlock(int id, Block block) {
 		// if(y < 0 || y > 127 || id < 0 || id > 255){
 		if ((id < 0) || (id > 255)) {
@@ -117,7 +118,7 @@ public class CraftMover {
 		return craft.world.getBlockAt(craft.minX + x, craft.minY + y, craft.minZ + z);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void storeDataBlocks() {
 		for (DataBlock dataBlock : craft.dataBlocks) {
 			if (dataBlock.id == getWorldBlock(dataBlock.x, dataBlock.y, dataBlock.z).getTypeId()) {
@@ -126,7 +127,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void storeComplexBlocks() { // store the data of all complex blocks, or die trying
 		Block currentBlock;
 
@@ -183,7 +184,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void restoreDataBlocks(int dx, int dy, int dz) {
 		Block block;
 
@@ -240,7 +241,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void reloadWeapons(Player p) {
 
 		for (DataBlock dataBlock : craft.dataBlocks) {
@@ -258,7 +259,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void delayedRestoreSigns(int dx, int dy, int dz) {
 
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -294,7 +295,7 @@ public class CraftMover {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void restoreComplexBlocks(int dx, int dy, int dz) {
 		Block theBlock;
 		Inventory inventory;
@@ -346,7 +347,7 @@ public class CraftMover {
 	
 	//perform collision detection, gravity.
 	//called by cruiseUpdate, calls delayed_move_collide
-	@SuppressWarnings("deprecation")
+	
 	public void calculateMove(int dx, int dy, int dz) {
 		//Try to detect damage and changes before moving
 		structureUpdate(null, false);
@@ -598,7 +599,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public int calculateBuoyancyMove()
 	{	
 		if( craft.canMove(0, craft.buoyancy, 0) )
@@ -638,7 +639,7 @@ public class CraftMover {
 	}
 
 	// move the craft according to a vector d
-	@SuppressWarnings("deprecation")
+	
 	public void move1() {
 		// if(craft.type.canDig) {
 		if (craft.isDestroying) { return; }
@@ -736,7 +737,7 @@ public class CraftMover {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void move2() {
 		// first pass, remove all items that need a support
 		removeSupportBlocks();
@@ -854,7 +855,7 @@ public class CraftMover {
 		restoreComplexBlocks(craft.dx, craft.dy, craft.dz);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void move2b() {
 		// first pass, remove all items that need a support
 		removeSupportBlocks();
@@ -1059,7 +1060,7 @@ public class CraftMover {
 
 	//performs vehicle movement, performs collision explosion
 	//called by calculateMove, calls move1, move2, move3
-	@SuppressWarnings("deprecation")
+	
 	public void delayed_move_collide(int dx, int dy, int dz) {
 
 		if (craft.type.canNavigate || craft.type.canDive) {
@@ -1137,7 +1138,7 @@ public class CraftMover {
 		//});
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void move(int dx, int dy, int dz, boolean checkStructure) {
 		if (craft.isDestroying) { return; }
 
@@ -1395,7 +1396,7 @@ public class CraftMover {
 
 	// scan to know if any of the craft blocks are now missing (blocks removed, TNT damage, creeper ?)
 	// and update the structure
-	@SuppressWarnings("deprecation")
+	
 	public void structureUpdate(Player causer, boolean scheduled) {
 		short craftBlockId;
 		int blockId;
@@ -2128,7 +2129,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void signUpdates(Block newBlock) {
 		Sign sign = (Sign) newBlock.getState();
 
@@ -4948,7 +4949,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void removeSupportBlocks() {
 		short blockId;
 		Block block;
@@ -5063,7 +5064,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void railMove() {
 		Byte deets = craft.railBlock.getData();
 
@@ -5079,7 +5080,7 @@ public class CraftMover {
 		// if so, prep another move?
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void sinkingThread() {
 		if (craft.signLoc != null) {
 			craft.signLoc.getBlock().setTypeId(0);
@@ -5156,7 +5157,7 @@ public class CraftMover {
 		});
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public boolean checkSink() {
 		int blockId;
 		Block newBlock;
@@ -5265,7 +5266,7 @@ public class CraftMover {
 
 	//updates if vehicle is moving and has stopped, 
 	//calls cruiseUpdate
-	@SuppressWarnings("deprecation")
+	
 	public void moveUpdate() {
 
 		if ((craft.noCaptain < 200)) {
@@ -5665,7 +5666,7 @@ public class CraftMover {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void sinkBroadcast() {
 		String broadcastMsg = "";
 		String logEntry = "";

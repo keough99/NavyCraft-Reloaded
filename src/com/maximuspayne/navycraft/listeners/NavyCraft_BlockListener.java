@@ -1,7 +1,5 @@
 package com.maximuspayne.navycraft.listeners;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,10 +28,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
 import com.maximuspayne.navycraft.NavyCraft;
@@ -43,34 +38,26 @@ import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
-import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.schematic.SchematicFormat;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.util.io.file.FilenameException;
-import com.sk89q.worldedit.world.registry.LegacyWorldData;
-import com.sk89q.worldedit.world.registry.WorldData;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-import ru.tehkode.permissions.exceptions.RankingException;
 
-@SuppressWarnings({ "deprecation", "unused" })
+@SuppressWarnings({ "deprecation"})
 public class NavyCraft_BlockListener implements Listener {
 	public static Craft updatedCraft = null;
 	private static NavyCraft plugin;
@@ -259,7 +246,7 @@ public class NavyCraft_BlockListener implements Listener {
 				EditSession es = wep.createEditSession(player);
 
 				Location loc;
-				int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
+				int sizeX, sizeY, sizeZ, originX, originY, originZ;
 				if (lotType == 1) {
 					loc = block.getRelative(bf, 28).getLocation();
 					sizeX = 13;
@@ -479,10 +466,10 @@ public class NavyCraft_BlockListener implements Listener {
 						return;
 					}
 
-					loadRewards(player.getName());
+					NavyCraft_Timer.loadRewards(player.getName());
 			
 					Location loc;
-					int sizeX, sizeY, sizeZ, originX, originY, originZ, offsetX, offsetY, offsetZ;
+					int sizeX, sizeY, sizeZ, originX, originY, originZ;
 					if (lotType == 1) {
 						loc = block.getRelative(bf, 28).getLocation();
 						sizeX = 13;
@@ -491,9 +478,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -29;
 			
 						int numSHIP1s = 0;
 						int numRewSHIP1s = 1;
@@ -516,9 +500,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -44;
 			
 						int numSHIP2s = 0;
 						int numRewSHIP2s = 0;
@@ -540,9 +521,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -71;
 			
 						int numSHIP3s = 0;
 						int numRewSHIP3s = 0;
@@ -564,9 +542,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -56;
 			
 						int numSHIP4s = 0;
 						int numRewSHIP4s = 0;
@@ -588,9 +563,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -8;
 						originZ = 0;
-						offsetX = 0;
-						offsetY = -7;
-						offsetZ = -99;
 			
 						int numSHIP5s = 0;
 						int numRewSHIP5s = 0;
@@ -612,9 +584,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -18;
-						offsetX = -17;
-						offsetY = 0;
-						offsetZ = -20;
 			
 						int numH1s = 0;
 						int numRewH1s = 0;
@@ -636,9 +605,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -31;
-						offsetX = -25;
-						offsetY = 0;
-						offsetZ = -33;
 			
 						int numH2s = 0;
 						int numRewH2s = 0;
@@ -660,10 +626,7 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -18;
-						offsetX = -12;
-						offsetY = 0;
-						offsetZ = -20;
-			
+						
 						int numT1s = 0;
 						int numRewT1s = 0;
 						if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
@@ -684,9 +647,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -1;
 						originZ = -32;
-						offsetX = -27;
-						offsetY = 0;
-						offsetZ = -34;
 			
 						int numT2s = 0;
 						int numRewT2s = 0;
@@ -708,9 +668,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -99;
-						offsetX = -100;
-						offsetY = 0;
-						offsetZ = -101;
 			
 						int numM1s = 0;
 						int numRewM1s = 0;
@@ -732,9 +689,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -149;
-						offsetX = -150;
-						offsetY = 0;
-						offsetZ = -151;
 			
 						int numM2s = 0;
 						int numRewM2s = 0;
@@ -756,9 +710,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -199;
-						offsetX = -200;
-						offsetY = 0;
-						offsetZ = -201;
 			
 						int numM3s = 0;
 						int numRewM3s = 0;
@@ -780,9 +731,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -249;
-						offsetX = -250;
-						offsetY = 0;
-						offsetZ = -251;
 			
 						int numM4s = 0;
 						int numRewM4s = 0;
@@ -804,9 +752,6 @@ public class NavyCraft_BlockListener implements Listener {
 						originX = 0;
 						originY = -63;
 						originZ = -499;
-						offsetX = -500;
-						offsetY = 0;
-						offsetZ = -501;
 			
 						int numM5s = 0;
 						int numRewM5s = 0;
@@ -1031,84 +976,6 @@ public class NavyCraft_BlockListener implements Listener {
 				int shiftForward = 0;
 				int shiftUp = 0;
 				int shiftDown = 0;
-				{
-					if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP1")) {
-						shiftRight = 12;
-						shiftForward = 28;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP2")) {
-						shiftRight = 8;
-						shiftForward = 43;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP3")) {
-						shiftRight = 10;
-						shiftForward = 70;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP4")) {
-						shiftRight = 16;
-						shiftForward = 55;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP5")) {
-						shiftRight = 16;
-						shiftForward = 98;
-						shiftUp = 20;
-						shiftDown = 8;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR1")) {
-						shiftRight = 16;
-						shiftForward = 19;
-						// shiftRight = 0;
-						// shiftForward = 0;
-						shiftUp = 7;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR2")) {
-						shiftRight = 24;
-						shiftForward = 32;
-						// shiftRight = 0;
-						// shiftForward = 0;
-						shiftUp = 14;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK1")) {
-						shiftRight = 11;
-						shiftForward = 19;
-						shiftUp = 7;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK2")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP1")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP2")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP3")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP4")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("MAP5")) {
-						shiftRight = 25;
-						shiftForward = 34;
-						shiftUp = 9;
-						shiftDown = 0;
-					} else {
-						player.sendMessage("Unknown lot type error2!");
-					}
 
 					Block rightLimit = block.getRelative(bf2, shiftRight).getRelative(bf, shiftForward).getRelative(BlockFace.UP, shiftUp);
 					Block leftLimit = block.getRelative(bf, 1).getRelative(BlockFace.DOWN, shiftDown);
@@ -1199,8 +1066,6 @@ public class NavyCraft_BlockListener implements Listener {
 								}
 							}
 						}
-					}
-					player.sendMessage("No ship sign located!");
 				}
 
 			} catch (MaxChangedBlocksException e) {
@@ -3037,7 +2902,7 @@ public class NavyCraft_BlockListener implements Listener {
 			for (int z = startZ; z >= endZ; z -= widthZ) {
 				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
 					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					syworld.getBlockAt(x + 1, 64, z);
 					Sign selectSign = (Sign) selectSignBlock.getState();
 					String signLine0 = selectSign.getLine(0);
 
@@ -3125,7 +2990,7 @@ public class NavyCraft_BlockListener implements Listener {
 			for (int z = startZ; z >= endZ; z -= widthZ) {
 				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
 					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x + 1, 64, z);
+					syworld.getBlockAt(x + 1, 64, z);
 					Sign selectSign = (Sign) selectSignBlock.getState();
 					String signLine0 = selectSign.getLine(0);
 
@@ -3730,172 +3595,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 			return null;
 		}
-		
-	public static void loadRewards(String player) {
-		NavyCraft.playerSHIP1Rewards.clear();
-		NavyCraft.playerSHIP2Rewards.clear();
-		NavyCraft.playerSHIP3Rewards.clear();
-		NavyCraft.playerSHIP4Rewards.clear();
-		NavyCraft.playerSHIP5Rewards.clear();
-		NavyCraft.playerHANGAR1Rewards.clear();
-		NavyCraft.playerHANGAR2Rewards.clear();
-		NavyCraft.playerTANK1Rewards.clear();
-		NavyCraft.playerTANK2Rewards.clear();
-		NavyCraft.playerMAP1Rewards.clear();
-		NavyCraft.playerMAP2Rewards.clear();
-		NavyCraft.playerMAP3Rewards.clear();
-		NavyCraft.playerMAP4Rewards.clear();
-		NavyCraft.playerMAP5Rewards.clear();
 
-		String worldName = "";
-		if(plugin.getConfig().getString("EnabledWorlds") != "null") {
-			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
-			worldName = worlds[0];
-		}else{
-			worldName = plugin.getServer().getPlayer(player).getWorld().getName();
-		}
-		
-		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
-		if( pex==null )
-			return;
-		
-		for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
-			if( s.contains("navycraft") ) {
-				if( s.contains("ship1") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP1Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
-					}
-				}else if( s.contains("ship2") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP2Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("ship3") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP3Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("ship4") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP4Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("ship5") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP5Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("hangar1") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR1Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("hangar2") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR2Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("tank1") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK1Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				}else if( s.contains("tank2") )
-				{
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK2Rewards.put(player, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				} else if( s.contains("map1") )
-					{
-						String[] split = s.split("\\.");
-						try {
-							int num = Integer.parseInt(split[2]);
-							NavyCraft.playerMAP1Rewards.put(player, num);
-						} catch (Exception ex) {
-							System.out.println("Invalid perm-" + s + " " + s.split(".").length);
-						}
-					}else if( s.contains("map2") )
-					{
-						String[] split = s.split("\\.");
-						try {
-							int num = Integer.parseInt(split[2]);
-							NavyCraft.playerMAP2Rewards.put(player, num);
-						} catch (Exception ex) {
-							System.out.println("Invalid perm-" + s);
-						}
-					}else if( s.contains("map3") )
-					{
-						String[] split = s.split("\\.");
-						try {
-							int num = Integer.parseInt(split[2]);
-							NavyCraft.playerMAP3Rewards.put(player, num);
-						} catch (Exception ex) {
-							System.out.println("Invalid perm-" + s);
-						}
-					}else if( s.contains("map4") )
-					{
-						String[] split = s.split("\\.");
-						try {
-							int num = Integer.parseInt(split[2]);
-							NavyCraft.playerMAP4Rewards.put(player, num);
-						} catch (Exception ex) {
-							System.out.println("Invalid perm-" + s);
-						}
-					}else if( s.contains("map5") )
-					{
-						String[] split = s.split("\\.");
-						try {
-							int num = Integer.parseInt(split[2]);
-							NavyCraft.playerMAP5Rewards.put(player, num);
-						} catch (Exception ex) {
-							System.out.println("Invalid perm-" + s);
-						}
-				}
-			}
-		}
-
-
-		NavyCraft.loadRewardsFile();
-
-	}
-	
 	public static Sign findSign(String player, int id) {
 		Sign foundSign = null;
 		if (NavyCraft.playerSHIP1Signs.containsKey(player)) {

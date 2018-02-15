@@ -20,6 +20,7 @@ import com.maximuspayne.navycraft.Pump;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 
+@SuppressWarnings({"deprecation"})
 public class CraftRotator {
 	public Plugin plugin;
 	public Craft craft;
@@ -90,12 +91,6 @@ public class CraftRotator {
 	}
 	//will replace other rotates
 	public Location rotate(Location point, int r, boolean isEntity, int minX, int minZ, int offX, int offZ){
-		@SuppressWarnings("unused")
-		Location entOffset;
-		if (isEntity){
-			entOffset = new Location(craft.world, 0.5, 0.0, 0.5);
-		}
-		else entOffset = new Location(craft.world, 0.0, 0.0, 0.0);
 		//Location pivot = this.getPivot().add(entOffset);
 		Location newPoint = point.clone();
 		//newPoint = point.subtract(pivot);// make point relative to pivot
@@ -173,7 +168,7 @@ public class CraftRotator {
 	}
 
 	//setblock, SAFE !
-	@SuppressWarnings("deprecation")
+	
 	public void setBlock(double id, int X, int Y, int Z) {
 		if(Y < 0 || Y > 255 || id < 0 || id > 255){
 			return;
@@ -197,7 +192,7 @@ public class CraftRotator {
 		setBlock(id, X, Y, Z);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void setDataBlock(short id, byte data, int X, int Y, int Z) {
 		if(Y < 0 || Y > 255 || id < 0 || id > 255){
 			return;
@@ -207,7 +202,7 @@ public class CraftRotator {
 		craft.world.getBlockAt(X, Y, Z).setData(data);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public short getWorldBlockId(int x, int y, int z, int r, int minX, int minY, int minZ, int offX, int offZ){
 		/** get world block id with matrix coordinates and rotation */
 		short blockId;
@@ -312,7 +307,7 @@ public class CraftRotator {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void turn(int dr) {
 
 		if( craft.waitTorpLoading > 0 )
@@ -394,7 +389,7 @@ public class CraftRotator {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void moveBlocks(Vector moveBy, int dr){
 		/** move the craft according to a vector d
 		wdx : world delta x
@@ -647,7 +642,7 @@ public class CraftRotator {
 		cm.restoreComplexBlocks(0, 0, 0);
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void rotateCardinals(ArrayList<DataBlock> blocksToRotate, int dr) {
 		//http://www.minecraftwiki.net/wiki/Data_values
 		//and beds
@@ -844,7 +839,7 @@ public class CraftRotator {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+	
 	public void removeSupportBlocks() {
 		short blockId;
 		Block block;
@@ -887,7 +882,7 @@ public class CraftRotator {
 		return craft.world.getBlockAt(craft.minX + x, craft.minY + y, craft.minZ + z);
 	}
 	
-	@SuppressWarnings("deprecation")
+	
 	public void setBlock(int id, Block block) {		
 		// if(y < 0 || y > 127 || id < 0 || id > 255){
 		if (id < 0 || id > 255) {
@@ -914,7 +909,7 @@ public class CraftRotator {
 	}
 	
 	
-	@SuppressWarnings("deprecation")
+	
 	public void restoreDataBlocks(int dx, int dy, int dz) {
 		Block block;
 		

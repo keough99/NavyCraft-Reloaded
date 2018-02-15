@@ -39,7 +39,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
  * You are not allowed to distribute alternative versions of MoveCraft without my consent.
  * If you do cool modifications, please tell me so I can integrate it :)
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation"})
 public class Craft {
 
 	// list of craft
@@ -534,13 +534,6 @@ public class Craft {
 
 	private static boolean isFree(int blockId) {
 		if (blockId == 0 || blockId == -1)
-			return true;
-		return false;
-	}
-
-	@SuppressWarnings("unused")
-	private static boolean isAirOrWater(int blockId) {
-		if (blockId == 0 || (blockId >= 8 && blockId <= 11))
 			return true;
 		return false;
 	}

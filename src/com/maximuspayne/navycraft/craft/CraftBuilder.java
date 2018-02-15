@@ -19,6 +19,7 @@ import com.maximuspayne.navycraft.blocks.DataBlock;
  * Detects and "assembles" a craft from a series of blocks, from a specified origin block
  * @author Joel (Yogoda)
  */
+@SuppressWarnings("deprecation")
 public class CraftBuilder {
 
 	private static Craft craft;
@@ -93,7 +94,7 @@ public class CraftBuilder {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	private static void detectWater(int x, int y, int z){
 		if(craft.isCraftBlock(x, y, z)) return;
 
@@ -217,7 +218,7 @@ public class CraftBuilder {
 
 	//second pass detection, we have the craft blocks, now we go from bottom to top,
 	//add all missing blocks, detect water level
-	@SuppressWarnings("deprecation")
+	
 	private static boolean secondPassDetection(){
 		//boolean needWaterDetection = false;
 
@@ -375,20 +376,20 @@ public class CraftBuilder {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	private static void addDataBlock(int id, int x, int y, int z){
 		craft.dataBlocks.add(new DataBlock(id, x - craft.minX, y - craft.minY, z - craft.minZ,
 				craft.world.getBlockAt(x, y, z).getData()));
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	private static void addComplexBlock(int id, int x, int y, int z){
 		craft.complexBlocks.add(new DataBlock(id, x - craft.minX, y - craft.minY, z - craft.minZ,
 				craft.world.getBlockAt(x, y, z).getData()));
 		//craft.complexBlocks.add(world.getBlockAt(x - craft.posX, y - craft.posY, z - craft.posZ));
 	}
 
-	/*@SuppressWarnings("deprecation")
+	/*
 	private static void addEngineBlock(int id, int x, int y, int z){
 		craft.engineBlocks.add(new DataBlock(id, x - craft.minX, y - craft.minY, z - craft.minZ,
 				craft.world.getBlockAt(x, y, z).getData()));
@@ -440,7 +441,7 @@ public class CraftBuilder {
 		dmatrix = null; //release the dynamic matrix now we don't need it anymore
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	private static void detectBlock(int x, int y, int z, int dir){
 
 		Short blockType = get(x, y, z);
@@ -596,7 +597,7 @@ public class CraftBuilder {
 
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public static boolean detect(Craft craft, int X, int Y, int Z){
 		waitStopMakingThatCraft = false;
 		CraftBuilder.craft = craft;
