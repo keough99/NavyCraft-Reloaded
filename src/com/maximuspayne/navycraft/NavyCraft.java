@@ -475,8 +475,42 @@ public class NavyCraft extends JavaPlugin {
 			}
 		}
 	}
+	
+	public static void loadShipyardData(String player)
+	{
+		  File shipyarddata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+          File f = new File(shipyarddata, File.separator + "signs.yml");
+          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 
-	public static void loadData(String player)
+          //When the file is created for the first time...
+          if (!f.exists()) {
+              try {
+
+                  syData.createSection("SHIP1Signs");
+                  syData.createSection("SHIP2Signs");
+                  syData.createSection("SHIP3Signs");
+                  syData.createSection("SHIP4Signs");
+                  syData.createSection("SHIP5Signs");
+                  syData.createSection("HANGAR1Signs");
+                  syData.createSection("HANGAR2Signs");
+                  syData.createSection("TANK1Signs");
+                  syData.createSection("TANK2Signs");
+                  syData.createSection("MAP1Signs");
+                  syData.createSection("MAP2Signs");
+                  syData.createSection("MAP3Signs");
+                  syData.createSection("MAP4Signs");
+                  syData.createSection("MAP5Signs");
+                  
+                  syData.save(f);
+              } catch (IOException exception) {
+                  exception.printStackTrace();
+              }
+          }
+          //Put all the hashmaps to file data
+          //loadShipyard();
+	}
+
+	public static void loadPlayerData(String player)
 	{
 		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
           File f = new File(userdata, File.separator + player + ".yml");
@@ -502,6 +536,9 @@ public class NavyCraft extends JavaPlugin {
                   playerData.set(player + ".MAP3", 0);
                   playerData.set(player + ".MAP4", 0);
                   playerData.set(player + ".MAP5", 0);
+                  playerData.set(player + ".wepvolume", 100.0);
+                  playerData.set(player + ".engvolume", 100.0);
+                  playerData.set(player + ".othervolume", 100.0);
                   
                   
                  
@@ -512,6 +549,7 @@ public class NavyCraft extends JavaPlugin {
           }
           //Put all the hashmaps to file data
           loadExperience(player);
+          loadVolume(player);
 	}
 	
 	public static void loadExperience(String player) {
@@ -532,7 +570,34 @@ public class NavyCraft extends JavaPlugin {
           try {
 			playerData.save(f);
 		} catch (IOException e) {
-			loadData(player);
+			loadPlayerData(player);
+		}
+	}
+	public static void loadVolume(String player) {
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+        File f = new File(userdata, File.separator + player + ".yml");
+        FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+  	    playerEngineVolumes.clear();
+		playerEngineVolumes.put(instance.getServer().getPlayer(player), Float.valueOf(playerData.get(player + ".engvolume").toString()));
+  	    playerWeaponVolumes.clear();
+		playerWeaponVolumes.put(instance.getServer().getPlayer(player), Float.valueOf(playerData.get(player + ".wepvolume").toString()));
+  	    playerOtherVolumes.clear();
+		playerOtherVolumes.put(instance.getServer().getPlayer(player), Float.valueOf(playerData.get(player + ".othervolume").toString()));
+	}
+	
+	
+	public static void saveVolume(String player)
+	{
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+        File f = new File(userdata, File.separator + player + ".yml");
+        FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+        playerData.set(player + ".wepvolume", playerWeaponVolumes.get(instance.getServer().getPlayer(player)));
+        playerData.set(player + ".engvolume", playerEngineVolumes.get(instance.getServer().getPlayer(player)));
+        playerData.set(player + ".othervolume", playerOtherVolumes.get(instance.getServer().getPlayer(player)));
+        try {
+			playerData.save(f);
+		} catch (IOException e) {
+			loadPlayerData(player);
 		}
 	}
 	public static void loadRewardsFile(String player)
@@ -558,7 +623,7 @@ public class NavyCraft extends JavaPlugin {
 			playerData.save(f);
 			return;
 		} catch (IOException e) {
-			loadData(player);
+			loadPlayerData(player);
 		}
        return;
 	}

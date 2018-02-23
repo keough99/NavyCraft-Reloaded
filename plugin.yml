@@ -1,17 +1,33 @@
 name: NavyCraft
 main: com.maximuspayne.navycraft.NavyCraft
 version: 3.0.5
+author: Solmex
 authors: [Maximuspayne, Solmex, Premejo, SycoPrime, Yogoda]
+website: https://github.com/Solmex72/NavyCraft-Reloaded
 depend: [WorldGuard,WorldEdit,Vault,PermissionsEx]
 
 commands:
    navycraft:
-      description: Ship and other vehicle based commands
-      usage:
-           /<command>
+      description: Basic navycraft plugin commands
+      aliases: [nc]
    ship:
-      description: Ship
-   aircraft:
-      description: Aircraft
-   submarine:
-      description: Submarine
+      description: Base vehicle command, displays your vehicle information
+      aliases: [submarine, tank, aircraft, helicopter]
+   ship help:
+      description: Displays other comamnds for the vehicle system.
+      aliases: [submarine_help, tank_help, aircraft_help, helicopter_help]
+   shipyard:
+      description: Base shipyard command, displays your avaliable shipyard plots
+      aliases: [sy, yard]
+   shipyard help:
+      description: Displays help for the shipyard system.
+      aliases: [sy help, yard help]
+   rank:
+      description: Base rank command, displays your rank, and the required EXP for the next rank
+   rank help:
+      description: Displays help for the ranking system.
+   volume:
+      description: Base volume command, displays volume help, and the types of volume
+   volume help:
+      description: Displays help for the volume system, and the types of volume
+   

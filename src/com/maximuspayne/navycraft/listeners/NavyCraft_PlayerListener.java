@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -26,7 +24,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -122,7 +119,8 @@ public class NavyCraft_PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		NavyCraft.loadData(player.getName());
+		NavyCraft.loadPlayerData(player.getName());
+		NavyCraft.loadVolume(player.getName());
 		if (Craft.reboardNames.containsKey(player.getName())) {
 			if ((Craft.reboardNames.get(player.getName()) != null)
 					&& Craft.reboardNames.get(player.getName()).crewNames.contains(player.getName())) {
@@ -182,12 +180,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 			}
 		}
-	}
-	
-
-
-	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
-
 	}
 
 	
@@ -1335,7 +1327,15 @@ public class NavyCraft_PlayerListener implements Listener {
 				
 				if( PermissionInterface.CheckQuietPerm(player, "navycraft.admin") )
 				{
-					player.sendMessage(ChatColor.BLUE + "Do /nc help for admin commands!");
+					player.sendMessage(ChatColor.RED + "NavyCraft Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + " commands :");
+					player.sendMessage(ChatColor.BLUE + "/navycraft list : " + ChatColor.WHITE
+						+ "list all craft");
+					player.sendMessage(ChatColor.BLUE + "/navycraft reload : " + ChatColor.WHITE + "reload config files");
+					player.sendMessage(ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
+					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE + "enables cleanup tools, use lighter, gold spade, and shears");
+					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE + "destroys all active ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE + "deactivates all active ships");
+					player.sendMessage(ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
 				}
 				event.setCancelled(true);
 			}
@@ -3627,6 +3627,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerEngineVolumes.put(player, inValue);
+							NavyCraft.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "Engine volume muted");
 							event.setCancelled(true);
 							return;
@@ -3638,6 +3639,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerEngineVolumes.put(player, inValue);
+										NavyCraft.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for engines - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3654,14 +3656,15 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					if (split[1].equalsIgnoreCase("weapon")) {
 						if (!PermissionInterface.CheckPerm(player, "navycraft.basic") && !player.isOp()) {
-							player.sendMessage(ChatColor.RED + "You do not have permission to set gun volume.");
+							player.sendMessage(ChatColor.RED + "You do not have permission to set weapon volume.");
 							event.setCancelled(true);
 							return;
 						}
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerWeaponVolumes.put(player, inValue);
-							player.sendMessage(ChatColor.GOLD + "Gun volume muted");
+							NavyCraft.saveVolume(player.getName());
+							player.sendMessage(ChatColor.GOLD + "Weapon volume muted");
 							event.setCancelled(true);
 							return;
 						}
@@ -3672,6 +3675,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerWeaponVolumes.put(player, inValue);
+										NavyCraft.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for weapons - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3694,6 +3698,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
+							NavyCraft.saveVolume(player.getName());
 							NavyCraft.playerOtherVolumes.put(player, inValue);
 							player.sendMessage(ChatColor.GOLD + "Other volumes muted");
 							event.setCancelled(true);
@@ -3706,6 +3711,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerOtherVolumes.put(player, inValue);
+										NavyCraft.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for other - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3731,6 +3737,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							NavyCraft.playerEngineVolumes.put(player, inValue);
 							NavyCraft.playerWeaponVolumes.put(player, inValue);
 							NavyCraft.playerOtherVolumes.put(player, inValue);
+							NavyCraft.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "All volume muted");
 							event.setCancelled(true);
 							return;
@@ -3744,6 +3751,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										NavyCraft.playerOtherVolumes.put(player, inValue);
 										NavyCraft.playerWeaponVolumes.put(player, inValue);
 										NavyCraft.playerEngineVolumes.put(player, inValue);
+										NavyCraft.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for all - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -3761,11 +3769,10 @@ public class NavyCraft_PlayerListener implements Listener {
 				} else {
 					player.sendMessage(ChatColor.GOLD + "Volume v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " commands :");
 					player.sendMessage(ChatColor.AQUA + "/volume - status message");
-					player.sendMessage(ChatColor.GOLD + "/volume <type> <volume> - sets volume for type");
-					player.sendMessage(ChatColor.GOLD + "/volume <type> mute - mutes volume");
-					player.sendMessage(ChatColor.YELLOW + "Types: engine, gun, other, all");
+					player.sendMessage(ChatColor.AQUA + "/volume <type> <volume> - sets volume for type");
+					player.sendMessage(ChatColor.AQUA + "/volume <type> mute - mutes volume");
+					player.sendMessage(ChatColor.YELLOW + "Types: engine, weapons, other, all");
 					}
-					event.setCancelled(true);
 					return;
 			} else if (craftName.equalsIgnoreCase("explode")) {
 				if (PermissionInterface.CheckPerm(player, "navycraft.admin")) {
@@ -4070,6 +4077,32 @@ public class NavyCraft_PlayerListener implements Listener {
 
 				return true;
 
+			} else if (split[1].equalsIgnoreCase("help")) {
+				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
+					player.sendMessage(ChatColor.GOLD + "Vehicle Commands v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " :");
+					player.sendMessage(ChatColor.AQUA + "/ship - Ship Status");
+					player.sendMessage(ChatColor.AQUA + "/ship tp - Teleport to your vehicle (1 min cooldown)");
+					player.sendMessage(ChatColor.AQUA + "/ship leave - Leave the crew of your ship");
+					player.sendMessage(ChatColor.AQUA + "/radio <message> - (or /ra) Send radio message (if equipped)");
+					player.sendMessage(ChatColor.AQUA + "/radio - (or /ra) Radio status");
+					player.sendMessage(ChatColor.AQUA + "/crew <message> - Send message to your crew");
+					player.sendMessage(ChatColor.AQUA + "/crew - Crew status");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship release - (Cpt) Release your command of the ship");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship store - (Cpt) Stores your vehicle if in a storage dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship sink - (Cpt) Scuttles your vehicle after a timer");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
+				}
+				if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin")) {
+					player.sendMessage(ChatColor.BLUE + "/ship command - (Mod) Steal command of a ship");
+					player.sendMessage(ChatColor.BLUE + "/ship remove - (Mod) Instantly disable a ship");
+					player.sendMessage(ChatColor.BLUE + "/ship drive - (Mod) Drive without sign");
+					player.sendMessage(ChatColor.BLUE + "/ship buoy - (Mod) View and modify buoyancy variables");
+				}
 			}else if (split[1].equalsIgnoreCase("drive")
 					&& (PermissionInterface.CheckPerm(player,  "navycraft.admin"))) {
 				if (player.getItemInHand().getTypeId() > 0) {
@@ -4282,41 +4315,6 @@ public class NavyCraft_PlayerListener implements Listener {
 				} else {
 					player.sendMessage(ChatColor.RED + "No vehicle detected.");
 				}
-			} else if (split[1].equalsIgnoreCase("warpdrive")&& PermissionInterface.CheckPerm(player,  "navycraft.other") ) {
-
-				if (split.length == 1) {
-					List<World> worlds = NavyCraft.instance.getServer().getWorlds();
-					player.sendMessage("You can warp to: ");
-					for (World world : worlds) {
-						player.sendMessage(world.getName());
-					}
-				} else {
-					World targetWorld = NavyCraft.instance.getServer().getWorld(split[2]);
-					if (targetWorld != null) {
-						craft.WarpToWorld(targetWorld);
-					} else if (player.isOp()) { // create the world, if the
-												// player is an op
-						if ((split.length > 3) && split[3].equalsIgnoreCase("nether")) {
-
-						} else {
-
-						}
-
-						while (targetWorld == null) {
-							try {
-								wait(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							targetWorld = NavyCraft.instance.getServer().getWorld(split[2]);
-						}
-						Chunk targetChunk = targetWorld
-								.getChunkAt(new Location(targetWorld, craft.minX, craft.minY, craft.minZ));
-						targetWorld.loadChunk(targetChunk);
-
-						craft.WarpToWorld(targetWorld);
-					}
-				}
 			} else if (split[1].equalsIgnoreCase("leave")) {
 				if (craft != null) {
 					craft.leaveCrew(player);
@@ -4464,33 +4462,9 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				return true;
 			} else {
-				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
-					player.sendMessage(ChatColor.GOLD + "Vehicle Commands v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " :");
-					player.sendMessage(ChatColor.AQUA + "/ship - Ship Status");
-					player.sendMessage(ChatColor.AQUA + "/ship tp - Teleport to your vehicle (1 min cooldown)");
-					player.sendMessage(ChatColor.AQUA + "/ship leave - Leave the crew of your ship");
-					player.sendMessage(ChatColor.AQUA + "/radio <message> - (or /ra) Send radio message (if equipped)");
-					player.sendMessage(ChatColor.AQUA + "/radio - (or /ra) Radio status");
-					player.sendMessage(ChatColor.AQUA + "/crew <message> - Send message to your crew");
-					player.sendMessage(ChatColor.AQUA + "/crew - Crew status");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship release - (Cpt) Release your command of the ship");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship store - (Cpt) Stores your vehicle if in a storage dock region");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship sink - (Cpt) Scuttles your vehicle after a timer");
-					player.sendMessage(ChatColor.DARK_AQUA + "/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
-				}
-				if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin")) {
-					player.sendMessage(ChatColor.BLUE + "/ship command - (Mod) Steal command of a ship");
-					player.sendMessage(ChatColor.BLUE + "/ship remove - (Mod) Instantly disable a ship");
-					player.sendMessage(ChatColor.BLUE + "/ship drive - (Mod) Drive without sign");
-					player.sendMessage(ChatColor.BLUE + "/ship buoy - (Mod) View and modify buoyancy variables");
-				}
 				return true;
 			}
+		}
 
 		if (craft != null) {
 			player.sendMessage(ChatColor.GOLD + "Vehicle Status");
@@ -4516,8 +4490,6 @@ public class NavyCraft_PlayerListener implements Listener {
 		}
 
 		return true;
-	}
- return true;
 	}
 
 	
