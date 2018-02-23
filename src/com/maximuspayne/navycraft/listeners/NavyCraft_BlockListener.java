@@ -137,12 +137,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 
 			if (block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getTypeId() == 68) {
+				String ownerName = sign.getLine(1) + sign.getLine(2);
 				String spawnName = sign.getLine(3).trim().toLowerCase();
 				Sign sign2 = (Sign) block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getState();
 				String restrictedName = sign2.getLine(0).trim().toLowerCase();
 				String rankStr = sign2.getLine(1).trim().toLowerCase();
 				String idStr = sign2.getLine(2).trim().toLowerCase();
 				String lotStr = sign2.getLine(3).trim().toLowerCase();
+				ownerName = ownerName.replaceAll(ChatColor.BLUE.toString(), "");
 				spawnName = spawnName.replaceAll(ChatColor.BLUE.toString(), "");
 				restrictedName = restrictedName.replaceAll(ChatColor.BLUE.toString(), "");
 				rankStr = rankStr.replaceAll(ChatColor.BLUE.toString(), "");
@@ -199,8 +201,6 @@ public class NavyCraft_BlockListener implements Listener {
 					player.sendMessage(ChatColor.RED + "Sign error: lot type");
 					return;
 				}
-
-				String ownerName = sign.getLine(1) + sign.getLine(2);
 
 				if (!restrictedName.isEmpty() && !restrictedName.equalsIgnoreCase("Public") && !restrictedName.equalsIgnoreCase(player.getName()) && !ownerName.equalsIgnoreCase(player.getName()) && !player.isOp() && !PermissionInterface.CheckQuietPerm(player, "NavyCraft.select")) {
 
@@ -813,7 +813,6 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.update();
 			
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
-						NavyCraft_Timer.loadShipyard();
 					} else {
 						player.sendMessage("World Guard error");
 					}
@@ -3755,9 +3754,7 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 				}
 			}
-
-
-			NavyCraft.loadRewardsFile();
+			NavyCraft.loadRewardsFile(player);
 
 			    }
 
@@ -3980,12 +3977,10 @@ public class NavyCraft_BlockListener implements Listener {
 		if(!event.isCancelled())
 			AimCannonPlayerListener.onBlockDispense(event);
 	}
-	public static void showRank(Player player, String p) {
+	public static void showRank(Player player, Player p) {
 		int exp = 0;
 		int exp1 = 0;
 		String worldName = null;
-		
-		NavyCraft.loadExperience();
 		
 		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		
@@ -4006,18 +4001,18 @@ public class NavyCraft_BlockListener implements Listener {
 		List<String> groupNames = PermissionsEx.getUser(p).getParentIdentifiers("navycraft");
 		for( String s : groupNames ) {
 			if( PermissionsEx.getPermissionManager().getGroup(s).getRankLadder().equalsIgnoreCase("navycraft") ) {
-				if (NavyCraft.playerExp.containsKey(p)) {
-					exp = NavyCraft.playerExp.get(p);
+				if (NavyCraft.playerExp.containsKey(p.getName())) {
+					exp = NavyCraft.playerExp.get(p.getName());
 				}
-				player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + s.toUpperCase()
+				player.sendMessage(ChatColor.GRAY + p.getName() + "'s rank is " + ChatColor.WHITE + s.toUpperCase()
 						+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp + "/" + rankExp
 						+ ChatColor.GRAY + " rank points.");
 				return;
 	   } else { 
-		   exp1 = NavyCraft.playerExp.get(p);
+		   exp1 = NavyCraft.playerExp.get(p.getName());
 			String[] groupName = PermissionsEx.getUser(p).getGroupsNames();
 			for( String g : groupName ) {
-			player.sendMessage(ChatColor.GRAY + p + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
+			player.sendMessage(ChatColor.GRAY + p.getName() + "'s rank is " + ChatColor.WHITE + g.toUpperCase()
 			+ ChatColor.GRAY + " and has " + ChatColor.WHITE + exp1
 			+ ChatColor.GRAY + " rank points.");
 	return;
@@ -4030,7 +4025,7 @@ public class NavyCraft_BlockListener implements Listener {
 		int exp1 = 0;
 		String worldName = player.getWorld().getName();
 		
-		NavyCraft.loadExperience();
+		NavyCraft.loadExperience(player.getName());
 		
 		pex = (PermissionsEx)plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		
@@ -4087,7 +4082,7 @@ public class NavyCraft_BlockListener implements Listener {
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
-		NavyCraft.saveExperience();	
+		NavyCraft.saveExperience(player.getName());	
 		if (NavyCraft.battleMode > 0) {
 		if (NavyCraft.battleType == 1) {		
             if (NavyCraft.redPlayers.contains(player.getName())) {		
@@ -4115,7 +4110,7 @@ public class NavyCraft_BlockListener implements Listener {
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
 			}
-		NavyCraft.saveExperience();
+		NavyCraft.saveExperience(p.getName());
 		if (NavyCraft.battleMode > 0) {
 		if (NavyCraft.battleType == 1) {		
             if (NavyCraft.redPlayers.contains(p.getName())) {		
@@ -4128,29 +4123,29 @@ public class NavyCraft_BlockListener implements Listener {
 }
 	}
 	
-	public static void setExpPlayer(int newExp, String p) {
-		NavyCraft.playerExp.put(p, newExp);
-		NavyCraft.saveExperience();
+	public static void setExpPlayer(int newExp, Player p) {
+		NavyCraft.playerExp.put(p.getName(), newExp);
+		NavyCraft.saveExperience(p.getName());
 	}
 	
-	public static void removeExpPlayer(int newExp, String p) {
-		if (NavyCraft.playerExp.containsKey(p)) {
-			newExp = NavyCraft.playerExp.get(p) - newExp;
-			NavyCraft.playerExp.put(p, newExp);
+	public static void removeExpPlayer(int newExp, Player p) {
+		if (NavyCraft.playerExp.containsKey(p.getName())) {
+			newExp = NavyCraft.playerExp.get(p.getName()) - newExp;
+			NavyCraft.playerExp.put(p.getName(), newExp);
 		} else {
-			NavyCraft.playerExp.put(p, newExp);
+			NavyCraft.playerExp.put(p.getName(), newExp);
 		}
-		NavyCraft.saveExperience();
+		NavyCraft.saveExperience(p.getName());
 	}
 	
-	public static void addExpPlayer(int newExp, String p) {
-		if (NavyCraft.playerExp.containsKey(p)) {
-			newExp = NavyCraft.playerExp.get(p) + newExp;
-			NavyCraft.playerExp.put(p, newExp);
+	public static void addExpPlayer(int newExp, Player p) {
+		if (NavyCraft.playerExp.containsKey(p.getName())) {
+			newExp = NavyCraft.playerExp.get(p.getName()) + newExp;
+			NavyCraft.playerExp.put(p.getName(), newExp);
 		} else {
-			NavyCraft.playerExp.put(p, newExp);
+			NavyCraft.playerExp.put(p.getName(), newExp);
 		}
-		NavyCraft.saveExperience();
+		NavyCraft.saveExperience(p.getName());
 	}
 	public static void checkRankWorld(Player playerIn, int newExp, World world) {
 		String worldName = world.getName();

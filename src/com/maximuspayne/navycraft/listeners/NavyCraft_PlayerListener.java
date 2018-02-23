@@ -122,7 +122,7 @@ public class NavyCraft_PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-
+		NavyCraft.loadData(player.getName());
 		if (Craft.reboardNames.containsKey(player.getName())) {
 			if ((Craft.reboardNames.get(player.getName()) != null)
 					&& Craft.reboardNames.get(player.getName()).crewNames.contains(player.getName())) {
@@ -212,7 +212,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					{
 						NavyCraft_BlockListener.rewardExpPlayer(newExp, p);
 						NavyCraft_BlockListener.checkRankWorld(p, newExp, p.getWorld());
-						NavyCraft.saveExperience();
+						NavyCraft.saveExperience(p.getName());
 					}
 				}
 			}
@@ -1521,6 +1521,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				return;
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
+					if (split.length > 1) {
 						if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
@@ -1529,16 +1530,10 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 
 							if (split.length < 5) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard reward <player> <type> <reason>");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard reward Solmex SHIP5 Donation");
+								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard reward <player> <type> <amount>");
+								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard reward Solmex SHIP5 1");
 								event.setCancelled(true);
 								return;
-							}
-
-							String reasonString;
-							reasonString = "";
-							for (int i = 4; i < split.length; i++) {
-								reasonString += split[i] + " ";
 							}
 
 							String typeString = split[3];
@@ -1568,14 +1563,25 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
+							
+							int rewNum = 0;
+							try {
+								rewNum = Integer.parseInt(split[4]);
+							} catch (NumberFormatException e) {
+								player.sendMessage(ChatColor.RED + "Invalid Number");
+								event.setCancelled(true);
+								return;
+							}
 
-							String outputString = playerString + "," + typeString + "," + player.getName() + ","
-									+ reasonString;
-
-							NavyCraft.saveRewardsFile(outputString);
-
-							player.sendMessage(ChatColor.GREEN + "Plot Rewarded.");
-
+							NavyCraft.saveRewardsFile(playerString, typeString, rewNum);
+							
+							String numString = String.valueOf(rewNum);
+							if  (rewNum != 1 || rewNum != -1) {	
+								player.sendMessage(ChatColor.DARK_GRAY + "[" +ChatColor.GOLD + numString + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Plot's rewarded to " + ChatColor.YELLOW + playerString);
+							} else {
+								player.sendMessage(ChatColor.DARK_GRAY + "[" +ChatColor.GOLD + numString + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Plot rewarded to " + ChatColor.YELLOW + playerString);
+							}
+							
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_Timer.loadShipyard();
 							NavyCraft_BlockListener.loadRewards(player.getName());
@@ -2532,6 +2538,9 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard ptp <playerName> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to a player's plot id");
 							}
+						} else {
+							return;
+						}
 							
 					} else {
 						NavyCraft_Timer.loadShipyard();
@@ -2750,8 +2759,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 					}
 					event.setCancelled(true);
-					return;	
-				
+					return;
 				
 			} else if (craftName.equalsIgnoreCase("sign")) {
 				if (split.length == 2) {
@@ -3865,7 +3873,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							event.setCancelled(true);
 							return;
 						}
-						String p = split[2];
+						Player p = plugin.getServer().getPlayer(split[2]);
 						{
 						NavyCraft_BlockListener.showRank(player, p);
 						}
@@ -3884,7 +3892,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							return;
 						}
 						int newExp = Math.abs(Integer.parseInt(split[3]));
-						String p = split[2];
+						Player p = plugin.getServer().getPlayer(split[2]);
 						{
 							NavyCraft_BlockListener.setExpPlayer(newExp, p);
 						}
@@ -3906,7 +3914,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							return;
 						}
 						int newExp = Math.abs(Integer.parseInt(split[3]));
-						String p = split[2];
+						Player p = plugin.getServer().getPlayer(split[2]);
 						{
 							NavyCraft_BlockListener.addExpPlayer(newExp, p);
 						}
@@ -3928,7 +3936,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							return;
 						}
 						int newExp = Math.abs(Integer.parseInt(split[3]));
-						String p = split[2];
+						Player p = plugin.getServer().getPlayer(split[2]);
 						{
 							NavyCraft_BlockListener.removeExpPlayer(newExp, p);
 						}
@@ -4810,8 +4818,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
 							+ " rank points.");
 				}
+				NavyCraft.saveExperience(p.getName());
 			}
-			NavyCraft.saveExperience();
 		}
 
 		if (blueTargetPoints > 0) {
@@ -4828,8 +4836,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
 							+ " rank points.");
 				}
+				NavyCraft.saveExperience(p.getName());
 			}
-			NavyCraft.saveExperience();
 		}
 
 		NavyCraft.redPoints += redTargetPoints;
@@ -5030,10 +5038,9 @@ public class NavyCraft_PlayerListener implements Listener {
 					p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY
 							+ " rank points.");
 				}
+				NavyCraft.saveExperience(p.getName());
 			}
 		}
-		NavyCraft.saveExperience();
-
 		NavyCraft.redPoints = redTargetPoints;
 		NavyCraft.bluePoints = blueTargetPoints;
 

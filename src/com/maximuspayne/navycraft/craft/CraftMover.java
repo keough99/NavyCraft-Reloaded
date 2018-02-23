@@ -1488,8 +1488,8 @@ public class CraftMover {
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
+						NavyCraft.saveExperience(p.getName());
 					}
-					NavyCraft.saveExperience();
 
 					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.redPoints += 5000;
@@ -1517,8 +1517,8 @@ public class CraftMover {
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
+						NavyCraft.saveExperience(p.getName());
 					}
-					NavyCraft.saveExperience();
 
 					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.GOLD + "5000 points!");
 					NavyCraft.bluePoints += 5000;
@@ -5649,7 +5649,7 @@ public class CraftMover {
 
 	public static void battleLogger(String str) {
 
-		String path = File.separator + "BattleLog.txt";
+		String path = File.separator + "logs" + File.separator + "BattleLog.txt";
 		File file = new File(path);
 		try {
 			FileWriter fw = new FileWriter(file.getName(), true);

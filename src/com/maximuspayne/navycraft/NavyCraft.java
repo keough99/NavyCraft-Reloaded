@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.logging.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -58,7 +55,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
  * If you do cool modifications, please tell me so I can integrate it :)
  */
 
-@SuppressWarnings({"deprecation","resource"})
+@SuppressWarnings({"deprecation"})
 public class NavyCraft extends JavaPlugin {
 
 	static final String pluginName = "NavyCraft";
@@ -343,36 +340,6 @@ public class NavyCraft extends JavaPlugin {
 		}
     	return 0;
 	}
-
-    public static boolean checkStorageRegion(Location loc)
-    {
-    	
-    	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
-    	if( wgp != null && loc != null)
-    	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
-    		{
-    			return false;
-    		}
-	    	RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
-		
-			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
-			
-			Iterator<ProtectedRegion> it = set.iterator();
-			while( it.hasNext() )
-			{
-				String id = it.next().getId();
-				String[] splits = id.split("_");
-				if( splits.length == 2 )
-				{
-					if( splits[1].equalsIgnoreCase("storage") )
-						return true;					
-				}
-		    }
-			return false;
-		}
-    	return false;
-	}
     
     public static boolean checkRepairRegion(Location loc)
     {
@@ -426,36 +393,6 @@ public class NavyCraft extends JavaPlugin {
 				if( splits.length == 2 )
 				{
 					if( splits[1].equalsIgnoreCase("safedock") )
-						return true;					
-				}
-		    }
-			return false;
-		}
-    	return false;
-	}
-    
-    public static boolean checkRecallRegion(Location loc)
-    {
-    	
-    	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
-    	if( wgp != null && loc != null)
-    	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
-    		{
-    			return false;
-    		}
-	    	RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
-		
-			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
-			
-			Iterator<ProtectedRegion> it = set.iterator();
-			while( it.hasNext() )
-			{
-				String id = it.next().getId();
-				String[] splits = id.split("_");
-				if( splits.length == 2 )
-				{
-					if( splits[1].equalsIgnoreCase("recall") )
 						return true;					
 				}
 		    }
@@ -539,87 +476,93 @@ public class NavyCraft extends JavaPlugin {
 		}
 	}
 
-	public static void loadExperience()
+	public static void loadData(String player)
 	{
-		String path = File.separator + "NCExp.txt";
-        File file = new File(path);
-        
-        FileReader fr;
-        BufferedReader reader;
-		try {
-			fr = new FileReader(file.getName());
-			reader = new BufferedReader(fr);
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+          File f = new File(userdata, File.separator + player + ".yml");
+          FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 
-	        String line = null;        
-	        try {
-	        	playerExp.clear();
-	        	
-				while ((line=reader.readLine()) != null) {
-					String[] strings = line.split(",");
-					if( strings.length != 2 )
-					{
-						System.out.println("Player EXP Load Error3");
-						return;
-					}
-					playerExp.put(strings[0], Integer.valueOf(strings[1]));
-					
-				}
+          //When the player file is created for the first time...
+          if (!f.exists()) {
+              try {
 
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Player EXP Load Error2");
-			}
-	        
-	        reader.close();  // Close to unlock.
-
-		} catch (FileNotFoundException e) {
+                  playerData.createSection(player);
+                  playerData.set(player + ".exp", 0);
+                  playerData.set(player + ".SHIP1", 0);
+                  playerData.set(player + ".SHIP2", 0);
+                  playerData.set(player + ".SHIP3", 0);
+                  playerData.set(player + ".SHIP4", 0);
+                  playerData.set(player + ".SHIP5", 0);
+                  playerData.set(player + ".HANGAR1", 0);
+                  playerData.set(player + ".HANGAR2", 0);
+                  playerData.set(player + ".TANK1", 0);
+                  playerData.set(player + ".TANK2", 0);
+                  playerData.set(player + ".MAP1", 0);
+                  playerData.set(player + ".MAP2", 0);
+                  playerData.set(player + ".MAP3", 0);
+                  playerData.set(player + ".MAP4", 0);
+                  playerData.set(player + ".MAP5", 0);
+                  
+                  
+                 
+                  playerData.save(f);
+              } catch (IOException exception) {
+                  exception.printStackTrace();
+              }
+          }
+          //Put all the hashmaps to file data
+          loadExperience(player);
+	}
+	
+	public static void loadExperience(String player) {
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+          File f = new File(userdata, File.separator + player + ".yml");
+          FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+    	playerExp.clear();
+		playerExp.put(player, Integer.valueOf(playerData.get(player + ".exp").toString()));
+	}
+	
+	
+	public static void saveExperience(String player)
+	{
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+          File f = new File(userdata, File.separator + player + ".yml");
+          FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+          playerData.set(player + ".exp", Integer.valueOf(playerExp.get(player).toString()));
+          try {
+			playerData.save(f);
+		} catch (IOException e) {
+			loadData(player);
+		}
+	}
+	public static void loadRewardsFile(String player)
+	{
+		  File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+          File f = new File(userdata, File.separator + player + ".yml");
+          FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+  		playerSHIP1Rewards.put(player, playerSHIP1Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP1").toString()));
+  		playerSHIP2Rewards.put(player, playerSHIP2Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP2").toString()));
+  		playerSHIP3Rewards.put(player, playerSHIP3Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP3").toString()));
+  		playerSHIP4Rewards.put(player, playerSHIP4Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP4").toString()));
+  		playerSHIP5Rewards.put(player, playerSHIP5Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP5").toString()));
+  		return;
+	}
+	
+	public static void saveRewardsFile(String player, String type, int newRewNum) {
+	   File userdata = new File(instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
+       File f = new File(userdata, File.separator + player + ".yml");
+       FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+       if (type != null) {
+           playerData.set(player + "." + type, Integer.valueOf(playerData.get(player + "." + type).toString()) + newRewNum);
+       try {
+			playerData.save(f);
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Player EXP Load Error4");
+			loadData(player);
 		}
+       return;
 	}
-	
-	
-	public static void saveExperience()
-	{
-		String path = File.separator + "NCExp.txt";
-        File file = new File(path);
-        FileWriter fw;
-        BufferedWriter writer;
-	
-		try {
-			fw = new FileWriter(file.getName());
-			writer = new BufferedWriter(fw);
-	        String line = null;
-	        
-	        if( playerExp.isEmpty() )
-	        {
-	        	System.out.println("Player Save Exp Error1");
-	        	return;
-	        }
-	        
-			for( String s : playerExp.keySet() )
-			{
-				line = s + "," + playerExp.get(s).toString();
-				try {
-					writer.write(line);
-					writer.newLine();
-				} catch (IOException e) {
-					System.out.println("Player Save Exp Error2");
-					e.printStackTrace();
-					return;
-				}	
-			}
-			
-			writer.close();
-		} catch (IOException e2) {
-			System.out.println("Player Save Exp Error4");
-			e2.printStackTrace();
-			return;
-		}
-	}
+}
    
    public void structureUpdateScheduler()
    {
@@ -841,195 +784,6 @@ public void updateCraft(int vehicleNum, int updateNum)
 			}
 		}
    }
-
-	public static void loadRewardsFile()
-	{
-		String path = File.separator + "PlayerPlotRewards.txt";
-       File file = new File(path);
-       
-       
-       FileReader fr;
-       BufferedReader reader;
-		try {
-			fr = new FileReader(file.getName());
-			reader = new BufferedReader(fr);
-
-	        String line = null;
-	        
-	        try {
-	        	
-				while ((line=reader.readLine()) != null) 
-				{
-					String[] strings = line.split(",");
-					if( strings.length != 4 )
-					{
-						System.out.println("Player Reward Load Error1");
-						reader.close(); 
-						return;
-					}
-					
-					if(strings[1].equalsIgnoreCase("ship1") )
-					{
-						if( playerSHIP1Rewards.containsKey(strings[0]) )
-							 playerSHIP1Rewards.put(strings[0], playerSHIP1Rewards.get(strings[0]) + 1);
-						else
-							 playerSHIP1Rewards.put(strings[0], 1);
-					}else if(strings[1].equalsIgnoreCase("ship2") )
-					{
-						{
-							if( playerSHIP2Rewards.containsKey(strings[0]) )
-								playerSHIP2Rewards.put(strings[0], playerSHIP2Rewards.get(strings[0]) + 1);
-							else
-								playerSHIP2Rewards.put(strings[0], 1);
-						}
-					}else if(strings[1].equalsIgnoreCase("ship3") )
-					{
-						{
-							if( playerSHIP3Rewards.containsKey(strings[0]) )
-								playerSHIP3Rewards.put(strings[0], playerSHIP3Rewards.get(strings[0]) + 1);
-							else
-								playerSHIP3Rewards.put(strings[0], 1);
-						}
-					}else if(strings[1].equalsIgnoreCase("ship4") )
-					{
-						{
-							if( playerSHIP4Rewards.containsKey(strings[0]) )
-								playerSHIP4Rewards.put(strings[0], playerSHIP4Rewards.get(strings[0]) + 1);
-							else
-								playerSHIP4Rewards.put(strings[0], 1);
-						}
-					}else if(strings[1].equalsIgnoreCase("ship5") )
-					{
-						{
-							if( playerSHIP5Rewards.containsKey(strings[0]) )
-								playerSHIP5Rewards.put(strings[0], playerSHIP5Rewards.get(strings[0]) + 1);
-							else
-								playerSHIP5Rewards.put(strings[0], 1);
-						}
-					}else if( strings[1].equalsIgnoreCase("hangar1") )
-					{
-						{
-							if( playerHANGAR1Rewards.containsKey(strings[0]) )
-								playerHANGAR1Rewards.put(strings[0], playerHANGAR1Rewards.get(strings[0]) + 1);
-							else
-								playerHANGAR1Rewards.put(strings[0], 1);
-						}
-					}else if( strings[1].equalsIgnoreCase("hangar2") )
-					{
-						{
-							if( playerHANGAR2Rewards.containsKey(strings[0]) )
-								playerHANGAR2Rewards.put(strings[0], playerHANGAR2Rewards.get(strings[0]) + 1);
-							else
-								playerHANGAR2Rewards.put(strings[0], 1);
-						}
-					}else if( strings[1].equalsIgnoreCase("tank1") )
-					{
-						{
-							if( playerTANK1Rewards.containsKey(strings[0]) )
-								playerTANK1Rewards.put(strings[0], playerTANK1Rewards.get(strings[0]) + 1);
-							else
-								playerTANK1Rewards.put(strings[0], 1);
-						}
-					}else if( strings[1].equalsIgnoreCase("tank2") )
-					{
-						{
-							if( playerTANK2Rewards.containsKey(strings[0]) )
-								playerTANK2Rewards.put(strings[0], playerTANK2Rewards.get(strings[0]) + 1);
-							else
-								playerTANK2Rewards.put(strings[0], 1);
-						}
-					}else if(strings[1].equalsIgnoreCase("MAP1") )
-						{
-							if( playerMAP1Rewards.containsKey(strings[0]) )
-								 playerMAP1Rewards.put(strings[0], playerMAP1Rewards.get(strings[0]) + 1);
-							else
-								 playerMAP1Rewards.put(strings[0], 1);
-						}else if(strings[1].equalsIgnoreCase("MAP2") )
-						{
-							{
-								if( playerMAP2Rewards.containsKey(strings[0]) )
-									playerMAP2Rewards.put(strings[0], playerMAP2Rewards.get(strings[0]) + 1);
-								else
-									playerMAP2Rewards.put(strings[0], 1);
-							}
-						}else if(strings[1].equalsIgnoreCase("MAP3") )
-						{
-							{
-								if( playerMAP3Rewards.containsKey(strings[0]) )
-									playerMAP3Rewards.put(strings[0], playerMAP3Rewards.get(strings[0]) + 1);
-								else
-									playerMAP3Rewards.put(strings[0], 1);
-							}
-						}else if(strings[1].equalsIgnoreCase("MAP4") )
-						{
-							{
-								if( playerMAP4Rewards.containsKey(strings[0]) )
-									playerMAP4Rewards.put(strings[0], playerMAP4Rewards.get(strings[0]) + 1);
-								else
-									playerMAP4Rewards.put(strings[0], 1);
-							}
-						}else if(strings[1].equalsIgnoreCase("MAP5") )
-						{
-							{
-								if( playerMAP5Rewards.containsKey(strings[0]) )
-									playerMAP5Rewards.put(strings[0], playerMAP5Rewards.get(strings[0]) + 1);
-								else
-									playerMAP5Rewards.put(strings[0], 1);
-							}
-					}else
-					{
-						System.out.println("Player Reward Load Error: Unknown Reward");
-					}
-					
-				}
-
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Player Reward Load Error2");
-				return;
-			}
-	        
-	        reader.close();  // Close to unlock.
-
-		} catch (FileNotFoundException e) {
-			//System.out.println("Player Reward Load Error3");
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Player Reward Load Error4");
-			return;
-		}
-	}
-	
-	public static void saveRewardsFile(String s)
-	{
-		String path = File.separator + "PlayerPlotRewards.txt";
-        File file = new File(path);
-        FileWriter fw;
-        BufferedWriter writer;
-	
-		try {
-			fw = new FileWriter(file.getName(), true);
-			writer = new BufferedWriter(fw);
-	        
-			try {
-				writer.write(s);
-				writer.newLine();
-			} catch (IOException e) {
-				System.out.println("Player Save Reward Error1");
-				e.printStackTrace();
-				writer.close();
-				return;
-			}
-			
-			writer.close();
-		} catch (IOException e2) {
-			System.out.println("Player Save Reward Error2");
-			e2.printStackTrace();
-			return;
-		}
-	}
    
 	public static void explosion(int explosionRadius, Block warhead, boolean signs)
 	{
