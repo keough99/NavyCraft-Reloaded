@@ -42,6 +42,7 @@ import com.maximuspayne.navycraft.Pump;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -1488,7 +1489,7 @@ public class CraftMover {
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
-						NavyCraft.saveExperience(p.getName());
+						NavyCraft_FileListener.saveExperience(p.getName());
 					}
 
 					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.GOLD + "5000 points!");
@@ -1517,7 +1518,7 @@ public class CraftMover {
 							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
 						}
-						NavyCraft.saveExperience(p.getName());
+						NavyCraft_FileListener.saveExperience(p.getName());
 					}
 
 					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.GOLD + "5000 points!");
