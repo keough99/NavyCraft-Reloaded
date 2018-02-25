@@ -28,6 +28,7 @@ import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_EntityListener;
+import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_InventoryListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
 import com.maximuspayne.navycraft.plugins.PermissionInterface;
@@ -73,6 +74,7 @@ public class NavyCraft extends JavaPlugin {
 	public final NavyCraft_BlockListener blockListener = new NavyCraft_BlockListener(this);
 	public final NavyCraft_EntityListener entityListener = new NavyCraft_EntityListener(this);
 	public final NavyCraft_InventoryListener inventoryListener = new NavyCraft_InventoryListener(this);
+	public final NavyCraft_FileListener fileListener = new NavyCraft_FileListener(this);
 	
     public static int battleMode=-1; //-1 false, 0 queue, 1 battle
     public static int battleType=-1;
@@ -184,12 +186,14 @@ public class NavyCraft extends JavaPlugin {
 		pm.registerEvents(entityListener, this);
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(inventoryListener, this);
+		pm.registerEvents(fileListener, this);
 		
 		PluginDescriptionFile pdfFile = this.getDescription();
 		version = pdfFile.getVersion();
 
 		BlocksInfo.loadBlocksInfo();
 		loadProperties();
+		NavyCraft_FileListener.loadShipyardData();
 		PermissionInterface.setupPermissions(this);
 		
 		PluginManager manager = getServer().getPluginManager();

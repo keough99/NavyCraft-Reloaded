@@ -1522,6 +1522,9 @@ public class NavyCraft_PlayerListener implements Listener {
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
+						if (split[1].equalsIgnoreCase("test")) {
+							NavyCraft_BlockListener.loadSignShipyard();
+						}
 						if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
@@ -1583,7 +1586,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							
 						} else if (split[1].equalsIgnoreCase("list")) {
-							NavyCraft_BlockListener.loadShipyard(player.getName());
+							NavyCraft_FileListener.loadSignData();
 							NavyCraft_BlockListener.loadRewards(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -1685,7 +1688,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1731,33 +1734,33 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								Block tpBlock = null;
 								if (typeString.equalsIgnoreCase("SHIP1")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("SHIP1");
+									tpBlock = NavyCraft_FileListener.findSignOpen("SHIP1");
 								} else if (typeString.equalsIgnoreCase("SHIP2")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("SHIP2");
+									tpBlock = NavyCraft_FileListener.findSignOpen("SHIP2");
 								} else if (typeString.equalsIgnoreCase("SHIP3")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("SHIP3");
+									tpBlock = NavyCraft_FileListener.findSignOpen("SHIP3");
 								} else if (typeString.equalsIgnoreCase("SHIP4")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("SHIP4");
+									tpBlock = NavyCraft_FileListener.findSignOpen("SHIP4");
 								} else if (typeString.equalsIgnoreCase("SHIP5")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("SHIP5");
+									tpBlock = NavyCraft_FileListener.findSignOpen("SHIP5");
 								} else if (typeString.equalsIgnoreCase("HANGAR1")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("HANGAR1");
+									tpBlock = NavyCraft_FileListener.findSignOpen("HANGAR1");
 								} else if (typeString.equalsIgnoreCase("HANGAR2")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("HANGAR2");
+									tpBlock = NavyCraft_FileListener.findSignOpen("HANGAR2");
 								} else if (typeString.equalsIgnoreCase("TANK1")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("TANK1");
+									tpBlock = NavyCraft_FileListener.findSignOpen("TANK1");
 								} else if (typeString.equalsIgnoreCase("TANK2")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("TANK2");
+									tpBlock = NavyCraft_FileListener.findSignOpen("TANK2");
 								} else if (typeString.equalsIgnoreCase("MAP1")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("MAP1");
+									tpBlock = NavyCraft_FileListener.findSignOpen("MAP1");
 								} else if (typeString.equalsIgnoreCase("MAP2")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("MAP2");
+									tpBlock = NavyCraft_FileListener.findSignOpen("MAP2");
 								} else if (typeString.equalsIgnoreCase("MAP3")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("MAP3");
+									tpBlock = NavyCraft_FileListener.findSignOpen("MAP3");
 								} else if (typeString.equalsIgnoreCase("MAP4")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("MAP4");
+									tpBlock = NavyCraft_FileListener.findSignOpen("MAP4");
 								} else if (typeString.equalsIgnoreCase("MAP5")) {
-									tpBlock = NavyCraft_BlockListener.findSignOpen("MAP5");
+									tpBlock = NavyCraft_FileListener.findSignOpen("MAP5");
 								} else {
 									player.sendMessage(ChatColor.RED + "Unknown lot type");
 									event.setCancelled(true);
@@ -1785,7 +1788,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1830,7 +1833,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1885,7 +1888,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -1939,7 +1942,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2005,7 +2008,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2088,7 +2091,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2120,7 +2123,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2163,7 +2166,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								}
 
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
 
 									Sign foundSign = null;
@@ -2197,7 +2200,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("player")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadShipyard(player.getName());
+								NavyCraft_FileListener.loadSignData();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
 								if (NavyCraft.playerSHIP1Signs.containsKey(p)) {
@@ -2416,7 +2419,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("plist")) {
 							if (split.length == 3) {
 								String p = split[2];
-								NavyCraft_BlockListener.loadShipyard(player.getName());
+								NavyCraft_FileListener.loadSignData();
 								NavyCraft_BlockListener.loadRewards(p);
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
 								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -2520,7 +2523,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									return;
 								}
 								if (tpId > -1) {
-									NavyCraft_BlockListener.loadShipyard(player.getName());
+									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(p);
 
 									Sign foundSign = null;
@@ -2543,7 +2546,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 							
 					} else {
-						NavyCraft_BlockListener.loadShipyard(player.getName());
+						NavyCraft_FileListener.loadSignData();
 						NavyCraft_BlockListener.loadRewards(player.getName());
 						String p = player.getName();
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
