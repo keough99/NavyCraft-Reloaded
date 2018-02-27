@@ -1,6 +1,8 @@
 package com.maximuspayne.navycraft.listeners;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +16,8 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -1522,8 +1526,21 @@ public class NavyCraft_PlayerListener implements Listener {
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
-						if (split[1].equalsIgnoreCase("test")) {
+						if (split[1].equalsIgnoreCase("load")) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
+								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
+								event.setCancelled(true);
+								return;
+							}
+							File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+						    File f = new File(shipyarddata, File.separator + "signs.yml");
+						    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+					        List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+					        int size = list.size();
 							NavyCraft_BlockListener.loadSignShipyard();
+							int amount = size;
+							player.sendMessage(ChatColor.GREEN + "Loaded: " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + amount + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plots" );
+							return;
 						}
 						if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {

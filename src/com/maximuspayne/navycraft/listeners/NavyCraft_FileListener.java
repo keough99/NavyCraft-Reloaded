@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -18,43 +19,22 @@ import com.maximuspayne.navycraft.NavyCraft;
 public class NavyCraft_FileListener  implements Listener {
 	
 	private static NavyCraft plugin;
-	
+
 	public NavyCraft_FileListener(NavyCraft p) {
 		plugin = p;
 	}
 
-	public static void loadShipyardData()
-	{
-		  File shipyardudata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-          File f1 = new File(shipyardudata, File.separator + "signu.yml");
-          FileConfiguration syuData = YamlConfiguration.loadConfiguration(f1);
-		  File shipyardcdata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-          File f = new File(shipyardcdata, File.separator + "signc.yml");
-          FileConfiguration sycData = YamlConfiguration.loadConfiguration(f);
+	public static void loadShipyardData() {
+	File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+    File f = new File(shipyarddata, File.separator + "signs.yml");
+    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 
           //When the file is created for the first time...
           if (!f.exists()) {
               try {
-
-                  sycData.createSection("Signs");
-                  sycData.createSection("Shipyard");
-                  sycData.createSection("Amount");
-                  sycData.set("Shipyard.Amount", 0);
+                  syData.createSection("Signs");
                   
-                  sycData.save(f);
-              } catch (IOException exception) {
-                  exception.printStackTrace();
-              }
-          }
-          if (!f1.exists()) {
-              try {
-
-                  syuData.createSection("Signs");
-                  syuData.createSection("Shipyard");
-                  syuData.createSection("Amount");
-                  syuData.set("Shipyard.Amount", 0);
-                  
-                  syuData.save(f1);
+                  syData.save(f);
               } catch (IOException exception) {
                   exception.printStackTrace();
               }
@@ -62,9 +42,11 @@ public class NavyCraft_FileListener  implements Listener {
 	}
 	
 	public static void loadSignData () {
-		File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-        File f = new File(shipyarddata, File.separator + "signc.yml");
-        FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+          File f = new File(shipyarddata, File.separator + "signs.yml");
+          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+                List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+          int size = list.size();
         for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
 			NavyCraft.playerSHIP1Signs.get(s).clear();
 		}
@@ -121,15 +103,16 @@ public class NavyCraft_FileListener  implements Listener {
 			NavyCraft.playerMAP5Signs.get(s).clear();
 		}
 		NavyCraft.playerMAP5Signs.clear();
-        if (syData.getString("Shipyard.Amount").equals("0")) {
+        if (size == 0) {
         	return;
         }
-        for (int num : syData.getIntegerList("Amount")) {
-        	String type = syData.getString("Signs." + num + "." + "type");
+        for (String num : list) {
+        	if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("true")) {
+        	String type = syData.getString("Signs." + num + ".type");
         	World world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
-        	int x = syData.getInt("Signs." + num + "." + "x");
-        	int y = syData.getInt("Signs." + num + "." + "y");
-        	int z = syData.getInt("Signs." + num + "." + "z");
+        	int x = syData.getInt("Signs." + num + ".x");
+        	int y = syData.getInt("Signs." + num + ".y");
+        	int z = syData.getInt("Signs." + num + ".z");
         	int id = syData.getInt("Signs." + num + ".id");
         	String playerName = syData.getString("Signs." + num + ".playerName");
 			Block selectSignBlock = world.getBlockAt(x, y, z);
@@ -194,82 +177,127 @@ public class NavyCraft_FileListener  implements Listener {
 					System.out.println("LOADED PLOTS");
         	}
         }
+	} else {
+		return;
 	}
 }
+        }
 	
 	public static Block findSignOpen (String type) {
-		File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-        File f = new File(shipyarddata, File.separator + "signu.yml");
-        FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+          File f = new File(shipyarddata, File.separator + "signs.yml");
+          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
     	Block selectSignBlock = null;
-        for (int num : syData.getIntegerList("Amount")) {
+              List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+        for (String num : list) {
+        if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
         String ptype = syData.getString("Signs." + num + "." + "type");
     	World world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
     	int x = syData.getInt("Signs." + num + "." + "x");
     	int y = syData.getInt("Signs." + num + "." + "y");
     	int z = syData.getInt("Signs." + num + "." + "z");
+    	
     	if (type.equalsIgnoreCase("SHIP1")) {
     		if (ptype.equalsIgnoreCase("SHIP1")) {
 			selectSignBlock = world.getBlockAt(x, y, z);
+			break;
     	}
     }
     	if (type.equalsIgnoreCase("SHIP2")) {
-    		
+    		if (ptype.equalsIgnoreCase("SHIP2")) {
+			selectSignBlock = world.getBlockAt(x, y, z);
+			break;
     	}
+    }
     	if (type.equalsIgnoreCase("SHIP3")) {
-    		
+    		if (ptype.equalsIgnoreCase("SHIP3")) {
+			selectSignBlock = world.getBlockAt(x, y, z);
+			break;
     	}
+    }
     	if (type.equalsIgnoreCase("SHIP4")) {
-    		
+    		if (ptype.equalsIgnoreCase("SHIP1")) {
+			selectSignBlock = world.getBlockAt(x, y, z);
+			break;
     	}
+    }
     	if (type.equalsIgnoreCase("SHIP5")) {
-    		
-    	  }
+    		if (ptype.equalsIgnoreCase("SHIP5")) {
+			selectSignBlock = world.getBlockAt(x, y, z);
+			break;
+    	}
+    }
+}
         }
 	    return selectSignBlock;  
 	}
 	
 	public static void saveClaimedSign (String player, String type, String world , int x, int y, int z, int id) {
-			  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-	          File f = new File(shipyarddata, File.separator + "signc.yml");
-	          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "type", type);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "world", world);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "x", x);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "y", y);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "z", z);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "playerName", player);
-		      syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "id", id);
-	          syData.set("Shipyard.Amount", syData.getInt("Shipyard.Amount") + 1);
-	          List<Integer> list=syData.getIntegerList("Amount");
-	          list.add(syData.getInt("Shipyard.Amount"));
-	          syData.set("Amount", list);
+		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+          File f = new File(shipyarddata, File.separator + "signs.yml");
+          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+          int size = list.size();
+				syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type);
+		        syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
+		        syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
+		        syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
+		        syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
+		        syData.set("Signs." + String.valueOf(size + 1) + "." + "playerName", player);
+			    syData.set("Signs." + String.valueOf(size + 1) + "." + "id", id);
+			    syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", true);
+        try {
+			syData.save(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("SIGN NOT LOADED");
+		}
+	}
+public static void saveUnclaimedSign (String type, String world, int x, int y, int z) {
+	File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+    File f = new File(shipyarddata, File.separator + "signs.yml");
+    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+	Location loc1;
+	Location loc = new Location (NavyCraft.instance.getServer().getWorld(world), x, y, z);
+          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+		for (String num : list) {
+		if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
+	         int x1 = syData.getInt("Signs." + num + "." + "x");
+	         int y1 = syData.getInt("Signs." + num + "." + "y");
+	         int z1 = syData.getInt("Signs." + num + "." + "z");
+	         World world1 = NavyCraft.instance.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+	         loc1 = new Location (world1, x1, y1, z1);
+	         if (loc1 == loc) {
+					syData.set("Signs." + num + "." + "type", type);
+			        syData.set("Signs." + num + "." + "world", world);
+			        syData.set("Signs." + num + "." + "x", x);
+			        syData.set("Signs." + num + "." + "y", y);
+			        syData.set("Signs." + num + "." + "z", z);
+				    syData.set("Signs." + num + "." + "isClaimed", false); 
+	         }
+		}
+	}
+}
+	
+	public static void saveSign (String type, String world, int x, int y , int z){
+		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+	      File f = new File(shipyarddata, File.separator + "signs.yml");
+	      FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+	      int size = list.size();
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type);
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
+		  syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", false);
 	          try {
 				syData.save(f);
 			} catch (IOException e) {
-				loadShipyardData();
+				e.printStackTrace();
+				System.out.println("SIGN NOT LOADED");
 			}
 		}
-	
-	public static void saveUnclaimedSign (String type, String world, int x, int y , int z){
-			  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-	          File f = new File(shipyarddata, File.separator + "signu.yml");
-	          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "type", type);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "world", world);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "x", x);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "y", y);
-	          syData.set("Signs." + String.valueOf(syData.getInt("Shipyard.Amount") + 1) + "." + "z", z);
-	          syData.set("Shipyard.Amount", syData.getInt("Shipyard.Amount") + 1);
-	          List<Integer> list=syData.getIntegerList("Amount");
-	          list.add(syData.getInt("Shipyard.Amount"));
-	          syData.set("Amount", list);
-	          try {
-				syData.save(f);
-			} catch (IOException e) {
-				loadShipyardData();
-			}
-	}
 
 	public static void loadPlayerData(String player)
 	{

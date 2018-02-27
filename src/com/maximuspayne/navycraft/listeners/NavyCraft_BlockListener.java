@@ -1,5 +1,6 @@
 package com.maximuspayne.navycraft.listeners;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -811,7 +814,63 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(2, "" + (maxId(player) + 1));
 						sign2.setLine(3, lotStr);
 						sign2.update();
-			
+						
+						
+						File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+					    File f = new File(shipyarddata, File.separator + "signs.yml");
+					    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+				         String type = null;
+				         World world = null;
+				         int x = 0;
+				         int y = 0;
+				         int z = 0;
+				         Location locf;
+				         List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+				         for (String num : list) {
+				         type = syData.getString("Signs." + num + "." + "type");
+				         world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+				         x = syData.getInt("Signs." + num + "." + "x");
+				         y = syData.getInt("Signs." + num + "." + "y");
+				         z = syData.getInt("Signs." + num + "." + "z");
+				         locf = new Location (world, x, y, z);
+				         	if (lotType == 1) {
+				         		if (type.equalsIgnoreCase("SHIP1")) {
+				         			if (sign.getLocation() == locf); {
+				         		    break;
+				         			}
+				         		}
+				         	}
+				         	if (lotType == 2) {
+				         		if (type.equalsIgnoreCase("SHIP2")) {
+				         			if (sign.getLocation() == locf); {
+				         		    break;
+				         			}
+				         		}
+				         	}
+				         	if (lotType == 3) {
+				         		if (type.equalsIgnoreCase("SHIP3")) {
+				         			if (sign.getLocation() == locf); {
+				         		    break;
+				         			}
+				         		}
+				         }
+				         	if (lotType == 4) {
+				         		if (type.equalsIgnoreCase("SHIP4")) {
+				         			if (sign.getLocation() == locf); {
+				         		    break;
+				         			}
+				         		}
+				         }
+				         	if (lotType == 5) {
+				         		if (type.equalsIgnoreCase("SHIP5")) {
+				         			if (sign.getLocation() == locf); {
+				         		    break;
+				         			}
+				         		}
+				         }
+				       NavyCraft_FileListener.saveClaimedSign(player.getName(), type, world.getName(), x, y, z, Integer.valueOf(sign2.getLine(2)));
+				   }
+				          	
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
 					} else {
 						player.sendMessage("World Guard error");
@@ -2390,267 +2449,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 		}
 	}
-	
-	public static void loadSHIP1Signs() {
-		World syworld = plugin.getServer().getWorld("shipyard");
-		// for( int x=601; x<=1567; x+=14 )
-		// for( int x=16; x<=1286; x+=14 )
-		int startX = 601;
-		int endX = 1567;
-		int widthX = 14;
-		int startZ = -408;
-		int endZ = -852;
-		int widthZ = 37;
-		for (int x = startX; x <= endX; x += widthX) {
-
-			// for( int z=-408; z>=-852; z-=37 )
-			// for( int z=-18; z>=-462; z-=37 )
-			for (int z = startZ; z >= endZ; z -= widthZ) {
-				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
-					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
-					Sign selectSign = (Sign) selectSignBlock.getState();
-					Sign selectSign2 = (Sign) selectSignBlock2.getState();
-					String signLine0 = selectSign.getLine(0);
-					String sign2Line2 = selectSign2.getLine(2);
-
-					if (signLine0.equalsIgnoreCase("*select*")) {
-						String playerName = selectSign.getLine(1);
-						String playerName2 = selectSign.getLine(2);
-
-						if ((playerName2 != null) && !playerName2.isEmpty()) {
-							playerName = playerName + playerName2;
-						}
-
-						int idNum = -1;
-						try {
-							idNum = Integer.parseInt(sign2Line2);
-						} catch (NumberFormatException nfe) {
-							continue;
-						}
-
-						NavyCraft_FileListener.saveClaimedSign(playerName, "SHIP1", "shipyard" , x, 64, z, idNum);
-
-					}
-				}
-			}
-		}
-	}
-
-	public static void loadSHIP2Signs() {
-		World syworld = plugin.getServer().getWorld("shipyard");
-		// for( int x=601; x<=1421; x+=10 )
-		// for( int x=16; x<=1296; x+=10 )
-		int startX = 601;
-		int endX = 1421;
-		int widthX = 10;
-		int startZ = -356;
-		int endZ = -148;
-		int widthZ = 52;
-		for (int x = startX; x <= endX; x += widthX) {
-
-			// for( int z=-356; z<=-148; z+=52 )
-			// for( int z=33; z<=241; z+=52 )
-			for (int z = startZ; z <= endZ; z += widthZ) {
-				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
-					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
-					Sign selectSign = (Sign) selectSignBlock.getState();
-					Sign selectSign2 = (Sign) selectSignBlock2.getState();
-					String signLine0 = selectSign.getLine(0);
-					String sign2Line2 = selectSign2.getLine(2);
-
-					if (signLine0.equalsIgnoreCase("*select*")) {
-						String playerName = selectSign.getLine(1);
-						String playerName2 = selectSign.getLine(2);
-
-						if ((playerName2 != null) && !playerName2.isEmpty()) {
-							playerName = playerName + playerName2;
-						}
-
-						if (playerName == null) {
-							continue;
-						}
-
-						int idNum = -1;
-						try {
-							idNum = Integer.parseInt(sign2Line2);
-						} catch (NumberFormatException nfe) {
-							continue;
-						}
-						if (idNum == -1) {
-							continue;
-						}
-
-						NavyCraft_FileListener.saveClaimedSign(playerName, "SHIP2", "shipyard" , x, 64, z, idNum);
-
-					}
-				}
-			}
-		}
-	}
-
-	public static void loadSHIP3Signs() {
-		World syworld = plugin.getServer().getWorld("shipyard");
-		// for( int x=549; x>=21; x-=12 )
-		// for( int x=-35; x>=-1091; x-=12 )
-		int startX = 549;
-		int endX = 21;
-		int widthX = 12;
-		int startZ = -329;
-		int endZ = -92;
-		int widthZ = 79;
-		for (int x = startX; x >= endX; x -= widthX) {
-
-			// for( int z=-329; z<=-92; z+=79 )
-			// for( int z=60; z<=297; z+=79 )
-			for (int z = startZ; z <= endZ; z += widthZ) {
-				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
-					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
-					Sign selectSign = (Sign) selectSignBlock.getState();
-					Sign selectSign2 = (Sign) selectSignBlock2.getState();
-					String signLine0 = selectSign.getLine(0);
-					String sign2Line2 = selectSign2.getLine(2);
-
-					if (signLine0.equalsIgnoreCase("*select*")) {
-						String playerName = selectSign.getLine(1);
-						String playerName2 = selectSign.getLine(2);
-
-						if ((playerName2 != null) && !playerName2.isEmpty()) {
-							playerName = playerName + playerName2;
-						}
-
-						if (playerName == null) {
-							continue;
-						}
-
-						int idNum = -1;
-						try {
-							idNum = Integer.parseInt(sign2Line2);
-						} catch (NumberFormatException nfe) {
-							continue;
-						}
-						if (idNum == -1) {
-							continue;
-						}
-
-						NavyCraft_FileListener.saveClaimedSign(playerName, "SHIP3", "shipyard" , x, 64, z, idNum);
-
-					}
-					
-				}
-			}
-		}
-	}
-
-	public static void loadSHIP4Signs() {
-		World syworld = plugin.getServer().getWorld("shipyard");
-		// for( int x=543; x>=21; x-=18 )
-		// for( int x=-41; x>=-1085; x-=18 )
-		int startX = 543;
-		int endX = 21;
-		int widthX = 18;
-		int startZ = -408;
-		int endZ = -600;
-		int widthZ = 64;
-		for (int x = startX; x >= endX; x -= widthX) {
-
-			// for( int z=-408; z>=-600; z-=64 )
-			// for( int z=-18; z>=-210; z-=64 )
-			for (int z = startZ; z >= endZ; z -= widthZ) {
-				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
-					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
-					Sign selectSign = (Sign) selectSignBlock.getState();
-					Sign selectSign2 = (Sign) selectSignBlock2.getState();
-					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
-					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
-
-					if (signLine0.equalsIgnoreCase("*select*")) {
-						String playerName = selectSign.getLine(1);
-						String playerName2 = selectSign.getLine(2);
-
-						if ((playerName2 != null) && !playerName2.isEmpty()) {
-							playerName = playerName + playerName2;
-						}
-
-						if (playerName == null) {
-							continue;
-						}
-
-						int idNum = -1;
-						try {
-							idNum = Integer.parseInt(sign2Line2);
-						} catch (NumberFormatException nfe) {
-							continue;
-						}
-						if (idNum == -1) {
-							continue;
-						}
-
-						NavyCraft_FileListener.saveClaimedSign(playerName, "SHIP4", "shipyard" , x, 64, z, idNum);
-						}
-					
-					}
-				}
-			}
-		}
-
-	public static void loadSHIP5Signs() {
-		World syworld = plugin.getServer().getWorld("shipyard");
-		// for( int x=1404; x>=656; x-=22 )
-		// for( int x=1270; x>=16; x-=22 )
-		int startX = 656;
-		int endX = 1426;
-		int widthX = 18;
-		int startZ = 142;
-		int endZ = 37;
-		int widthZ = 105;
-		for (int x = startX; x <= endX; x += widthX) {
-
-			// for( int z=37; z<=142; z+=105 )
-			// for( int z=349; z<=454; z+=105 )
-			for (int z = startZ; z >= endZ; z -= widthZ) {
-				if ((syworld.getBlockAt(x, 64, z).getTypeId() == 63) && (syworld.getBlockAt(x, 63, z + 1).getTypeId() == 68)) {
-					Block selectSignBlock = syworld.getBlockAt(x, 64, z);
-					Block selectSignBlock2 = syworld.getBlockAt(x, 63, z + 1);
-					Sign selectSign = (Sign) selectSignBlock.getState();
-					Sign selectSign2 = (Sign) selectSignBlock2.getState();
-					String signLine0 = selectSign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
-					String sign2Line2 = selectSign2.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
-
-					if (signLine0.equalsIgnoreCase("*select*")) {
-						String playerName = selectSign.getLine(1);
-						String playerName2 = selectSign.getLine(2);
-
-						if ((playerName2 != null) && !playerName2.isEmpty()) {
-							playerName = playerName + playerName2;
-						}
-
-						if (playerName == null) {
-							continue;
-						}
-
-						int idNum = -1;
-						try {
-							idNum = Integer.parseInt(sign2Line2);
-						} catch (NumberFormatException nfe) {
-							continue;
-						}
-						if (idNum == -1) {
-							continue;
-						}
-
-						NavyCraft_FileListener.saveClaimedSign(playerName, "SHIP5", "shipyard" , x, 64, z, idNum);
-						}
-		}
-	}
-}
-	}
-	
-	
-	public static void loadSHIP1Unclaimed() {
+	public static void loadSHIP1() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1567; x+=14 )
 		// for( int x=16; x<=1286; x+=14 )
@@ -2673,7 +2472,7 @@ public class NavyCraft_BlockListener implements Listener {
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 
 
-						NavyCraft_FileListener.saveUnclaimedSign("SHIP1", "shipyard" , x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP1", "shipyard" , x, 64, z);
 
 					}
 				}
@@ -2681,7 +2480,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 
-	public static void loadSHIP2Unclaimed() {
+	public static void loadSHIP2() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=601; x<=1421; x+=10 )
 		// for( int x=16; x<=1296; x+=10 )
@@ -2704,7 +2503,7 @@ public class NavyCraft_BlockListener implements Listener {
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 
 
-						NavyCraft_FileListener.saveUnclaimedSign("SHIP2", "shipyard" , x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP2", "shipyard" , x, 64, z);
 
 					}
 				}
@@ -2712,7 +2511,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 
-	public static void loadSHIP3Unclaimed() {
+	public static void loadSHIP3() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=549; x>=21; x-=12 )
 		// for( int x=-35; x>=-1091; x-=12 )
@@ -2735,7 +2534,7 @@ public class NavyCraft_BlockListener implements Listener {
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 
 
-						NavyCraft_FileListener.saveUnclaimedSign("SHIP3", "shipyard" , x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP3", "shipyard" , x, 64, z);
 
 					}
 					
@@ -2744,7 +2543,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 
-	public static void loadSHIP4Unclaimed() {
+	public static void loadSHIP4() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=543; x>=21; x-=18 )
 		// for( int x=-41; x>=-1085; x-=18 )
@@ -2766,7 +2565,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 
-						NavyCraft_FileListener.saveUnclaimedSign("SHIP4", "shipyard" , x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP4", "shipyard" , x, 64, z);
 						}
 					
 					}
@@ -2774,7 +2573,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 
-	public static void loadSHIP5Unclaimed() {
+	public static void loadSHIP5() {
 		World syworld = plugin.getServer().getWorld("shipyard");
 		// for( int x=1404; x>=656; x-=22 )
 		// for( int x=1270; x>=16; x-=22 )
@@ -2796,7 +2595,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 
-						NavyCraft_FileListener.saveUnclaimedSign("SHIP5", "shipyard" , x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP5", "shipyard" , x, 64, z);
 						}
 					}
 				}
@@ -2807,16 +2606,11 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	   public static void loadSignShipyard()
 	   {
-			loadSHIP1Signs();
-			loadSHIP2Signs();
-			loadSHIP3Signs();
-			loadSHIP4Signs();
-			loadSHIP5Signs();
-			loadSHIP1Unclaimed();
-			loadSHIP2Unclaimed();
-			loadSHIP3Unclaimed();
-			loadSHIP4Unclaimed();
-			loadSHIP5Unclaimed();
+			loadSHIP1();
+			loadSHIP2();
+			loadSHIP3();
+			loadSHIP4();
+			loadSHIP5();
 	   }
 		
 		public static void loadRewards(String player) {
