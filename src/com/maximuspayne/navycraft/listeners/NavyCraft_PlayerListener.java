@@ -194,7 +194,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		String deathMsg = event.getDeathMessage();
 		
 		if (NavyCraft.battleMode > 0
-				&& PermissionInterface.CheckEnabledWorld(event.getEntity().getLocation())) {
+				&& PermissionInterface.CheckBattleWorld(event.getEntity().getLocation())) {
 			CraftMover.battleLogger(deathMsg);
 		}
 		
@@ -1537,14 +1537,14 @@ public class NavyCraft_PlayerListener implements Listener {
 						event.setCancelled(true);
 						return;
 					}
-					if (split.length < 5) {
+					if (split.length < 3) {
 						player.sendMessage(ChatColor.GOLD + "Usage - /shipyard load <type>");
 						player.sendMessage(ChatColor.YELLOW + "Example - /shipyard load <type>");
 						event.setCancelled(true);
 						return;
 					}
 					
-					String typeString = split[3];
+					String typeString = split[2];
 					if (!typeString.equalsIgnoreCase("SHIP1") &&
 							!typeString.equalsIgnoreCase("SHIP2") &&
 							!typeString.equalsIgnoreCase("SHIP3") &&
@@ -3247,8 +3247,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			event.setCancelled(true);
 			return;
 		} else if (craftName.equalsIgnoreCase("soldier")) {
-			if (player.getWorld().getName().equalsIgnoreCase("BattleWorld")) {
-				if (player.getWorld().getName().equalsIgnoreCase("BattleWorld") && NavyCraft.battleMode > 0) {
+				if (PermissionInterface.CheckBattleWorld(player.getLocation()) && NavyCraft.battleMode > 0) {
 					if (!NavyCraft.playerKits.contains(player.getName())) {
 						player.sendMessage(ChatColor.GREEN + "Soldier Kit Given");
 						player.getInventory().addItem(new ItemStack(Material.IRON_SWORD, 1));
@@ -3270,15 +3269,9 @@ public class NavyCraft_PlayerListener implements Listener {
 					} else {
 						player.sendMessage(ChatColor.RED + "You only get one Soldier kit per life!");
 					}
-				} else if (player.getWorld().getName().equalsIgnoreCase("shipyard")) {
-					player.sendMessage(ChatColor.RED + "You can only get this kit in the overworld.");
 				} else {
-					player.sendMessage(ChatColor.RED + "You can't use that kit right now");
+					player.sendMessage(ChatColor.RED + "You can only get this kit during a battle!");
 				}
-			} else {
-				// use essentials instead to make a kit.
-				player.sendMessage(ChatColor.RED + "You can only get this kit during an official battle.");
-			}
 		} else if (craftName.equalsIgnoreCase("battle")) {
 			if (split.length == 1) {
 				if (NavyCraft.battleMode == -1) {
@@ -3291,10 +3284,10 @@ public class NavyCraft_PlayerListener implements Listener {
 					String battleTypeStr = "";
 					switch (NavyCraft.battleType) {
 						case 1:
-							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+							battleTypeStr = ChatColor.YELLOW + "DDay (siege on land by ocean)";
 							break;
 						case 2:
-							battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+							battleTypeStr = ChatColor.BLUE + "Pearl Harbor (island-ships and airplanes)";
 							break;
 						case 3:
 							battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
@@ -3324,7 +3317,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					String scoreUpdateStr = "";
 					switch (NavyCraft.battleType) {
 						case 1:
-							battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+							battleTypeStr = ChatColor.YELLOW + "DDay (siege on land by ocean)";
 							scoreUpdateStr = "Time Left: "
 									+ (int) ((NavyCraft.battleLength
 											- (System.currentTimeMillis() - NavyCraft.battleStartTime)) / 60000.0f)
@@ -3332,7 +3325,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									+ ChatColor.BLUE + NavyCraft.bluePoints + " Team Blue";
 							break;
 						case 2:
-							battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+							battleTypeStr = ChatColor.BLUE + "Pearl Harbor (island-ships and airplanes)";
 							scoreTarawa();
 							scoreUpdateStr = "Time Left: "
 									+ (int) ((NavyCraft.battleLength
@@ -3567,8 +3560,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (!NavyCraft.redPlayers.contains(player.getName())
 							&& !NavyCraft.bluePlayers.contains(player.getName())
 							&& !NavyCraft.anyPlayers.contains(player.getName())) {
-						if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
-							Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+						if (PermissionInterface.CheckBattleWorld(player.getLocation())) {
+							Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
 							player.teleport(spawnLoc);
 						}
 						player.sendMessage(ChatColor.RED + "You are not on a team.");
@@ -3627,8 +3620,8 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						plugin.getServer().broadcastMessage(
 								ChatColor.YELLOW + testPlayer.getName() + " was kicked from the battle!");
-						if (PermissionInterface.CheckEnabledWorld(player.getLocation())) {
-							Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+						if (PermissionInterface.CheckBattleWorld(player.getLocation())) {
+							Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
 							testPlayer.teleport(spawnLoc);
 						}
 						
@@ -3661,8 +3654,8 @@ public class NavyCraft_PlayerListener implements Listener {
 						return;
 					}
 					
-					List<Player> ww2Players = player.getWorld().getPlayers();
-					Location spawnLoc = plugin.getServer().getWorlds().get(0).getSpawnLocation();
+					List<Player> ww2Players = PermissionInterface.BattleWorld().getPlayers();
+					Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
 					for (Player p : ww2Players) {
 						if (p != player) {
 							p.teleport(spawnLoc);
@@ -3717,8 +3710,8 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split.length == 3) {
 							if (split[2].equalsIgnoreCase("list")) {
 								player.sendMessage("Battle List");
-								player.sendMessage("1 - Tunisia (Desert-Tanks and Airplanes)");
-								player.sendMessage("2 - Tarawa (Island-Ships and Airplanes)");
+								player.sendMessage("1 - DDay (siege on land by ocean)");
+								player.sendMessage("2 - Pearl Harbor (Island-Ships and Airplanes)");
 								player.sendMessage("3 - North Sea (Open Ocean-Ships)");
 								// Anythings possible.
 								event.setCancelled(true);
@@ -3739,41 +3732,20 @@ public class NavyCraft_PlayerListener implements Listener {
 						String battleTypeStr = "";
 						switch (battleType) {
 							case 1:
-								if (!checkTunisia()) {
-									player.sendMessage("Tunisia bases need to be repaired first!");
-									event.setCancelled(true);
-									return;
-								}
-								battleTypeStr = ChatColor.YELLOW + "Tunisia (desert-tanks and airplanes)";
+								// Need to add automatic repair system for battles!
+								battleTypeStr = ChatColor.YELLOW + "DDay (siege on land by ocean)";
 								break;
 							case 2:
-								if (!checkTarawa()) {
-									player.sendMessage("Tarawa bases need to be repaired first!");
-									event.setCancelled(true);
-									return;
-								}
-								battleTypeStr = ChatColor.BLUE + "Tarawa (island-ships and airplanes)";
+								// Need to add automatic repair system for battles!
+								battleTypeStr = ChatColor.BLUE + "Pearl Harbor (island-ships and airplanes)";
 								break;
 							case 3:
-								/*
-								 * if( !checkNorthSea() ) { player.
-								 * sendMessage("North Sea bases need to be repaired first!"
-								 * ); event.setCancelled(true); return; }
-								 */
+								// This map shouldn't need to be repaired, but better safe than sorry.
 								battleTypeStr = ChatColor.DARK_AQUA + "North Sea (open ocean-ships)";
-								break;
-							case 4:
-								battleTypeStr = "Normandy";
-								break;
-							case 5:
-								battleTypeStr = "Wake Island";
-								break;
-							case 6:
-								battleTypeStr = "Omaha";
 								break;
 							default:
 								player.sendMessage(ChatColor.RED + "Invalid battle type option, use " + ChatColor.YELLOW
-										+ "/battle new (1,2,3)");
+										+ "/battle new list to see all battle types");
 								return;
 						}
 						plugin.getServer().broadcastMessage(ChatColor.GREEN + "*** OFFICIAL BATTLE QUEUE OPEN!!! ***");

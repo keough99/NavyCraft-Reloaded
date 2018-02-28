@@ -5810,12 +5810,12 @@ public class CraftMover {
 		}
 		
 		plugin.getServer().broadcastMessage(broadcastMsg);
-		if (NavyCraft.battleMode > 0 && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+		if (NavyCraft.battleMode > 0 && PermissionInterface.CheckBattleWorld(craft.getLocation())) {
 			battleLogger(logEntry);
 		}
 		
 		if (craft.damagers.isEmpty()) {
-			if (NavyCraft.battleMode > 0 && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+			if (NavyCraft.battleMode > 0 && PermissionInterface.CheckBattleWorld(craft.getLocation())) {
 				logEntry = "Unknown damage=" + craft.uncreditedDamage;
 				battleLogger(logEntry);
 			}
@@ -5883,7 +5883,7 @@ public class CraftMover {
 					}
 					
 					plugin.getServer().broadcastMessage(broadcastMsg);
-					if (NavyCraft.battleMode > 0 && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+					if (NavyCraft.battleMode > 0 && PermissionInterface.CheckBattleWorld(craft.getLocation())) {
 						battleLogger(logEntry);
 					}
 				}
@@ -5911,13 +5911,13 @@ public class CraftMover {
 					logEntry += p.getName();
 					
 					plugin.getServer().broadcastMessage(broadcastMsg);
-					if (NavyCraft.battleMode > 0 && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+					if (NavyCraft.battleMode > 0 && PermissionInterface.CheckBattleWorld(craft.getLocation())) {
 						battleLogger(logEntry);
 					}
 				}
 			}
 			
-			if (craft.uncreditedDamage > 0)// && craft.world.getName().equalsIgnoreCase("navalbattlezone")) )
+			if (craft.uncreditedDamage > 0)
 			{
 				broadcastMsg = "";
 				logEntry = "";
@@ -5930,7 +5930,7 @@ public class CraftMover {
 				broadcastMsg += "Unknown damage";
 				logEntry += "Unknown damage";
 				plugin.getServer().broadcastMessage(broadcastMsg);
-				if (NavyCraft.battleMode > 0 && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+				if (NavyCraft.battleMode > 0 && PermissionInterface.CheckBattleWorld(craft.getLocation())) {
 					battleLogger(logEntry);
 				}
 			}

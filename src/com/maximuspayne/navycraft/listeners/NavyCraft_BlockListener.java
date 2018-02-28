@@ -3247,7 +3247,6 @@ public class NavyCraft_BlockListener implements Listener {
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
 		NavyCraft_FileListener.saveExperience(player.getName());
 		if (NavyCraft.battleMode > 0) {
-			if (NavyCraft.battleType == 1) {
 				if (NavyCraft.redPlayers.contains(player.getName())) {
 					NavyCraft.redPoints += newExp;
 				} else {
@@ -3255,8 +3254,6 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-
-	}
 
 	public static void rewardExpCraft(int newExp, Craft craft) {
 		int playerNewExp = newExp;
@@ -3276,7 +3273,6 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 			NavyCraft_FileListener.saveExperience(p.getName());
 			if (NavyCraft.battleMode > 0) {
-				if (NavyCraft.battleType == 1) {
 					if (NavyCraft.redPlayers.contains(p.getName())) {
 						NavyCraft.redPoints += newExp;
 					} else {
@@ -3285,7 +3281,6 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-	}
 
 	public static void setExpPlayer(int newExp, Player p) {
 		NavyCraft.playerExp.put(p.getName(), newExp);

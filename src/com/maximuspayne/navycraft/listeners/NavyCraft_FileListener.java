@@ -118,6 +118,7 @@ public class NavyCraft_FileListener implements Listener {
 				int id = syData.getInt("Signs." + num + ".id");
 				String playerName = syData.getString("Signs." + num + ".playerName");
 				Block selectSignBlock = world.getBlockAt(x, y, z);
+				if (selectSignBlock.getTypeId() == 63) {
 				Sign selectSign = (Sign) selectSignBlock.getState();
 				if (type.equalsIgnoreCase("SHIP1")) {
 					if (!NavyCraft.playerSHIP1Signs.containsKey(playerName)) {
@@ -290,6 +291,7 @@ public class NavyCraft_FileListener implements Listener {
 			}
 		}
 	}
+}
 
 	public static Block findSignOpen(String type) {
 		File shipyarddata = new File(
@@ -306,89 +308,116 @@ public class NavyCraft_FileListener implements Listener {
 				int x = syData.getInt("Signs." + num + "." + "x");
 				int y = syData.getInt("Signs." + num + "." + "y");
 				int z = syData.getInt("Signs." + num + "." + "z");
-				
 				if (type.equalsIgnoreCase("SHIP1")) {
 					if (ptype.equalsIgnoreCase("SHIP1")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("SHIP2")) {
 					if (ptype.equalsIgnoreCase("SHIP2")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("SHIP3")) {
 					if (ptype.equalsIgnoreCase("SHIP3")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("SHIP4")) {
 					if (ptype.equalsIgnoreCase("SHIP4")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("SHIP5")) {
 					if (ptype.equalsIgnoreCase("SHIP5")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("HANGAR1")) {
 					if (ptype.equalsIgnoreCase("HANGAR1")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("HANGAR2")) {
 					if (ptype.equalsIgnoreCase("HANGAR2")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("TANK1")) {
 					if (ptype.equalsIgnoreCase("TANK1")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("TANK2")) {
 					if (ptype.equalsIgnoreCase("TANK2")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("MAP1")) {
 					if (ptype.equalsIgnoreCase("MAP1")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("MAP2")) {
 					if (ptype.equalsIgnoreCase("MAP2")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("MAP3")) {
 					if (ptype.equalsIgnoreCase("MAP3")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("MAP4")) {
 					if (ptype.equalsIgnoreCase("MAP4")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 				if (type.equalsIgnoreCase("MAP5")) {
 					if (ptype.equalsIgnoreCase("MAP5")) {
 						selectSignBlock = world.getBlockAt(x, y, z);
+						if (selectSignBlock.getTypeId() == 63) {
 						break;
+						}
 					}
 				}
 			}
@@ -397,9 +426,9 @@ public class NavyCraft_FileListener implements Listener {
 	}
 
 	public static void saveClaimedSign(String player, String type, String world, int x, int y, int z, int id) {
-		File shipyarddata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "shipyarddata");
+		Block selectSignBlock = NavyCraft.instance.getServer().getWorld(world).getBlockAt(x, y, z);
+		if (selectSignBlock.getTypeId() == 63) {
+		File shipyarddata = new File( NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
 		File f = new File(shipyarddata, File.separator + "signs.yml");
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		Location loc = new Location(NavyCraft.instance.getServer().getWorld(world), x, y, z);
@@ -430,11 +459,12 @@ public class NavyCraft_FileListener implements Listener {
 			return;
 		}
 	}
+}
 	
 	public static void saveUnclaimedSign(String type, String world, int x, int y, int z) {
-		File shipyarddata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "shipyarddata");
+		Block selectSignBlock = NavyCraft.instance.getServer().getWorld(world).getBlockAt(x, y, z);
+		if (selectSignBlock.getTypeId() == 63) {
+		File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),File.separator + "shipyarddata");
 		File f = new File(shipyarddata, File.separator + "signs.yml");
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		Location loc = new Location(NavyCraft.instance.getServer().getWorld(world), x, y, z);
@@ -463,11 +493,10 @@ public class NavyCraft_FileListener implements Listener {
 			return;
 		}
 	}
+}
 	
 	public static void saveSign(String type, String world, int x, int y, int z) {
-		File shipyarddata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "shipyarddata");
+		File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),File.separator + "shipyarddata");
 		File f = new File(shipyarddata, File.separator + "signs.yml");
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		List<String> list = new ArrayList<String>(syData.getConfigurationSection("Signs").getKeys(false));
@@ -484,7 +513,7 @@ public class NavyCraft_FileListener implements Listener {
 			e.printStackTrace();
 			System.out.println("SIGN NOT LOADED");
 		}
-	}
+}
 	
 	public static void loadPlayerData(String player) {
 		File userdata = new File(

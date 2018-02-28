@@ -2,6 +2,7 @@ package com.maximuspayne.navycraft.plugins;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -93,25 +94,49 @@ public class PermissionInterface {
 
 	public static boolean CheckEnabledWorld(Location loc) {
 		if (!plugin.getConfig().getString("EnabledWorlds").equalsIgnoreCase("null")) {
-			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
-			for (String world : worlds) {
-				if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;
-				
-			}
-			return false;
+			String world = NavyCraft.instance.getConfig().getString("EnabledWorlds");
+			if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;	
 		}
-		return true;
+	return false;
+}
+	
+	public static boolean CheckShipyardWorld(Location loc) {
+		if (!plugin.getConfig().getString("ShipyardWorld").equalsIgnoreCase("null")) {
+			String world = NavyCraft.instance.getConfig().getString("ShipyardWorld");
+				if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;	
+			}
+		return false;
 	}
 	
 	public static boolean CheckBattleWorld(Location loc) {
 		if (!plugin.getConfig().getString("BattleWorld").equalsIgnoreCase("null")) {
-			String[] worlds = NavyCraft.instance.getConfig().getString("BattleWorld").split(",");
-			for (String world : worlds) {
-				if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;
-				
-			}
-			return false;
+			String world = NavyCraft.instance.getConfig().getString("BattleWorld");
+			if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;	
 		}
-		return true;
-	}
+	return false;
+}
+
+public static World EnabledWorld() {
+	if (!plugin.getConfig().getString("EnabledWorld").equalsIgnoreCase("null")) {
+		World worlds = NavyCraft.instance.getServer().getWorld(NavyCraft.instance.getConfig().getString("EnabledWorld"));
+		return worlds;	
+		}
+	return null;
+}
+
+public static World ShipyardWorld() {
+	if (!plugin.getConfig().getString("ShipyardWorld").equalsIgnoreCase("null")) {
+		World worlds = NavyCraft.instance.getServer().getWorld(NavyCraft.instance.getConfig().getString("ShipyardWorld"));
+		return worlds;	
+		}
+	return null;
+}
+
+public static World BattleWorld() {
+	if (!plugin.getConfig().getString("BattleWorld").equalsIgnoreCase("null")) {
+		World worlds = NavyCraft.instance.getServer().getWorld(NavyCraft.instance.getConfig().getString("BattleWorld"));
+		return worlds;	
+		}
+	return null;
+}
 }
