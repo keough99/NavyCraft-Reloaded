@@ -7,38 +7,38 @@ import org.bukkit.event.HandlerList;
 import com.maximuspayne.navycraft.craft.Craft;
 
 public class NavyCraftTurnEvent extends Event implements Cancellable {
-    
-    private int degrees;
-    private boolean cancelled;
-    private final Craft craft;
-    
-    public NavyCraftTurnEvent(Craft craft, int degrees) {
-        this.craft = craft;
-        this.setDegrees(degrees);
-        this.cancelled = false;
-    }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+	private int degrees;
+	private boolean cancelled;
+	private final Craft craft;
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
+	public NavyCraftTurnEvent(Craft craft, int degrees) {
+		this.craft = craft;
+		setDegrees(degrees);
+		cancelled = false;
+	}
 
-    public void setDegrees(int degrees) {
-        this.degrees = degrees;
-    }
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
 
-    public int getDegrees() {
-        return degrees;
-    }
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
-    public Craft getCraft() {
-        return craft;
-    }
+	public void setDegrees(int degrees) {
+		this.degrees = degrees;
+	}
+
+	public int getDegrees() {
+		return degrees;
+	}
+
+	public Craft getCraft() {
+		return craft;
+	}
 
 	@Override
 	public HandlerList getHandlers() {
