@@ -10,7 +10,7 @@ public class DataBlock {
 	public int data;
 	public ItemStack[] items = new ItemStack[27];
 	public String[] signLines = new String[4];
-	
+
 	public DataBlock(int id, int x, int y, int z, int data) {
 		this.id = id;
 		this.x = x;
@@ -18,18 +18,18 @@ public class DataBlock {
 		this.z = z;
 		this.data = data;
 	}
-
+	
 	public boolean locationMatches(int locX, int locY, int locZ) {
-		if (locX == x && locY == y && locZ == z)
+		if(locX == x && locY == y && locZ == z)
 			return true;
 		else
 			return false;
 	}
-
+	
 	@SuppressWarnings("deprecation")
-	public void setItem(int slot, ItemStack origItem) {
-		// items[slot] = new ItemStack(itemType);
-		if (slot >= 27)
+	public void setItem(int slot, ItemStack origItem){
+		//items[slot] = new ItemStack(itemType);
+		if( slot >= 27 )
 			return;
 		items[slot] = new ItemStack(origItem.getTypeId());
 		items[slot].setAmount(origItem.getAmount());
