@@ -20,10 +20,10 @@ You can read up on the future of this plugin and some current ideas [here](https
 
 ## Resources
 
-- Solmex Server files [here](https://github.com/Solmex72/NavyCraft-Server)
 - Schematics from NBZ/IronSeas [here](https://ironseas.tk/schematics) - **This isn't copied from NavalClash, I made it for NavalClash :/**
 - Texture Pack for NC [here](https://github.com/Solmex72/NavyCraft-Textures)
-- Old NBZ Server files [here](http://navalbattlezone.com/downloads/) - these files are the only thing that made this plugin possible!
+- Old NBZ Server files [here](http://navalbattlezone.com/downloads/)
+- The Iron Seas [Discord](https://discord.gg/5XX3tyU)
 
 ## Builds
 [![CircleCI](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded.svg?style=svg)](https://circleci.com/gh/Solmex72/NavyCraft-Reloaded)
