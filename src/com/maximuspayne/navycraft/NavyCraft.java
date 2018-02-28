@@ -209,6 +209,7 @@ public class NavyCraft extends JavaPlugin {
 
 	public void onDisable() {
 		shutDown = true;
+		PermissionInterface.removePermissions(this);
 		PluginDescriptionFile pdfFile = this.getDescription();
 		System.out.println(pdfFile.getName() + " " + version + " plugin disabled");
 	}

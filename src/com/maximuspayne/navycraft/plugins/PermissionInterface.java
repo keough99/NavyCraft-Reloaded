@@ -41,6 +41,29 @@ public class PermissionInterface {
 			}
 		}
 	}
+	public static void removePermissions(NavyCraft p) {
+		plugin = p;
+		PluginManager pm = NavyCraft.instance.getServer().getPluginManager();
+		if(pm != null) {
+			pm.removePermission(new Permission("navycraft.periscope.use"));
+			pm.removePermission(new Permission("navycraft.aa-gun.use"));
+			pm.removePermission(new Permission("navycraft.flak-gun.use"));
+			pm.removePermission(new Permission("navycraft.periscope.create"));
+			pm.removePermission(new Permission("navycraft.aa-gun.create"));
+			pm.removePermission(new Permission("navycraft.flak-gun.create"));
+			
+			for (CraftType type : CraftType.craftTypes) 
+			{
+				pm.removePermission(new Permission("navycraft." + type.name + ".release"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".info"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".takeover"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".start"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".create"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".sink"));
+				pm.removePermission(new Permission("navycraft." + type.name + ".remove"));
+			}
+		}
+	}
 	
 	
 	

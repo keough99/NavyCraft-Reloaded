@@ -2549,16 +2549,117 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 
-	
-	
-	   public static void loadSignShipyard()
-	   {
-			loadSHIP1();
-			loadSHIP2();
-			loadSHIP3();
-			loadSHIP4();
-			loadSHIP5();
-	   }
+	public static Block loadHANGAR1() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = 553;
+		int endX = -137;
+		int widthX = 23;
+		int startZ = -766;
+		int endZ = -1191;
+		int widthZ = 25;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) {
+						NavyCraft_FileListener.saveSign("HANGAR1", "shipyard" , x, 64, z);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Block loadHANGAR2() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=553; x>=-137; x-=23 )
+		// for( int x=-31; x>=-1067; x-=23 )
+		int startX = -99;
+		int endX = -1177;
+		int widthX = 49;
+		int startZ = 67;
+		int endZ = -117;
+		int widthZ = 46;
+		for (int x = startX; x >= endX; x -= widthX) {
+
+			// for( int z=-766; z>=-1191; z-=25 )
+			// for( int z=-278; z>=-828; z-=25 )
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					syworld.getBlockAt(x + 1, 64, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) {
+						NavyCraft_FileListener.saveSign("HANGAR2", "shipyard" , x, 64, z);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Block loadTANK1() {
+		World syworld = plugin.getServer().getWorld("shipyard");
+		// for( int x=602; x<=908; x+=18 )
+		// for( int x=22; x<=832; x+=18 )
+		int startX = 602;
+		int endX = 926;
+		int widthX = 18;
+		int startZ = -953;
+		int endZ = -1385;
+		int widthZ = 24;
+		for (int x = startX; x <= endX; x += widthX) {
+		for (int z = startZ; z >= endZ; z -= widthZ) {
+				if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+					Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+					Sign selectSign = (Sign) selectSignBlock.getState();
+					String signLine0 = selectSign.getLine(0);
+
+					if (signLine0.equalsIgnoreCase("*claim*")) {
+						NavyCraft_FileListener.saveSign("TANK1", "shipyard" , x, 64, z);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+		public static Block loadTANK2() {
+			World syworld = plugin.getServer().getWorld("shipyard");
+			// for( int x=602; x<=908; x+=18 )
+			// for( int x=22; x<=832; x+=18 )
+			int startX = 960;
+			int endX = 1436;
+			int widthX = 34;
+			int startZ = -920;
+			int endZ = -1361;
+			int widthZ = 44;
+			for (int x = startX; x <= endX; x += widthX) {
+			for (int z = startZ; z >= endZ; z -= widthZ) {
+					if ((syworld.getBlockAt(x, 65, z).getTypeId() == 63) && (syworld.getBlockAt(x + 1, 64, z).getTypeId() == 68)) {
+						Block selectSignBlock = syworld.getBlockAt(x, 65, z);
+						Sign selectSign = (Sign) selectSignBlock.getState();
+						String signLine0 = selectSign.getLine(0);
+
+						if (signLine0.equalsIgnoreCase("*claim*")) {
+							NavyCraft_FileListener.saveSign("TANK2", "shipyard" , x, 64, z);
+						}
+					}
+				}
+			}
+		return null;
+	}
 		
 		public static void loadRewards(String player) {
 			NavyCraft.playerSHIP1Rewards.clear();

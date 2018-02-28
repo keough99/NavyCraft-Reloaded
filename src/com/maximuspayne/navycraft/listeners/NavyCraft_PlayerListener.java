@@ -1527,17 +1527,69 @@ public class NavyCraft_PlayerListener implements Listener {
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
 						if (split[1].equalsIgnoreCase("load")) {
-							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.load") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
 								event.setCancelled(true);
 								return;
+							}
+							if (split.length < 5) {
+								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard load <type>");
+								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard load <type>");
+								event.setCancelled(true);
+								return;
+							}
+
+							String typeString = split[3];
+							if (!typeString.equalsIgnoreCase("SHIP1") &&
+								!typeString.equalsIgnoreCase("SHIP2") &&
+								!typeString.equalsIgnoreCase("SHIP3") &&
+							    !typeString.equalsIgnoreCase("SHIP4") &&
+								!typeString.equalsIgnoreCase("SHIP5") &&
+							    !typeString.equalsIgnoreCase("HANGAR1") &&
+							    !typeString.equalsIgnoreCase("HANGAR2") && 
+							    !typeString.equalsIgnoreCase("TANK1") && 
+							    !typeString.equalsIgnoreCase("TANK2") &&
+								!typeString.equalsIgnoreCase("MAP1") &&
+								!typeString.equalsIgnoreCase("MAP2") &&
+							    !typeString.equalsIgnoreCase("MAP3") &&
+								!typeString.equalsIgnoreCase("MAP4") &&
+								!typeString.equalsIgnoreCase("MAP5")) {
+								player.sendMessage(ChatColor.RED + "Unknown lot type");
+								event.setCancelled(true);
+								return;
+							}
+							if (typeString.equalsIgnoreCase("SHIP1")) {
+								NavyCraft_BlockListener.loadSHIP1();
+							}
+							if (typeString.equalsIgnoreCase("SHIP2")) {
+								NavyCraft_BlockListener.loadSHIP2();
+							}
+							if (typeString.equalsIgnoreCase("SHIP3")) {
+								NavyCraft_BlockListener.loadSHIP3();
+							}
+							if (typeString.equalsIgnoreCase("SHIP4")) {
+								NavyCraft_BlockListener.loadSHIP4();
+							}
+							if (typeString.equalsIgnoreCase("SHIP5")) {
+								NavyCraft_BlockListener.loadSHIP5();
+							}
+							if (typeString.equalsIgnoreCase("HANGAR1")) {
+								NavyCraft_BlockListener.loadHANGAR1();
+							}
+							if (typeString.equalsIgnoreCase("HANGAR2")) {
+								NavyCraft_BlockListener.loadHANGAR2();
+							}
+							if (typeString.equalsIgnoreCase("TANK1")) {
+								NavyCraft_BlockListener.loadTANK1();
+							}
+							if (typeString.equalsIgnoreCase("TANK2")) {
+								NavyCraft_BlockListener.loadTANK2();
 							}
 							File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
 						    File f = new File(shipyarddata, File.separator + "signs.yml");
 						    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 					        List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
 					        int size = list.size();
-							NavyCraft_BlockListener.loadSignShipyard();
 							int amount = size;
 							player.sendMessage(ChatColor.GREEN + "Loaded: " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + amount + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plots" );
 							return;
