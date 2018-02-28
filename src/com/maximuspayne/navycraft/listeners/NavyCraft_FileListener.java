@@ -45,7 +45,7 @@ public class NavyCraft_FileListener  implements Listener {
 		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
           File f = new File(shipyarddata, File.separator + "signs.yml");
           FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-                List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
           int size = list.size();
         for (String s : NavyCraft.playerSHIP1Signs.keySet()) {
 			NavyCraft.playerSHIP1Signs.get(s).clear();
@@ -177,11 +177,9 @@ public class NavyCraft_FileListener  implements Listener {
 					System.out.println("LOADED PLOTS");
         	}
         }
-	} else {
-		return;
 	}
 }
-        }
+	}
 	
 	public static Block findSignOpen (String type) {
 		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
@@ -233,52 +231,67 @@ public class NavyCraft_FileListener  implements Listener {
 	}
 	
 	public static void saveClaimedSign (String player, String type, String world , int x, int y, int z, int id) {
-		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-          File f = new File(shipyarddata, File.separator + "signs.yml");
-          FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
-          int size = list.size();
-				syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type);
-		        syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
-		        syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
-		        syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
-		        syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
-		        syData.set("Signs." + String.valueOf(size + 1) + "." + "playerName", player);
-			    syData.set("Signs." + String.valueOf(size + 1) + "." + "id", id);
-			    syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", true);
-        try {
-			syData.save(f);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("SIGN NOT LOADED");
-		}
+		File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
+        File f = new File(shipyarddata, File.separator + "signs.yml");
+        FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+        Location loc = new Location (NavyCraft.instance.getServer().getWorld(world), x, y, z);
+        List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+    		for (String num : list) {
+    	         int x1 = syData.getInt("Signs." + num + "." + "x");
+    	         int y1 = syData.getInt("Signs." + num + "." + "y");
+    	         int z1 = syData.getInt("Signs." + num + "." + "z");
+    	         String world1 = syData.getString("Signs." + num + "." + "world");
+    	         Location loc1 = new Location (NavyCraft.instance.getServer().getWorld(world1), x1, y1, z1);
+    	         if (loc.equals(loc1)) {
+    	     		syData.set("Signs." + num + "." + "type", type.toUpperCase());
+    	            syData.set("Signs." + num + "." + "world", world);
+    	            syData.set("Signs." + num + "." + "x", x);
+    	            syData.set("Signs." + num + "." + "y", y);
+    	            syData.set("Signs." + num + "." + "z", z);
+    	    	    syData.set("Signs." + num + "." + "isClaimed", true);
+    	    	    syData.set("Signs." + num + "." + "playerName" , player);
+    	    	    syData.set("Signs." + num + "." + "id", id);
+    	    	    break;
+    	         }
+      		}
+            try {
+    			syData.save(f);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    			System.out.println("SIGN NOT LOADED");
+    			return;
+    	}
 	}
 public static void saveUnclaimedSign (String type, String world, int x, int y, int z) {
 	File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
     File f = new File(shipyarddata, File.separator + "signs.yml");
     FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-	Location loc1;
-	Location loc = new Location (NavyCraft.instance.getServer().getWorld(world), x, y, z);
-          List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
+    Location loc = new Location (NavyCraft.instance.getServer().getWorld(world), x, y, z);
+    List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-		if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
 	         int x1 = syData.getInt("Signs." + num + "." + "x");
 	         int y1 = syData.getInt("Signs." + num + "." + "y");
 	         int z1 = syData.getInt("Signs." + num + "." + "z");
-	         World world1 = NavyCraft.instance.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
-	         loc1 = new Location (world1, x1, y1, z1);
-	         if (loc1 == loc) {
-					syData.set("Signs." + num + "." + "type", type);
-			        syData.set("Signs." + num + "." + "world", world);
-			        syData.set("Signs." + num + "." + "x", x);
-			        syData.set("Signs." + num + "." + "y", y);
-			        syData.set("Signs." + num + "." + "z", z);
-				    syData.set("Signs." + num + "." + "isClaimed", false); 
+	         String world1 = syData.getString("Signs." + num + "." + "world");
+	         Location loc1 = new Location (NavyCraft.instance.getServer().getWorld(world1), x1, y1, z1);
+	         if (loc.equals(loc1)) {
+	     		syData.set("Signs." + num + "." + "type", type.toUpperCase());
+	            syData.set("Signs." + num + "." + "world", world);
+	            syData.set("Signs." + num + "." + "x", x);
+	            syData.set("Signs." + num + "." + "y", y);
+	            syData.set("Signs." + num + "." + "z", z);
+	    	    syData.set("Signs." + num + "." + "isClaimed", false);
+	    	    break;
 	         }
-		}
+  		}
+        try {
+			syData.save(f);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("SIGN NOT LOADED");
+			return;
 	}
 }
-	
 	public static void saveSign (String type, String world, int x, int y , int z){
 		  File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
 	      File f = new File(shipyarddata, File.separator + "signs.yml");
@@ -394,11 +407,23 @@ public static void saveUnclaimedSign (String type, String world, int x, int y, i
 		  File userdata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
           File f = new File(userdata, File.separator + player + ".yml");
           FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+        if( NavyCraft.playerSHIP1Rewards.containsKey(player) )
   		NavyCraft.playerSHIP1Rewards.put(player, NavyCraft.playerSHIP1Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP1").toString()));
+		else
+			 NavyCraft.playerSHIP1Rewards.put(player, 1);
+        if( NavyCraft.playerSHIP2Rewards.containsKey(player) )
   		NavyCraft.playerSHIP2Rewards.put(player, NavyCraft.playerSHIP2Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP2").toString()));
+		else
+			 NavyCraft.playerSHIP2Rewards.put(player, 1);
+        if( NavyCraft.playerSHIP3Rewards.containsKey(player) )
   		NavyCraft.playerSHIP3Rewards.put(player, NavyCraft.playerSHIP3Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP3").toString()));
+		 NavyCraft.playerSHIP3Rewards.put(player, 1);
+	    if( NavyCraft.playerSHIP4Rewards.containsKey(player) )
   		NavyCraft.playerSHIP4Rewards.put(player, NavyCraft.playerSHIP4Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP4").toString()));
+		 NavyCraft.playerSHIP4Rewards.put(player, 1);
+	    if( NavyCraft.playerSHIP5Rewards.containsKey(player) )
   		NavyCraft.playerSHIP5Rewards.put(player, NavyCraft.playerSHIP5Rewards.get(player) + Integer.valueOf(playerData.get(player + ".SHIP5").toString()));
+		NavyCraft.playerSHIP5Rewards.put(player, 1);
   		return;
 	}
 	

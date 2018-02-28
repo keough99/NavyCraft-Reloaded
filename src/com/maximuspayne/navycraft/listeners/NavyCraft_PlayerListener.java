@@ -2032,6 +2032,15 @@ public class NavyCraft_PlayerListener implements Listener {
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
 
 									if (foundSign != null) {
+										Block foundBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX(),
+												foundSign.getY() - 1, foundSign.getZ() + 1);
+										if (foundBlock2.getTypeId() != 68) {
+											foundBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX() + 1,
+													foundSign.getY() - 1, foundSign.getZ());
+										}
+									if (foundBlock2.getTypeId() == 68) {
+										Sign foundSign2 = (Sign) foundBlock2.getState();
+										
 										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
 												.getPlugin("WorldGuard");
 										if (wgp != null) {
@@ -2066,6 +2075,7 @@ public class NavyCraft_PlayerListener implements Listener {
 												}
 											}
 											regionManager.removeRegion(regionName);
+											NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3), foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(), foundSign.getZ());
 												foundSign.setLine(0, "*Claim*");
 												foundSign.setLine(1, "");
 												foundSign.setLine(2, "");
@@ -2076,9 +2086,11 @@ public class NavyCraft_PlayerListener implements Listener {
 											} catch (StorageException e) {
 												e.printStackTrace();
 											}
-											
 											player.sendMessage(ChatColor.GREEN + "Plot Unclaimed.");
 										}
+									} else {
+										player.sendMessage(ChatColor.RED + "Error: There may be a problem with your plot signs.");
+									}
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
 									}

@@ -1,6 +1,5 @@
 package com.maximuspayne.navycraft.listeners;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,8 +15,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -815,61 +812,11 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(3, lotStr);
 						sign2.update();
 						
-						
-						File shipyarddata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "shipyarddata");
-					    File f = new File(shipyarddata, File.separator + "signs.yml");
-					    FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
-				         String type = null;
-				         World world = null;
-				         int x = 0;
-				         int y = 0;
-				         int z = 0;
-				         Location locf;
-				         List<String> list = new ArrayList<String> (syData.getConfigurationSection("Signs").getKeys(false));
-				         for (String num : list) {
-				         type = syData.getString("Signs." + num + "." + "type");
-				         world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
-				         x = syData.getInt("Signs." + num + "." + "x");
-				         y = syData.getInt("Signs." + num + "." + "y");
-				         z = syData.getInt("Signs." + num + "." + "z");
-				         locf = new Location (world, x, y, z);
-				         	if (lotType == 1) {
-				         		if (type.equalsIgnoreCase("SHIP1")) {
-				         			if (sign.getLocation() == locf); {
-				         		    break;
-				         			}
-				         		}
-				         	}
-				         	if (lotType == 2) {
-				         		if (type.equalsIgnoreCase("SHIP2")) {
-				         			if (sign.getLocation() == locf); {
-				         		    break;
-				         			}
-				         		}
-				         	}
-				         	if (lotType == 3) {
-				         		if (type.equalsIgnoreCase("SHIP3")) {
-				         			if (sign.getLocation() == locf); {
-				         		    break;
-				         			}
-				         		}
-				         }
-				         	if (lotType == 4) {
-				         		if (type.equalsIgnoreCase("SHIP4")) {
-				         			if (sign.getLocation() == locf); {
-				         		    break;
-				         			}
-				         		}
-				         }
-				         	if (lotType == 5) {
-				         		if (type.equalsIgnoreCase("SHIP5")) {
-				         			if (sign.getLocation() == locf); {
-				         		    break;
-				         			}
-				         		}
-				         }
-				       NavyCraft_FileListener.saveClaimedSign(player.getName(), type, world.getName(), x, y, z, Integer.valueOf(sign2.getLine(2)));
-				   }
+						int x = sign.getX();
+						int y = sign.getY();
+						int z = sign.getZ();
+						World world = sign.getWorld();
+				       NavyCraft_FileListener.saveClaimedSign(player.getName(), lotStr, world.getName(), x, y, z, Integer.valueOf(sign2.getLine(2)));
 				          	
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
 					} else {
