@@ -6,32 +6,31 @@ package com.maximuspayne.navycraft.blocks;
  */
 
 /**
- * 
  * @author Joel
  */
-//a simple class to store a block location 
+// a simple class to store a block location
 public class BlockLoc {
-
+	
 	public int x;
 	public int y;
 	public int z;
-
+	
 	public BlockLoc(int x, int y, int z) {
-
+		
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
-
+	
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof BlockLoc))
 			return false;
-
+		
 		BlockLoc block = (BlockLoc) object;
 		return x == block.x && y == block.y && z == block.z;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Integer.valueOf(x).hashCode() >> 13
