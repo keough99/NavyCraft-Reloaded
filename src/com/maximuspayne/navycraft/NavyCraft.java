@@ -292,7 +292,8 @@ public class NavyCraft extends JavaPlugin {
 				|| checkSpawnRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ))) {
 			craft.speedChange(player, true);
 		}
-		{
+		
+		if (shutDown = false || PermissionInterface.CheckEnabledWorld(new Location(craft.world, craft.minX, craft.minY, craft.minZ))){
 			craft.driverName = craft.captainName;
 			if (craft.type.listenItem == true) {
 				player.sendMessage(ChatColor.GRAY

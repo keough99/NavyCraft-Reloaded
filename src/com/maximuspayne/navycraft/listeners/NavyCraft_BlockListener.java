@@ -2520,7 +2520,7 @@ public class NavyCraft_BlockListener implements Listener {
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 						
-						NavyCraft_FileListener.saveSign("SHIP1", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP1", "shipyard", x, y, z);
 						
 					}
 				}
@@ -2551,7 +2551,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 
 					if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("SHIP2", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP2", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2581,7 +2581,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 
 					if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("SHIP3", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP3", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2611,7 +2611,7 @@ public class NavyCraft_BlockListener implements Listener {
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 						
-						NavyCraft_FileListener.saveSign("SHIP4", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP4", "shipyard", x, y, z);
 					}
 					
 				}
@@ -2643,7 +2643,7 @@ public class NavyCraft_BlockListener implements Listener {
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
 						
-						NavyCraft_FileListener.saveSign("SHIP5", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("SHIP5", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2673,7 +2673,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 					
 										if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("HANGAR1", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("HANGAR1", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2704,7 +2704,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("HANGAR2", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("HANGAR2", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2735,7 +2735,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("TANK1", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("TANK1", "shipyard", x, y, z);
 					}
 				}
 			}
@@ -2766,7 +2766,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String signLine0 = selectSign.getLine(0);
 					
 					if (signLine0.equalsIgnoreCase("*claim*")) {
-						NavyCraft_FileListener.saveSign("TANK2", "shipyard", x, 64, z);
+						NavyCraft_FileListener.saveSign("TANK2", "shipyard", x, y, z);
 					}
 				}
 			}
