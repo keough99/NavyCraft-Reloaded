@@ -24,7 +24,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;

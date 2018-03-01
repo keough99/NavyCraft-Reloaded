@@ -21,7 +21,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 
 public class NavyCraft_EntityListener implements Listener {
 	private static Plugin plugin;

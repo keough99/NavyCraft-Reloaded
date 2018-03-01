@@ -32,7 +32,7 @@ import com.maximuspayne.navycraft.listeners.NavyCraft_EntityListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_InventoryListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;

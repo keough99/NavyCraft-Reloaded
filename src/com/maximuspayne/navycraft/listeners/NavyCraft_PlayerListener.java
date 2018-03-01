@@ -52,7 +52,7 @@ import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -1312,6 +1312,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					event.setCancelled(true);
 				} else {
 					player.sendMessage("Unknown command. Type \"/navycraft help\" for help.");
+					event.setCancelled(true);
+					return;
 				}
 				// nc help
 			} else {
@@ -2828,6 +2830,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 				} else {
 					player.sendMessage("Unknown command. Type \"/shipyard help\" for help.");
+					event.setCancelled(true);
+					return;
 				}
 				
 			} else {
@@ -3579,7 +3583,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							&& !NavyCraft.bluePlayers.contains(player.getName())
 							&& !NavyCraft.anyPlayers.contains(player.getName())) {
 						if (PermissionInterface.CheckBattleWorld(player.getLocation())) {
-							Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
+							Location spawnLoc = PermissionInterface.MainWorld().getSpawnLocation();
 							player.teleport(spawnLoc);
 						}
 						player.sendMessage(ChatColor.RED + "You are not on a team.");
@@ -3639,7 +3643,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						plugin.getServer().broadcastMessage(
 								ChatColor.YELLOW + testPlayer.getName() + " was kicked from the battle!");
 						if (PermissionInterface.CheckBattleWorld(player.getLocation())) {
-							Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
+							Location spawnLoc = PermissionInterface.MainWorld().getSpawnLocation();
 							testPlayer.teleport(spawnLoc);
 						}
 						
@@ -3673,7 +3677,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 					
 					List<Player> ww2Players = PermissionInterface.BattleWorld().getPlayers();
-					Location spawnLoc = PermissionInterface.EnabledWorld().getSpawnLocation();
+					Location spawnLoc = PermissionInterface.MainWorld().getSpawnLocation();
 					for (Player p : ww2Players) {
 						if (p != player) {
 							p.teleport(spawnLoc);
@@ -4172,6 +4176,8 @@ public class NavyCraft_PlayerListener implements Listener {
 					}
 				} else {
 					player.sendMessage("Unknown command. Type \"/volume\" for help.");
+					event.setCancelled(true);
+					return;
 				}
 			} else {
 				player.sendMessage(ChatColor.GOLD + "Volume v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD

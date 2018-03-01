@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.plugin.Plugin;
 
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 
 import net.md_5.bungee.api.ChatColor;
 

@@ -41,7 +41,7 @@ import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
 import com.sk89q.worldedit.MaxChangedBlocksException;

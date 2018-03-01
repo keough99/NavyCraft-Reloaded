@@ -43,7 +43,7 @@ import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
 import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
-import com.maximuspayne.navycraft.plugins.PermissionInterface;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;

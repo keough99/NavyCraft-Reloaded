@@ -1,4 +1,4 @@
-package com.maximuspayne.navycraft.plugins;
+package com.maximuspayne.navycraft;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -91,9 +91,24 @@ public class PermissionInterface {
 		} else // player.sendMessage("You do not have permission to perform " + command);
 			return false;
 	}
-
+	
 	public static boolean CheckEnabledWorld(Location loc) {
-		if (!plugin.getConfig().getString("EnabledWorlds").equalsIgnoreCase("null")) {
+		if(!plugin.getConfig().getString("EnabledWorlds").equalsIgnoreCase("null")) {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
+			for(int i = 0; i < worlds.length; i++) {
+				if( loc.getWorld().getName().equalsIgnoreCase(worlds[i]) )
+				{
+					return true;
+				}
+					
+			}
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean CheckMainWorld(Location loc) {
+		if (!plugin.getConfig().getString("MainWorlds").equalsIgnoreCase("null")) {
 			String world = NavyCraft.instance.getConfig().getString("EnabledWorlds");
 			if (loc.getWorld().getName().equalsIgnoreCase(world)) return true;	
 		}
@@ -116,8 +131,8 @@ public class PermissionInterface {
 	return false;
 }
 
-public static World EnabledWorld() {
-	if (!plugin.getConfig().getString("EnabledWorld").equalsIgnoreCase("null")) {
+public static World MainWorld() {
+	if (!plugin.getConfig().getString("MainWorld").equalsIgnoreCase("null")) {
 		World worlds = NavyCraft.instance.getServer().getWorld(NavyCraft.instance.getConfig().getString("EnabledWorld"));
 		return worlds;	
 		}
