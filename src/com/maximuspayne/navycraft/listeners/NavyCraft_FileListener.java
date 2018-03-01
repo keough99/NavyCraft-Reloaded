@@ -26,8 +26,8 @@ public class NavyCraft_FileListener implements Listener {
 	
 	public static void loadShipyardData() {
 		File shipyarddata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "shipyarddata");
+		NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
+		File.separator + "shipyarddata");
 		File f = new File(shipyarddata, File.separator + "signs.yml");
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		
@@ -40,8 +40,95 @@ public class NavyCraft_FileListener implements Listener {
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
+	}
+}
+	public static void loadShipyardConfig() {
+		File shipyarddata = new File(
+		NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
+		File.separator + "shipyarddata");
+		File c = new File(shipyarddata, File.separator + "config.yml");
+		FileConfiguration syConfig = YamlConfiguration.loadConfiguration(c);
+		if (!c.exists()) {
+			try {
+				syConfig.set("SHIP1World", "Shipyard");
+				syConfig.set("SHIP1SX", 601);
+				syConfig.set("SHIP1EX", 1567);
+				syConfig.set("SHIP1WX", 14);
+				syConfig.set("SHIP1Y", 64);
+				syConfig.set("SHIP1SZ", -408);
+				syConfig.set("SHIP1EZ", -852);
+				syConfig.set("SHIP1WZ", 37);
+				syConfig.set("SHIP2World", "Shipyard");
+				syConfig.set("SHIP2SX", 601);
+				syConfig.set("SHIP2EX", 1421);
+				syConfig.set("SHIP2WX", 10);
+				syConfig.set("SHIP2Y", 64);
+				syConfig.set("SHIP2SZ", -356);
+				syConfig.set("SHIP2EZ", -148);
+				syConfig.set("SHIP2WZ", 52);
+				syConfig.set("SHIP3World", "Shipyard");
+				syConfig.set("SHIP3SX", 549);
+				syConfig.set("SHIP3EX", 21);
+				syConfig.set("SHIP3WX", 12);
+				syConfig.set("SHIP3Y", 64);
+				syConfig.set("SHIP3SZ", -329);
+				syConfig.set("SHIP3EZ", -92);
+				syConfig.set("SHIP3WZ", 79);
+				syConfig.set("SHIP4World", "Shipyard");
+				syConfig.set("SHIP4SX", 543);
+				syConfig.set("SHIP4EX", 21);
+				syConfig.set("SHIP4WX", 18);
+				syConfig.set("SHIP4Y", 64);
+				syConfig.set("SHIP4SZ", -408);
+				syConfig.set("SHIP4EZ", -600);
+				syConfig.set("SHIP4WZ", 64);
+				syConfig.set("SHIP5World", "Shipyard");
+				syConfig.set("SHIP5SX", 656);
+				syConfig.set("SHIP5EX", 1426);
+				syConfig.set("SHIP5WX", 18);
+				syConfig.set("SHIP5Y", 64);
+				syConfig.set("SHIP5SZ", 142);
+				syConfig.set("SHIP5EZ", 37);
+				syConfig.set("SHIP5WZ", 105);
+				syConfig.set("HANGAR1World", "Shipyard");
+				syConfig.set("HANGAR1SX", 553);
+				syConfig.set("HANGAR1EX", -137);
+				syConfig.set("HANGAR1WX", 23);
+				syConfig.set("HANGAR1Y", 65);
+				syConfig.set("HANGAR1SZ", -766);
+				syConfig.set("HANGAR1EZ", -1191);
+				syConfig.set("HANGAR1WZ", 25);
+				syConfig.set("HANGAR2World", "Shipyard");
+				syConfig.set("HANGAR2SX", -99);
+				syConfig.set("HANGAR2EX", -1177);
+				syConfig.set("HANGAR2WX", 49);
+				syConfig.set("HANGAR2Y", 65);
+				syConfig.set("HANGAR2SZ", 67);
+				syConfig.set("HANGAR2EZ", -117);
+				syConfig.set("HANGAR2WZ", 46);
+				syConfig.set("TANK1World", "Shipyard");
+				syConfig.set("TANK1SX", 602);
+				syConfig.set("TANK1EX", 926);
+				syConfig.set("TANK1WX", 18);
+				syConfig.set("TANK1Y", 65);
+				syConfig.set("TANK1SZ", -953);
+				syConfig.set("TANK1EZ", -1385);
+				syConfig.set("TANK1WZ", 24);
+				syConfig.set("TANK2World", "Shipyard");
+				syConfig.set("TANK2SX", 960);
+				syConfig.set("TANK2EX", 1436);
+				syConfig.set("TANK2WX", 34);
+				syConfig.set("TANK2Y", 65);
+				syConfig.set("TANK2SZ", -920);
+				syConfig.set("TANK2EZ", -1361);
+				syConfig.set("TANK2WZ", 44);
+				
+				syConfig.save(c);
+			} catch (IOException exception) {
+				exception.printStackTrace();
 		}
 	}
+}
 
 	public static void loadSignData() {
 		File shipyarddata = new File(
@@ -482,6 +569,8 @@ public class NavyCraft_FileListener implements Listener {
 				syData.set("Signs." + num + "." + "y", y);
 				syData.set("Signs." + num + "." + "z", z);
 				syData.set("Signs." + num + "." + "isClaimed", false);
+				syData.set("Signs." + num + "." + "playerName", null);
+				syData.set("Signs." + num + "." + "id", null);
 				break;
 			}
 		}
@@ -501,7 +590,7 @@ public class NavyCraft_FileListener implements Listener {
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		List<String> list = new ArrayList<String>(syData.getConfigurationSection("Signs").getKeys(false));
 		int size = list.size();
-		syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type);
+		syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type.toUpperCase());
 		syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
 		syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
 		syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);

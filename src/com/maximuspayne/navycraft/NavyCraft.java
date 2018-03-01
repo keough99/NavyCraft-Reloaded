@@ -198,6 +198,7 @@ public class NavyCraft extends JavaPlugin {
 		BlocksInfo.loadBlocksInfo();
 		loadProperties();
 		NavyCraft_FileListener.loadShipyardData();
+		NavyCraft_FileListener.loadShipyardConfig();
 		PermissionInterface.setupPermissions(this);
 
 		PluginManager manager = getServer().getPluginManager();

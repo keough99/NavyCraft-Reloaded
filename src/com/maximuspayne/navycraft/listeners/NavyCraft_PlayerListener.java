@@ -1174,6 +1174,11 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (!PermissionInterface.CheckPerm(player, "navycraft.admin"))
 						return;
 					NavyCraft.instance.loadProperties();
+					NavyCraft_FileListener.loadShipyardData();
+					NavyCraft_FileListener.loadShipyardConfig();
+					for (Player p : NavyCraft.instance.getServer().getOnlinePlayers()) {
+					NavyCraft_FileListener.loadPlayerData(p.getName());
+					}
 					player.sendMessage(ChatColor.GREEN + "NavyCraft configuration reloaded");
 					event.setCancelled(true);
 					return;
@@ -1305,6 +1310,8 @@ public class NavyCraft_PlayerListener implements Listener {
 								+ "teleport to ship ID #");
 					}
 					event.setCancelled(true);
+				} else {
+					player.sendMessage("Unknown command. Type \"/navycraft help\" for help.");
 				}
 				// nc help
 			} else {
@@ -1340,8 +1347,9 @@ public class NavyCraft_PlayerListener implements Listener {
 							ChatColor.BLUE + "/navycraft tpship id # : " + ChatColor.WHITE + "teleport to ship ID #");
 				}
 				event.setCancelled(true);
+				return;
 			}
-		}
+	}
 		String craftName = split[0];
 		
 		CraftType craftType = CraftType.getCraftType(craftName);
@@ -1554,11 +1562,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							!typeString.equalsIgnoreCase("HANGAR2") &&
 							!typeString.equalsIgnoreCase("TANK1") &&
 							!typeString.equalsIgnoreCase("TANK2") &&
-							!typeString.equalsIgnoreCase("MAP1") &&
-							!typeString.equalsIgnoreCase("MAP2") &&
-							!typeString.equalsIgnoreCase("MAP3") &&
-							!typeString.equalsIgnoreCase("MAP4") &&
-							!typeString.equalsIgnoreCase("MAP5")) {
+							!typeString.equalsIgnoreCase("all")) {
 						player.sendMessage(ChatColor.RED + "Unknown lot type");
 						event.setCancelled(true);
 						return;
@@ -1590,6 +1594,18 @@ public class NavyCraft_PlayerListener implements Listener {
 					if (typeString.equalsIgnoreCase("TANK2")) {
 						NavyCraft_BlockListener.loadTANK2();
 					}
+					if (typeString.equalsIgnoreCase("all")) {
+							NavyCraft_BlockListener.loadSHIP1();
+							NavyCraft_BlockListener.loadSHIP2();
+							NavyCraft_BlockListener.loadSHIP3();
+							NavyCraft_BlockListener.loadSHIP4();
+							NavyCraft_BlockListener.loadSHIP5();
+							NavyCraft_BlockListener.loadHANGAR1();
+							NavyCraft_BlockListener.loadHANGAR2();
+							NavyCraft_BlockListener.loadTANK1();
+							NavyCraft_BlockListener.loadTANK2();
+					}
+					
 					File shipyarddata = new File(
 							NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
 							File.separator + "shipyarddata");
@@ -2810,7 +2826,9 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.YELLOW + "/shipyard ptp <playerName> <id>" + ChatColor.DARK_GRAY
 								+ " - " + ChatColor.GOLD + "teleport to a player's plot id");
 					}
-				} else return;
+				} else {
+					player.sendMessage("Unknown command. Type \"/shipyard help\" for help.");
+				}
 				
 			} else {
 				NavyCraft_FileListener.loadSignData();
@@ -4152,6 +4170,8 @@ public class NavyCraft_PlayerListener implements Listener {
 						event.setCancelled(true);
 						return;
 					}
+				} else {
+					player.sendMessage("Unknown command. Type \"/volume\" for help.");
 				}
 			} else {
 				player.sendMessage(ChatColor.GOLD + "Volume v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD
