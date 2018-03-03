@@ -17,7 +17,6 @@ public class AimCannonPlayerListener implements Listener {
 
     public static void onPlayerInteract(PlayerInteractEvent event) {
     	
-    	
     	if (event.getHand() != EquipmentSlot.HAND)
     		return;
     	

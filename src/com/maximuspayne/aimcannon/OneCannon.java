@@ -26,9 +26,9 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
+import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
-import com.maximuspayne.navycraft.PermissionInterface;
 
 @SuppressWarnings("deprecation")
 public class OneCannon{

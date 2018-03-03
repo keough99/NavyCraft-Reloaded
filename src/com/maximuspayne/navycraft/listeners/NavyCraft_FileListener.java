@@ -604,6 +604,27 @@ public class NavyCraft_FileListener implements Listener {
 		}
 }
 	
+	public static boolean checkSign(int x, int y, int z, World world) {
+		File shipyarddata = new File(
+				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
+				File.separator + "shipyarddata");
+		File f = new File(shipyarddata, File.separator + "signs.yml");
+		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
+		List<String> list = new ArrayList<String>(syData.getConfigurationSection("Signs").getKeys(false));
+		for (String num : list) {
+				World world1 = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+				int x1 = syData.getInt("Signs." + num + "." + "x");
+				int y1 = syData.getInt("Signs." + num + "." + "y");
+				int z1 = syData.getInt("Signs." + num + "." + "z");
+				Location loc1 = new Location(world1, x1, y1, z1);
+				Location loc = new Location(world, x, y, z);
+				if (loc.equals(loc1)) {
+					return true;
+				}
+		}
+		return false;
+	}
+	
 	public static void loadPlayerData(String player) {
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),

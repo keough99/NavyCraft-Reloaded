@@ -4,12 +4,6 @@
 #Defines which worlds the plugin's weapons will funciton in.
 EnabledWorlds: WarWorld,BattleWorld,TankSpawn
 
-#Defines the main world for your server
-MainWorld: WarWorld
-
-#Defines the world which shipyard will function in
-ShipyardWorld: Shipyard
-
 #Defines which worlds the plugin's battles will funciton in.
 BattleWorld: BattleWorld
 
