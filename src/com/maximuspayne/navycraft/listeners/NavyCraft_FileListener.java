@@ -18,7 +18,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 @SuppressWarnings("deprecation")
 public class NavyCraft_FileListener implements Listener {
 
-	private static NavyCraft plugin;
+	public static NavyCraft plugin;
 	
 	public NavyCraft_FileListener(NavyCraft p) {
 		plugin = p;
@@ -198,7 +198,7 @@ public class NavyCraft_FileListener implements Listener {
 		for (String num : list) {
 			if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("true")) {
 				String type = syData.getString("Signs." + num + ".type");
-				World world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+				World world = NavyCraft.instance.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
 				int x = syData.getInt("Signs." + num + ".x");
 				int y = syData.getInt("Signs." + num + ".y");
 				int z = syData.getInt("Signs." + num + ".z");
@@ -391,7 +391,7 @@ public class NavyCraft_FileListener implements Listener {
 		for (String num : list) {
 			if (syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
 				String ptype = syData.getString("Signs." + num + "." + "type");
-				World world = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+				World world = NavyCraft.instance.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
 				int x = syData.getInt("Signs." + num + "." + "x");
 				int y = syData.getInt("Signs." + num + "." + "y");
 				int z = syData.getInt("Signs." + num + "." + "z");
@@ -612,7 +612,7 @@ public class NavyCraft_FileListener implements Listener {
 		FileConfiguration syData = YamlConfiguration.loadConfiguration(f);
 		List<String> list = new ArrayList<String>(syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-				World world1 = plugin.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
+				World world1 = NavyCraft.instance.getServer().getWorld(syData.getString("Signs." + num + "." + "world"));
 				int x1 = syData.getInt("Signs." + num + "." + "x");
 				int y1 = syData.getInt("Signs." + num + "." + "y");
 				int z1 = syData.getInt("Signs." + num + "." + "z");
