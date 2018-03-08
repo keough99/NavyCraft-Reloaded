@@ -128,29 +128,8 @@ public class CraftType {
 	private static CraftType getDefaultCraftType(String name) {
 
 		CraftType craftType = new CraftType(name);
-
-		if (name.equalsIgnoreCase("template")) {
-
-			
-			
-		} else if (name.equalsIgnoreCase("boat")) {
-			setAttribute(
-					craftType,
-					"structureBlocks",
-					"4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-					+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-					+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-					+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-					+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
-			
-			craftType.driveCommand = "sail";
-			craftType.canNavigate = true;
-			craftType.minBlocks = 9;
-			craftType.maxBlocks = 500;
-			craftType.maxSpeed = 4;
-			craftType.doesCruise = false;
-			
-		} else if (name.equalsIgnoreCase("ship")) {
+		
+		if (name.equalsIgnoreCase("ship")) {
 			setAttribute(
 					craftType,
 					"structureBlocks",
@@ -190,27 +169,6 @@ public class CraftType {
 			craftType.discount = 100;
 			craftType.adminBuild = true;
 			
-		} else if (name.equalsIgnoreCase("halfship")) {
-			setAttribute(
-					craftType,
-					"structureBlocks",
-					"4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-					+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-					+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-					+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-					+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
-			
-			craftType.driveCommand = "sail";
-			craftType.canNavigate = true;
-			craftType.minBlocks = 50;
-			craftType.maxBlocks = 3000;
-			craftType.maxSpeed = 6;
-			craftType.doesCruise = true;
-			craftType.maxEngineSpeed = 8;
-			craftType.maxForwardGear = 2;
-			craftType.discount = 50;
-			craftType.adminBuild = true;
-			
 		} else if (name.equalsIgnoreCase("aircraft")) {
 			setAttribute(
 					craftType,
@@ -229,7 +187,7 @@ public class CraftType {
 			craftType.maxEngineSpeed = 8;
 			craftType.maxForwardGear = 3;
 			
-		}else if (name.equalsIgnoreCase("airship")) {
+		} else if (name.equalsIgnoreCase("helicopter")) {
 			setAttribute(
 					craftType,
 					"structureBlocks",
@@ -237,13 +195,14 @@ public class CraftType {
 					+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
 					+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
 					+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,160,162,163,"
-					+ "164,165,166,167,168,169,170,173,174,183,184,185,186,187,188,189,190,191,192,0");
+					+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
 			craftType.driveCommand = "pilot";
 			craftType.canFly = true;
 			craftType.minBlocks = 9;
-			craftType.maxBlocks = 1000;
-			craftType.maxSpeed = 6;
+			craftType.maxBlocks = 18000;
+			craftType.maxSpeed = 5;
 			craftType.doesCruise = false;
+			craftType.maxForwardGear = 3;
 			
 		} else if (name.equalsIgnoreCase("submarine")) {
 			setAttribute(
