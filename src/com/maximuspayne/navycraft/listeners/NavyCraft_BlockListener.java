@@ -203,7 +203,7 @@ public class NavyCraft_BlockListener implements Listener {
 				String ownerName = sign.getLine(1) + sign.getLine(2);
 
 				if (!restrictedName.isEmpty() && !restrictedName.equalsIgnoreCase("Public") && !restrictedName.equalsIgnoreCase(player.getName()) && !ownerName.equalsIgnoreCase(player.getName()) && !player.isOp() && !PermissionInterface.CheckQuietPerm(player, "NavyCraft.select")) {
-
+					// This is so messy, Please send help :(
 					int tpId = -1;
 					try {
 						tpId = Integer.parseInt(idStr);

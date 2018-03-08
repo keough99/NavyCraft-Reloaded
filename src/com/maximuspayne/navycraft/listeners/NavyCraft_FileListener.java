@@ -18,10 +18,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 @SuppressWarnings("deprecation")
 public class NavyCraft_FileListener implements Listener {
 
-	public static NavyCraft plugin;
-	
 	public NavyCraft_FileListener(NavyCraft p) {
-		plugin = p;
 	}
 	
 	public static void loadShipyardData() {
