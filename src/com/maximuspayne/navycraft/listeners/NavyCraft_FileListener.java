@@ -838,11 +838,9 @@ public class NavyCraft_FileListener implements Listener {
 		File f = new File(userdata, File.separator + player + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 		if (type != null) {
-			playerData.set(player + "." + type,
-					Integer.valueOf(playerData.get(player + "." + type).toString()) + newRewNum);
+			playerData.set(player + "." + type.toUpperCase(), Integer.valueOf(playerData.get(player + "." + type.toUpperCase()).toString()) + newRewNum);
 			try {
 				playerData.save(f);
-				return;
 			} catch (IOException e) {
 				loadPlayerData(player);
 			}
