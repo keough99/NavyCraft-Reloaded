@@ -19,6 +19,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -4286,20 +4287,6 @@ public class NavyCraft_PlayerListener implements Listener {
 
 				return true;
 
-			} else if (split[1].equalsIgnoreCase("dock")) {
-				if (craft != null) {
-					if (craft.driverName == player.getName()) {
-						if (craft.autoTurn) {
-							player.sendMessage(ChatColor.GREEN + "Docking mode engaged");
-						} else {
-							player.sendMessage(ChatColor.RED + "Docking mode disengaged");
-						}
-						craft.autoTurn = !craft.autoTurn;
-					}
-				} else {
-					player.sendMessage(ChatColor.RED + "No vehicle detected.");
-				}
-				return true;
 			} else if (split[1].equalsIgnoreCase("command")
 					&& (PermissionInterface.CheckPerm(player,  "navycraft.admin"))) {
 				Craft testCraft = Craft.getCraft(player.getLocation().getBlockX(), player.getLocation().getBlockY(),
@@ -4462,7 +4449,18 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (split[1].equalsIgnoreCase("add")) {
 				if (craft != null) {
 					if (craft.captainName == player.getName()) {
-						craft.buildCrew(player, true);
+						ArrayList<Entity> ents = craft.getCraftEntities(false);
+						
+						for( Entity e : ents )
+						{
+							if( e instanceof Player )
+							{
+								Player p = (Player)e;
+								if (p.getName() == craft.captainName) {
+									craft.buildCrew(player, true);
+								}
+							}
+						}
 					} else {
 						player.sendMessage(ChatColor.RED + "You are not the captain of this crew.");
 					}
@@ -4587,9 +4585,8 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				return true;
 			} else if (split[1].equalsIgnoreCase("help")) {
-				if (PermissionInterface.CheckPerm(player, "navycraft.basic")) {
-					player.sendMessage(ChatColor.GOLD + "Vehicle Commands v" + ChatColor.GREEN + NavyCraft.version
-							+ ChatColor.GOLD + " :");
+				if( PermissionInterface.CheckPerm(player, "navycraft.basic") ){
+					player.sendMessage(ChatColor.GOLD + "Vehicle Commands v" + ChatColor.GREEN + NavyCraft.version + ChatColor.GOLD + " :");
 					player.sendMessage(ChatColor.AQUA + "/ship - Ship Status");
 					player.sendMessage(ChatColor.AQUA + "/ship tp - Teleport to your vehicle (1 min cooldown)");
 					player.sendMessage(ChatColor.AQUA + "/ship leave - Leave the crew of your ship");
@@ -4598,21 +4595,14 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.AQUA + "/crew <message> - Send message to your crew");
 					player.sendMessage(ChatColor.AQUA + "/crew - Crew status");
 					player.sendMessage(ChatColor.DARK_AQUA + "/ship release - (Cpt) Release your command of the ship");
-					player.sendMessage(ChatColor.DARK_AQUA
-							+ "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
-					player.sendMessage(
-							ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
-					player.sendMessage(ChatColor.DARK_AQUA
-							+ "/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
-					player.sendMessage(
-							ChatColor.DARK_AQUA + "/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
-					player.sendMessage(ChatColor.DARK_AQUA
-							+ "/ship store - (Cpt) Stores your vehicle if in a storage dock region");
-					player.sendMessage(ChatColor.DARK_AQUA
-							+ "/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship crew - (Cpt) Recreates your crew with players on your vehicle");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship add - (Cpt) Add players on your vehicle to your crew");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship summon - (Cpt) Teleports you and your crew to your vehicle (10 min cooldown)");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship repair - (Cpt) Repairs your vehicle if in repair dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship store - (Cpt) Stores your vehicle if in a storage dock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship disable - (Cpt) Deactivates a vehicle, so that it can be modified");
 					player.sendMessage(ChatColor.DARK_AQUA + "/ship sink - (Cpt) Scuttles your vehicle after a timer");
-					player.sendMessage(ChatColor.DARK_AQUA
-							+ "/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
+					player.sendMessage(ChatColor.DARK_AQUA + "/ship destroy - (Cpt) Destroys your vehicle, usable in safedock region");
 				}
 				if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin")) {
 					player.sendMessage(ChatColor.BLUE + "/ship command - (Mod) Steal command of a ship");
@@ -4620,6 +4610,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(ChatColor.BLUE + "/ship drive - (Mod) Drive without sign");
 					player.sendMessage(ChatColor.BLUE + "/ship buoy - (Mod) View and modify buoyancy variables");
 				}
+				return true;
 			} else {
 				player.sendMessage("Unknown command. Type \"/ship help\" for help.");
 				return true;
