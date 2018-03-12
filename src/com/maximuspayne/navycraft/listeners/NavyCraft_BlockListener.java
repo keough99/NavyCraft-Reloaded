@@ -1,5 +1,6 @@
 package com.maximuspayne.navycraft.listeners;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -88,6 +91,11 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
+		File shipyarddata = new File(
+		NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
+		File.separator + "shipyarddata");
+		File f = new File(shipyarddata, File.separator + "config.yml");
+		FileConfiguration syConfig = YamlConfiguration.loadConfiguration(f);
 		// String world = block.getWorld().getName();
 		Craft playerCraft = Craft.getPlayerCraft(player);
 
@@ -248,117 +256,117 @@ public class NavyCraft_BlockListener implements Listener {
 				Location loc;
 				int sizeX, sizeY, sizeZ, originX, originY, originZ;
 				if (lotType == 1) {
-					loc = block.getRelative(bf, 28).getLocation();
-					sizeX = 13;
-					sizeY = 28;
-					sizeZ = 28;
-					originX = 0;
-					originY = -8;
-					originZ = 0;
+					loc = block.getRelative(bf, syConfig.getInt("SHIP1BFR")).getLocation();
+					sizeX = syConfig.getInt("SHIP1SZX");
+					sizeY = syConfig.getInt("SHIP1SZY");
+					sizeZ = syConfig.getInt("SHIP1SZZ");
+					originX = syConfig.getInt("SHIP1OX");
+					originY = syConfig.getInt("SHIP1OY");
+					originZ = syConfig.getInt("SHIP1OZ");
 				} else if (lotType == 2) {
-					loc = block.getRelative(bf, 43).getLocation();
-					sizeX = 9;
-					sizeY = 28;
-					sizeZ = 43;
-					originX = 0;
-					originY = -8;
-					originZ = 0;
+					loc = block.getRelative(bf, syConfig.getInt("SHIP2BFR")).getLocation();
+					sizeX = syConfig.getInt("SHIP2SZX");
+					sizeY = syConfig.getInt("SHIP2SZY");
+					sizeZ = syConfig.getInt("SHIP2SZZ");
+					originX = syConfig.getInt("SHIP2OX");
+					originY = syConfig.getInt("SHIP2OY");
+					originZ = syConfig.getInt("SHIP2OZ");
 				} else if (lotType == 3) {
-					loc = block.getRelative(bf, 70).getLocation();
-					sizeX = 11;
-					sizeY = 28;
-					sizeZ = 70;
-					originX = 0;
-					originY = -8;
-					originZ = 0;
+					loc = block.getRelative(bf, syConfig.getInt("SHIP3BFR")).getLocation();
+					sizeX = syConfig.getInt("SHIP3SZX");
+					sizeY = syConfig.getInt("SHIP3SZY");
+					sizeZ = syConfig.getInt("SHIP3SZZ");
+					originX = syConfig.getInt("SHIP3OX");
+					originY = syConfig.getInt("SHIP3OY");
+					originZ = syConfig.getInt("SHIP3OZ");
 				} else if (lotType == 4) {
-					loc = block.getRelative(bf, 55).getLocation();
-					sizeX = 17;
-					sizeY = 28;
-					sizeZ = 55;
-					originX = 0;
-					originY = -8;
-					originZ = 0;
+					loc = block.getRelative(bf, syConfig.getInt("SHIP4BFR")).getLocation();
+					sizeX = syConfig.getInt("SHIP4SZX");
+					sizeY = syConfig.getInt("SHIP4SZY");
+					sizeZ = syConfig.getInt("SHIP4SZZ");
+					originX = syConfig.getInt("SHIP4OX");
+					originY = syConfig.getInt("SHIP4OY");
+					originZ = syConfig.getInt("SHIP4OZ");
 				} else if (lotType == 5) {
-					loc = block.getRelative(bf, 98).getLocation();
-					sizeX = 17;
-					sizeY = 28;
-					sizeZ = 98;
-					originX = 0;
-					originY = -8;
-					originZ = 0;
+					loc = block.getRelative(bf, syConfig.getInt("SHIP5BFR")).getLocation();
+					sizeX = syConfig.getInt("SHIP5SZX");
+					sizeY = syConfig.getInt("SHIP5SZY");
+					sizeZ = syConfig.getInt("SHIP5SZZ");
+					originX = syConfig.getInt("SHIP5OX");
+					originY = syConfig.getInt("SHIP5OY");
+					originZ = syConfig.getInt("SHIP5OZ");
 				} else if (lotType == 6) {
-					loc = block.getRelative(bf, 17).getLocation();
-					sizeX = 17;
-					sizeY = 7;
-					sizeZ = 19;
-					originX = 0;
-					originY = -1;
-					originZ = -18;
+					loc = block.getRelative(bf, syConfig.getInt("HANGAR1BFR")).getLocation();
+					sizeX = syConfig.getInt("HANGAR1SZX");
+					sizeY = syConfig.getInt("HANGAR1SZY");
+					sizeZ = syConfig.getInt("HANGAR1SZZ");
+					originX = syConfig.getInt("HANGAR1OX");
+					originY = syConfig.getInt("HANGAR1OY");
+					originZ = syConfig.getInt("HANGAR1OZ");
 				} else if (lotType == 7) {
-					loc = block.getRelative(bf, 25).getLocation();
-					sizeX = 25;
-					sizeY = 7;
-					sizeZ = 32;
-					originX = 0;
-					originY = -1;
-					originZ = -31;
+					loc = block.getRelative(bf, syConfig.getInt("HANGAR2BFR")).getLocation();
+					sizeX = syConfig.getInt("HANGAR2SZX");
+					sizeY = syConfig.getInt("HANGAR2SZY");
+					sizeZ = syConfig.getInt("HANGAR2SZZ");
+					originX = syConfig.getInt("HANGAR2OX");
+					originY = syConfig.getInt("HANGAR2OY");
+					originZ = syConfig.getInt("HANGAR2OZ");
 				} else if (lotType == 8) {
-					loc = block.getRelative(bf, 12).getLocation();
-					sizeX = 12;
-					sizeY = 7;
-					sizeZ = 19;
-					originX = 0;
-					originY = -1;
-					originZ = -18;
+					loc = block.getRelative(bf, syConfig.getInt("TANK1BFR")).getLocation();
+					sizeX = syConfig.getInt("TANK1SZX");
+					sizeY = syConfig.getInt("TANK1SZY");
+					sizeZ = syConfig.getInt("TANK1SZZ");
+					originX = syConfig.getInt("TANK1OX");
+					originY = syConfig.getInt("TANK1OY");
+					originZ = syConfig.getInt("TANK1OZ");
 				} else if (lotType == 9) {
-					loc = block.getRelative(bf, 27).getLocation();
-					sizeX = 27;
-					sizeY = 9;
-					sizeZ = 33;
-					originX = 0;
-					originY = -1;
-					originZ = -32;
+					loc = block.getRelative(bf, syConfig.getInt("TANK2BFR")).getLocation();
+					sizeX = syConfig.getInt("TANK2SZX");
+					sizeY = syConfig.getInt("TANK2SZY");
+					sizeZ = syConfig.getInt("TANK2SZZ");
+					originX = syConfig.getInt("TANK2OX");
+					originY = syConfig.getInt("TANK2OY");
+					originZ = syConfig.getInt("TANK2OZ");
 				} else if (lotType == 10) {
-					loc = block.getRelative(bf, 100).getLocation();
-					sizeX = 100;
-					sizeY = 255;
-					sizeZ = 100;
-					originX = 0;
-					originY = -63;
-					originZ = -99;
+					loc = block.getRelative(bf, syConfig.getInt("MAP1BFR")).getLocation();
+					sizeX = syConfig.getInt("MAP1SZX");
+					sizeY = syConfig.getInt("MAP1SZY");
+					sizeZ = syConfig.getInt("MAP1SZZ");
+					originX = syConfig.getInt("MAP1OX");
+					originY = syConfig.getInt("MAP1OY");
+					originZ = syConfig.getInt("MAP1OZ");
 				} else if (lotType == 11) {
-					loc = block.getRelative(bf, 150).getLocation();
-					sizeX = 150;
-					sizeY = 255;
-					sizeZ = 150;
-					originX = 0;
-					originY = -63;
-					originZ = -149;
+					loc = block.getRelative(bf, syConfig.getInt("MAP2BFR")).getLocation();
+					sizeX = syConfig.getInt("MAP2SZX");
+					sizeY = syConfig.getInt("MAP2SZY");
+					sizeZ = syConfig.getInt("MAP2SZZ");
+					originX = syConfig.getInt("MAP2OX");
+					originY = syConfig.getInt("MAP2OY");
+					originZ = syConfig.getInt("MAP2OZ");
 				} else if (lotType == 12) {
-					loc = block.getRelative(bf, 200).getLocation();
-					sizeX = 200;
-					sizeY = 255;
-					sizeZ = 200;
-					originX = 0;
-					originY = -63;
-					originZ = -199;
+					loc = block.getRelative(bf, syConfig.getInt("MAP3BFR")).getLocation();
+					sizeX = syConfig.getInt("MAP3SZX");
+					sizeY = syConfig.getInt("MAP3SZY");
+					sizeZ = syConfig.getInt("MAP3SZZ");
+					originX = syConfig.getInt("MAP3OX");
+					originY = syConfig.getInt("MAP3OY");
+					originZ = syConfig.getInt("MAP3OZ");
 				} else if (lotType == 13) {
-					loc = block.getRelative(bf, 250).getLocation();
-					sizeX = 250;
-					sizeY = 255;
-					sizeZ = 250;
-					originX = 0;
-					originY = -63;
-					originZ = -249;
+					loc = block.getRelative(bf, syConfig.getInt("MAP4BFR")).getLocation();
+					sizeX = syConfig.getInt("MAP4SZX");
+					sizeY = syConfig.getInt("MAP4SZY");
+					sizeZ = syConfig.getInt("MAP4SZZ");
+					originX = syConfig.getInt("MAP4OX");
+					originY = syConfig.getInt("MAP4OY");
+					originZ = syConfig.getInt("MAP4OZ");
 				} else if (lotType == 14) {
-					loc = block.getRelative(bf, 500).getLocation();
-					sizeX = 500;
-					sizeY = 255;
-					sizeZ = 500;
-					originX = 0;
-					originY = -63;
-					originZ = -499;
+					loc = block.getRelative(bf, syConfig.getInt("MAP5BFR")).getLocation();
+					sizeX = syConfig.getInt("MAP5SZX");
+					sizeY = syConfig.getInt("MAP5SZY");
+					sizeZ = syConfig.getInt("MAP5SZZ");
+					originX = syConfig.getInt("MAP5OX");
+					originY = syConfig.getInt("MAP5OY");
+					originZ = syConfig.getInt("MAP5OZ");
 				} else
 
 				{
@@ -471,13 +479,13 @@ public class NavyCraft_BlockListener implements Listener {
 					Location loc;
 					int sizeX, sizeY, sizeZ, originX, originY, originZ;
 					if (lotType == 1) {
-						loc = block.getRelative(bf, 28).getLocation();
-						sizeX = 13;
-						sizeY = 28;
-						sizeZ = 28;
-						originX = 0;
-						originY = -8;
-						originZ = 0;
+						loc = block.getRelative(bf, syConfig.getInt("SHIP1BFR")).getLocation();
+						sizeX = syConfig.getInt("SHIP1SZX");
+						sizeY = syConfig.getInt("SHIP1SZY");
+						sizeZ = syConfig.getInt("SHIP1SZZ");
+						originX = syConfig.getInt("SHIP1OX");
+						originY = syConfig.getInt("SHIP1OY");
+						originZ = syConfig.getInt("SHIP1OZ");
 			
 						int numSHIP1s = 0;
 						int numRewSHIP1s = 1;
@@ -493,13 +501,13 @@ public class NavyCraft_BlockListener implements Listener {
 						}
 			
 					} else if (lotType == 2) {
-						loc = block.getRelative(bf, 43).getLocation();
-						sizeX = 9;
-						sizeY = 28;
-						sizeZ = 43;
-						originX = 0;
-						originY = -8;
-						originZ = 0;
+						loc = block.getRelative(bf, syConfig.getInt("SHIP2BFR")).getLocation();
+						sizeX = syConfig.getInt("SHIP2SZX");
+						sizeY = syConfig.getInt("SHIP2SZY");
+						sizeZ = syConfig.getInt("SHIP2SZZ");
+						originX = syConfig.getInt("SHIP2OX");
+						originY = syConfig.getInt("SHIP2OY");
+						originZ = syConfig.getInt("SHIP2OZ");
 			
 						int numSHIP2s = 0;
 						int numRewSHIP2s = 0;
@@ -514,13 +522,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 3) {
-						loc = block.getRelative(bf, 70).getLocation();
-						sizeX = 11;
-						sizeY = 28;
-						sizeZ = 70;
-						originX = 0;
-						originY = -8;
-						originZ = 0;
+						loc = block.getRelative(bf, syConfig.getInt("SHIP3BFR")).getLocation();
+						sizeX = syConfig.getInt("SHIP3SZX");
+						sizeY = syConfig.getInt("SHIP3SZY");
+						sizeZ = syConfig.getInt("SHIP3SZZ");
+						originX = syConfig.getInt("SHIP3OX");
+						originY = syConfig.getInt("SHIP3OY");
+						originZ = syConfig.getInt("SHIP3OZ");
 			
 						int numSHIP3s = 0;
 						int numRewSHIP3s = 0;
@@ -535,13 +543,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 4) {
-						loc = block.getRelative(bf, 55).getLocation();
-						sizeX = 17;
-						sizeY = 28;
-						sizeZ = 55;
-						originX = 0;
-						originY = -8;
-						originZ = 0;
+						loc = block.getRelative(bf, syConfig.getInt("SHIP4BFR")).getLocation();
+						sizeX = syConfig.getInt("SHIP4SZX");
+						sizeY = syConfig.getInt("SHIP4SZY");
+						sizeZ = syConfig.getInt("SHIP4SZZ");
+						originX = syConfig.getInt("SHIP4OX");
+						originY = syConfig.getInt("SHIP4OY");
+						originZ = syConfig.getInt("SHIP4OZ");
 			
 						int numSHIP4s = 0;
 						int numRewSHIP4s = 0;
@@ -556,13 +564,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 5) {
-						loc = block.getRelative(bf, 98).getLocation();
-						sizeX = 17;
-						sizeY = 28;
-						sizeZ = 98;
-						originX = 0;
-						originY = -8;
-						originZ = 0;
+						loc = block.getRelative(bf, syConfig.getInt("SHIP5BFR")).getLocation();
+						sizeX = syConfig.getInt("SHIP5SZX");
+						sizeY = syConfig.getInt("SHIP5SZY");
+						sizeZ = syConfig.getInt("SHIP5SZZ");
+						originX = syConfig.getInt("SHIP5OX");
+						originY = syConfig.getInt("SHIP5OY");
+						originZ = syConfig.getInt("SHIP5OZ");
 			
 						int numSHIP5s = 0;
 						int numRewSHIP5s = 0;
@@ -577,13 +585,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 6) {
-						loc = block.getRelative(bf, 17).getLocation();
-						sizeX = 17;
-						sizeY = 7;
-						sizeZ = 19;
-						originX = 0;
-						originY = -1;
-						originZ = -18;
+						loc = block.getRelative(bf, syConfig.getInt("HANGAR1BFR")).getLocation();
+						sizeX = syConfig.getInt("HANGAR1SZX");
+						sizeY = syConfig.getInt("HANGAR1SZY");
+						sizeZ = syConfig.getInt("HANGAR1SZZ");
+						originX = syConfig.getInt("HANGAR1OX");
+						originY = syConfig.getInt("HANGAR1OY");
+						originZ = syConfig.getInt("HANGAR1OZ");
 			
 						int numH1s = 0;
 						int numRewH1s = 0;
@@ -598,13 +606,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 7) {
-						loc = block.getRelative(bf, 25).getLocation();
-						sizeX = 25;
-						sizeY = 7;
-						sizeZ = 32;
-						originX = 0;
-						originY = -1;
-						originZ = -31;
+						loc = block.getRelative(bf, syConfig.getInt("HANGAR2BFR")).getLocation();
+						sizeX = syConfig.getInt("HANGAR2SZX");
+						sizeY = syConfig.getInt("HANGAR2SZY");
+						sizeZ = syConfig.getInt("HANGAR2SZZ");
+						originX = syConfig.getInt("HANGAR2OX");
+						originY = syConfig.getInt("HANGAR2OY");
+						originZ = syConfig.getInt("HANGAR2OZ");
 			
 						int numH2s = 0;
 						int numRewH2s = 0;
@@ -619,13 +627,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 8) {
-						loc = block.getRelative(bf, 12).getLocation();
-						sizeX = 12;
-						sizeY = 7;
-						sizeZ = 19;
-						originX = 0;
-						originY = -1;
-						originZ = -18;
+						loc = block.getRelative(bf, syConfig.getInt("TANK1BFR")).getLocation();
+						sizeX = syConfig.getInt("TANK1SZX");
+						sizeY = syConfig.getInt("TANK1SZY");
+						sizeZ = syConfig.getInt("TANK1SZZ");
+						originX = syConfig.getInt("TANK1OX");
+						originY = syConfig.getInt("TANK1OY");
+						originZ = syConfig.getInt("TANK1OZ");
 						
 						int numT1s = 0;
 						int numRewT1s = 0;
@@ -640,13 +648,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 9) {
-						loc = block.getRelative(bf, 27).getLocation();
-						sizeX = 27;
-						sizeY = 9;
-						sizeZ = 33;
-						originX = 0;
-						originY = -1;
-						originZ = -32;
+						loc = block.getRelative(bf, syConfig.getInt("TANK2BFR")).getLocation();
+						sizeX = syConfig.getInt("TANK2SZX");
+						sizeY = syConfig.getInt("TANK2SZY");
+						sizeZ = syConfig.getInt("TANK2SZZ");
+						originX = syConfig.getInt("TANK2OX");
+						originY = syConfig.getInt("TANK2OY");
+						originZ = syConfig.getInt("TANK2OZ");
 			
 						int numT2s = 0;
 						int numRewT2s = 0;
@@ -661,13 +669,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 10) {
-						loc = block.getRelative(bf, 100).getLocation();
-						sizeX = 100;
-						sizeY = 255;
-						sizeZ = 100;
-						originX = 0;
-						originY = -63;
-						originZ = -99;
+						loc = block.getRelative(bf, syConfig.getInt("MAP1BFR")).getLocation();
+						sizeX = syConfig.getInt("MAP1SZX");
+						sizeY = syConfig.getInt("MAP1SZY");
+						sizeZ = syConfig.getInt("MAP1SZZ");
+						originX = syConfig.getInt("MAP1OX");
+						originY = syConfig.getInt("MAP1OY");
+						originZ = syConfig.getInt("MAP1OZ");
 			
 						int numM1s = 0;
 						int numRewM1s = 0;
@@ -682,13 +690,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 11) {
-						loc = block.getRelative(bf, 150).getLocation();
-						sizeX = 150;
-						sizeY = 255;
-						sizeZ = 150;
-						originX = 0;
-						originY = -63;
-						originZ = -149;
+						loc = block.getRelative(bf, syConfig.getInt("MAP2BFR")).getLocation();
+						sizeX = syConfig.getInt("MAP2SZX");
+						sizeY = syConfig.getInt("MAP2SZY");
+						sizeZ = syConfig.getInt("MAP2SZZ");
+						originX = syConfig.getInt("MAP2OX");
+						originY = syConfig.getInt("MAP2OY");
+						originZ = syConfig.getInt("MAP2OZ");
 			
 						int numM2s = 0;
 						int numRewM2s = 0;
@@ -703,13 +711,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 12) {
-						loc = block.getRelative(bf, 200).getLocation();
-						sizeX = 200;
-						sizeY = 255;
-						sizeZ = 200;
-						originX = 0;
-						originY = -63;
-						originZ = -199;
+						loc = block.getRelative(bf, syConfig.getInt("MAP3BFR")).getLocation();
+						sizeX = syConfig.getInt("MAP3SZX");
+						sizeY = syConfig.getInt("MAP3SZY");
+						sizeZ = syConfig.getInt("MAP3SZZ");
+						originX = syConfig.getInt("MAP3OX");
+						originY = syConfig.getInt("MAP3OY");
+						originZ = syConfig.getInt("MAP3OZ");
 			
 						int numM3s = 0;
 						int numRewM3s = 0;
@@ -724,13 +732,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 13) {
-						loc = block.getRelative(bf, 250).getLocation();
-						sizeX = 250;
-						sizeY = 255;
-						sizeZ = 250;
-						originX = 0;
-						originY = -63;
-						originZ = -249;
+						loc = block.getRelative(bf, syConfig.getInt("MAP4BFR")).getLocation();
+						sizeX = syConfig.getInt("MAP4SZX");
+						sizeY = syConfig.getInt("MAP4SZY");
+						sizeZ = syConfig.getInt("MAP4SZZ");
+						originX = syConfig.getInt("MAP4OX");
+						originY = syConfig.getInt("MAP4OY");
+						originZ = syConfig.getInt("MAP4OZ");
 			
 						int numM4s = 0;
 						int numRewM4s = 0;
@@ -745,13 +753,13 @@ public class NavyCraft_BlockListener implements Listener {
 							return;
 						}
 					} else if (lotType == 14) {
-						loc = block.getRelative(bf, 500).getLocation();
-						sizeX = 500;
-						sizeY = 255;
-						sizeZ = 500;
-						originX = 0;
-						originY = -63;
-						originZ = -499;
+						loc = block.getRelative(bf, syConfig.getInt("MAP5BFR")).getLocation();
+						sizeX = syConfig.getInt("MAP5SZX");
+						sizeY = syConfig.getInt("MAP5SZY");
+						sizeZ = syConfig.getInt("MAP5SZZ");
+						originX = syConfig.getInt("MAP5OX");
+						originY = syConfig.getInt("MAP5OY");
+						originZ = syConfig.getInt("MAP5OZ");
 			
 						int numM5s = 0;
 						int numRewM5s = 0;
