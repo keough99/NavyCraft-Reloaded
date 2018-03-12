@@ -47,6 +47,118 @@ public class NavyCraft_FileListener implements Listener {
 		FileConfiguration syConfig = YamlConfiguration.loadConfiguration(c);
 		if (!c.exists()) {
 			try {
+				syConfig.set("SHIP1SZX", 13);
+				syConfig.set("SHIP1SZY", 28);
+				syConfig.set("SHIP1SZZ", 28);
+				syConfig.set("SHIP1OX", 0);
+				syConfig.set("SHIP1OY", -8);
+				syConfig.set("SHIP1OZ", 0);
+				syConfig.set("SHIP1BFR", 28);
+				
+				syConfig.set("SHIP2SZX", 9);
+				syConfig.set("SHIP2SZY", 28);
+				syConfig.set("SHIP2SZZ", 43);
+				syConfig.set("SHIP2OX", 0);
+				syConfig.set("SHIP2OY", -8);
+				syConfig.set("SHIP2OZ", 0);
+				syConfig.set("SHIP2BFR", 43);
+				
+				syConfig.set("SHIP3SZX", 11);
+				syConfig.set("SHIP3SZY", 28);
+				syConfig.set("SHIP3SZZ", 70);
+				syConfig.set("SHIP3OX", 0);
+				syConfig.set("SHIP3OY", -8);
+				syConfig.set("SHIP3OZ", 0);
+				syConfig.set("SHIP3BFR", 70);
+				
+				syConfig.set("SHIP4SZX", 17);
+				syConfig.set("SHIP4SZY", 28);
+				syConfig.set("SHIP4SZZ", 55);
+				syConfig.set("SHIP4OX", 0);
+				syConfig.set("SHIP4OY", -8);
+				syConfig.set("SHIP4OZ", 0);
+				syConfig.set("SHIP4BFR", 55);
+				
+				syConfig.set("SHIP5SZX", 17);
+				syConfig.set("SHIP5SZY", 28);
+				syConfig.set("SHIP5SZZ", 98);
+				syConfig.set("SHIP5OX", 0);
+				syConfig.set("SHIP5OY", -8);
+				syConfig.set("SHIP5OZ", 0);
+				syConfig.set("SHIP5BFR", 98);
+				
+				syConfig.set("HANGAR1SZX", 17);
+				syConfig.set("HANGAR1SZY", 7);
+				syConfig.set("HANGAR1SZZ", 19);
+				syConfig.set("HANGAR1OX", 0);
+				syConfig.set("HANGAR1OY", -1);
+				syConfig.set("HANGAR1OZ", -18);
+				syConfig.set("HANGAR1BFR", 17);
+				
+				syConfig.set("HANGAR2SZX", 25);
+				syConfig.set("HANGAR2SZY", 7);
+				syConfig.set("HANGAR2SZZ", 32);
+				syConfig.set("HANGAR2OX", 0);
+				syConfig.set("HANGAR2OY", -1);
+				syConfig.set("HANGAR2OZ", -31);
+				syConfig.set("HANGAR2BFR", 25);
+				
+				syConfig.set("TANK1SZX", 12);
+				syConfig.set("TANK1SZY", 7);
+				syConfig.set("TANK1SZZ", 19);
+				syConfig.set("TANK1OX", 0);
+				syConfig.set("TANK1OY", -1);
+				syConfig.set("TANK1OZ", -18);
+				syConfig.set("TANK1BFR", 12);
+				
+				syConfig.set("TANK2SZX", 27);
+				syConfig.set("TANK2SZY", 9);
+				syConfig.set("TANK2SZZ", 33);
+				syConfig.set("TANK2OX", 0);
+				syConfig.set("TANK2OY", -1);
+				syConfig.set("TANK2OZ", -32);
+				syConfig.set("TANK2BFR", 27);
+				
+				syConfig.set("MAP1SZX", 100);
+				syConfig.set("MAP1SZY", 255);
+				syConfig.set("MAP1SZZ", 100);
+				syConfig.set("MAP1OX", 0);
+				syConfig.set("MAP1OY", -63);
+				syConfig.set("MAP1OZ", -99);
+				syConfig.set("MAP1BFR", 100);
+				
+				syConfig.set("MAP2SZX", 150);
+				syConfig.set("MAP2SZY", 255);
+				syConfig.set("MAP2SZZ", 150);
+				syConfig.set("MAP2OX", 0);
+				syConfig.set("MAP2OY", -63);
+				syConfig.set("MAP2OZ", -149);
+				syConfig.set("MAP2BFR", 150);
+				
+				syConfig.set("MAP3SZX", 200);
+				syConfig.set("MAP3SZY", 255);
+				syConfig.set("MAP3SZZ", 200);
+				syConfig.set("MAP3OX", 0);
+				syConfig.set("MAP3OY", -63);
+				syConfig.set("MAP3OZ", -199);
+				syConfig.set("MAP3BFR", 200);
+				
+				syConfig.set("MAP4SZX", 250);
+				syConfig.set("MAP4SZY", 255);
+				syConfig.set("MAP4SZZ", 250);
+				syConfig.set("MAP4OX", 0);
+				syConfig.set("MAP4OY", -63);
+				syConfig.set("MAP4OZ", -249);
+				syConfig.set("MAP4BFR", 250);
+				
+				syConfig.set("MAP5SZX", 500);
+				syConfig.set("MAP5SZY", 255);
+				syConfig.set("MAP5SZZ", 250);
+				syConfig.set("MAP5OX", 0);
+				syConfig.set("MAP5OY", -63);
+				syConfig.set("MAP5OZ", -499);
+				syConfig.set("MAP5BFR", 500);
+				
 				syConfig.set("SHIP1World", "Shipyard");
 				syConfig.set("SHIP1SX", 601);
 				syConfig.set("SHIP1EX", 1567);
