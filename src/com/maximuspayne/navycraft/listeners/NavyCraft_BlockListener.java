@@ -1964,12 +1964,16 @@ public class NavyCraft_BlockListener implements Listener {
 			return;
 		}
 		
-		if (!player.isOp() && craftType != null && craftType.adminBuild || craftTypeName.equalsIgnoreCase("claim")  || craftTypeName.equalsIgnoreCase("select") || craftTypeName.equalsIgnoreCase("spawn") || craftTypeName.equalsIgnoreCase("recall") || craftTypeName.equalsIgnoreCase("target") && !PermissionInterface.CheckPerm(player, "navycraft.admin") ) {
+		if (!player.isOp() && craftType != null && craftType.adminBuild && !PermissionInterface.CheckPerm(player, "navycraft.admin") ) {
 			player.sendMessage(ChatColor.RED + "You don't have permission to create this type of sign!");
 			event.setCancelled(true);
 			return;
 		}
-		
+		if (!player.isOp() && ((craftTypeName.equalsIgnoreCase("claim")  && craftTypeName.equalsIgnoreCase("select") || craftTypeName.equalsIgnoreCase("spawn") || craftTypeName.equalsIgnoreCase("recall") || craftTypeName.equalsIgnoreCase("target") ) && !PermissionInterface.CheckPerm(player, "navycraft.adminsigncreate"))) {
+			player.sendMessage(ChatColor.RED + "You don't have permission to create this type of sign!");
+			event.setCancelled(true);
+			return;
+		}
 
 		Craft theCraft = Craft.getPlayerCraft(event.getPlayer());
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);

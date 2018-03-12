@@ -649,16 +649,16 @@ public class NavyCraft_FileListener implements Listener {
 				playerData.set(player + ".MAP3", 0);
 				playerData.set(player + ".MAP4", 0);
 				playerData.set(player + ".MAP5", 0);
-				playerData.set(player + ".wepvolume", 100.0);
-				playerData.set(player + ".engvolume", 100.0);
-				playerData.set(player + ".othervolume", 100.0);
+				playerData.set(player + ".wepvolume", 5.0);
+				playerData.set(player + ".engvolume", 5.0);
+				playerData.set(player + ".othervolume", 5.0);
 				
 				playerData.save(f);
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
 		}
-		// Put all the hashmaps to file data
+		// Put all the file data to hashmaps
 		loadExperience(player);
 		loadVolume(player);
 	}
@@ -693,15 +693,9 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + player + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		NavyCraft.playerEngineVolumes.clear();
-		NavyCraft.playerEngineVolumes.put(NavyCraft.instance.getServer().getPlayer(player),
-				Float.valueOf(playerData.get(player + ".engvolume").toString()));
-		NavyCraft.playerWeaponVolumes.clear();
-		NavyCraft.playerWeaponVolumes.put(NavyCraft.instance.getServer().getPlayer(player),
-				Float.valueOf(playerData.get(player + ".wepvolume").toString()));
-		NavyCraft.playerOtherVolumes.clear();
-		NavyCraft.playerOtherVolumes.put(NavyCraft.instance.getServer().getPlayer(player),
-				Float.valueOf(playerData.get(player + ".othervolume").toString()));
+		NavyCraft.playerEngineVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get(player + ".engvolume").toString()));
+		NavyCraft.playerWeaponVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get(player + ".wepvolume").toString()));
+		NavyCraft.playerOtherVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get(player + ".othervolume").toString()));
 	}
 	
 	public static void saveVolume(String player) {
@@ -710,12 +704,9 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + player + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		playerData.set(player + ".wepvolume",
-				NavyCraft.playerWeaponVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
-		playerData.set(player + ".engvolume",
-				NavyCraft.playerEngineVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
-		playerData.set(player + ".othervolume",
-				NavyCraft.playerOtherVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
+		playerData.set(player + ".wepvolume",NavyCraft.playerWeaponVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
+		playerData.set(player + ".engvolume",NavyCraft.playerEngineVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
+		playerData.set(player + ".othervolume",NavyCraft.playerOtherVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
 		try {
 			playerData.save(f);
 		} catch (IOException e) {

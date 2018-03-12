@@ -127,7 +127,6 @@ public class NavyCraft_PlayerListener implements Listener {
 		Player player = event.getPlayer();
 
 		NavyCraft_FileListener.loadPlayerData(player.getName());
-		NavyCraft_FileListener.loadVolume(player.getName());
 		if (Craft.reboardNames.containsKey(player.getName())) {
 			if ((Craft.reboardNames.get(player.getName()) != null)
 					&& Craft.reboardNames.get(player.getName()).crewNames.contains(player.getName())) {
@@ -4615,7 +4614,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				player.sendMessage("Unknown command. Type \"/ship help\" for help.");
 				return true;
 			}
-
+	} else {
 		if (craft != null) {
 			player.sendMessage(ChatColor.GOLD + "Vehicle Status");
 			player.sendMessage(ChatColor.GOLD + "Type : " + ChatColor.WHITE + craft.name);
