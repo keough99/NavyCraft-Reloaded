@@ -32,7 +32,7 @@ You can read up on the future of this plugin and some current ideas [here](https
 
 If you have any questions message me on discord using Solmex#7439
 
-If your really interested in the project join the [Discord](https://discord.gg/5XX3tyU)
+If your really interested in the project join the [Discord](https://discord.gg/ZuPs37u)
 
 More information over at the [Wiki](https://github.com/Solmex72/NavyCraft-Reloaded/wiki)
 
