@@ -1680,6 +1680,11 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
+							File userdata = new File(
+									NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
+									File.separator + "userdata");
+							File f = new File(userdata, File.separator + playerString + ".yml");
+							FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 							
 							int rewNum = 0;
 							try {
@@ -1690,17 +1695,38 @@ public class NavyCraft_PlayerListener implements Listener {
 								return;
 							}
 							
+							if (playerData.getInt(playerString + "." + typeString) <= 0 && rewNum < 0) {
+								player.sendMessage(ChatColor.RED + "Cannot revoke plots below 0!");
+								event.setCancelled(true);
+								return;
+							}
+							
 							NavyCraft_FileListener.saveRewardsFile(playerString, typeString, rewNum);
 							
-							String numString = String.valueOf(rewNum);
-							if (rewNum != 1 || rewNum != -1) {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + numString + ChatColor.DARK_GRAY
+							if (rewNum < 0) {
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
 										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
-										+ " Plot's rewarded to " + ChatColor.YELLOW + playerString);
-							} else {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + numString + ChatColor.DARK_GRAY
+										+ " Plot's revoked from " + ChatColor.YELLOW + playerString);
+								event.setCancelled(true);
+								return;
+							} else if (rewNum == -1) {
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
+										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
+										+ " Plot revoked from " + ChatColor.YELLOW + playerString);
+								event.setCancelled(true);
+								return;
+							} else if (rewNum == 1) {
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
 										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
 										+ " Plot rewarded to " + ChatColor.YELLOW + playerString);
+								event.setCancelled(true);
+								return;
+							} else {
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
+										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
+										+ " Plot's rewarded to " + ChatColor.YELLOW + playerString);
+								event.setCancelled(true);
+								return;
 							}
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_FileListener.loadSignData();
@@ -2762,7 +2788,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numSHIP5s + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 							}
 						} else {
-							if (NavyCraft.playerSHIP4Rewards.containsKey(p)) {
+							if (NavyCraft.playerSHIP5Rewards.containsKey(p)) {
 								player.sendMessage(ChatColor.GOLD + "SHIP5 " + ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "0" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
 										+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + NavyCraft.playerSHIP5Rewards.get(p) + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 							}

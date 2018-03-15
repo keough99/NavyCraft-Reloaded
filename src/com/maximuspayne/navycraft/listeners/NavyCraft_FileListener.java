@@ -832,104 +832,110 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + player + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+		
 		if (playerData.getInt(player + ".SHIP1") > 0) {
 			if (NavyCraft.playerSHIP1Rewards.containsKey(player)) {
-				NavyCraft.playerSHIP1Rewards.put(player, NavyCraft.playerSHIP1Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".SHIP1").toString()));
+				NavyCraft.playerSHIP1Rewards.put(player, NavyCraft.playerSHIP1Rewards.get(player) + playerData.getInt(player + ".SHIP1"));
 			} else {
-				NavyCraft.playerSHIP1Rewards.put(player, 1);
+				NavyCraft.playerSHIP1Rewards.put(player, playerData.getInt(player + ".SHIP1"));
 			}
-		} else if (playerData.getInt(player + ".SHIP2") > 0) {
+		}
+		if (playerData.getInt(player + ".SHIP2") > 0) {
 			if (NavyCraft.playerSHIP2Rewards.containsKey(player)) {
-				NavyCraft.playerSHIP2Rewards.put(player, NavyCraft.playerSHIP2Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".SHIP2").toString()));
+				NavyCraft.playerSHIP2Rewards.put(player, NavyCraft.playerSHIP2Rewards.get(player) + playerData.getInt(player + ".SHIP2"));
 			} else {
-				NavyCraft.playerSHIP2Rewards.put(player, 1);
+				NavyCraft.playerSHIP2Rewards.put(player, playerData.getInt(player + ".SHIP2"));
 			}
-		} else if (playerData.getInt(player + ".SHIP3") > 0) {
+		}
+		if (playerData.getInt(player + ".SHIP3") > 0) {
 			if (NavyCraft.playerSHIP3Rewards.containsKey(player)) {
-				NavyCraft.playerSHIP3Rewards.put(player, NavyCraft.playerSHIP3Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".SHIP3").toString()));
+				NavyCraft.playerSHIP3Rewards.put(player, NavyCraft.playerSHIP3Rewards.get(player) + playerData.getInt(player + ".SHIP3"));
 			} else {
-				NavyCraft.playerSHIP3Rewards.put(player, 1);
+				NavyCraft.playerSHIP3Rewards.put(player, playerData.getInt(player + ".SHIP3"));
 			}
-		} else if (playerData.getInt(player + ".SHIP4") > 0) {
+		}
+		if (playerData.getInt(player + ".SHIP4") > 0) {
 			if (NavyCraft.playerSHIP4Rewards.containsKey(player)) {
-				NavyCraft.playerSHIP4Rewards.put(player, NavyCraft.playerSHIP4Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".SHIP4").toString()));
+				NavyCraft.playerSHIP4Rewards.put(player, NavyCraft.playerSHIP4Rewards.get(player) + playerData.getInt(player + ".SHIP4"));
 			} else {
-				NavyCraft.playerSHIP4Rewards.put(player, 1);
+				NavyCraft.playerSHIP4Rewards.put(player, playerData.getInt(player + ".SHIP4"));
 			}
-		} else if (playerData.getInt(player + ".SHIP5") > 0) {
+		}
+		if (playerData.getInt(player + ".SHIP5") > 0) {
 			if (NavyCraft.playerSHIP5Rewards.containsKey(player)) {
-				NavyCraft.playerSHIP5Rewards.put(player, NavyCraft.playerSHIP5Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".SHIP5").toString()));
+				NavyCraft.playerSHIP5Rewards.put(player, NavyCraft.playerSHIP5Rewards.get(player) + playerData.getInt(player + ".SHIP5"));
 			} else {
-				NavyCraft.playerSHIP5Rewards.put(player, 1);
+				NavyCraft.playerSHIP5Rewards.put(player, playerData.getInt(player + ".SHIP5"));
 			}
-		} else if (playerData.getInt(player + ".HANGAR1") > 0) {
+		}
+		if (playerData.getInt(player + ".HANGAR1") > 0) {
 			if (NavyCraft.playerHANGAR1Rewards.containsKey(player)) {
-				NavyCraft.playerHANGAR1Rewards.put(player, NavyCraft.playerHANGAR1Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".HANGAR1").toString()));
+				NavyCraft.playerHANGAR1Rewards.put(player, NavyCraft.playerHANGAR1Rewards.get(player) + playerData.getInt(player + ".HANGAR1"));
 			} else {
-				NavyCraft.playerHANGAR1Rewards.put(player, 1);
+				NavyCraft.playerHANGAR1Rewards.put(player, playerData.getInt(player + ".HANGAR1"));
 			}
-		} else if (playerData.getInt(player + ".HANGAR2") > 0) {
+		}
+		if (playerData.getInt(player + ".HANGAR2") > 0) {
 			if (NavyCraft.playerHANGAR2Rewards.containsKey(player)) {
-				NavyCraft.playerHANGAR2Rewards.put(player, NavyCraft.playerHANGAR2Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".HANGAR2").toString()));
+				NavyCraft.playerHANGAR2Rewards.put(player, NavyCraft.playerHANGAR2Rewards.get(player) + playerData.getInt(player + ".HANGAR2"));
 			} else {
-				NavyCraft.playerHANGAR2Rewards.put(player, 1);
+				NavyCraft.playerHANGAR2Rewards.put(player, playerData.getInt(player + ".HANGAR2"));
 			}
-		} else if (playerData.getInt(player + ".TANK1") > 0) {
+		}
+		if (playerData.getInt(player + ".TANK1") > 0) {
 			if (NavyCraft.playerTANK1Rewards.containsKey(player)) {
-				NavyCraft.playerTANK1Rewards.put(player, NavyCraft.playerTANK1Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".TANK1").toString()));
+				NavyCraft.playerTANK1Rewards.put(player, NavyCraft.playerTANK1Rewards.get(player) + playerData.getInt(player + ".TANK1"));
 			} else {
-				NavyCraft.playerTANK1Rewards.put(player, 1);
+				NavyCraft.playerTANK1Rewards.put(player, playerData.getInt(player + ".TANK1"));
 			}
-		} else if (playerData.getInt(player + ".TANK2") > 0) {
+		}
+		if (playerData.getInt(player + ".TANK2") > 0) {
 			if (NavyCraft.playerTANK2Rewards.containsKey(player)) {
-				NavyCraft.playerTANK2Rewards.put(player, NavyCraft.playerTANK2Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".TANK2").toString()));
+				NavyCraft.playerTANK2Rewards.put(player, NavyCraft.playerTANK2Rewards.get(player) + playerData.getInt(player + ".TANK2"));
 			} else {
-				NavyCraft.playerTANK2Rewards.put(player, 1);
+				NavyCraft.playerTANK2Rewards.put(player, playerData.getInt(player + ".TANK2"));
 			}
-		} else if (playerData.getInt(player + ".MAP1") > 0) {
+		}
+		if (playerData.getInt(player + ".MAP1") > 0) {
 			if (NavyCraft.playerMAP1Rewards.containsKey(player)) {
-				NavyCraft.playerMAP1Rewards.put(player, NavyCraft.playerMAP1Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".MAP1").toString()));
+				NavyCraft.playerMAP1Rewards.put(player, NavyCraft.playerMAP1Rewards.get(player) + playerData.getInt(player + ".MAP1"));
 			} else {
-				NavyCraft.playerMAP1Rewards.put(player, 1);
+				NavyCraft.playerMAP1Rewards.put(player, playerData.getInt(player + ".MAP1"));
 			}
-		} else if (playerData.getInt(player + ".MAP2") > 0) {
+		}
+		if (playerData.getInt(player + ".MAP2") > 0) {
 			if (NavyCraft.playerMAP2Rewards.containsKey(player)) {
-				NavyCraft.playerMAP2Rewards.put(player, NavyCraft.playerMAP2Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".MAP2").toString()));
+				NavyCraft.playerMAP2Rewards.put(player, NavyCraft.playerMAP2Rewards.get(player) + playerData.getInt(player + ".MAP2"));
 			} else {
-				NavyCraft.playerMAP2Rewards.put(player, 1);
+				NavyCraft.playerMAP2Rewards.put(player, playerData.getInt(player + ".MAP2"));
 			}
-		} else if (playerData.getInt(player + ".MAP3") > 0) {
+		}
+		if (playerData.getInt(player + ".MAP3") > 0) {
 			if (NavyCraft.playerMAP3Rewards.containsKey(player)) {
-				NavyCraft.playerMAP3Rewards.put(player, NavyCraft.playerMAP3Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".MAP3").toString()));
+				NavyCraft.playerMAP3Rewards.put(player, NavyCraft.playerMAP3Rewards.get(player) + playerData.getInt(player + ".MAP3"));
 			} else {
-				NavyCraft.playerMAP3Rewards.put(player, 1);
+				NavyCraft.playerMAP3Rewards.put(player, playerData.getInt(player + ".MAP3"));
 			}
-		} else if (playerData.getInt(player + ".MAP4") > 0) {
+		}
+		if (playerData.getInt(player + ".MAP4") > 0) {
 			if (NavyCraft.playerMAP4Rewards.containsKey(player)) {
-				NavyCraft.playerMAP4Rewards.put(player, NavyCraft.playerMAP4Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".MAP4").toString()));
+				NavyCraft.playerMAP4Rewards.put(player, NavyCraft.playerMAP4Rewards.get(player) + playerData.getInt(player + ".MAP4"));
 			} else {
-				NavyCraft.playerMAP4Rewards.put(player, 1);
+				NavyCraft.playerMAP4Rewards.put(player, playerData.getInt(player + ".MAP4"));
 			}
-		} else if (playerData.getInt(player + ".MAP5") > 0) {
+		}
+		if (playerData.getInt(player + ".MAP5") > 0) {
 			if (NavyCraft.playerMAP5Rewards.containsKey(player)) {
-				NavyCraft.playerMAP5Rewards.put(player, NavyCraft.playerMAP5Rewards.get(player)
-						+ Integer.valueOf(playerData.get(player + ".MAP5").toString()));
+				NavyCraft.playerMAP5Rewards.put(player, NavyCraft.playerMAP5Rewards.get(player) + playerData.getInt(player + ".MAP5"));
 			} else {
-				NavyCraft.playerMAP5Rewards.put(player, 1);
+				NavyCraft.playerMAP5Rewards.put(player, playerData.getInt(player + ".MAP5"));
 			}
+		}
+		try {
+			playerData.save(f);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return;
 	}
