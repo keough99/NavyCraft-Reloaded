@@ -2242,6 +2242,105 @@ public class NavyCraft_PlayerListener implements Listener {
 										+ ChatColor.GOLD + "destroys all blocks within the plot");
 							}
 							
+						} else if (split[1].equalsIgnoreCase("aunclaim")) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.admin")) {
+								event.setCancelled(true);
+								return;
+							}
+							if (split.length == 4) {
+								int tpId = -1;
+								String p = split[2];
+								try {
+									tpId = Integer.parseInt(split[3]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+								if (tpId > -1) {
+									NavyCraft_FileListener.loadSignData();
+									NavyCraft_BlockListener.loadRewards(p);
+									
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(p, tpId);
+									
+									if (foundSign != null) {
+										Block foundBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX(),
+												foundSign.getY() - 1, foundSign.getZ() + 1);
+										if (foundBlock2.getTypeId() != 68) {
+											foundBlock2 = foundSign.getWorld().getBlockAt(foundSign.getX() + 1,
+													foundSign.getY() - 1, foundSign.getZ());
+										}
+										if (foundBlock2.getTypeId() == 68) {
+											Sign foundSign2 = (Sign) foundBlock2.getState();
+											
+											wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+													.getPlugin("WorldGuard");
+											if (wgp != null) {
+												RegionManager regionManager = wgp
+														.getRegionManager(plugin.getServer().getWorld("shipyard"));
+												String regionName = "--" + p + "-" + tpId;
+												
+												int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
+												int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
+												int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
+												int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
+												int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
+												int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+												
+												for (int x = startX; x <= endX; x++) {
+													for (int z = startZ; z <= endZ; z++) {
+														for (int y = startY; y <= 62; y++) {
+															plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
+																	.setType(Material.AIR);
+															
+														}
+														int startYy;
+														if (startY > 63) {
+															startYy = startY;
+														} else {
+															startYy = 63;
+														}
+														for (int y = startYy; y <= endY; y++) {
+															plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
+																	.setType(Material.AIR);
+														}
+													}
+												}
+												regionManager.removeRegion(regionName);
+												NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3),
+														foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(),
+														foundSign.getZ());
+												foundSign.setLine(0, "*Claim*");
+												foundSign.setLine(1, "");
+												foundSign.setLine(2, "");
+												foundSign.setLine(3, "");
+												foundSign.update();
+												NavyCraft_FileListener.loadSignData();
+												NavyCraft_BlockListener.loadRewards(player.getName());
+												try {
+													regionManager.save();
+												} catch (StorageException e) {
+													e.printStackTrace();
+												}
+												player.sendMessage(ChatColor.GREEN + "Plot Unclaimed.");
+											}
+										} else {
+											player.sendMessage(
+													ChatColor.RED + "Error: There may be a problem with your plot signs.");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW
+												+ "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - "
+										+ ChatColor.GOLD + "destroys all blocks within the plot");
+							}
+							
 						} else if (split[1].equalsIgnoreCase("rename")) {
 							if (split.length > 3) {
 								int tpId = -1;
