@@ -1755,7 +1755,7 @@ public class CraftMover {
 
 						}
 
-						if (blockId == 68) {
+						if (blockId == 68 || blockId == 63) {
 							signUpdates(newBlock);
 						} // end if sign
 
