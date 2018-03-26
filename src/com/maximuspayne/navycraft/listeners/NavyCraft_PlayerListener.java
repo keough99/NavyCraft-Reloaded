@@ -2216,6 +2216,8 @@ public class NavyCraft_PlayerListener implements Listener {
 												foundSign.setLine(2, "");
 												foundSign.setLine(3, "");
 												foundSign.update();
+												NavyCraft_FileListener.loadSignData();
+												NavyCraft_BlockListener.loadRewards(player.getName());
 												try {
 													regionManager.save();
 												} catch (StorageException e) {

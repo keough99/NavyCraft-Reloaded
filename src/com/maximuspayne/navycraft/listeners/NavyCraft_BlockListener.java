@@ -812,6 +812,10 @@ public class NavyCraft_BlockListener implements Listener {
 						if (player.getName().length() > 15) {
 							sign.setLine(1, player.getName().substring(0, 16));
 							sign.setLine(2, player.getName().substring(15, player.getName().length()));
+						if (player.getName() != sign.getLine(1) + sign.getLine(2)) {
+							sign.setLine(1, player.getName());
+							sign.setLine(2, null);
+						}
 						} else {
 							sign.setLine(1, player.getName());
 						}
