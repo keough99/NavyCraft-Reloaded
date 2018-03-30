@@ -229,8 +229,12 @@ public class NavyCraft_BlockListener implements Listener {
 							if (wgp != null) {
 								RegionManager regionManager = wgp.getRegionManager(plugin.getServer().getWorld("shipyard"));
 								String regionName = "--" + ownerName + "-" + tpId;
-
-								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getName())) {
+								DefaultDomain dd = regionManager.getRegion(regionName).getMembers();
+								List<String> list = new ArrayList<String>();
+								for (String s : dd.getPlayers()) {
+									list.add(s);
+								}
+								if (!list.contains(player.getName())) {
 									player.sendMessage("You are not allowed to select this plot.");
 									return;
 								}
@@ -475,7 +479,7 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 
 					NavyCraft_BlockListener.loadRewards(player.getName());
-			
+					String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
 					Location loc;
 					int sizeX, sizeY, sizeZ, originX, originY, originZ;
 					if (lotType == 1) {
@@ -489,11 +493,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numSHIP1s = 0;
 						int numRewSHIP1s = 1;
-						if (NavyCraft.playerSHIP1Signs.containsKey(player.getName())) {
-							numSHIP1s = NavyCraft.playerSHIP1Signs.get(player.getName()).size();
+						if (NavyCraft.playerSHIP1Signs.containsKey(UUID)) {
+							numSHIP1s = NavyCraft.playerSHIP1Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerSHIP1Rewards.containsKey(player.getName())) {
-							numRewSHIP1s = NavyCraft.playerSHIP1Rewards.get(player.getName());
+						if (NavyCraft.playerSHIP1Rewards.containsKey(UUID)) {
+							numRewSHIP1s = NavyCraft.playerSHIP1Rewards.get(UUID);
 						}
 						if (numSHIP1s >= numRewSHIP1s) {
 							player.sendMessage("You have no SHIP1 reward plots available.");
@@ -511,11 +515,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numSHIP2s = 0;
 						int numRewSHIP2s = 0;
-						if (NavyCraft.playerSHIP2Signs.containsKey(player.getName())) {
-							numSHIP2s = NavyCraft.playerSHIP2Signs.get(player.getName()).size();
+						if (NavyCraft.playerSHIP2Signs.containsKey(UUID)) {
+							numSHIP2s = NavyCraft.playerSHIP2Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerSHIP2Rewards.containsKey(player.getName())) {
-							numRewSHIP2s = NavyCraft.playerSHIP2Rewards.get(player.getName());
+						if (NavyCraft.playerSHIP2Rewards.containsKey(UUID)) {
+							numRewSHIP2s = NavyCraft.playerSHIP2Rewards.get(UUID);
 						}
 						if (numSHIP2s >= numRewSHIP2s) {
 							player.sendMessage("You have no SHIP2 reward plots available.");
@@ -532,11 +536,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numSHIP3s = 0;
 						int numRewSHIP3s = 0;
-						if (NavyCraft.playerSHIP3Signs.containsKey(player.getName())) {
-							numSHIP3s = NavyCraft.playerSHIP3Signs.get(player.getName()).size();
+						if (NavyCraft.playerSHIP3Signs.containsKey(UUID)) {
+							numSHIP3s = NavyCraft.playerSHIP3Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerSHIP3Rewards.containsKey(player.getName())) {
-							numRewSHIP3s = NavyCraft.playerSHIP3Rewards.get(player.getName());
+						if (NavyCraft.playerSHIP3Rewards.containsKey(UUID)) {
+							numRewSHIP3s = NavyCraft.playerSHIP3Rewards.get(UUID);
 						}
 						if (numSHIP3s >= numRewSHIP3s) {
 							player.sendMessage("You have no SHIP3 reward plots available.");
@@ -553,11 +557,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numSHIP4s = 0;
 						int numRewSHIP4s = 0;
-						if (NavyCraft.playerSHIP4Signs.containsKey(player.getName())) {
-							numSHIP4s = NavyCraft.playerSHIP4Signs.get(player.getName()).size();
+						if (NavyCraft.playerSHIP4Signs.containsKey(UUID)) {
+							numSHIP4s = NavyCraft.playerSHIP4Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerSHIP4Rewards.containsKey(player.getName())) {
-							numRewSHIP4s = NavyCraft.playerSHIP4Rewards.get(player.getName());
+						if (NavyCraft.playerSHIP4Rewards.containsKey(UUID)) {
+							numRewSHIP4s = NavyCraft.playerSHIP4Rewards.get(UUID);
 						}
 						if (numSHIP4s >= numRewSHIP4s) {
 							player.sendMessage("You have no SHIP4 reward plots available.");
@@ -574,11 +578,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numSHIP5s = 0;
 						int numRewSHIP5s = 0;
-						if (NavyCraft.playerSHIP5Signs.containsKey(player.getName())) {
-							numSHIP5s = NavyCraft.playerSHIP5Signs.get(player.getName()).size();
+						if (NavyCraft.playerSHIP5Signs.containsKey(UUID)) {
+							numSHIP5s = NavyCraft.playerSHIP5Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerSHIP5Rewards.containsKey(player.getName())) {
-							numRewSHIP5s = NavyCraft.playerSHIP5Rewards.get(player.getName());
+						if (NavyCraft.playerSHIP5Rewards.containsKey(UUID)) {
+							numRewSHIP5s = NavyCraft.playerSHIP5Rewards.get(UUID);
 						}
 						if (numSHIP5s >= numRewSHIP5s) {
 							player.sendMessage("You have no SHIP5 reward plots available.");
@@ -595,11 +599,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numH1s = 0;
 						int numRewH1s = 0;
-						if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
-							numH1s = NavyCraft.playerHANGAR1Signs.get(player.getName()).size();
+						if (NavyCraft.playerHANGAR1Signs.containsKey(UUID)) {
+							numH1s = NavyCraft.playerHANGAR1Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerHANGAR1Rewards.containsKey(player.getName())) {
-							numRewH1s = NavyCraft.playerHANGAR1Rewards.get(player.getName());
+						if (NavyCraft.playerHANGAR1Rewards.containsKey(UUID)) {
+							numRewH1s = NavyCraft.playerHANGAR1Rewards.get(UUID);
 						}
 						if (numH1s >= numRewH1s) {
 							player.sendMessage("You have no HANGAR1 reward plots available.");
@@ -616,11 +620,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numH2s = 0;
 						int numRewH2s = 0;
-						if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
-							numH2s = NavyCraft.playerHANGAR2Signs.get(player.getName()).size();
+						if (NavyCraft.playerHANGAR2Signs.containsKey(UUID)) {
+							numH2s = NavyCraft.playerHANGAR2Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerHANGAR2Rewards.containsKey(player.getName())) {
-							numRewH2s = NavyCraft.playerHANGAR2Rewards.get(player.getName());
+						if (NavyCraft.playerHANGAR2Rewards.containsKey(UUID)) {
+							numRewH2s = NavyCraft.playerHANGAR2Rewards.get(UUID);
 						}
 						if (numH2s >= numRewH2s) {
 							player.sendMessage("You have no HANGAR2 reward plots available.");
@@ -637,11 +641,11 @@ public class NavyCraft_BlockListener implements Listener {
 						
 						int numT1s = 0;
 						int numRewT1s = 0;
-						if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
-							numT1s = NavyCraft.playerTANK1Signs.get(player.getName()).size();
+						if (NavyCraft.playerTANK1Signs.containsKey(UUID)) {
+							numT1s = NavyCraft.playerTANK1Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerTANK1Rewards.containsKey(player.getName())) {
-							numRewT1s = NavyCraft.playerTANK1Rewards.get(player.getName());
+						if (NavyCraft.playerTANK1Rewards.containsKey(UUID)) {
+							numRewT1s = NavyCraft.playerTANK1Rewards.get(UUID);
 						}
 						if (numT1s >= numRewT1s) {
 							player.sendMessage("You have no TANK1 reward plots available.");
@@ -658,11 +662,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numT2s = 0;
 						int numRewT2s = 0;
-						if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
-							numT2s = NavyCraft.playerTANK2Signs.get(player.getName()).size();
+						if (NavyCraft.playerTANK2Signs.containsKey(UUID)) {
+							numT2s = NavyCraft.playerTANK2Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerTANK2Rewards.containsKey(player.getName())) {
-							numRewT2s = NavyCraft.playerTANK2Rewards.get(player.getName());
+						if (NavyCraft.playerTANK2Rewards.containsKey(UUID)) {
+							numRewT2s = NavyCraft.playerTANK2Rewards.get(UUID);
 						}
 						if (numT2s >= numRewT2s) {
 							player.sendMessage("You have no TANK2 reward plots available.");
@@ -679,11 +683,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numM1s = 0;
 						int numRewM1s = 0;
-						if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
-							numM1s = NavyCraft.playerMAP1Signs.get(player.getName()).size();
+						if (NavyCraft.playerMAP1Signs.containsKey(UUID)) {
+							numM1s = NavyCraft.playerMAP1Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerMAP1Rewards.containsKey(player.getName())) {
-							numRewM1s = NavyCraft.playerMAP1Rewards.get(player.getName());
+						if (NavyCraft.playerMAP1Rewards.containsKey(UUID)) {
+							numRewM1s = NavyCraft.playerMAP1Rewards.get(UUID);
 						}
 						if (numM1s >= numRewM1s) {
 							player.sendMessage("You have no MAP1 reward plots available.");
@@ -700,11 +704,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numM2s = 0;
 						int numRewM2s = 0;
-						if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
-							numM2s = NavyCraft.playerMAP2Signs.get(player.getName()).size();
+						if (NavyCraft.playerMAP2Signs.containsKey(UUID)) {
+							numM2s = NavyCraft.playerMAP2Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerMAP2Rewards.containsKey(player.getName())) {
-							numRewM2s = NavyCraft.playerMAP2Rewards.get(player.getName());
+						if (NavyCraft.playerMAP2Rewards.containsKey(UUID)) {
+							numRewM2s = NavyCraft.playerMAP2Rewards.get(UUID);
 						}
 						if (numM2s >= numRewM2s) {
 							player.sendMessage("You have no MAP2 reward plots available.");
@@ -721,11 +725,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numM3s = 0;
 						int numRewM3s = 0;
-						if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
-							numM3s = NavyCraft.playerMAP3Signs.get(player.getName()).size();
+						if (NavyCraft.playerMAP3Signs.containsKey(UUID)) {
+							numM3s = NavyCraft.playerMAP3Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerMAP3Rewards.containsKey(player.getName())) {
-							numRewM3s = NavyCraft.playerMAP3Rewards.get(player.getName());
+						if (NavyCraft.playerMAP3Rewards.containsKey(UUID)) {
+							numRewM3s = NavyCraft.playerMAP3Rewards.get(UUID);
 						}
 						if (numM3s >= numRewM3s) {
 							player.sendMessage("You have no MAP3 reward plots available.");
@@ -742,11 +746,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numM4s = 0;
 						int numRewM4s = 0;
-						if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
-							numM4s = NavyCraft.playerMAP4Signs.get(player.getName()).size();
+						if (NavyCraft.playerMAP4Signs.containsKey(UUID)) {
+							numM4s = NavyCraft.playerMAP4Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerMAP4Rewards.containsKey(player.getName())) {
-							numRewM4s = NavyCraft.playerMAP4Rewards.get(player.getName());
+						if (NavyCraft.playerMAP4Rewards.containsKey(UUID)) {
+							numRewM4s = NavyCraft.playerMAP4Rewards.get(UUID);
 						}
 						if (numM4s >= numRewM4s) {
 							player.sendMessage("You have no MAP4 reward plots available.");
@@ -763,11 +767,11 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						int numM5s = 0;
 						int numRewM5s = 0;
-						if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
-							numM5s = NavyCraft.playerMAP5Signs.get(player.getName()).size();
+						if (NavyCraft.playerMAP5Signs.containsKey(UUID)) {
+							numM5s = NavyCraft.playerMAP5Signs.get(UUID).size();
 						}
-						if (NavyCraft.playerMAP5Rewards.containsKey(player.getName())) {
-							numRewM5s = NavyCraft.playerMAP5Rewards.get(player.getName());
+						if (NavyCraft.playerMAP5Rewards.containsKey(UUID)) {
+							numRewM5s = NavyCraft.playerMAP5Rewards.get(UUID);
 						}
 						if (numM5s >= numRewM5s) {
 							player.sendMessage("You have no MAP5 reward plots available.");
@@ -2422,6 +2426,7 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 	
 	public static void loadRewards(String player) {
+		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		NavyCraft.playerSHIP1Rewards.clear();
 		NavyCraft.playerSHIP2Rewards.clear();
 		NavyCraft.playerSHIP3Rewards.clear();
@@ -2455,7 +2460,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP1Rewards.put(player, num);
+						NavyCraft.playerSHIP1Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
 					}
@@ -2463,7 +2468,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP2Rewards.put(player, num);
+						NavyCraft.playerSHIP2Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2471,7 +2476,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP3Rewards.put(player, num);
+						NavyCraft.playerSHIP3Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2479,7 +2484,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP4Rewards.put(player, num);
+						NavyCraft.playerSHIP4Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2487,7 +2492,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP5Rewards.put(player, num);
+						NavyCraft.playerSHIP5Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2495,7 +2500,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR1Rewards.put(player, num);
+						NavyCraft.playerHANGAR1Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2503,7 +2508,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR2Rewards.put(player, num);
+						NavyCraft.playerHANGAR2Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2511,7 +2516,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK1Rewards.put(player, num);
+						NavyCraft.playerTANK1Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2519,7 +2524,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK2Rewards.put(player, num);
+						NavyCraft.playerTANK2Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2527,7 +2532,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP1Rewards.put(player, num);
+						NavyCraft.playerMAP1Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
 					}
@@ -2535,7 +2540,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP2Rewards.put(player, num);
+						NavyCraft.playerMAP2Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2543,7 +2548,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP3Rewards.put(player, num);
+						NavyCraft.playerMAP3Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2551,7 +2556,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP4Rewards.put(player, num);
+						NavyCraft.playerMAP4Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2559,7 +2564,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP5Rewards.put(player, num);
+						NavyCraft.playerMAP5Rewards.put(UUID, num);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2571,100 +2576,101 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 
 	public static Sign findSign(String player, int id) {
+		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		Sign foundSign = null;
-		if (NavyCraft.playerSHIP1Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerSHIP1Signs.get(player)) {
+		if (NavyCraft.playerSHIP1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP1Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerSHIP2Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerSHIP2Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerSHIP2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP2Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerSHIP3Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerSHIP3Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerSHIP3Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP3Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerSHIP4Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerSHIP4Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerSHIP4Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP4Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerSHIP5Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerSHIP5Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerSHIP5Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP5Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerHANGAR1Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerHANGAR1Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerHANGAR1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerHANGAR1Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerHANGAR2Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerHANGAR2Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerHANGAR2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerHANGAR2Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerTANK1Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerTANK1Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerTANK1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerTANK1Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerTANK2Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerTANK2Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerTANK2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerMAP1Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerMAP1Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerMAP1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerMAP2Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerMAP2Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerMAP2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerMAP3Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerMAP3Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerMAP3Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerMAP4Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerMAP4Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerMAP4Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
 			}
 		}
-		if ((foundSign == null) && NavyCraft.playerMAP5Signs.containsKey(player)) {
-			for (Sign s : NavyCraft.playerMAP5Signs.get(player)) {
+		if ((foundSign == null) && NavyCraft.playerMAP5Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(UUID)) {
 				if (id == NavyCraft.playerSignIndex.get(s)) {
 					foundSign = s;
 				}
@@ -2674,100 +2680,101 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 
 	public static int maxId(Player player) {
+		String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
 		int foundHighest = -1;
-		if (NavyCraft.playerSHIP1Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerSHIP1Signs.get(player.getName())) {
+		if (NavyCraft.playerSHIP1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP1Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerSHIP2Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerSHIP2Signs.get(player.getName())) {
+		if (NavyCraft.playerSHIP2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP2Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerSHIP3Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerSHIP3Signs.get(player.getName())) {
+		if (NavyCraft.playerSHIP3Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP3Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerSHIP4Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerSHIP4Signs.get(player.getName())) {
+		if (NavyCraft.playerSHIP4Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP4Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerSHIP5Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerSHIP5Signs.get(player.getName())) {
+		if (NavyCraft.playerSHIP5Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerSHIP5Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerHANGAR1Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerHANGAR1Signs.get(player.getName())) {
+		if (NavyCraft.playerHANGAR1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerHANGAR1Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerHANGAR2Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerHANGAR2Signs.get(player.getName())) {
+		if (NavyCraft.playerHANGAR2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerHANGAR2Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerTANK1Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerTANK1Signs.get(player.getName())) {
+		if (NavyCraft.playerTANK1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerTANK1Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerTANK2Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerTANK2Signs.get(player.getName())) {
+		if (NavyCraft.playerTANK2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerTANK2Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerMAP1Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerMAP1Signs.get(player.getName())) {
+		if (NavyCraft.playerMAP1Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP1Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerMAP2Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerMAP2Signs.get(player.getName())) {
+		if (NavyCraft.playerMAP2Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP2Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerMAP3Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerMAP3Signs.get(player.getName())) {
+		if (NavyCraft.playerMAP3Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP3Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerMAP4Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerMAP4Signs.get(player.getName())) {
+		if (NavyCraft.playerMAP4Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP4Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}
 			}
 		}
-		if (NavyCraft.playerMAP5Signs.containsKey(player.getName())) {
-			for (Sign s : NavyCraft.playerMAP5Signs.get(player.getName())) {
+		if (NavyCraft.playerMAP5Signs.containsKey(UUID)) {
+			for (Sign s : NavyCraft.playerMAP5Signs.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(s)) {
 					foundHighest = NavyCraft.playerSignIndex.get(s);
 				}

@@ -6,6 +6,7 @@ import com.maximuspayne.navycraft.craft.CraftType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -66,7 +67,15 @@ public class PermissionInterface {
 		}
 	}
 	
-	
+	@SuppressWarnings("deprecation")
+	public static String getUUIDfromPlayer(String player) {
+		String UUID = NavyCraft.instance.getServer().getOfflinePlayer(player).getUniqueId().toString();
+		if(UUID == null) {
+			return null;
+		} else {
+			return UUID;
+		}
+	}
 	
 	public static boolean CheckPerm(Player player, String command) {		
 		command = command.replace(" ", ".");
