@@ -87,7 +87,6 @@ public class NavyCraft_BlockListener implements Listener {
 				theCraft.addBlock(event.getBlock(), false);
 			}
 		}
-
 	}
 
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
@@ -207,11 +206,11 @@ public class NavyCraft_BlockListener implements Listener {
 					player.sendMessage(ChatColor.RED + "Sign error: lot type");
 					return;
 				}
-
-				String ownerName = sign.getLine(1) + sign.getLine(2);
-
-				if (!restrictedName.isEmpty() && !restrictedName.equalsIgnoreCase("Public") && !restrictedName.equalsIgnoreCase(player.getName()) && !ownerName.equalsIgnoreCase(player.getName()) && !player.isOp() && !PermissionInterface.CheckQuietPerm(player, "NavyCraft.select")) {
-					// This is so messy, Please send help :(
+				String ownerName = null;
+				if (!sign.getLine(1).isEmpty()) {
+				ownerName = sign.getLine(1) + sign.getLine(2);
+				}
+				if (!restrictedName.isEmpty() && !restrictedName.equalsIgnoreCase("Public") && !restrictedName.equalsIgnoreCase(player.getName()) && (ownerName != null && !ownerName.equalsIgnoreCase(player.getName())) && !player.isOp() && !PermissionInterface.CheckQuietPerm(player, "NavyCraft.select")) {
 					int tpId = -1;
 					try {
 						tpId = Integer.parseInt(idStr);
@@ -229,12 +228,8 @@ public class NavyCraft_BlockListener implements Listener {
 							if (wgp != null) {
 								RegionManager regionManager = wgp.getRegionManager(plugin.getServer().getWorld("shipyard"));
 								String regionName = "--" + ownerName + "-" + tpId;
-								DefaultDomain dd = regionManager.getRegion(regionName).getMembers();
-								List<String> list = new ArrayList<String>();
-								for (String s : dd.getPlayers()) {
-									list.add(s);
-								}
-								if (!list.contains(player.getName())) {
+
+								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getName())) {
 									player.sendMessage("You are not allowed to select this plot.");
 									return;
 								}
@@ -2189,9 +2184,40 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onBlockBreak(BlockBreakEvent event) {
+	public void on(BlockBreakEvent event) {
 		Player p = event.getPlayer();
-		if( p.getWorld().getName().equalsIgnoreCase("warworld2") && p.getGameMode() != GameMode.CREATIVE )
+		if (!p.isOp() && !PermissionInterface.CheckQuietPerm(p, "NavyCraft.admin")) {
+		Block block;
+		block = event.getBlock().getRelative(BlockFace.NORTH);
+		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
+		{
+			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
+			event.setCancelled(true);
+			return;
+		}
+		block = event.getBlock().getRelative(BlockFace.SOUTH);
+		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
+		{
+			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
+			event.setCancelled(true);
+			return;
+		}
+		block = event.getBlock().getRelative(BlockFace.EAST);
+		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
+		{
+			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
+			event.setCancelled(true);
+			return;
+		}
+		block = event.getBlock().getRelative(BlockFace.WEST);
+		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
+		{
+			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
+			event.setCancelled(true);
+			return;
+		}
+	}
+		if( PermissionInterface.CheckBattleWorld(p.getLocation()) && p.getGameMode() != GameMode.CREATIVE )
 		{
 			if( NavyCraft_PlayerListener.checkForTarget(event.getBlock()) )
 			{
@@ -2230,7 +2256,7 @@ public class NavyCraft_BlockListener implements Listener {
 					return;
 				}
 			}
-		}else if( p.getWorld().getName().equalsIgnoreCase("warworld1") )
+		}else if( PermissionInterface.CheckEnabledWorld(p.getLocation()))
 		{
 			Block checkBlock;
 			checkBlock = event.getBlock();

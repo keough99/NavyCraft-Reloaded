@@ -1047,7 +1047,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 				return;
 			}
-			if ((player.getItemInHand().getType() == Material.GOLD_SPADE)
+			if ((player.getItemInHand().getType() == Material.GOLD_PICKAXE)
 					&& NavyCraft.cleanupPlayers.contains(player.getName())
 					&& PermissionInterface.CheckEnabledWorld(player.getLocation())
 					&& !NavyCraft.checkSafeDockRegion(player.getLocation())) {
@@ -1058,9 +1058,9 @@ public class NavyCraft_PlayerListener implements Listener {
 				Block block = player.getTargetBlock(transp, 300);
 
 				if (block != null) {
-					System.out.println("Golden Shovel used:" + player.getName() + " X:" + block.getX() + " Y:"
+					System.out.println("Golden Pickaxe used:" + player.getName() + " X:" + block.getX() + " Y:"
 							+ block.getY() + " Z:" + block.getZ());
-					player.sendMessage(ChatColor.GOLD + "Golden Shovel used!");
+					player.sendMessage(ChatColor.GOLD + "Golden Pickaxe used!");
 					for (int x = block.getX() - 7; x <= (block.getX() + 7); x++) {
 						for (int z = block.getZ() - 7; z <= (block.getZ() + 7); z++) {
 							for (int y = block.getY() - 7; y <= (block.getY() + 7); y++) {
@@ -1326,7 +1326,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(
 								ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
 						player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE
-								+ "enables cleanup tools, use lighter, gold spade, and shears");
+								+ "enables cleanup tools, use lighter, gold pickaxe, and shears");
 						player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE
 								+ "destroys all active ships");
 						player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE
@@ -1365,7 +1365,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					player.sendMessage(
 							ChatColor.BLUE + "/navycraft config : " + ChatColor.WHITE + "display config settings");
 					player.sendMessage(ChatColor.BLUE + "/navycraft cleanup : " + ChatColor.WHITE
-							+ "enables cleanup tools, use lighter, gold spade, and shears");
+							+ "enables cleanup tools, use lighter, gold pickaxe, and shears");
 					player.sendMessage(ChatColor.BLUE + "/navycraft destroyships : " + ChatColor.WHITE
 							+ "destroys all active ships");
 					player.sendMessage(ChatColor.BLUE + "/navycraft removeships : " + ChatColor.WHITE
@@ -2789,7 +2789,8 @@ public class NavyCraft_PlayerListener implements Listener {
 												ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + NavyCraft.playerSignIndex.get(s) + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " MAP5");
 									}
 								}
-								return;
+								event.setCancelled(true);
+								return;	
 							} else {
 								player.sendMessage(ChatColor.RED + p + "has never joined the server!");
 								event.setCancelled(true);
@@ -5499,6 +5500,31 @@ public class NavyCraft_PlayerListener implements Listener {
 			}
 
 			if (signLine0.equalsIgnoreCase("Target")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean checkAdminSign(Block adminSignCheck) {
+		if (adminSignCheck.getTypeId() == 68 || adminSignCheck.getTypeId() == 63) {
+			Sign sign = (Sign) adminSignCheck.getState();
+
+			if ((sign.getLine(0) == null) || sign.getLine(0).trim().equals("")) {
+				return false;
+			}
+
+			String signLine0 = sign.getLine(0).trim().toLowerCase();
+
+			// remove colors
+			signLine0 = signLine0.replaceAll(ChatColor.BLUE.toString(), "");
+
+			// remove brackets
+			if (signLine0.startsWith("[") || signLine0.startsWith("*")) {
+				signLine0 = signLine0.substring(1, signLine0.length() - 1);
+			}
+
+			if (signLine0.equalsIgnoreCase("Claim") || signLine0.equalsIgnoreCase("Select")) {
 				return true;
 			}
 		}

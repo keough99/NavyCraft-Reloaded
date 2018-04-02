@@ -11,6 +11,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 import com.maximuspayne.navycraft.NavyCraft;
+import com.maximuspayne.navycraft.PermissionInterface;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class AimCannonPlayerListener implements Listener {
     public static AimCannon plugin;
@@ -257,6 +260,7 @@ public class AimCannonPlayerListener implements Listener {
 				}
 				
 			}else { //b != null
+				if (PermissionInterface.CheckEnabledWorld(event.getPlayer().getLocation())) {
 			    for (OneCannon onec : AimCannon.getCannons()) {
 				if (onec.isThisCannon(b.getLocation(), false)) {
 				    if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -269,9 +273,11 @@ public class AimCannonPlayerListener implements Listener {
 				    return;
 				}
 			    }
+			} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "Can't turn cannons outside of the main world!");
 			}
 		    }
-		
+		    }
 	    }
 
 	    ///Dispenser
