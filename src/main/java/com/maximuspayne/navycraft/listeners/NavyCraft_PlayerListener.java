@@ -159,7 +159,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						String[] split = s.split("\\.");
 						try {
 							int pay = Integer.parseInt(split[2]);
-							
 							List<String> groupNames = PermissionsEx.getUser(player).getParentIdentifiers("navycraft");
 							String rankName="";
 							for( String group : groupNames ) {

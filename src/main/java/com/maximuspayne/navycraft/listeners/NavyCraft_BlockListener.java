@@ -58,6 +58,7 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
+import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 @SuppressWarnings({ "deprecation"})
@@ -2486,7 +2487,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP1Rewards.put(UUID, num);
+							if (NavyCraft.playerSHIP1Rewards.containsKey(UUID)) {
+								NavyCraft.playerSHIP1Rewards.put(UUID, NavyCraft.playerSHIP1Rewards.get(UUID) + num);
+							} else {
+								NavyCraft.playerSHIP1Rewards.put(UUID, num);
+							}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
 					}
@@ -2494,7 +2499,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP2Rewards.put(UUID, num);
+						if (NavyCraft.playerSHIP2Rewards.containsKey(UUID)) {
+							NavyCraft.playerSHIP2Rewards.put(UUID, NavyCraft.playerSHIP2Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerSHIP2Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2502,7 +2511,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP3Rewards.put(UUID, num);
+						if (NavyCraft.playerSHIP3Rewards.containsKey(UUID)) {
+							NavyCraft.playerSHIP3Rewards.put(UUID, NavyCraft.playerSHIP3Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerSHIP3Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2510,7 +2523,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP4Rewards.put(UUID, num);
+						if (NavyCraft.playerSHIP4Rewards.containsKey(UUID)) {
+							NavyCraft.playerSHIP4Rewards.put(UUID, NavyCraft.playerSHIP4Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerSHIP4Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2518,7 +2535,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerSHIP5Rewards.put(UUID, num);
+						if (NavyCraft.playerSHIP5Rewards.containsKey(UUID)) {
+							NavyCraft.playerSHIP5Rewards.put(UUID, NavyCraft.playerSHIP5Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerSHIP5Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2526,7 +2547,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR1Rewards.put(UUID, num);
+						if (NavyCraft.playerHANGAR1Rewards.containsKey(UUID)) {
+							NavyCraft.playerHANGAR1Rewards.put(UUID, NavyCraft.playerHANGAR1Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerHANGAR1Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2534,7 +2559,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerHANGAR2Rewards.put(UUID, num);
+						if (NavyCraft.playerHANGAR2Rewards.containsKey(UUID)) {
+							NavyCraft.playerHANGAR2Rewards.put(UUID, NavyCraft.playerHANGAR2Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerHANGAR2Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2542,7 +2571,11 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK1Rewards.put(UUID, num);
+						if (NavyCraft.playerTANK1Rewards.containsKey(UUID)) {
+							NavyCraft.playerTANK1Rewards.put(UUID, NavyCraft.playerTANK1Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerTANK1Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
@@ -2550,52 +2583,76 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerTANK2Rewards.put(UUID, num);
+						if (NavyCraft.playerTANK2Rewards.containsKey(UUID)) {
+							NavyCraft.playerTANK2Rewards.put(UUID, NavyCraft.playerTANK2Rewards.get(UUID) + num);
+						} else {
+							NavyCraft.playerTANK2Rewards.put(UUID, num);
+						}
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 					}
 				} else if (s.contains("map1")) {
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP1Rewards.put(UUID, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
-					}
-				} else if (s.contains("map2")) {
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP2Rewards.put(UUID, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				} else if (s.contains("map3")) {
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP3Rewards.put(UUID, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				} else if (s.contains("map4")) {
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP4Rewards.put(UUID, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-					}
-				} else if (s.contains("map5")) {
-					String[] split = s.split("\\.");
-					try {
-						int num = Integer.parseInt(split[2]);
-						NavyCraft.playerMAP5Rewards.put(UUID, num);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+								if (NavyCraft.playerMAP1Rewards.containsKey(UUID)) {
+									NavyCraft.playerMAP1Rewards.put(UUID, NavyCraft.playerMAP1Rewards.get(UUID) + num);
+								} else {
+									NavyCraft.playerMAP1Rewards.put(UUID, num);
+								}
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s + " " + s.split(".").length);
+						}
+					} else if (s.contains("map2")) {
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							if (NavyCraft.playerMAP2Rewards.containsKey(UUID)) {
+								NavyCraft.playerMAP2Rewards.put(UUID, NavyCraft.playerMAP2Rewards.get(UUID) + num);
+							} else {
+								NavyCraft.playerMAP2Rewards.put(UUID, num);
+							}
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					} else if (s.contains("map3")) {
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							if (NavyCraft.playerMAP3Rewards.containsKey(UUID)) {
+								NavyCraft.playerMAP3Rewards.put(UUID, NavyCraft.playerMAP3Rewards.get(UUID) + num);
+							} else {
+								NavyCraft.playerMAP3Rewards.put(UUID, num);
+							}
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					} else if (s.contains("map4")) {
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							if (NavyCraft.playerMAP4Rewards.containsKey(UUID)) {
+								NavyCraft.playerMAP4Rewards.put(UUID, NavyCraft.playerMAP4Rewards.get(UUID) + num);
+							} else {
+								NavyCraft.playerMAP4Rewards.put(UUID, num);
+							}
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
+					} else if (s.contains("map5")) {
+						String[] split = s.split("\\.");
+						try {
+							int num = Integer.parseInt(split[2]);
+							if (NavyCraft.playerMAP5Rewards.containsKey(UUID)) {
+								NavyCraft.playerMAP5Rewards.put(UUID, NavyCraft.playerMAP5Rewards.get(UUID) + num);
+							} else {
+								NavyCraft.playerMAP5Rewards.put(UUID, num);
+							}
+						} catch (Exception ex) {
+							System.out.println("Invalid perm-" + s);
+						}
 					}
 				}
-			}
 		}
 		NavyCraft_FileListener.loadRewardsFile(player);
 		
@@ -2889,7 +2946,6 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-		
 		List<String> groupNames = PermissionsEx.getUser(player).getParentIdentifiers("navycraft");
 		for( String s : groupNames ) {
 			if( PermissionsEx.getPermissionManager().getGroup(s).getRankLadder().equalsIgnoreCase("navycraft") ) {
@@ -2903,6 +2959,7 @@ public class NavyCraft_BlockListener implements Listener {
 				{
 							checkRankWorld(player, exp, player.getWorld());
 				}
+				return;
 			   } else { 
 					if (NavyCraft.playerExp.containsKey(player.getName())) {
 					exp1 = NavyCraft.playerExp.get(player.getName());
