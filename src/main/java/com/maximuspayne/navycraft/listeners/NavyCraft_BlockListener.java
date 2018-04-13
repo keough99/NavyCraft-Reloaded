@@ -58,7 +58,6 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
-import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 @SuppressWarnings({ "deprecation"})
@@ -3011,9 +3010,9 @@ public class NavyCraft_BlockListener implements Listener {
 				} else {
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
 				}
+				NavyCraft_FileListener.saveExperience(p.getName());
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
-				NavyCraft_FileListener.saveExperience(p.getName());
 			}
 		if (NavyCraft.battleMode > 0) {
 		if (NavyCraft.battleType == 1) {		

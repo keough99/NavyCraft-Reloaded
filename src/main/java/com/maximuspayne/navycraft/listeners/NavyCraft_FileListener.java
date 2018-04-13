@@ -800,6 +800,7 @@ public class NavyCraft_FileListener implements Listener {
 		} catch (IOException e) {
 			loadPlayerData(player);
 		}
+		NavyCraft.playerExp.put(player, Integer.valueOf(playerData.get("exp").toString()));
 	}
 	
 	public static void loadVolume(String player) {

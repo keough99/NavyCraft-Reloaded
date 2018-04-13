@@ -125,8 +125,11 @@ public class NavyCraft_PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-
+		try {
 		NavyCraft_FileListener.loadPlayerData(player.getName());
+		} catch (Exception ex) {
+			System.out.println("Something is wrong with" + player.getName() + "'s playerdata!");
+		}
 		if (Craft.reboardNames.containsKey(player.getName())) {
 			if ((Craft.reboardNames.get(player.getName()) != null)
 					&& Craft.reboardNames.get(player.getName()).crewNames.contains(player.getName())) {
