@@ -3,15 +3,27 @@ main: com.maximuspayne.navycraft.NavyCraft
 version: ${project.version}
 authors: [Maximuspayne, Solmex, Keough99, PocketKid2, Premejo, SycoPrime, Yogoda]
 depend: [WorldGuard,WorldEdit,Essentials,PermissionsEx]
-
+website: http://github.com/Solmex72/NavyCraft-Reloaded/
+description: NavyCraft-Reloaded - Reworked version of the Old NavyCraft plugin that was abandoned.
 commands:
-   navycraft:
-      description: Ship and other vehicle based commands
-      usage:
-           /<command>
-   ship:
-      description: Ship
-   aircraft:
-      description: Aircraft
-   submarine:
-      description: Submarine
+  navycraft:
+    aliases: [nc]
+    description: Displays navycraft status message.
+  navycraft help:
+    aliases: [nc_help]
+    description: Shows help for navycraft.
+  shipyard:
+    aliases: [yard, sy]
+    description: Displays shipyard status message.
+  shipyard help:
+    aliases: [yard_help, sy_help]
+    description: Shows help for shipyard.
+  rank:
+    description: Shows player rank and their exp.
+  rank help:
+    description: Shows help for ranks.
+  volume:
+    description: Displays volume status message.
+  volume help:
+    description: Shows help for volume.
+

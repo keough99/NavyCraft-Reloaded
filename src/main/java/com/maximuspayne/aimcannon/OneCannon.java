@@ -4342,6 +4342,7 @@ public class OneCannon{
     
 	public void turnCannonLayer(Boolean right, Player p, int offsetY) {
 		// Get data
+		if (PermissionInterface.CheckEnabledWorld(p.getLocation())) {
 		int[][] arr = new int[7][7];
 		byte[][] arrb = new byte[7][7];
 		for (int x = 0; x < 7; x++) {
@@ -4487,7 +4488,7 @@ public class OneCannon{
 			
 		}
     }
-    
+}
     
     public boolean checkProtectedRegion(Player player, Location loc)
     {
