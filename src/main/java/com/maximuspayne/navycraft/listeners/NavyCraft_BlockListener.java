@@ -58,6 +58,7 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 
+import net.ess3.api.MaxMoneyException;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 @SuppressWarnings({ "deprecation"})
@@ -2981,7 +2982,20 @@ public class NavyCraft_BlockListener implements Listener {
 		} else {
 			NavyCraft.playerExp.put(player.getName(), newExp);
 		}
-		
+		 	Essentials ess;
+			ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+			if( ess == null )
+			{
+				player.sendMessage("Essentials Economy error");
+				return;
+			}
+			try {
+				ess.getUser(player).giveMoney(new BigDecimal(newExp / 2));
+				player.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + "$" + newExp / 2 + ChatColor.GRAY + ".");
+			} catch (MaxMoneyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
@@ -3011,6 +3025,20 @@ public class NavyCraft_BlockListener implements Listener {
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
 				}
 				NavyCraft_FileListener.saveExperience(p.getName());
+			 	Essentials ess;
+				ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+				if( ess == null )
+				{
+					p.sendMessage("Essentials Economy error");
+					return;
+				}
+				try {
+					ess.getUser(p.getName()).giveMoney(new BigDecimal(newExp / 2));
+					p.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + "$" + newExp / 2 + ChatColor.GRAY + ".");
+				} catch (MaxMoneyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
 			}
