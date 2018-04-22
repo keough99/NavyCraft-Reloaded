@@ -75,29 +75,8 @@ public class NavyCraft extends JavaPlugin {
 	public final NavyCraft_EntityListener entityListener = new NavyCraft_EntityListener(this);
 	public final NavyCraft_InventoryListener inventoryListener = new NavyCraft_InventoryListener(this);
 	public final NavyCraft_InventoryListener fileListener = new NavyCraft_InventoryListener(this);
-	
-    public static int battleMode=-1; //-1 false, 0 queue, 1 battle
-    public static int battleType=-1;
-    public static boolean battleLockTeams=false;
-    public static ArrayList<String> bluePlayers = new ArrayList<String>();
-    public static ArrayList<String> redPlayers = new ArrayList<String>();
-    public static ArrayList<String> anyPlayers = new ArrayList<String>();
-
-	public static ArrayList<String> playerKits = new ArrayList<String>();
-    public static Location redSpawn;
-    public static Location blueSpawn;
-    public static int redPoints=0;
-    public static int bluePoints=0;
-    public static long battleStartTime;
-    public static long battleLength;
-    public static boolean redMerchant = false;
-    public static boolean blueMerchant = false;
-
-    public static enum battleTypes { battle1, battle2 }; //1
-	
 
 	public static Thread updateThread=null;
-	public static Thread npcMerchantThread=null;
 	public static boolean shutDown = false;
 	
 	public static WorldGuardPlugin wgp;
@@ -171,10 +150,6 @@ public class NavyCraft extends JavaPlugin {
 
 		CraftType.loadTypes(dir);
 		CraftType.saveTypes(dir);
-		
-	}
-	
-	public void onLoad() {
 		
 	}
 
@@ -261,23 +236,6 @@ public class NavyCraft extends JavaPlugin {
 		CraftMover cm = new CraftMover(craft, this);
 		cm.structureUpdate(null,false);
 
-		if( !craft.redTeam && !craft.blueTeam )
-		{
-			if( checkTeamRegion(player.getLocation()) > 0 )
-			{
-				if( checkTeamRegion(player.getLocation()) == 1 )
-				{
-					craft.blueTeam = true;
-					player.sendMessage(ChatColor.BLUE + "You start a blue team vehicle!");
-				}
-				else
-				{
-					craft.redTeam = true;
-					player.sendMessage(ChatColor.RED + "You start a red team vehicle!");
-				}
-			}
-		}
-
 		Craft.addCraftList.add(craft);
 		//craft.cloneCraft();
 		
@@ -309,72 +267,6 @@ public class NavyCraft extends JavaPlugin {
 		}
 		return craft;
 	}
-    
-    public static int checkTeamRegion(Location loc) /// 0 no region, 1 blue team, 2 red team
-    {
-    	
-    	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
-    	if( wgp != null && loc != null)
-    	{
-    		if( !loc.getWorld().getName().equalsIgnoreCase("warworld1") &&  !loc.getWorld().getName().equalsIgnoreCase("warworld2") &&  !loc.getWorld().getName().equalsIgnoreCase("warworld3") )
-    		{
-    			return 0;
-    		}
-	    	RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
-		
-			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
-			
-			Iterator<ProtectedRegion> it = set.iterator();
-			while( it.hasNext() )
-			{
-				String id = it.next().getId();
-				String[] splits = id.split("_");
-				if( splits.length == 2 )
-				{
-					if( splits[1].equalsIgnoreCase("blue") )
-						return 1;
-					else if( splits[1].equalsIgnoreCase("red") )
-						return 2;
-					
-				}
-		
-				
-		    }
-			return 0;
-		}
-    	return 0;
-	}
-
-    public static boolean checkStorageRegion(Location loc)
-    {
-    	
-    	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
-    	if( wgp != null && loc != null)
-    	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
-    		{
-    			return false;
-    		}
-	    	RegionManager regionManager = wgp.getRegionManager(loc.getWorld());
-		
-			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
-			
-			Iterator<ProtectedRegion> it = set.iterator();
-			while( it.hasNext() )
-			{
-				String id = it.next().getId();
-				String[] splits = id.split("_");
-				if( splits.length == 2 )
-				{
-					if( splits[1].equalsIgnoreCase("storage") )
-						return true;					
-				}
-		    }
-			return false;
-		}
-    	return false;
-	}
-    
     public static boolean checkRepairRegion(Location loc)
     {
     	

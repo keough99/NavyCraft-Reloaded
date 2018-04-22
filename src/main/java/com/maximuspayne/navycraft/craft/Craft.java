@@ -181,9 +181,6 @@ public class Craft {
 	public int reductionSpeed = -1;
 	public int collisionSpeed = -1;
 	
-	public boolean blueTeam = false;
-	public boolean redTeam = false;
-	
 	public long abandonTime=0;
 	//long lastUpdate=0;
 	public boolean recentlyUpdated = false;
@@ -463,10 +460,6 @@ public class Craft {
 	}
 	
 	public void remove() {
-		if( isMerchantCraft && redTeam )
-			NavyCraft.redMerchant = false;
-		else if( isMerchantCraft && blueTeam )
-			NavyCraft.blueMerchant = false;
 		isDestroying = true;
 		releaseCraft();
 		craftList.remove(this);

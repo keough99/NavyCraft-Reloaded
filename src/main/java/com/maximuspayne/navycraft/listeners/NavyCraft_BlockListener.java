@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -37,7 +36,6 @@ import com.maximuspayne.aimcannon.AimCannonPlayerListener;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
-import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
@@ -897,13 +895,6 @@ public class NavyCraft_BlockListener implements Listener {
 				return;
 			}
 
-			boolean isMerchantSpawn = false;
-			String freeString = sign.getLine(2).trim().toLowerCase();
-			freeString = freeString.replaceAll(ChatColor.BLUE.toString(), "");
-			if (freeString.equalsIgnoreCase("merchant")) {
-				isMerchantSpawn = true;
-			}
-
 			String typeString = sign.getLine(1).trim().toLowerCase();
 			typeString = typeString.replaceAll(ChatColor.BLUE.toString(), "");
 			if (!typeString.isEmpty() && !typeString.equalsIgnoreCase(Craft.playerClipboardsType.get(player)) && !typeString.equalsIgnoreCase(Craft.playerClipboardsLot.get(player))) {
@@ -1073,19 +1064,6 @@ public class NavyCraft_BlockListener implements Listener {
 
 										CraftMover cm = new CraftMover(theCraft, plugin);
 										cm.structureUpdate(null, false);
-										if (isMerchantSpawn) {
-											theCraft.isMerchantCraft = true;
-
-											if (theCraft.redTeam) {
-												NavyCraft.redMerchant = true;
-												plugin.getServer().broadcastMessage(ChatColor.YELLOW + "**" + ChatColor.RED + "Red Team" + ChatColor.YELLOW + " has spawned a merchant!**");
-											} else if (theCraft.blueTeam) {
-
-												NavyCraft.blueMerchant = true;
-												plugin.getServer().broadcastMessage(ChatColor.YELLOW + "**" + ChatColor.BLUE + "Blue Team" + ChatColor.YELLOW + " has spawned a merchant!**");
-
-											}
-										}
 										return;
 									}
 								}
@@ -2218,88 +2196,7 @@ public class NavyCraft_BlockListener implements Listener {
 			return;
 		}
 	}
-		if( PermissionInterface.CheckBattleWorld(p.getLocation()) && p.getGameMode() != GameMode.CREATIVE )
-		{
-			if( NavyCraft_PlayerListener.checkForTarget(event.getBlock()) )
-			{
-				p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an explosive!");
-				event.setCancelled(true);
-				return;
-			}else
-			{
-				Block checkBlock;
-				checkBlock = event.getBlock().getRelative(BlockFace.NORTH);
-				if( checkBlock.getTypeId() == 68 && NavyCraft_PlayerListener.checkForTarget(checkBlock) )
-				{
-					p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an explosive!");
-					event.setCancelled(true);
-					return;
-				}
-				checkBlock = event.getBlock().getRelative(BlockFace.SOUTH);
-				if( checkBlock.getTypeId() == 68 && NavyCraft_PlayerListener.checkForTarget(checkBlock) )
-				{
-					p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an explosive!");
-					event.setCancelled(true);
-					return;
-				}
-				checkBlock = event.getBlock().getRelative(BlockFace.EAST);
-				if( checkBlock.getTypeId() == 68 && NavyCraft_PlayerListener.checkForTarget(checkBlock) )
-				{
-					p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an explosive!");
-					event.setCancelled(true);
-					return;
-				}
-				checkBlock = event.getBlock().getRelative(BlockFace.WEST);
-				if( checkBlock.getTypeId() == 68 && NavyCraft_PlayerListener.checkForTarget(checkBlock) )
-				{
-					p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an explosive!");
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}else if( PermissionInterface.CheckEnabledWorld(p.getLocation()))
-		{
-			Block checkBlock;
-			checkBlock = event.getBlock();
-			int craftBlockId = checkBlock.getTypeId();
-
-			Craft checkCraft = Craft.getCraft(checkBlock.getX(), checkBlock.getY(), checkBlock.getZ());
-
-			if (checkCraft != null) {
-				if ((craftBlockId == 46) && (p.getGameMode() != GameMode.CREATIVE)) {
-					p.sendMessage(ChatColor.RED + "Can't break vehicle TNT.");
-					event.setCancelled(true);
-					return;
-				} else if ((craftBlockId == 75) || (craftBlockId == 76) || (craftBlockId == 65) || (craftBlockId == 68) || (craftBlockId == 63) || (craftBlockId == 69) || (craftBlockId == 77) || (craftBlockId == 70) || (craftBlockId == 72) || (craftBlockId == 55) || (craftBlockId == 143) || (craftBlockId == 64) || (craftBlockId == 71)) {
-					int arrayX = checkBlock.getX() - checkCraft.minX;
-					int arrayY = checkBlock.getY() - checkCraft.minY;
-					int arrayZ = checkBlock.getZ() - checkCraft.minZ;
-					checkCraft.matrix[arrayX][arrayY][arrayZ] = -1;
-
-					if (((craftBlockId == 64) && (checkBlock.getRelative(BlockFace.UP).getTypeId() == 64)) || ((craftBlockId == 71) && (checkBlock.getRelative(BlockFace.UP).getTypeId() == 71))) {
-						checkBlock.getRelative(BlockFace.UP).setTypeId(0);
-						checkCraft.matrix[arrayX][arrayY + 1][arrayZ] = -1;
-					}
-					if (((craftBlockId == 64) && (checkBlock.getRelative(BlockFace.DOWN).getTypeId() == 64)) || ((craftBlockId == 71) && (checkBlock.getRelative(BlockFace.DOWN).getTypeId() == 71))) {
-						checkBlock.getRelative(BlockFace.DOWN).setTypeId(0);
-						checkCraft.matrix[arrayX][arrayY - 1][arrayZ] = -1;
-					}
-					for (DataBlock complexBlock : checkCraft.complexBlocks) {
-						if (complexBlock.locationMatches(arrayX, arrayY, arrayZ)) {
-							checkCraft.complexBlocks.remove(complexBlock);
-							break;
-						}
-					}
-					for (DataBlock dataBlock : checkCraft.dataBlocks) {
-						if (dataBlock.locationMatches(arrayX, arrayY, arrayZ)) {
-							checkCraft.dataBlocks.remove(dataBlock);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
+}
 
 	public static void divingBellThread(final Location loc) {
 		new Thread() {
@@ -3000,16 +2897,6 @@ public class NavyCraft_BlockListener implements Listener {
 			
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
 		NavyCraft_FileListener.saveExperience(player.getName());	
-		if (NavyCraft.battleMode > 0) {
-		if (NavyCraft.battleType == 1) {		
-            if (NavyCraft.redPlayers.contains(player.getName())) {		
-            NavyCraft.redPoints += newExp;		
-            } else {		
-            NavyCraft.bluePoints += newExp;		
-            }
-		}
-	}
-		
 	}
 	
 	public static void rewardExpCraft(int newExp, Craft craft) {
@@ -3042,16 +2929,7 @@ public class NavyCraft_BlockListener implements Listener {
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
 			}
-		if (NavyCraft.battleMode > 0) {
-		if (NavyCraft.battleType == 1) {		
-            if (NavyCraft.redPlayers.contains(p.getName())) {		
-            NavyCraft.redPoints += newExp;		
-            } else {		
-            NavyCraft.bluePoints += newExp;		
-            }
 		}
-	}
-}
 	}
 	
 	public static void setExpPlayer(int newExp, String p) {

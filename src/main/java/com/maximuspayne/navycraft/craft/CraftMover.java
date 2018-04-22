@@ -1,12 +1,7 @@
 package com.maximuspayne.navycraft.craft;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -43,7 +38,6 @@ import com.maximuspayne.navycraft.Pump;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
-import com.maximuspayne.navycraft.listeners.NavyCraft_FileListener;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -1472,71 +1466,6 @@ public class CraftMover {
 			return;
 		
 		}
-// TODO This is really important if you ever want to test battles and score regions arent working. Eventually I will and probably will remove this and replace it with a kind reminder as to where the score region code is.
-			if (!craft.isDestroying && (NavyCraft.battleType == 3) && craft.isMerchantCraft && (checkMerchantScoreRegion(new Location(craft.world, craft.minX, craft.minY, craft.minZ), craft) || checkMerchantScoreRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ), craft))) {
-
-				if (craft.redTeam) {
-					for (String s : NavyCraft.redPlayers) {
-						Player p = plugin.getServer().getPlayer(s);
-						int playerNewExp = 5000;
-						if ((p != null) && p.isOnline()) {
-							if (NavyCraft.playerExp.containsKey(p.getName())) {
-								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							} else {
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							}
-							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
-						}
-						NavyCraft_FileListener.saveExperience(p.getName());
-					}
-
-					plugin.getServer().broadcastMessage(ChatColor.RED + "Red Team Merchant Score! Red Team earns " + ChatColor.GOLD + "5000 points!");
-					NavyCraft.redPoints += 5000;
-
-					for (String s : craft.crewNames) {
-						Player p = plugin.getServer().getPlayer(s);
-						if ((p != null) && p.isOnline()) {
-							p.teleport(NavyCraft.redSpawn);
-						}
-					}
-
-					NavyCraft.redMerchant = false;
-
-				} else if (craft.blueTeam) {
-					for (String s : NavyCraft.bluePlayers) {
-						Player p = plugin.getServer().getPlayer(s);
-						int playerNewExp = 5000;
-						if ((p != null) && p.isOnline()) {
-							if (NavyCraft.playerExp.containsKey(p.getName())) {
-								playerNewExp = NavyCraft.playerExp.get(p.getName()) + playerNewExp;
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							} else {
-								NavyCraft.playerExp.put(p.getName(), playerNewExp);
-							}
-							p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
-							NavyCraft_BlockListener.checkRankWorld(p, playerNewExp, craft.world);
-						}
-						NavyCraft_FileListener.saveExperience(p.getName());
-					}
-
-					plugin.getServer().broadcastMessage(ChatColor.BLUE + "Blue Team Merchant Score! Blue Team earns " + ChatColor.GOLD + "5000 points!");
-					NavyCraft.bluePoints += 5000;
-
-					for (String s : craft.crewNames) {
-						Player p = plugin.getServer().getPlayer(s);
-						if ((p != null) && p.isOnline()) {
-							p.teleport(NavyCraft.blueSpawn);
-						}
-					}
-
-					NavyCraft.blueMerchant = false;
-				}
-
-				craft.doDestroy = true;
-				return;
-			}
 			
 
 		float displacement = 0.0f;
@@ -1736,24 +1665,11 @@ public class CraftMover {
 						}*/
 
 						if ((craftBlockId == 87) && (blockId == 87)) {
-							if (craft.redTeam) {
-								craft.matrix[x][y][z] = (short) 35;
-								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 14));
-								newBlock.setTypeId(35);
-								newBlock.setData((byte) 0xE);
-							} else if (craft.blueTeam) {
-								craft.matrix[x][y][z] = (short) 35;
-								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 11));
-								newBlock.setTypeId(35);
-								newBlock.setData((byte) 0xB);
-							} else {
 								craft.matrix[x][y][z] = (short) 35;
 								craft.dataBlocks.add(new DataBlock(blockId, x, y, z, 4));
 								newBlock.setTypeId(35);
 								newBlock.setData((byte) 0x4);
 							}
-
-						}
 
 						if (blockId == 68 || blockId == 63) {
 							signUpdates(newBlock);
@@ -5232,39 +5148,6 @@ public class CraftMover {
 		return false;
 	}
 
-	// TODO This is also important for score regions.
-	public boolean checkMerchantScoreRegion(Location loc, Craft merchant) {
-
-		wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-		if ((wgp != null) && (loc != null)) {
-			RegionManager regionManager = wgp.getRegionManager(craft.world);
-
-			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
-
-			Iterator<ProtectedRegion> it = set.iterator();
-			while (it.hasNext()) {
-				String id = it.next().getId();
-
-				String[] splits = id.split("_");
-				if (splits.length == 3) {
-					if (splits[1].equalsIgnoreCase("score")) {
-						if (splits[2].equalsIgnoreCase("red") && merchant.redTeam) {
-							return true;
-						} else if (splits[2].equalsIgnoreCase("blue") && merchant.blueTeam) {
-							return true;
-						} else if (splits[2].equalsIgnoreCase("any")) {
-							return true;
-						} else {
-							return false;
-						}
-					}
-				}
-			}
-			return false;
-		}
-		return false;
-	}
-
 	//updates if vehicle is moving and has stopped, 
 	//calls cruiseUpdate
 	
@@ -5648,85 +5531,36 @@ public class CraftMover {
 		cruiseUpdate = false;
 	}
 
-	public static void battleLogger(String str) {
-
-		String path = File.separator + "BattleLog.txt";
-		File file = new File(path);
-		try {
-			FileWriter fw = new FileWriter(file.getName(), true);
-			BufferedWriter bw = new BufferedWriter(fw);
-
-			Date now = new Date();
-			bw.write(DateFormat.getDateInstance(DateFormat.SHORT).format(now) + " " + DateFormat.getTimeInstance().format(now) + " - " + str);
-			bw.newLine();
-
-			bw.flush();
-			bw.close();
-		} catch (Exception e) {
-			System.out.println("Battle log failure");
-		}
-	}
-
 	
 	public void sinkBroadcast() {
 		String broadcastMsg = "";
-		String logEntry = "";
 
-		if (craft.blueTeam) {
-			broadcastMsg += ChatColor.BLUE;
-		} else if (craft.redTeam) {
-			broadcastMsg += ChatColor.RED;
-		} else {
-			broadcastMsg += ChatColor.YELLOW;
-		}
+		broadcastMsg += ChatColor.YELLOW;
 
 		if (craft.captainName != null) {
 			broadcastMsg += craft.captainName + "'s ";
-			logEntry += craft.captainName + "'s ";
 		}
 
 		if (craft.customName != null) {
 			broadcastMsg += craft.customName.toUpperCase() + " (" + craft.name.toUpperCase() + " class)";
-			logEntry += craft.customName.toUpperCase() + " (" + craft.name.toUpperCase() + " class)";
 		} else {
 			broadcastMsg += craft.name.toUpperCase() + " class";
-			logEntry += craft.name.toUpperCase() + " class)";
 		}
 
 		broadcastMsg += ChatColor.WHITE + " - " + craft.weightStart + " tons -";
-		logEntry += " - " + craft.weightStart + " tons -";
 
 		if (craft.type.canFly) {
 			broadcastMsg += ChatColor.YELLOW + " was shot down.";
-			logEntry += " was shot down.";
 		} else if (craft.type.canNavigate || craft.type.canDive) {
 			broadcastMsg += ChatColor.YELLOW + " was sunk.";
-			logEntry += " was sunk.";
 		} else {
 			broadcastMsg += ChatColor.YELLOW + " was destroyed.";
-			logEntry += " was destroyed.";
-		}
-
-		if (craft.isMerchantCraft) {
-			if (craft.redTeam) {
-				NavyCraft.redMerchant = false;
-			} else if (craft.blueTeam) {
-
-				NavyCraft.blueMerchant = false;
-			}
-			broadcastMsg = ChatColor.YELLOW + "MERCHANT " + broadcastMsg;
 		}
 
 		plugin.getServer().broadcastMessage(broadcastMsg);
-		if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-			battleLogger(logEntry);
-		}
 
 		if (craft.damagers.isEmpty()) {
-			if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-				logEntry = "Unknown damage=" + craft.uncreditedDamage;
-				battleLogger(logEntry);
-			}
+
 		} else {
 			HashMap<Craft, Integer> craftDamagers = new HashMap<>();
 			HashMap<Player, Integer> uncrewedPlayers = new HashMap<>();
@@ -5760,40 +5594,28 @@ public class CraftMover {
 
 				for (Craft c : craftDamagers.keySet()) {
 					broadcastMsg = "";
-					logEntry = "";
 					int score = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * 100.0f);
 					if (score > topScore) {
 						topScore = score;
 						topCraft = c;
 					}
 					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
-					logEntry = " " + score + "% - ";
 
-					if (c.blueTeam) {
-						broadcastMsg += ChatColor.BLUE;
-					} else if (c.redTeam) {
-						broadcastMsg += ChatColor.RED;
-					} else {
-						broadcastMsg += ChatColor.YELLOW;
-					}
+
+					broadcastMsg += ChatColor.YELLOW;
+
 
 					if (c.captainName != null) {
 						broadcastMsg += c.captainName.toUpperCase() + "'s ";
-						logEntry += c.captainName.toUpperCase() + "'s ";
 					}
 
 					if (c.customName != null) {
 						broadcastMsg += c.customName.toUpperCase() + " (" + c.name + " class)";
-						logEntry += c.customName.toUpperCase() + " (" + c.name + " class)";
 					} else {
 						broadcastMsg += c.name.toUpperCase() + " class";
-						logEntry += c.name.toUpperCase() + " class";
 					}
 
 					plugin.getServer().broadcastMessage(broadcastMsg);
-					if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-						battleLogger(logEntry);
-					}
 				}
 			}
 
@@ -5803,7 +5625,6 @@ public class CraftMover {
 			if (!uncrewedPlayers.isEmpty()) {
 				for (Player p : uncrewedPlayers.keySet()) {
 					broadcastMsg = "";
-					logEntry = "";
 					int score = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * 100.0f);
 					if (score > topScore) {
 						topScore = score;
@@ -5811,49 +5632,34 @@ public class CraftMover {
 					}
 
 					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
-					logEntry = " " + score + "% - ";
 
 					broadcastMsg += ChatColor.YELLOW;
 
 					broadcastMsg += p.getName();
-					logEntry += p.getName();
 
 					plugin.getServer().broadcastMessage(broadcastMsg);
-					if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-						battleLogger(logEntry);
-					}
 				}
 			}
 
 			if (craft.uncreditedDamage > 0)// && craft.world.getName().equalsIgnoreCase("navalbattlezone")) )
 			{
 				broadcastMsg = "";
-				logEntry = "";
 				int score = (int) (((float) craft.uncreditedDamage / (float) totalDamage) * 100.0f);
 				broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
-				logEntry = " " + score + "% - ";
 
 				broadcastMsg += ChatColor.YELLOW;
 
 				broadcastMsg += "Unknown damage";
-				logEntry += "Unknown damage";
 				plugin.getServer().broadcastMessage(broadcastMsg);
-				if ((NavyCraft.battleMode > 0) && PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-					battleLogger(logEntry);
-				}
 			}
 
 			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
+			//if (PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
 				if (topPlayer != null) {
 					if (craft.crewHistory.contains(topPlayer.getName()) && !topPlayer.isOp()) { return; }
 					int newExp = craft.blockCountStart;
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					{
 						NavyCraft_BlockListener.rewardExpPlayer(newExp, topPlayer);
-					}
-					
-					
-					
 				} else if ((topCraft != null) && (topCraft != craft)) {
 					for (String s : topCraft.crewNames) {
 						if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
@@ -5868,14 +5674,12 @@ public class CraftMover {
 					}
 
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-					{
 						NavyCraft_BlockListener.rewardExpCraft(newExp, topCraft);
-					}
 				}
 			}
 		}
 	}
-	
+
 	public String idIntToString(int id) {
 		switch (id % 26) {
 			case 0:
