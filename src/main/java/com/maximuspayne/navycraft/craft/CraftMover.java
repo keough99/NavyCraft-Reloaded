@@ -1699,9 +1699,11 @@ public class CraftMover {
 								} else if (oc.cannonType == 7) {
 									cost = 2000;
 								} else if (oc.cannonType == 8) {
-									cost = 250;
+									cost = 850;
 								} else if (oc.cannonType == 9) {
 									cost = 100;
+								}else if (oc.cannonType == 10) {
+									cost = 800;
 								}
 								craft.vehicleCost += cost;
 								initWeaponDispensers.add(newBlock);

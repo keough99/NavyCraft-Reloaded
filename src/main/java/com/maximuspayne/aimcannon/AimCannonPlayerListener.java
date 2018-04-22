@@ -52,7 +52,7 @@ public class AimCannonPlayerListener implements Listener {
 							onec.fireCannonButton(event.getPlayer(), true);
 						else
 							onec.fireCannonButton(event.getPlayer(), false);
-					}else if( onec.cannonType == 4 || onec.cannonType == 5 || onec.cannonType == 9)
+					}else if( onec.cannonType == 4 || onec.cannonType == 5 || onec.cannonType == 9 || onec.cannonType == 10)
 					{
 						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 							onec.fireDCButton(event.getPlayer(), true);

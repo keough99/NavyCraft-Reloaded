@@ -215,9 +215,6 @@ public class NavyCraft extends JavaPlugin {
 	}
 
 	public Craft createCraft(Player player, CraftType craftType, int x, int y, int z, String name, float dr, Block signBlock) {
-		//if( npcMerchantThread == null )
-			//npcMerchantThread();
-		
 		if (DebugMode == true)
 			player.sendMessage("Attempting to create " + craftType.name
 					+ "at coordinates " + Integer.toString(x) + ", "

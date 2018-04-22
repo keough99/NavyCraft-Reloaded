@@ -40,7 +40,7 @@ public class OneCannon{
     int charged;
     boolean ignite;
     int cannonLength;
-    public int cannonType; //0 single, 1 double, 2 fireball (crap), 3 torpedo mk2, 4 depth charge, 5 depth charger II, 6 triple cannon, 7 torp mk3, 8 torp mk1, 9 bombs
+    public int cannonType; //0 single, 1 double, 2 fireball (crap), 3 torpedo mk2, 4 depth charge, 5 depth charger II, 6 triple cannon, 7 torp mk3, 8 torp mk1, 9 bombs mk1, 10 bombs mk2
     int delay;
     int range;
     int torpedoMode;
@@ -803,8 +803,10 @@ public class OneCannon{
 		    	cost=2000;
 		    else if( cannonType == 8 )//torpedo mk 1
 		    	cost=250;
-		    else if( cannonType == 9 )//bombs
+		    else if( cannonType == 9 )//bombs mk1
 		    	cost=500;
+		    else if( cannonType == 10 )//bombs mk2
+		    	cost=800;
 		    
 			if( PermissionInterface.CheckEnabledWorld(p.getLocation()) )
 			{
@@ -976,6 +978,26 @@ public class OneCannon{
 			    return true;
 	    		
 	    	}else if( cannonType == 9 )
+	    	{
+	    		if( charged == 0 )
+			    {
+			    	if( ammunition > 0 )
+			    	{
+			    		ammunition = ammunition - 1;
+			    	}else
+			    	{
+			    		p.sendMessage( ChatColor.RED + "Out of bombs!");
+			    		return false;
+			    	}
+			    	charged=1;
+			    	p.sendMessage("Bomb dropper loaded! " + ammunition + " bombs left.");
+			    }else{
+			    	p.sendMessage("Bomb dropper already loaded! " + ammunition + " bombs left.");
+			    }
+		    	
+			    return true;
+	    		
+	    	}else if( cannonType == 10 )
 	    	{
 	    		if( charged == 0 )
 			    {
@@ -4050,6 +4072,42 @@ public class OneCannon{
 			    	ammunition = 2;
 			    	initAmmo = ammunition;
 			    }
+			} else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
+				{
+					direction = BlockFace.EAST;
+				    cannonType = 9;
+				    if( ammunition == -1 )
+				    {
+				    	ammunition = 6;
+				    	initAmmo = ammunition;
+				    }
+			}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
+				{
+					direction = BlockFace.WEST;
+				    cannonType = 9;
+				    if( ammunition == -1 )
+				    {
+				    	ammunition = 6;
+				    	initAmmo = ammunition;
+				    }
+			}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
+				{
+					direction = BlockFace.SOUTH;
+				    cannonType = 9;
+				    if( ammunition == -1 )
+				    {
+				    	ammunition = 6;
+				    	initAmmo = ammunition;
+				    }
+			}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
+				{
+					direction = BlockFace.NORTH;
+				    cannonType = 9;
+				    if( ammunition == -1 )
+				    {
+				    	ammunition = 6;
+				    	initAmmo = ammunition;
+				    }
 			}else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.IRON_BLOCK && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
 			{
 				direction = BlockFace.EAST;
@@ -4543,7 +4601,7 @@ public class OneCannon{
 					loc.getBlock().getRelative(direction,4).getRelative(BlockFace.DOWN).setTypeIdAndData(35, (byte) 0x8, false);
 					fireDC(p, loc.getBlock().getRelative(direction,4), depth, loc.getBlockY(), 0, 2);
 					p.sendMessage("Depth Charge Away!");
-				}else if( cannonType == 9 )
+				}else if( cannonType == 9 || cannonType == 10 )
 				{
 					
 					loc.getBlock().getRelative(BlockFace.DOWN,5).setTypeIdAndData(35, (byte) 0x8, false);
@@ -4596,7 +4654,7 @@ public class OneCannon{
 				p.sendMessage("Depth Charge Dropper set to " + depth + " meters.");
 			else if( cannonType == 5 )
 				p.sendMessage("Depth Charge Launcher set to " + depth + " meters.");
-			else if( cannonType == 9 )
+			else if( cannonType == 9 || cannonType == 10)
 				p.sendMessage("Left click to drop bomb.");
 		}
     }
