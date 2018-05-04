@@ -79,11 +79,21 @@ public class NavyCraft_BlockListener implements Listener {
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
 
 		if (theCraft != null) {
-			theCraft.addBlock(event.getBlock(), false);
+			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				theCraft.addBlock(event.getBlock(), false);
+			} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "You can't place blocks on enemy ships!");
+				event.setCancelled(true);
+			}
 		} else {
 			theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
 			if (theCraft != null) {
-				theCraft.addBlock(event.getBlock(), false);
+				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+					theCraft.addBlock(event.getBlock(), false);
+				} else {
+					event.getPlayer().sendMessage(ChatColor.RED + "You can't place blocks on enemy ships!");
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -2164,38 +2174,23 @@ public class NavyCraft_BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void on(BlockBreakEvent event) {
-		Player p = event.getPlayer();
-		if (!p.isOp() && !PermissionInterface.CheckQuietPerm(p, "NavyCraft.admin")) {
-		Block block;
-		block = event.getBlock().getRelative(BlockFace.NORTH);
-		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
-		{
-			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
-			event.setCancelled(true);
-			return;
+		Craft theCraft = Craft.getPlayerCraft(event.getPlayer());
+		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
+
+		if (theCraft != null) {
+			if (!theCraft.crewNames.contains(event.getPlayer().getName()) && !event.getPlayer().isOp() && !PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");
+				event.setCancelled(true);
+			}
+		} else {
+			theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
+			if (theCraft != null) {
+				if (!theCraft.crewNames.contains(event.getPlayer().getName()) && !event.getPlayer().isOp() && !PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+					event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");
+					event.setCancelled(true);
+				}
+			}
 		}
-		block = event.getBlock().getRelative(BlockFace.SOUTH);
-		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
-		{
-			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
-			event.setCancelled(true);
-			return;
-		}
-		block = event.getBlock().getRelative(BlockFace.EAST);
-		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
-		{
-			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
-			event.setCancelled(true);
-			return;
-		}
-		block = event.getBlock().getRelative(BlockFace.WEST);
-		if( (block.getTypeId() == 68 || block.getTypeId() == 63) && NavyCraft_PlayerListener.checkAdminSign(block) )
-		{
-			p.sendMessage(ChatColor.RED + "This sign can only be destroyed by an admin!");
-			event.setCancelled(true);
-			return;
-		}
-	}
 }
 
 	public static void divingBellThread(final Location loc) {
@@ -2876,8 +2871,10 @@ public class NavyCraft_BlockListener implements Listener {
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
 			NavyCraft.playerExp.put(player.getName(), newExp);
+			NavyCraft_FileListener.saveExperience(player.getName());
 		} else {
 			NavyCraft.playerExp.put(player.getName(), newExp);
+			NavyCraft_FileListener.saveExperience(player.getName());
 		}
 		 	Essentials ess;
 			ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
@@ -2895,8 +2892,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
-		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());
-		NavyCraft_FileListener.saveExperience(player.getName());	
+		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());	
 	}
 	
 	public static void rewardExpCraft(int newExp, Craft craft) {
@@ -2908,10 +2904,11 @@ public class NavyCraft_BlockListener implements Listener {
 				if (NavyCraft.playerExp.containsKey(p.getName())) {
 					playerNewExp = NavyCraft.playerExp.get(p.getName()) + newExp;
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					NavyCraft_FileListener.saveExperience(p.getName());
 				} else {
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
+					NavyCraft_FileListener.saveExperience(p.getName());
 				}
-				NavyCraft_FileListener.saveExperience(p.getName());
 			 	Essentials ess;
 				ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
 				if( ess == null )
