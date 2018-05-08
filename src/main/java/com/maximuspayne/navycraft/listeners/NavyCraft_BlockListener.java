@@ -843,8 +843,7 @@ public class NavyCraft_BlockListener implements Listener {
 						int y = sign.getY();
 						int z = sign.getZ();
 						World world = sign.getWorld();
-						NavyCraft_FileListener.saveClaimedSign(player.getName(), lotStr, world.getName(), x, y, z,
-								Integer.valueOf(sign2.getLine(2)));
+						NavyCraft_FileListener.saveClaimedSign(player.getName(), lotStr, world.getName(), x, y, z,Integer.valueOf(sign2.getLine(2)));
 						
 						NavyCraft_FileListener.loadSignData();
 					} else {
