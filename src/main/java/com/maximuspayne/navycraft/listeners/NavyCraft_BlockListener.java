@@ -2870,10 +2870,8 @@ public class NavyCraft_BlockListener implements Listener {
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
 			NavyCraft.playerExp.put(player.getName(), newExp);
-			NavyCraft_FileListener.saveExperience(player.getName());
 		} else {
 			NavyCraft.playerExp.put(player.getName(), newExp);
-			NavyCraft_FileListener.saveExperience(player.getName());
 		}
 		 	Essentials ess;
 			ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
@@ -2892,6 +2890,7 @@ public class NavyCraft_BlockListener implements Listener {
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
 		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());	
+		NavyCraft_FileListener.saveExperience(player.getName());
 	}
 	
 	public static void rewardExpCraft(int newExp, Craft craft) {
@@ -2903,11 +2902,10 @@ public class NavyCraft_BlockListener implements Listener {
 				if (NavyCraft.playerExp.containsKey(p.getName())) {
 					playerNewExp = NavyCraft.playerExp.get(p.getName()) + newExp;
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
-					NavyCraft_FileListener.saveExperience(p.getName());
 				} else {
 					NavyCraft.playerExp.put(p.getName(), playerNewExp);
-					NavyCraft_FileListener.saveExperience(p.getName());
 				}
+				NavyCraft_FileListener.saveExperience(p.getName());
 			 	Essentials ess;
 				ess = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
 				if( ess == null )
