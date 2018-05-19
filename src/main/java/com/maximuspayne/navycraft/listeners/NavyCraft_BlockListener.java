@@ -2867,6 +2867,7 @@ public class NavyCraft_BlockListener implements Listener {
 }
 	
 	public static void rewardExpPlayer(int newExp, Player player) {
+		int cash = newExp / 2;
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
 			NavyCraft.playerExp.put(player.getName(), newExp);
@@ -2881,8 +2882,8 @@ public class NavyCraft_BlockListener implements Listener {
 				return;
 			}
 			try {
-				ess.getUser(player).giveMoney(new BigDecimal(newExp / 2));
-				player.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + "$" + newExp / 2 + ChatColor.GRAY + ".");
+				ess.getUser(player).giveMoney(new BigDecimal(cash));
+				player.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + "$" + cash + ChatColor.GRAY + ".");
 			} catch (MaxMoneyException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
