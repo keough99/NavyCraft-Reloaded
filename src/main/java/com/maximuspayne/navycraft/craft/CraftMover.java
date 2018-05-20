@@ -5567,6 +5567,7 @@ public class CraftMover {
 			HashMap<Craft, Integer> craftDamagers = new HashMap<>();
 			HashMap<Player, Integer> uncrewedPlayers = new HashMap<>();
 			int totalDamage = 0;
+			int totalBlocks = craft.blockCountStart;
 			for (Player p : craft.damagers.keySet()) {
 				totalDamage += craft.damagers.get(p);
 
@@ -5588,21 +5589,22 @@ public class CraftMover {
 
 			totalDamage += craft.uncreditedDamage;
 
-			Craft topCraft;
-			topCraft = null;
-			int topScore = 0;
-
 			if (craftDamagers != null) {
 
 				for (Craft c : craftDamagers.keySet()) {
 					broadcastMsg = "";
 					int score = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * 100.0f);
-					if (score > topScore) {
-						topScore = score;
-						topCraft = c;
+					int damage = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * totalBlocks);
+					
+					if (c != craft) {
+						for (String s : c.crewNames) {
+							if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
+						}
+							NavyCraft_BlockListener.rewardExpCraft(damage, c);
 					}
-					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
+					broadcastMsg = " " + ChatColor.WHITE + damage + "/" + totalBlocks  + " " + "(" + score + "%) - ";
 
+					
 
 					broadcastMsg += ChatColor.YELLOW;
 
@@ -5621,19 +5623,16 @@ public class CraftMover {
 				}
 			}
 
-			Player topPlayer;
-			topPlayer = null;
-
 			if (!uncrewedPlayers.isEmpty()) {
 				for (Player p : uncrewedPlayers.keySet()) {
 					broadcastMsg = "";
 					int score = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * 100.0f);
-					if (score > topScore) {
-						topScore = score;
-						topPlayer = p;
+					int damage = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
+					if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
+						if (craft.crewHistory.contains(p.getName()) && !p.isOp()) { return; }
+					NavyCraft_BlockListener.rewardExpPlayer(damage, p);
 					}
-
-					broadcastMsg = " " + ChatColor.WHITE + score + "% - ";
+					broadcastMsg = " " + ChatColor.WHITE + damage + "/" + totalBlocks  + " " + "(" + score + "%) - ";
 
 					broadcastMsg += ChatColor.YELLOW;
 
@@ -5653,31 +5652,6 @@ public class CraftMover {
 
 				broadcastMsg += "Unknown damage";
 				plugin.getServer().broadcastMessage(broadcastMsg);
-			}
-
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
-			//if (PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
-				if (topPlayer != null) {
-					if (craft.crewHistory.contains(topPlayer.getName()) && !topPlayer.isOp()) { return; }
-					int newExp = craft.blockCountStart;
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + topPlayer.getName() + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-						NavyCraft_BlockListener.rewardExpPlayer(newExp, topPlayer);
-				} else if ((topCraft != null) && (topCraft != craft)) {
-					for (String s : topCraft.crewNames) {
-						if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
-					}
-
-					int newExp = craft.blockCountStart;
-					String dispName;
-					if (topCraft.customName != null) {
-						dispName = topCraft.customName.toUpperCase();
-					} else {
-						dispName = topCraft.name.toUpperCase();
-					}
-
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.WHITE + dispName + ChatColor.GREEN + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
-						NavyCraft_BlockListener.rewardExpCraft(newExp, topCraft);
-				}
 			}
 		}
 	}

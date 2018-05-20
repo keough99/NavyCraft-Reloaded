@@ -782,7 +782,6 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		NavyCraft.playerExp.clear();
 		NavyCraft.playerExp.put(player, playerData.getInt("exp"));
 	}
 	
@@ -794,9 +793,7 @@ public class NavyCraft_FileListener implements Listener {
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 		if (NavyCraft.playerExp.containsKey(player)) {
-		playerData.set("exp", NavyCraft.playerExp.get(player) + playerData.getInt("exp"));
-		} else {
-		playerData.set("exp", playerData.getInt("exp"));
+		playerData.set("exp", NavyCraft.playerExp.get(player));
 		}
 		try {
 			playerData.save(f);

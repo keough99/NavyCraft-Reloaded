@@ -2868,6 +2868,7 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	public static void rewardExpPlayer(int newExp, Player player) {
 		int cash = newExp / 2;
+		NavyCraft_FileListener.loadExperience(player.getName());
 		 if (NavyCraft.playerExp.containsKey(player.getName())) {
 			newExp = NavyCraft.playerExp.get(player.getName()) + newExp;
 			NavyCraft.playerExp.put(player.getName(), newExp);
@@ -2890,7 +2891,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		player.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + newExp + ChatColor.GRAY + " rank points.");
 			
-		NavyCraft_BlockListener.checkRankWorld(player, newExp, player.getWorld());	
+		checkRankWorld(player, newExp, player.getWorld());	
 		NavyCraft_FileListener.saveExperience(player.getName());
 	}
 	
@@ -2899,6 +2900,7 @@ public class NavyCraft_BlockListener implements Listener {
 		for (String s : craft.crewNames) {
 			Player p = plugin.getServer().getPlayer(s);
 			if (p != null) {
+				NavyCraft_FileListener.loadExperience(p.getName());
 				playerNewExp = newExp;
 				if (NavyCraft.playerExp.containsKey(p.getName())) {
 					playerNewExp = NavyCraft.playerExp.get(p.getName()) + newExp;
