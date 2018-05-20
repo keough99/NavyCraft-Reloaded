@@ -2179,13 +2179,24 @@ public class NavyCraft_PlayerListener implements Listener {
 												RegionManager regionManager = wgp
 														.getRegionManager(plugin.getServer().getWorld("shipyard"));
 												String regionName = "--" + player.getName() + "-" + tpId;
-												
-												int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
-												int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
-												int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
-												int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
-												int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
-												int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+												int startX = 0;
+												int endX = 0;
+												int startZ = 0;
+												int endZ = 0;
+												int startY = 0;
+												int endY = 0;
+											try {
+												startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
+												endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
+												startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
+												endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
+												startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
+												endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+												} catch(Exception e) {
+												player.sendMessage(ChatColor.DARK_RED + "Your plots region is defined incorrectly, contact an admin!");
+												event.setCancelled(true);
+												return;
+												}
 												
 												for (int x = startX; x <= endX; x++) {
 													for (int z = startZ; z <= endZ; z++) {
@@ -2279,14 +2290,24 @@ public class NavyCraft_PlayerListener implements Listener {
 												RegionManager regionManager = wgp
 														.getRegionManager(plugin.getServer().getWorld("shipyard"));
 												String regionName = "--" + p + "-" + tpId;
-												
-												int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
-												int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
-												int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
-												int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
-												int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
-												int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
-												
+												int startX = 0;
+												int endX = 0;
+												int startZ = 0;
+												int endZ = 0;
+												int startY = 0;
+												int endY = 0;
+											try {
+												startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
+												endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
+												startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
+												endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
+												startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
+												endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+												} catch(Exception e) {
+												player.sendMessage(ChatColor.DARK_RED + "This plots region is defined incorrectly!");
+												event.setCancelled(true);
+												return;
+												}
 												for (int x = startX; x <= endX; x++) {
 													for (int z = startZ; z <= endZ; z++) {
 														for (int y = startY; y <= 62; y++) {
@@ -2323,7 +2344,6 @@ public class NavyCraft_PlayerListener implements Listener {
 													e.printStackTrace();
 												}
 												player.sendMessage(ChatColor.GREEN + "Plot Unclaimed.");
-											}
 										} else {
 											player.sendMessage(
 													ChatColor.RED + "Error: There may be a problem with your plot signs.");
@@ -2339,7 +2359,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - "
 										+ ChatColor.GOLD + "destroys all blocks within the plot");
 							}
-							
+						}
 						} else if (split[1].equalsIgnoreCase("rename")) {
 							if (split.length > 3) {
 								int tpId = -1;
