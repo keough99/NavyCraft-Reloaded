@@ -285,33 +285,33 @@ public class AimCannonPlayerListener implements Listener {
 		for (OneCannon onec : AimCannon.getCannons()) 
 		{
 		    if (onec.isThisCannon(event.getClickedBlock().getLocation(), false)) {
-		    	if (!PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
-		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
-		    	event.setCancelled(true);
-		    	return;
-		    	}
+		    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
 		    	if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 		    		onec.Charge(event.getPlayer(), true);
 				else
 					onec.Charge(event.getPlayer(), false);
 			    
 			    return;
+		    } else {
+		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
+		    	return;
+		    }
 		}
 	}
 		
 		// new Cannon
 		OneCannon oc = new OneCannon(event.getClickedBlock().getLocation(), NavyCraft.instance);
 		if (oc.isValidCannon(event.getClickedBlock())) {
-	    	if (!PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
-	    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
-	    	event.setCancelled(true);
-	    	return;
-	    	}
+	    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
 			if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 				oc.Charge(event.getPlayer(), true);
 			else
 				oc.Charge(event.getPlayer(), false);
 		    AimCannon.cannons.add(oc);
+		    } else {
+		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
+		    	return;
+		    }
 		}
 	    }
 	    
