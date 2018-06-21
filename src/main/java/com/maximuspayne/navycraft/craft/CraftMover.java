@@ -1523,6 +1523,7 @@ public class CraftMover {
 										if(craft.captainName != null) {
 											Player player = plugin.getServer().getPlayer(craft.captainName);
 											player.sendMessage("Pump expired!");
+											newBlock.setTypeId(0);
 										}
 										playEngineSound(newBlock.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0f, 1.0f);
 										p.counter++;
