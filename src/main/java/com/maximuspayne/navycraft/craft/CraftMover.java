@@ -1519,12 +1519,12 @@ public class CraftMover {
 									}
 									break;
 								}else if( newBlock.getData() == 1 && p.loc.equals(newBlock.getLocation()) ) { //found pump but expired
-									if (p.counter == p.limit+1) {
+									if (p.counter == p.limit+2) {
 										if(craft.captainName != null) {
 											Player player = plugin.getServer().getPlayer(craft.captainName);
 											player.sendMessage("Pump expired!");
-											newBlock.setTypeId(0);
 										}
+										newBlock.setTypeId(0);
 										playEngineSound(newBlock.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1.0f, 1.0f);
 										p.counter++;
 									}
