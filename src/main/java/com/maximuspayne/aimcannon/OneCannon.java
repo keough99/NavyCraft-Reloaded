@@ -798,9 +798,9 @@ public class OneCannon{
 		    else if( cannonType == 5 )//depth charge mk2
 		    	cost=1250;
 		    else if( cannonType == 6 )//triple barrel
-		    	cost=2000;
+		    	cost=1250;
 		    else if( cannonType == 7 )//torpedo mk 3
-		    	cost=2000;
+		    	cost=1250;
 		    else if( cannonType == 8 )//torpedo mk 1
 		    	cost=250;
 		    else if( cannonType == 9 )//bombs mk1

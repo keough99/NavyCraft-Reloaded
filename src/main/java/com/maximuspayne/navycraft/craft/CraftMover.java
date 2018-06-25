@@ -1519,7 +1519,7 @@ public class CraftMover {
 									}
 									break;
 								}else if( newBlock.getData() == 1 && p.loc.equals(newBlock.getLocation()) ) { //found pump but expired
-									if (p.counter == p.limit+2) {
+									if (p.counter == p.limit+1) {
 										if(craft.captainName != null) {
 											Player player = plugin.getServer().getPlayer(craft.captainName);
 											player.sendMessage("Pump expired!");
@@ -1696,9 +1696,9 @@ public class CraftMover {
 								} else if (oc.cannonType == 5) {
 									cost = 1250;
 								} else if (oc.cannonType == 6) {
-									cost = 2000;
+									cost = 1250;
 								} else if (oc.cannonType == 7) {
-									cost = 2000;
+									cost = 1250;
 								} else if (oc.cannonType == 8) {
 									cost = 850;
 								} else if (oc.cannonType == 9) {
@@ -4795,11 +4795,11 @@ public class CraftMover {
 			} else if (craftTypeName.equalsIgnoreCase("firecontrol")) {
 				cost = 1000;
 			} else if (craftTypeName.equalsIgnoreCase("passivesonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("activesonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("hfsonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("engine")) {
 				String engineTypeStr = sign.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
 				if (engineTypeStr != null) {
@@ -4831,7 +4831,7 @@ public class CraftMover {
 						cost = 100;
 					}
 					if (engineTypeStr.equalsIgnoreCase("Nuclear")) {
-						cost = 10000;
+						cost = 5000;
 					}
 					if (engineTypeStr.equalsIgnoreCase("Airplane 1")) {
 						cost = 50;

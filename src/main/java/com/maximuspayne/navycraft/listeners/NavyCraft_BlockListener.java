@@ -2016,11 +2016,11 @@ public class NavyCraft_BlockListener implements Listener {
 			} else if (craftTypeName.equalsIgnoreCase("tdc")) {
 				cost = 400;
 			} else if (craftTypeName.equalsIgnoreCase("passivesonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("activesonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("hfsonar")) {
-				cost = 2000;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("engine")) {
 				String engineTypeStr = event.getLine(2).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
 				if (engineTypeStr != null) {
@@ -2052,7 +2052,7 @@ public class NavyCraft_BlockListener implements Listener {
 						cost = 100;
 					}
 					if (engineTypeStr.equalsIgnoreCase("Nuclear")) {
-						cost = 10000;
+						cost = 5000;
 					}
 					if (engineTypeStr.equalsIgnoreCase("Airplane 1")) {
 						cost = 50;
