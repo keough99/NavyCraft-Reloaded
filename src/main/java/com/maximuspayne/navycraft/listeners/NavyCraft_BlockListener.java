@@ -335,46 +335,9 @@ public class NavyCraft_BlockListener implements Listener {
 					originX = syConfig.getInt("TANK2OX");
 					originY = syConfig.getInt("TANK2OY");
 					originZ = syConfig.getInt("TANK2OZ");
-				} else if (lotType == 10) {
-					loc = block.getRelative(bf, syConfig.getInt("MAP1BFR")).getLocation();
-					sizeX = syConfig.getInt("MAP1SZX");
-					sizeY = syConfig.getInt("MAP1SZY");
-					sizeZ = syConfig.getInt("MAP1SZZ");
-					originX = syConfig.getInt("MAP1OX");
-					originY = syConfig.getInt("MAP1OY");
-					originZ = syConfig.getInt("MAP1OZ");
-				} else if (lotType == 11) {
-					loc = block.getRelative(bf, syConfig.getInt("MAP2BFR")).getLocation();
-					sizeX = syConfig.getInt("MAP2SZX");
-					sizeY = syConfig.getInt("MAP2SZY");
-					sizeZ = syConfig.getInt("MAP2SZZ");
-					originX = syConfig.getInt("MAP2OX");
-					originY = syConfig.getInt("MAP2OY");
-					originZ = syConfig.getInt("MAP2OZ");
-				} else if (lotType == 12) {
-					loc = block.getRelative(bf, syConfig.getInt("MAP3BFR")).getLocation();
-					sizeX = syConfig.getInt("MAP3SZX");
-					sizeY = syConfig.getInt("MAP3SZY");
-					sizeZ = syConfig.getInt("MAP3SZZ");
-					originX = syConfig.getInt("MAP3OX");
-					originY = syConfig.getInt("MAP3OY");
-					originZ = syConfig.getInt("MAP3OZ");
-				} else if (lotType == 13) {
-					loc = block.getRelative(bf, syConfig.getInt("MAP4BFR")).getLocation();
-					sizeX = syConfig.getInt("MAP4SZX");
-					sizeY = syConfig.getInt("MAP4SZY");
-					sizeZ = syConfig.getInt("MAP4SZZ");
-					originX = syConfig.getInt("MAP4OX");
-					originY = syConfig.getInt("MAP4OY");
-					originZ = syConfig.getInt("MAP4OZ");
-				} else if (lotType == 14) {
-					loc = block.getRelative(bf, syConfig.getInt("MAP5BFR")).getLocation();
-					sizeX = syConfig.getInt("MAP5SZX");
-					sizeY = syConfig.getInt("MAP5SZY");
-					sizeZ = syConfig.getInt("MAP5SZZ");
-					originX = syConfig.getInt("MAP5OX");
-					originY = syConfig.getInt("MAP5OY");
-					originZ = syConfig.getInt("MAP5OZ");
+				} else if (lotType > 10 && lotType < 14) {
+					player.sendMessage(ChatColor.RED + "You can't select and spawn map plots!");
+					return;
 				} else
 
 				{
@@ -854,11 +817,6 @@ public class NavyCraft_BlockListener implements Listener {
 					player.sendMessage(ChatColor.DARK_RED + "Sign error: Check Second Sign?");
 					return;
 				}
-		} else if (craftTypeName.equalsIgnoreCase("*battle*")) {
-			{
-				player.sendMessage(ChatColor.DARK_RED + "This sign is unfinished, Please discontinue use until the developer has had time to further develop this sign type.");
-			}
-
 		} else if (craftTypeName.equalsIgnoreCase("*spawn*") && (block.getRelative(BlockFace.DOWN, 1).getTypeId() == 22)) {
 			int rotate = -1;
 			BlockFace bf, bf2;
