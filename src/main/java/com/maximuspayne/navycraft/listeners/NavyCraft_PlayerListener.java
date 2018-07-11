@@ -3785,7 +3785,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else if (split[1].equalsIgnoreCase("destroy")) {
 				if (craft != null) {
 					if ((craft.captainName == player.getName()) || player.isOp()) {
-						if (checkProtectedRegion(player, craft.getLocation()) || PermissionInterface.CheckPerm(player,  "navycraft.basic")) {
+						if (checkProtectedRegion(player, craft.getLocation()) || PermissionInterface.CheckPerm(player,  "navycraft.admin")) {
 							craft.doDestroy = true;
 							if (player.getInventory().contains(Material.GOLD_SWORD)) {
 								player.getInventory().remove(Material.GOLD_SWORD);
@@ -3812,7 +3812,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								craft.helmDestroyed = true;
 								craft.setSpeed = 0;
 								playerSinkThread(craft);
-								player.sendMessage(ChatColor.RED + "Your vehicle will be scuttled in 3 minutes.");
+								player.sendMessage(ChatColor.RED + "Your vehicle will be scuttled in 1 minute.");
 							} else {
 								player.sendMessage(
 										ChatColor.RED + "This command cannot be used within a protected region.");
@@ -4379,7 +4379,7 @@ public class NavyCraft_PlayerListener implements Listener {
 				setPriority(Thread.MIN_PRIORITY);
 
 				try {
-					sleep(180000);
+					sleep(60000);
 					playerSinkUpdate(craft);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
