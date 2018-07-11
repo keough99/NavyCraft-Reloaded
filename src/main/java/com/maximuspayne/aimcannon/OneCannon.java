@@ -804,9 +804,9 @@ public class OneCannon{
 		    else if( cannonType == 8 )//torpedo mk 1
 		    	cost=250;
 		    else if( cannonType == 9 )//bombs mk1
-		    	cost=500;
+		    	cost=250;
 		    else if( cannonType == 10 )//bombs mk2
-		    	cost=800;
+		    	cost=500;
 		    
 			if( PermissionInterface.CheckEnabledWorld(p.getLocation()) )
 			{
