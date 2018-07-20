@@ -2883,7 +2883,7 @@ public class NavyCraft_BlockListener implements Listener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				p.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + newExp + ChatColor.GRAY + "rank points.");
+				p.sendMessage(ChatColor.GRAY + "You were rewarded with " + ChatColor.GREEN + newExp + ChatColor.GRAY + " rank points.");
 				p.sendMessage(ChatColor.GRAY + "You now have " + ChatColor.WHITE + playerNewExp + ChatColor.GRAY + " rank points.");
 				checkRankWorld(p, playerNewExp, craft.world);
 			}

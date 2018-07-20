@@ -5650,6 +5650,12 @@ public class CraftMover {
 				broadcastMsg += "Unknown damage";
 				plugin.getServer().broadcastMessage(broadcastMsg);
 			}
+			if (craftDamagers != null) {
+
+				for (Craft c : craftDamagers.keySet()) {
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
+				}
+			}
 		}
 	}
 
