@@ -5651,9 +5651,26 @@ public class CraftMover {
 				plugin.getServer().broadcastMessage(broadcastMsg);
 			}
 			if (craftDamagers != null) {
-
+				String name;
 				for (Craft c : craftDamagers.keySet()) {
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + + " receives " + ChatColor.YELLOW + newExp + ChatColor.GREEN + " rank points!");
+					int damage = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * totalBlocks);
+					if (c.customName != null) {
+						name = c.customName.toUpperCase() + " (" + c.name + " class)";
+					} else {
+						name = c.name.toUpperCase() + " class";
+					}
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + damage / 2 + "cash!");
+					if (!uncrewedPlayers.isEmpty()) {
+						for (Player p : uncrewedPlayers.keySet()) {
+							int d = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
+							if (c != craft) {
+								for (String s : c.crewNames) {
+									if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
+								}
+								plugin.getServer().broadcastMessage(ChatColor.GREEN + p.getName() + " receives " + ChatColor.YELLOW + d + ChatColor.GREEN + " rank points and " + d / 2 + "cash!");
+							}
+						}
+					}
 				}
 			}
 		}

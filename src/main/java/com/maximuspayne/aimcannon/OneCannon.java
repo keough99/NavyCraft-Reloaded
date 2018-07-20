@@ -941,6 +941,12 @@ public class OneCannon{
 	    	{
 	    		if( charged == 0 )
 			    {
+	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
+	    			if (theCraft != null) {
+	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
+	    					return false;
+	    				}
+	    			}
 			    	if( ammunition > 0 )
 			    	{
 			    		ammunition = ammunition - 1;
@@ -956,11 +962,16 @@ public class OneCannon{
 			    }
 		    	
 			    return true;
-	    		
 	    	}else if( cannonType == 5 )
 	    	{
 	    		if( charged == 0 )
 			    {
+	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
+	    			if (theCraft != null) {
+	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
+	    					return false;
+	    				}
+	    			}
 			    	if( ammunition > 0 )
 			    	{
 			    		ammunition = ammunition - 1;
