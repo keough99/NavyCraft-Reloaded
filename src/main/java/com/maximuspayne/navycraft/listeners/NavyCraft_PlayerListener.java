@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -513,6 +514,10 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		// fire airplane gun
 		if ((action == Action.LEFT_CLICK_AIR) && (player.getItemInHand().getType() == Material.GOLD_SWORD)&& event.getHand() == EquipmentSlot.HAND ) {
+			if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+				ItemStack m = new ItemStack(Material.EGG, 1);
+				player.getInventory().removeItem(m);
+				player.updateInventory();
 			Craft testCraft = Craft.getPlayerCraft(event.getPlayer());
 			if ((testCraft != null) && (testCraft.driverName == player.getName()) && testCraft.type.canFly
 					&& !testCraft.sinking && !testCraft.helmDestroyed) {
@@ -526,29 +531,45 @@ public class NavyCraft_PlayerListener implements Listener {
 				CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);
 
+				}
+			} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "You are out of ammunition!");
 			}
-
 		}
 
 		// AA Gunner...
 		if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.aaGunnersList.contains(player)
 				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
+			if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+				ItemStack m = new ItemStack(Material.EGG, 1);
+				player.getInventory().removeItem(m);
+				player.updateInventory();
 			Egg newEgg = player.launchProjectile(Egg.class);
 			newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 			NavyCraft.explosiveEggsList.add(newEgg);
 			event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
 			CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
-					1.70f);			
+					1.70f);	
+			} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "You are out of ammunition!");
+			}
 		}
 			// Flak Gunner...
 			if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.flakGunnersList.contains(player)
 					&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
+				if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+					ItemStack m = new ItemStack(Material.EGG, 1);
+					player.getInventory().removeItem(m);
+					player.updateInventory();
 				Egg newEgg = player.launchProjectile(Egg.class);
 				newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);
 				event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
 				CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
 						1.70f);	
+				} else {
+					event.getPlayer().sendMessage(ChatColor.RED + "You are out of ammunition!");
+				}
 
 			//// else check for movement clicking
 		} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
