@@ -1704,7 +1704,7 @@ public class Craft {
 			}else
 			{
 				if( player != null )
-					player.sendMessage(ChatColor.RED + "Rudder already set." + ChatColor.GOLD + "Look other way to cancel.");
+					player.sendMessage(ChatColor.RED + "Rudder already set. " + ChatColor.GOLD + "Look other way to cancel.");
 			}
 		}
 	}

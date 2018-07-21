@@ -944,10 +944,11 @@ public class OneCannon{
 	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
 	    			if (theCraft != null) {
 	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
+	    					p.sendMessage("You can't use Depth Charges on an aircraft!");
 	    					return false;
 	    				}
 	    			}
-			    	if( ammunition > 0 )
+			    	if( ammunition > 0 && ammunition <= 10)
 			    	{
 			    		ammunition = ammunition - 1;
 			    	}else
@@ -969,10 +970,11 @@ public class OneCannon{
 	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
 	    			if (theCraft != null) {
 	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
+	    					p.sendMessage("You can't use Depth Charges on an aircraft!");
 	    					return false;
 	    				}
 	    			}
-			    	if( ammunition > 0 )
+			    	if( ammunition > 0 && ammunition <= 20)
 			    	{
 			    		ammunition = ammunition - 1;
 			    	}else
@@ -992,7 +994,7 @@ public class OneCannon{
 	    	{
 	    		if( charged == 0 )
 			    {
-			    	if( ammunition > 0 )
+			    	if( ammunition > 0 && ammunition <= 2)
 			    	{
 			    		ammunition = ammunition - 1;
 			    	}else
@@ -1012,7 +1014,7 @@ public class OneCannon{
 	    	{
 	    		if( charged == 0 )
 			    {
-			    	if( ammunition > 0 )
+			    	if( ammunition > 0 && ammunition <= 6)
 			    	{
 			    		ammunition = ammunition - 1;
 			    	}else
@@ -1021,9 +1023,9 @@ public class OneCannon{
 			    		return false;
 			    	}
 			    	charged=1;
-			    	p.sendMessage("Bomb dropper loaded! " + ammunition + " bombs left.");
+			    	p.sendMessage("Bomb launcher loaded! " + ammunition + " bombs left.");
 			    }else{
-			    	p.sendMessage("Bomb dropper already loaded! " + ammunition + " bombs left.");
+			    	p.sendMessage("Bomb launcher already loaded! " + ammunition + " bombs left.");
 			    }
 		    	
 			    return true;
