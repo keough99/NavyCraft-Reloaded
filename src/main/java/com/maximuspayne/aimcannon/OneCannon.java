@@ -944,7 +944,7 @@ public class OneCannon{
 	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
 	    			if (theCraft != null) {
 	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
-	    					p.sendMessage("You can't use Depth Charges on an aircraft!");
+	    					p.sendMessage(ChatColor.RED + "You can't use Depth Charges on an aircraft!");
 	    					return false;
 	    				}
 	    			}
@@ -970,7 +970,7 @@ public class OneCannon{
 	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
 	    			if (theCraft != null) {
 	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
-	    					p.sendMessage("You can't use Depth Charges on an aircraft!");
+	    					p.sendMessage(ChatColor.RED + "You can't use Depth Charges on an aircraft!");
 	    					return false;
 	    				}
 	    			}
