@@ -72,7 +72,7 @@ public class AimCannonPlayerListener implements Listener {
 					}
 				}
 			}
-		   ////else not gun, maybe torpedo?
+		   ////else not gun, maybe torpedo or missile?
 		}else
 		{
 			if( event.getClickedBlock().getRelative(BlockFace.NORTH).getRelative(BlockFace.DOWN).getType() == Material.DISPENSER ) 
@@ -93,12 +93,17 @@ public class AimCannonPlayerListener implements Listener {
 			{
 				for (OneCannon onec : AimCannon.getCannons()) 
 				{
-					if (onec.isThisCannon(b.getLocation(), false))
+					if (onec.isThisCannon(b.getLocation(), false) && ( onec.cannonType == 3 || onec.cannonType == 7 || onec.cannonType == 8))
 					{
 						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 							onec.fireTorpedoButton(event.getPlayer());
 						else
 							onec.setTorpedoMode(event.getPlayer());
+					} else if (onec.isThisCannon(b.getLocation(), false)) {
+						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
+							onec.fireMissileButton(event.getPlayer());
+						else
+							onec.setMissileMode(event.getPlayer());
 					}
 				}
 			}

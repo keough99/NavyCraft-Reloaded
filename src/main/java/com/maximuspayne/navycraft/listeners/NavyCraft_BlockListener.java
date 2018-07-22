@@ -14,6 +14,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,10 +30,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
+import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
@@ -67,6 +70,7 @@ public class NavyCraft_BlockListener implements Listener {
 	public static WorldEditPlugin wep;
 	public static WorldGuardPlugin wgp;
 	public static CraftMover cm;
+	public static OneCannon onec;
 	public static int lastSpawn = -1;
 
 	public NavyCraft_BlockListener(NavyCraft p) {
@@ -97,7 +101,18 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
-
+	
+	public void dispenserOpen(InventoryOpenEvent event) {
+		if (event.getInventory().getType() == InventoryType.DISPENSER) {
+			Dispenser dispenser = (Dispenser) event.getInventory().getHolder();
+			Block b = dispenser.getBlock();
+			if (onec.isValidCannon(b)) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
 		File shipyarddata = new File(
 		NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
