@@ -817,8 +817,13 @@ public class OneCannon{
 		wool3 = 0x0;
 		wool4 = 0x7;
 		
-
-		
+		if( cannonType == 11 )
+		{
+    		wool1 = 0xB;
+			wool2 = 0x0;
+			wool3 = 0x0;
+			wool4 = 0x7;
+		}
 		
 		if( c.getTypeId() == 35 )
     		c.setTypeIdAndData(35, wool1, false);
@@ -3818,8 +3823,10 @@ public class OneCannon{
 			fireTorpedoMk1(p, b, direction, depth, 0, true);
 		else if ( cannonType == 3)
 			fireTorpedoMk2(p, b, direction, depth, 0, true);
-		else
+		else if (cannonType == 11)
 			fireMissileMk1(p, b, direction, depth, 0, true);
+		else
+			fireMissileMk2(p, b, direction, depth, 0, true);
     }
     
     public void fireRight(Player p)
@@ -3839,8 +3846,10 @@ public class OneCannon{
 		else if ( cannonType == 3 )
 			//fireTorpedo(p, b, direction, depth, 500, getTubeBlockFace(false), 0);
 			fireTorpedoMk2(p, b, direction, depth, 0, false);
-		else
+		else if (cannonType == 11)
 			fireMissileMk1(p, b, direction, depth, 0, true);
+		else
+			fireMissileMk2(p, b, direction, depth, 0, true);
     }
     
     public void fireBoth(Player p)
@@ -3872,12 +3881,18 @@ public class OneCannon{
     		fireTorpedoMk2(p, b, direction, depth, 0,true);
     		b = getDirectionFromRelative(loc.getBlock(), direction, false).getRelative(direction,4);
     		fireTorpedoMk2(p, b, direction, depth, 2000,false);
-    	}else
+    	}else if (cannonType == 11)
     	{
     		b = getDirectionFromRelative(loc.getBlock(), direction, true).getRelative(direction,4);
     		fireMissileMk1(p, b, direction, depth, 0,true);
     		b = getDirectionFromRelative(loc.getBlock(), direction, false).getRelative(direction,4);
     		fireMissileMk1(p, b, direction, depth, 2000,false);
+    	}else
+    	{
+    		b = getDirectionFromRelative(loc.getBlock(), direction, true).getRelative(direction,4);
+    		fireMissileMk2(p, b, direction, depth, 0,true);
+    		b = getDirectionFromRelative(loc.getBlock(), direction, false).getRelative(direction,4);
+    		fireMissileMk2(p, b, direction, depth, 2000,false);
     	}
     	
     	
@@ -4185,7 +4200,7 @@ public class OneCannon{
     				for( int i=0; i<150; i++ )
     				{
 						fireMissileUpdateMk1(p, torp, i, testCraft, left);
-						sleep(200);
+						sleep(80);
 					} 
 				}catch (InterruptedException e) {
 					e.printStackTrace();
@@ -4325,7 +4340,7 @@ public class OneCannon{
 								return;
 							}
 		    				
-		    				torp.warhead.setTypeIdAndData(35, (byte) 0xE, false);
+		    				torp.warhead.setTypeIdAndData(35, (byte) 0xB, false);
 		    				torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
 		    				torp.warhead.getRelative(torp.hdg, -2).setTypeIdAndData(35, (byte) 0x0, false);
 		    				torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
@@ -4342,7 +4357,7 @@ public class OneCannon{
 							
 							
 							torp.warhead = torp.warhead.getRelative(torp.hdg,-1);
-							NavyCraft.explosion(10,  torp.warhead, false);
+							NavyCraft.explosion(8,  torp.warhead, false);
 							torp.dead = true;
 	
 							Craft checkCraft=null;
@@ -4413,7 +4428,7 @@ public class OneCannon{
 						
 						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
 						{
-							torp.warhead.setTypeIdAndData(35, (byte) 0xE, false);
+							torp.warhead.setTypeIdAndData(35, (byte) 0xB, false);
 			    			torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
 			    			torp.warhead.getRelative(torp.hdg, -2).setTypeIdAndData(35, (byte) 0x0, false);
 			    			torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
@@ -4449,6 +4464,747 @@ public class OneCannon{
 					
 		    		
 		    	}else //else torp blocks missing, detonate
+		    	{
+		    		if( checkProtectedRegion(p, torp.warhead.getLocation()) )
+					{
+						p.sendMessage(ChatColor.RED + "No missile explosions in dock area.");
+						return;
+					}
+					
+		    		if( !torp.active )
+		    		{
+		    			p.sendMessage("Dud Missile! Too close.");
+						torp.dead = true;
+						if( firingCraft != null )
+						{
+							firingCraft.waitTorpLoading--;
+							if( left )
+								leftLoading = false;
+							else
+								rightLoading = false;
+							
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+								openMissileDoors(p);
+						}else
+						{
+							if( left )
+								leftLoading = false;
+							else
+								rightLoading = false;
+							
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+								openMissileDoors(p);
+						}
+						return;
+		    		}
+					
+					
+					torp.warhead = torp.warhead.getRelative(torp.hdg,-1);
+					NavyCraft.explosion(8,  torp.warhead, false);
+					torp.dead = true;
+					
+					Craft checkCraft=null;
+					checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(torp.hdg,2).getLocation(), p);
+					if( checkCraft == null ) {
+						checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(7,7,7).getLocation(), p);
+						if( checkCraft == null ) {
+							checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(-7,-7,-7).getLocation(), p);
+							if( checkCraft == null ) {
+								checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(3,-2,-3).getLocation(), p);
+								if( checkCraft == null ) {
+									checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(-3,2,3).getLocation(), p);
+								}
+							}
+						}
+					}
+					
+					if( checkCraft == null )
+						p.sendMessage("Missile detonated prematurely!");
+					else
+						p.sendMessage("Missile hit " + checkCraft.name + "!");
+					
+					
+					if( firingCraft != null )
+					{
+						firingCraft.waitTorpLoading--;
+						if( left )
+							leftLoading = false;
+						else
+							rightLoading = false;
+						
+						if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							openMissileDoors(p);
+					}else
+					{
+						if( left )
+							leftLoading = false;
+						else
+							rightLoading = false;
+						
+						if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							openMissileDoors(p);
+					}
+		    	}
+		    	if( i == 15 )
+				{
+					
+					if( firingCraft != null )
+					{
+						firingCraft.waitTorpLoading--;
+						if( left )
+							leftLoading = false;
+						else
+							rightLoading = false;
+						
+						if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							openMissileDoors(p);
+					}else
+					{
+						if( left )
+							leftLoading = false;
+						else
+							rightLoading = false;
+						
+						if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							openMissileDoors(p);
+					}
+					torp.active = true;
+				}
+	    	}
+
+	    }
+    	}
+    	
+	);
+
+    }
+    
+    public void fireMissileMk2(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left){
+    	//final int taskNum;
+    	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
+    	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		AimCannon.weapons.add(torp);
+		
+		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )
+		{
+			Sign sign = (Sign) torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getState();
+			String signLine0 =  sign.getLine(0).trim().toLowerCase().replaceAll(ChatColor.BLUE.toString(), "");
+			int tubeNum=0;
+			if( signLine0.equalsIgnoreCase("Tube") )
+			{
+				String tubeString = sign.getLine(1).trim().toLowerCase();
+				tubeString = tubeString.replaceAll(ChatColor.BLUE.toString(), "");
+				if( !tubeString.isEmpty() )
+				{
+					try{
+						tubeNum = Integer.parseInt(tubeString);
+					}catch (NumberFormatException nfe)
+					{
+						tubeNum=0;
+					}
+				}
+			}
+			torp.tubeNum=tubeNum;
+		}
+		
+		if( testCraft != null && testCraft.tubeMk1FiringDisplay > -1 )
+		{
+			torp.setDepth = torpDepth;
+			Player onScopePlayer=null;
+			for( Periscope per: testCraft.periscopes )
+			{
+				if( per.user != null )
+				{
+					onScopePlayer = per.user;
+					break;
+				}
+			}
+			
+
+			float rotation=0;
+			int torpRotation=0;
+			if( direction == BlockFace.SOUTH )
+				torpRotation=180;
+			else if( direction == BlockFace.WEST )
+				torpRotation=270;
+			else if( direction == BlockFace.EAST )
+				torpRotation=90;
+			else if( direction == BlockFace.NORTH )
+				torpRotation=0;
+			
+			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
+				rotation = (float) Math.PI * onScopePlayer.getLocation().getYaw() / 180f;
+			else if( testCraft.lastPeriscopeYaw != -9999 && testCraft.tubeMk1FiringMode == -1 )
+				rotation = (float) Math.PI * testCraft.lastPeriscopeYaw / 180f;
+			else
+			{
+				rotation = (float) Math.PI * (torpRotation+180f) / 180f;
+				
+			}
+			
+			if( left )
+				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/180f;
+			else
+				rotation += testCraft.tubeMk1FiringSpread*Math.PI/180f;
+			
+			float nx = -(float) Math.sin(rotation);
+			float nz = (float) Math.cos(rotation);
+			
+		////north
+			
+			//p.sendMessage("torpRotation=" + torpRotation + " rotation=" + rotation);
+			
+					
+			if( torpRotation%360 == 0 )
+			{
+				if( nx > 0.5 )
+				{
+					torp.rudder = 1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+				else if( nx < -0.5 )
+				{
+					torp.rudder = -1;
+					torp.turnProgress = 0;
+					if( Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = -(int)(1.0f / nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}else if( nz < 0 )
+				{
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudder = (int)(1.0f / nx);
+						if( torp.rudder > 10 )
+							torp.rudder = 10;
+						else if( torp.rudder < -10 )
+							torp.rudder = -10;
+						torp.rudderSetting = torp.rudder;
+					}
+				}else
+				{
+					if( nx < 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = -1;
+						torp.turnProgress = 0;
+					}else if( nx > 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = 1;
+						torp.turnProgress = 0;
+					}
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / -nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+				
+			
+			//////south
+			}else if( torpRotation%360 == 180 )
+			{
+				
+				if( nx > 0.5 )
+				{
+					torp.rudder = -1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+				else if( nx < -0.5 )
+				{
+					torp.rudder = 1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / -nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}else if( nz > 0 )
+				{
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudder = (int)(1.0f / -nx);
+						if( torp.rudder > 10 )
+							torp.rudder = 10;
+						else if( torp.rudder < -10 )
+							torp.rudder = -10;
+						torp.rudderSetting = torp.rudder;
+					}
+				}else
+				{
+					if( nx < 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = 1;
+						torp.turnProgress = 0;
+					}else if( nx > 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = -1;
+						torp.turnProgress = 0;
+					}
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+			//////east
+			}else if( torpRotation%360 == 90 )
+			{
+				
+				if( nz > 0.5 )
+				{
+					torp.rudder = 1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / -nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+				else if( nz < -0.5 )
+				{
+					torp.rudder = -1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}else if( nx > 0 )
+				{
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudder = (int)(1.0f / nz);
+						if( torp.rudder > 10 )
+							torp.rudder = 10;
+						else if( torp.rudder < -10 )
+							torp.rudder = -10;
+						torp.rudderSetting = torp.rudder;
+					}
+				}else
+				{
+					if( nz < 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = -1;
+						torp.turnProgress = 0;
+					}else if( nz > 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = 1;
+						torp.turnProgress = 0;
+					}
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / -nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+			//////////////west
+			}else if( torpRotation%360 == 270 )
+			{
+				if( nz > 0.5 )
+				{
+					torp.rudder = -1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / -nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+				else if( nz < -0.5 )
+				{
+					torp.rudder = 1;
+					torp.turnProgress = 0;
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nx);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}else if( nx < 0 )
+				{
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudder = (int)(1.0f / -nz);
+						if( torp.rudder > 10 )
+							torp.rudder = 10;
+						else if( torp.rudder < -10 )
+							torp.rudder = -10;
+						torp.rudderSetting = torp.rudder;
+					}
+				}else
+				{
+					if( nz < 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = 1;
+						torp.turnProgress = 0;
+					}else if( nz > 0 )
+					{
+						torp.doubleTurn = true;
+						torp.rudder = -1;
+						torp.turnProgress = 0;
+					}
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting = (int)(1.0f / nz);
+						if( torp.rudderSetting > 10 )
+							torp.rudderSetting = 10;
+						else if( torp.rudderSetting < -10 )
+							torp.rudderSetting = -10;
+					}
+				}
+			}
+			
+			
+			for( String s : testCraft.crewNames )
+			{
+				Player pl = nc.getServer().getPlayer(s);
+				if( pl != null )
+				{
+					if( torp.tubeNum == 0 )
+						pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Tube Fired!");
+					else
+						pl.sendMessage(ChatColor.YELLOW + "" + ChatColor.BOLD + "Tube " + torp.tubeNum + " Fired!");
+				}
+			}
+		}else
+		{
+			torp.setDepth = depth;
+		}
+    	
+    	
+    	
+		new Thread(){
+			
+    	@Override
+			public void run() {
+    		
+    		setPriority(Thread.MIN_PRIORITY);
+				//taskNum = -1;
+    			try{
+    				sleep(delayShoot);
+    				
+    				
+    				
+    				
+    				for( int i=0; i<250; i++ )
+    				{
+						fireMissileUpdateMk2(p, torp, i, testCraft, left);
+						sleep(50);
+					} 
+				}catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+    	}.start(); //, 20L);
+    }
+    
+    public void fireMissileUpdateMk2(final Player p, final Weapon torp, final int i, final Craft firingCraft, final boolean left) {
+    	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
+    	//new Thread() {
+	  //  @Override
+		public void run()
+	    {
+	    	//getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+	    //	}
+		//setPriority(Thread.MIN_PRIORITY);
+			//try
+			//{ 
+	    	if( !torp.dead )
+	    	{
+		    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35 )
+		    	{
+		    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
+					if( i > 15 )
+					{
+						if( torp.warhead.getY() > 62 )
+			    		{
+			    			torp.warhead.setType(Material.AIR);
+			    			torp.warhead.getRelative(torp.hdg, -1).setType(Material.AIR);
+			    			torp.warhead.getRelative(torp.hdg, -2).setType(Material.AIR);
+			    			torp.warhead.getRelative(torp.hdg, -3).setType(Material.AIR);
+			    		}else
+			    		{
+			    			torp.warhead.setType(Material.WATER);
+			    			torp.warhead.getRelative(torp.hdg, -1).setType(Material.WATER);
+			    			torp.warhead.getRelative(torp.hdg, -2).setType(Material.WATER);
+			    			torp.warhead.getRelative(torp.hdg, -3).setType(Material.WATER);
+			    		}
+						
+						
+						
+						
+						//new position
+						torp.warhead = torp.warhead.getRelative(torp.hdg);
+						int depthDifference = torp.setDepth - torp.warhead.getY();
+						if( depthDifference < 0 )
+						{
+							torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
+						}else if( depthDifference > 0)
+						{
+							torp.warhead = torp.warhead.getRelative(BlockFace.UP);
+						}
+						
+						if( torp.turnProgress > -1 )
+						{
+							
+							if( torp.turnProgress == 10 )
+							{
+								if( torp.hdg == BlockFace.NORTH )
+								{
+									if( torp.rudder < 0 )
+										torp.hdg = BlockFace.WEST;
+									else
+										torp.hdg = BlockFace.EAST;
+								}else if( torp.hdg == BlockFace.SOUTH )
+								{
+									if( torp.rudder < 0 )
+										torp.hdg = BlockFace.EAST;
+									else
+										torp.hdg = BlockFace.WEST;
+								}else if( torp.hdg == BlockFace.EAST )
+								{
+									if( torp.rudder < 0 )
+										torp.hdg = BlockFace.NORTH;
+									else
+										torp.hdg = BlockFace.SOUTH;
+								}else
+								{
+									if( torp.rudder < 0 )
+										torp.hdg = BlockFace.SOUTH;
+									else
+										torp.hdg = BlockFace.NORTH;
+								}
+								torp.rudder = -torp.rudder;
+							}
+							
+							if( torp.turnProgress == 20 )
+							{
+								if( torp.doubleTurn )
+								{
+									torp.turnProgress = 0;
+									torp.rudder = -torp.rudder;
+									torp.doubleTurn = false;
+								}else
+								{
+									torp.turnProgress = -1;
+									torp.rudder = torp.rudderSetting;
+								}
+							}else
+								torp.turnProgress += 1;
+						}
+						
+						if( torp.rudder != 0 )
+						{
+							int dirMod  = Math.abs(torp.rudder);
+							if( i % dirMod == 0 )
+							{
+								if( torp.rudder < 0 )
+								{
+									torp.warhead = getDirectionFromRelative(torp.warhead, torp.hdg, true);
+								}else
+								{
+									torp.warhead = getDirectionFromRelative(torp.warhead, torp.hdg, false);
+								}
+							}
+						}
+						
+						
+						
+						//check new position
+						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						{
+		    				if( i == 249 )
+							{
+								if( torp.warhead.getY() > 62 )
+								{
+									torp.warhead.setType(Material.AIR);
+									torp.warhead.getRelative(torp.hdg).setType(Material.AIR);
+									torp.warhead.getRelative(torp.hdg, -2).setType(Material.AIR);
+									torp.warhead.getRelative(torp.hdg, -3).setType(Material.AIR);
+								}else
+								{
+									torp.warhead.setType(Material.WATER);
+									torp.warhead.getRelative(torp.hdg, -1).setType(Material.WATER);
+									torp.warhead.getRelative(torp.hdg, -2).setType(Material.WATER);
+									torp.warhead.getRelative(torp.hdg, -3).setType(Material.WATER);
+								}
+								p.sendMessage("Missile expired.");
+								return;
+							}
+		    				
+		    				torp.warhead.setTypeIdAndData(35, (byte) 0xE, false);
+		    				torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
+		    				torp.warhead.getRelative(torp.hdg, -2).setTypeIdAndData(35, (byte) 0x0, false);
+		    				torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
+						}else if( torp.active ) ///detonate!
+						{
+							if( checkProtectedRegion(p, torp.warhead.getLocation()) )
+							{
+								p.sendMessage(ChatColor.RED + "No missile explosions in dock area.");
+								torp.dead = true;
+								return;
+							}
+	
+							
+							torp.warhead = torp.warhead.getRelative(torp.hdg,-1);
+							NavyCraft.explosion(10,  torp.warhead, false);
+							torp.dead = true;
+							
+							Craft checkCraft=null;
+							checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(torp.hdg,2).getLocation(), p);
+							if( checkCraft == null ) {
+								checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(7,7,7).getLocation(), p);
+								if( checkCraft == null ) {
+									checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(-7,-7,-7).getLocation(), p);
+									if( checkCraft == null ) {
+										checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(3,-2,-3).getLocation(), p);
+										if( checkCraft == null ) {
+											checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(-3,2,3).getLocation(), p);
+										}
+									}
+								}
+							}
+							
+							if( checkCraft == null )
+								p.sendMessage("Missile hit unknown object!");
+							else
+								p.sendMessage("Missile hit " + checkCraft.name + "!");
+							
+						}else
+						{
+							p.sendMessage("Missile Dud (Too close).");
+							torp.dead = true;
+						}
+						
+						
+					}
+					else/// i <= 15
+					{
+						if( torp.warhead.getY() > 62 || i < 5 )
+						{
+							torp.warhead.setType(Material.AIR);
+							torp.warhead.getRelative(torp.hdg, -1).setType(Material.AIR);
+							torp.warhead.getRelative(torp.hdg, -2).setType(Material.AIR);
+							torp.warhead.getRelative(torp.hdg, -3).setType(Material.AIR);
+							
+							if( i == 4  )
+							{
+								if( firingCraft != null )
+								{
+									firingCraft.addBlock(torp.warhead, true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -1), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -2), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -3), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -4), true);
+	
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -5), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -6), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -7), true);
+									firingCraft.addBlock(torp.warhead.getRelative(torp.hdg, -8), true);
+								}
+							}
+						}else
+						{
+							torp.warhead.setType(Material.WATER);
+							torp.warhead.getRelative(torp.hdg, -1).setType(Material.WATER);
+							torp.warhead.getRelative(torp.hdg, -2).setType(Material.WATER);
+							torp.warhead.getRelative(torp.hdg, -3).setType(Material.WATER);
+						}
+						
+						
+						
+						
+						//Move torp
+						torp.warhead = torp.warhead.getRelative(torp.hdg);
+						
+						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						{
+							torp.warhead.setTypeIdAndData(35, (byte) 0xE, false);
+			    			torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
+			    			torp.warhead.getRelative(torp.hdg, -2).setTypeIdAndData(35, (byte) 0x0, false);
+			    			torp.warhead.getRelative(torp.hdg, -3).setTypeIdAndData(35, (byte) 0x7, false);
+						}else
+						{
+							if( firingCraft != null )
+							{
+								firingCraft.waitTorpLoading--;
+								if( left )
+									leftLoading = false;
+								else
+									rightLoading = false;
+								
+								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+									openMissileDoors(p);
+							}else
+							{
+								if( left )
+									leftLoading = false;
+								else
+									rightLoading = false;
+								
+								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+									openMissileDoors(p);
+							}
+							torp.dead = true;
+							p.sendMessage("Dud Missile! Too close.");
+						}
+	
+					}
+					
+					
+		    		
+		    	}else //torp blocks missing, detonate
 		    	{
 		    		if( checkProtectedRegion(p, torp.warhead.getLocation()) )
 					{
@@ -4530,6 +5286,7 @@ public class OneCannon{
 							openMissileDoors(p);
 					}
 		    	}
+		    	
 		    	if( i == 15 )
 				{
 					
@@ -4617,19 +5374,19 @@ public class OneCannon{
 	{
 		direction = BlockFace.WEST;
 	    cannonType = 8;
-	}else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.NETHERRACK )
+	}else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.NORTH;
 	    cannonType = 11;
-	}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.NETHERRACK)
+	}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.SOUTH;
 	    cannonType = 11;
-	}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.NETHERRACK)
+	}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.EAST;
 	    cannonType = 11;
-	}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.NETHERRACK)
+	}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.WEST;
 	    cannonType = 11;

@@ -99,7 +99,7 @@ public class AimCannonPlayerListener implements Listener {
 							onec.fireTorpedoButton(event.getPlayer());
 						else
 							onec.setTorpedoMode(event.getPlayer());
-					} else if (onec.isThisCannon(b.getLocation(), false)) {
+					} else if (onec.isThisCannon(b.getLocation(), false) && (onec.cannonType == 11 || onec.cannonType == 12)) {
 						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 							onec.fireMissileButton(event.getPlayer());
 						else
