@@ -5655,11 +5655,11 @@ public class CraftMover {
 				for (Craft c : craftDamagers.keySet()) {
 					int damage = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * totalBlocks);
 					if (c.customName != null) {
-						name = c.customName.toUpperCase() + " (" + c.name + " class)";
+						name = c.customName.toUpperCase();
 					} else {
-						name = c.name.toUpperCase() + " class";
+						name = c.name.toUpperCase();
 					}
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + damage / 2 + "cash!");
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the" + ChatColor.GOLD + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + damage / 2 + ChatColor.GREEN + " cash!");
 					if (!uncrewedPlayers.isEmpty()) {
 						for (Player p : uncrewedPlayers.keySet()) {
 							int d = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
@@ -5667,7 +5667,7 @@ public class CraftMover {
 								for (String s : c.crewNames) {
 									if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
 								}
-								plugin.getServer().broadcastMessage(ChatColor.GREEN + p.getName() + " receives " + ChatColor.YELLOW + d + ChatColor.GREEN + " rank points and " + d / 2 + "cash!");
+								plugin.getServer().broadcastMessage(ChatColor.GOLD + p.getName() + ChatColor.GREEN + " receives " + ChatColor.YELLOW + d + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + d / 2 + ChatColor.GREEN + " cash!");
 							}
 						}
 					}

@@ -87,6 +87,18 @@ public class AimCannonPlayerListener implements Listener {
 			}else if( event.getClickedBlock().getRelative(BlockFace.WEST).getRelative(BlockFace.DOWN).getType() == Material.DISPENSER ) 
 			{
 				b = event.getClickedBlock().getRelative(BlockFace.WEST).getRelative(BlockFace.DOWN);
+			}else if( event.getClickedBlock().getRelative(BlockFace.NORTH).getType() == Material.DISPENSER ) 
+			{
+				b = event.getClickedBlock().getRelative(BlockFace.NORTH);
+			}else if( event.getClickedBlock().getRelative(BlockFace.SOUTH).getType() == Material.DISPENSER ) 
+			{
+				b = event.getClickedBlock().getRelative(BlockFace.SOUTH);
+			}else if( event.getClickedBlock().getRelative(BlockFace.EAST).getType() == Material.DISPENSER ) 
+			{
+				b = event.getClickedBlock().getRelative(BlockFace.EAST);
+			}else if( event.getClickedBlock().getRelative(BlockFace.WEST).getType() == Material.DISPENSER ) 
+			{
+				b = event.getClickedBlock().getRelative(BlockFace.WEST);
 			}
 			
 			if( b != null )
@@ -99,15 +111,21 @@ public class AimCannonPlayerListener implements Listener {
 							onec.fireTorpedoButton(event.getPlayer());
 						else
 							onec.setTorpedoMode(event.getPlayer());
-					} else if (onec.isThisCannon(b.getLocation(), false) && (onec.cannonType == 11 || onec.cannonType == 12)) {
-						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
-							onec.fireMissileButton(event.getPlayer());
-						else
+					} else if (onec.isThisCannon(b.getLocation(), false) && (onec.cannonType == 11 || onec.cannonType == 12 || onec.cannonType == 13 || onec.cannonType == 14)) {
+						
+						if (onec.cannonType == 13 || onec.cannonType == 14) {
+							if( event.getAction() == Action.LEFT_CLICK_BLOCK )
+							onec.fireMissileButton(event.getPlayer(), true);
+						} else {
+							if( event.getAction() == Action.LEFT_CLICK_BLOCK )
+							onec.fireMissileButton(event.getPlayer(), false);
+							else
 							onec.setMissileMode(event.getPlayer());
 					}
 				}
 			}
 		}
+	}
 		
 	    }
 
@@ -235,6 +253,26 @@ public class AimCannonPlayerListener implements Listener {
 					torpedoAction = 3;
 				}
 				
+				//outer missile door lever
+				//north
+				if (event.getClickedBlock().getRelative(BlockFace.NORTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) 
+				{
+					b = event.getClickedBlock().getRelative(BlockFace.NORTH,1).getRelative(BlockFace.DOWN, 2);
+					torpedoAction = 10;
+				}//south
+				if (event.getClickedBlock().getRelative(BlockFace.SOUTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+					b = event.getClickedBlock().getRelative(BlockFace.SOUTH,1).getRelative(BlockFace.DOWN, 2);
+					torpedoAction = 10;
+				}//east
+				if (event.getClickedBlock().getRelative(BlockFace.EAST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+					b = event.getClickedBlock().getRelative(BlockFace.EAST,1).getRelative(BlockFace.DOWN, 2);
+					torpedoAction = 10;
+				}//west
+				if (event.getClickedBlock().getRelative(BlockFace.WEST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+					b = event.getClickedBlock().getRelative(BlockFace.WEST,1).getRelative(BlockFace.DOWN, 2);
+					torpedoAction = 10;
+				}
+				
 				
 				if( b != null )
 				{
@@ -258,6 +296,9 @@ public class AimCannonPlayerListener implements Listener {
 							}else if( torpedoAction == 7 )
 							{
 								onec.openTorpedoDoors(event.getPlayer(), true, false);
+							}else if( torpedoAction == 10 )
+							{
+								onec.openMissileDoorsV(event.getPlayer());
 							}
 						}
 					}
