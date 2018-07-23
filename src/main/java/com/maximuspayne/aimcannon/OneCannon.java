@@ -3865,9 +3865,9 @@ public class OneCannon{
 			//fireTorpedo(p, b, direction, depth, 500, getTubeBlockFace(false), 0);
 			fireTorpedoMk2(p, b, direction, depth, 0, false);
 		else if (cannonType == 11)
-			fireMissileMk1(p, b, direction, depth, 0, true, false);
+			fireMissileMk1(p, b, direction, depth, 0, false, false);
 		else
-			fireMissileMk2(p, b, direction, depth, 0, true, false);
+			fireMissileMk2(p, b, direction, depth, 0, false, false);
     }
     
     public void fireBoth(Player p)
@@ -5773,35 +5773,35 @@ public class OneCannon{
 	{
 		direction = BlockFace.WEST;
 	    cannonType = 12;
-	}else if (b.getRelative(BlockFace.NORTH, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.COAL_BLOCK)
+	}else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.NORTH;
 	    cannonType = 13;
-	}else if(b.getRelative(BlockFace.SOUTH, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.COAL_BLOCK)
+	}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.SOUTH;
 	    cannonType = 13;
-	}else if(b.getRelative(BlockFace.EAST, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.COAL_BLOCK)
+	}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.EAST;
 	    cannonType = 13;
-	}else if(b.getRelative(BlockFace.WEST, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.COAL_BLOCK)
+	}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.COAL_BLOCK)
 	{
 		direction = BlockFace.WEST;
 	    cannonType = 13;
-	}else if (b.getRelative(BlockFace.NORTH, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.REDSTONE_BLOCK )
+	}else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.REDSTONE_BLOCK )
 	{
 		direction = BlockFace.NORTH;
 	    cannonType = 14;
-	}else if(b.getRelative(BlockFace.SOUTH, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.REDSTONE_BLOCK)
+	}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.REDSTONE_BLOCK)
 	{
 		direction = BlockFace.SOUTH;
 	    cannonType = 14;
-	}else if(b.getRelative(BlockFace.EAST, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.REDSTONE_BLOCK)
+	}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.REDSTONE_BLOCK)
 	{
 		direction = BlockFace.EAST;
 	    cannonType = 14;
-	}else if(b.getRelative(BlockFace.WEST, 1).getRelative(BlockFace.DOWN, 1).getType() == Material.REDSTONE_BLOCK)
+	}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.REDSTONE_BLOCK)
 	{
 		direction = BlockFace.WEST;
 	    cannonType = 14;

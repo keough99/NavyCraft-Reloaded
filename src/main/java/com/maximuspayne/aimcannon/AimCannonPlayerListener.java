@@ -111,24 +111,40 @@ public class AimCannonPlayerListener implements Listener {
 							onec.fireTorpedoButton(event.getPlayer());
 						else
 							onec.setTorpedoMode(event.getPlayer());
-					} else if (onec.isThisCannon(b.getLocation(), false) && (onec.cannonType == 11 || onec.cannonType == 12 || onec.cannonType == 13 || onec.cannonType == 14)) {
-						
-						if (onec.cannonType == 13 || onec.cannonType == 14) {
-							if( event.getAction() == Action.LEFT_CLICK_BLOCK )
-							onec.fireMissileButton(event.getPlayer(), true);
-						} else {
+					} else if (onec.isThisCannon(b.getLocation(), false) && (onec.cannonType == 11 || onec.cannonType == 12 )) {
 							if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 							onec.fireMissileButton(event.getPlayer(), false);
 							else
 							onec.setMissileMode(event.getPlayer());
 					}
-				}
 			}
+		} else {
+			if( event.getClickedBlock().getRelative(BlockFace.NORTH).getType() == Material.DROPPER ) 
+		{
+			b = event.getClickedBlock().getRelative(BlockFace.NORTH);
+		}else if( event.getClickedBlock().getRelative(BlockFace.SOUTH).getType() == Material.DROPPER ) 
+		{
+			b = event.getClickedBlock().getRelative(BlockFace.SOUTH);
+		}else if( event.getClickedBlock().getRelative(BlockFace.EAST).getType() == Material.DROPPER ) 
+		{
+			b = event.getClickedBlock().getRelative(BlockFace.EAST);
+		}else if( event.getClickedBlock().getRelative(BlockFace.WEST).getType() == Material.DROPPER ) 
+		{
+			b = event.getClickedBlock().getRelative(BlockFace.WEST);
+		}
+			if( b != null )
+			{
+				for (OneCannon onec : AimCannon.getCannons()) 
+				{
+					if (onec.isThisCannon(b.getLocation(), false) && ( onec.cannonType == 13 || onec.cannonType == 14)) {
+						if( event.getAction() == Action.LEFT_CLICK_BLOCK )
+						onec.fireMissileButton(event.getPlayer(), true);
 		}
 	}
-		
-	    }
-
+}
+		}
+	}
+}
 	    //////Levers
 	    if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 		    if (event.getClickedBlock().getType() == Material.LEVER) {
@@ -255,20 +271,20 @@ public class AimCannonPlayerListener implements Listener {
 				
 				//outer missile door lever
 				//north
-				if (event.getClickedBlock().getRelative(BlockFace.NORTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) 
+				if (event.getClickedBlock().getRelative(BlockFace.NORTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DROPPER) 
 				{
 					b = event.getClickedBlock().getRelative(BlockFace.NORTH,1).getRelative(BlockFace.DOWN, 2);
 					torpedoAction = 10;
 				}//south
-				if (event.getClickedBlock().getRelative(BlockFace.SOUTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+				if (event.getClickedBlock().getRelative(BlockFace.SOUTH,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DROPPER) {
 					b = event.getClickedBlock().getRelative(BlockFace.SOUTH,1).getRelative(BlockFace.DOWN, 2);
 					torpedoAction = 10;
 				}//east
-				if (event.getClickedBlock().getRelative(BlockFace.EAST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+				if (event.getClickedBlock().getRelative(BlockFace.EAST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DROPPER) {
 					b = event.getClickedBlock().getRelative(BlockFace.EAST,1).getRelative(BlockFace.DOWN, 2);
 					torpedoAction = 10;
 				}//west
-				if (event.getClickedBlock().getRelative(BlockFace.WEST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DISPENSER) {
+				if (event.getClickedBlock().getRelative(BlockFace.WEST,1).getRelative(BlockFace.DOWN, 2).getType() == Material.DROPPER) {
 					b = event.getClickedBlock().getRelative(BlockFace.WEST,1).getRelative(BlockFace.DOWN, 2);
 					torpedoAction = 10;
 				}
@@ -327,11 +343,11 @@ public class AimCannonPlayerListener implements Listener {
 	    }
 
 	    ///Dispenser
-	    if (event.getClickedBlock().getType() == Material.DISPENSER) {
+	    if (event.getClickedBlock().getType() == Material.DISPENSER || event.getClickedBlock().getType() == Material.DROPPER) {
 		for (OneCannon onec : AimCannon.getCannons()) 
 		{
 		    if (onec.isThisCannon(event.getClickedBlock().getLocation(), false)) {
-		    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
+		    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation()) || !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
 		    	if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 		    		onec.Charge(event.getPlayer(), true);
 				else
@@ -339,7 +355,7 @@ public class AimCannonPlayerListener implements Listener {
 			    
 			    return;
 		    } else {
-		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
+		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons inside safedock!");
 		    	return;
 		    }
 		}
@@ -348,14 +364,14 @@ public class AimCannonPlayerListener implements Listener {
 		// new Cannon
 		OneCannon oc = new OneCannon(event.getClickedBlock().getLocation(), NavyCraft.instance);
 		if (oc.isValidCannon(event.getClickedBlock())) {
-	    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation())) {
+			if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation()) || !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
 			if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 				oc.Charge(event.getPlayer(), true);
 			else
 				oc.Charge(event.getPlayer(), false);
 		    AimCannon.cannons.add(oc);
 		    } else {
-		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons outside the main world!");
+		    	event.getPlayer().sendMessage(ChatColor.RED + "You can't load cannons inside safedock!");
 		    	return;
 		    }
 		}
