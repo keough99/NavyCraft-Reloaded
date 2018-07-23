@@ -6103,10 +6103,10 @@ public class OneCannon{
 	
 	if (direction != null) {
 	    isCannon = true;
-	    System.out.print("It is a valid Cannon");
+	    NavyCraft.instance.DebugMessage("It is a valid Cannon", 3);
 	    return true;
 	} else {
-	    System.out.print("No Cannon");
+	    NavyCraft.instance.DebugMessage("No Cannon", 3);
 	    return false;
 	}
     }
