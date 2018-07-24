@@ -4363,7 +4363,6 @@ public class OneCannon{
 		    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35 )
 		    	{
 		    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
-		    		
 					if( i > 15 )
 					{
 						if( torp.warhead.getY() > 62 )
@@ -4660,13 +4659,12 @@ public class OneCannon{
 		  //  @Override
 			public void run()
 		    {
-
 		    	if( !torp.dead )
 		    	{
-			    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35 || torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35 )
+		    		NavyCraft.instance.DebugMessage(Integer.toString(i), 3);
+			    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35 || ( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35 && i < 16 ))
 			    	{
 			    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
-			    		
 						if( i > 15 )
 						{
 							if( torp.warhead.getY() > 62 )
@@ -4802,7 +4800,7 @@ public class OneCannon{
 								
 								
 								torp.warhead = torp.warhead.getRelative(torp.hdg,-1);
-								NavyCraft.explosion(3,  torp.warhead, false);
+								NavyCraft.explosion(8,  torp.warhead, false);
 								torp.dead = true;
 		
 								Craft checkCraft=null;
@@ -4888,7 +4886,7 @@ public class OneCannon{
 										rightLoading = false;
 									
 									if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-										openMissileDoors(p);
+										openMissileDoorsV(p);
 								}else
 								{
 									if( left )
@@ -4897,7 +4895,7 @@ public class OneCannon{
 										rightLoading = false;
 									
 									if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-										openMissileDoors(p);
+										openMissileDoorsV(p);
 								}
 								p.sendMessage("Dud Missile! Too close.2");
 								torp.dead = true;
@@ -4929,7 +4927,7 @@ public class OneCannon{
 									rightLoading = false;
 								
 								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-									openMissileDoors(p);
+									openMissileDoorsV(p);
 							}else
 							{
 								if( left )
@@ -4938,14 +4936,13 @@ public class OneCannon{
 									rightLoading = false;
 								
 								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-									openMissileDoors(p);
+									openMissileDoorsV(p);
 							}
 							return;
 			    		}
 						
-						
 						torp.warhead = torp.warhead.getRelative(torp.hdg,-1);
-						NavyCraft.explosion(3,  torp.warhead, false);
+						NavyCraft.explosion(8,  torp.warhead, false);
 						torp.dead = true;
 						
 						Craft checkCraft=null;
@@ -4978,7 +4975,7 @@ public class OneCannon{
 								rightLoading = false;
 							
 							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-								openMissileDoors(p);
+								openMissileDoorsV(p);
 						}else
 						{
 							if( left )
@@ -4987,9 +4984,10 @@ public class OneCannon{
 								rightLoading = false;
 							
 							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-								openMissileDoors(p);
+								openMissileDoorsV(p);
 						}
 			    	}
+			    }
 			    	if( i == 15 )
 					{
 						
@@ -5002,7 +5000,7 @@ public class OneCannon{
 								rightLoading = false;
 							
 							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-								openMissileDoors(p);
+								openMissileDoorsV(p);
 						}else
 						{
 							if( left )
@@ -5011,14 +5009,13 @@ public class OneCannon{
 								rightLoading = false;
 							
 							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
-								openMissileDoors(p);
+								openMissileDoorsV(p);
 						}
 						torp.active = true;
 					}
 		    	}
 
 		    }
-	    	}
 	    	
 		);
    }

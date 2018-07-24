@@ -1676,8 +1676,14 @@ public class CraftMover {
 						if (craft.doCost && (blockId == 23 || blockId == 158)) {
 							OneCannon oc = new OneCannon(newBlock.getLocation(), NavyCraft.instance);
 
-							Dispenser dispenser = (Dispenser) newBlock.getState();
-							Inventory inventory = dispenser.getInventory();
+							Inventory inventory = null;
+							if (newBlock.getType() == Material.DISPENSER) {
+					    	Dispenser dispenser = (Dispenser) newBlock.getState();
+					    	inventory = dispenser.getInventory();
+							} else if (newBlock.getType() == Material.DROPPER) {
+							Dropper dropper = (Dropper) newBlock.getState();
+					    	inventory = dropper.getInventory();
+							}
 
 							if ((oc.isValidCannon(newBlock, false) && newBlock.getTypeId() == 23) || (oc.isValidCannon(newBlock, true) && newBlock.getTypeId() == 158) && ((inventory.getItem(4) == null) || (inventory.getItem(4).getTypeId() != 388))) {
 								int cost = 0;
@@ -1700,8 +1706,16 @@ public class CraftMover {
 									cost = 250;
 								} else if (oc.cannonType == 9) {
 									cost = 250;
-								}else if (oc.cannonType == 10) {
+								} else if (oc.cannonType == 10) {
 									cost = 500;
+								} else if (oc.cannonType == 11) {
+									cost = 600;
+								} else if (oc.cannonType == 12) {
+									cost = 1250;
+								} else if (oc.cannonType == 13) {
+									cost = 600;
+								} else if (oc.cannonType == 14) {
+									cost = 1250;
 								}
 								craft.vehicleCost += cost;
 								initWeaponDispensers.add(newBlock);
@@ -1850,8 +1864,14 @@ public class CraftMover {
 				}
 				if (!initWeaponDispensers.isEmpty()) {
 					for (Block b : initWeaponDispensers) {
-						Dispenser dispenser = (Dispenser) b.getState();
-						Inventory inventory = dispenser.getInventory();
+						Inventory inventory = null;
+						if (b.getType() == Material.DISPENSER) {
+				    	Dispenser dispenser = (Dispenser) b.getState();
+				    	inventory = dispenser.getInventory();
+						} else if (b.getType() == Material.DROPPER) {
+						Dropper dropper = (Dropper) b.getState();
+				    	inventory = dropper.getInventory();
+						}
 						inventory.setItem(4, new ItemStack(388, 1));
 					}
 					initWeaponDispensers.clear();
