@@ -207,22 +207,23 @@ public class CraftMover {
 					
 				}
 				
-				if (theBlock.getTypeId() == 23) { //move cannons
+				if (theBlock.getTypeId() == 23 || theBlock.getTypeId() == 158) { //move cannons
 
 					boolean stopSearch = false;
 					for (OneCannon onec : AimCannon.getCannons()) {
-						if (onec.isThisCannon(theBlock.getLocation(), false)) {
+						if (onec.isThisCannon(theBlock.getLocation(), false, false) || onec.isThisCannon(theBlock.getLocation(), false, true)) {
 							stopSearch = true;
 						}
 					}
 
 					if (!stopSearch) {
 						OneCannon oc = new OneCannon(theBlock.getLocation(), NavyCraft.instance);
-						if (oc.isValidCannon(theBlock)) {
+						if ((oc.isValidCannon(theBlock, false) && theBlock.getTypeId() == 23) || (oc.isValidCannon(theBlock, true) && theBlock.getTypeId() == 158)) {
 
 							for (OneCannon onec : AimCannon.getCannons()) {
-								boolean oldCannonFound = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true);
-								if (oldCannonFound) {
+								boolean oldCannonFound = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true, true);
+								boolean oldCannonFound2 = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true, false);
+								if (oldCannonFound || oldCannonFound2) {
 									Location newLoc = theBlock.getLocation();
 									onec.setLocation(newLoc);
 
@@ -242,10 +243,10 @@ public class CraftMover {
 		for (DataBlock dataBlock : craft.dataBlocks) {
 
 			Block theBlock = getWorldBlock(dataBlock.x, dataBlock.y, dataBlock.z);
-			if (theBlock.getTypeId() == 23) {
+			if (theBlock.getTypeId() == 23 || theBlock.getTypeId() == 158) {
 
 				for (OneCannon onec : AimCannon.getCannons()) {
-					if (onec.isThisCannon(theBlock.getLocation(), false)) {
+					if (onec.isThisCannon(theBlock.getLocation(), false, false) || onec.isThisCannon(theBlock.getLocation(), false, true)) {
 						onec.reload(p);
 					}
 				}
@@ -1672,13 +1673,13 @@ public class CraftMover {
 							signUpdates(newBlock);
 						} // end if sign
 
-						if (craft.doCost && (blockId == 23)) {
+						if (craft.doCost && (blockId == 23 || blockId == 158)) {
 							OneCannon oc = new OneCannon(newBlock.getLocation(), NavyCraft.instance);
 
 							Dispenser dispenser = (Dispenser) newBlock.getState();
 							Inventory inventory = dispenser.getInventory();
 
-							if (oc.isValidCannon(newBlock) && ((inventory.getItem(4) == null) || (inventory.getItem(4).getTypeId() != 388))) {
+							if ((oc.isValidCannon(newBlock, false) && newBlock.getTypeId() == 23) || (oc.isValidCannon(newBlock, true) && newBlock.getTypeId() == 158) && ((inventory.getItem(4) == null) || (inventory.getItem(4).getTypeId() != 388))) {
 								int cost = 0;
 								AimCannon.cannons.add(oc);
 								if (oc.cannonType == 0) {
