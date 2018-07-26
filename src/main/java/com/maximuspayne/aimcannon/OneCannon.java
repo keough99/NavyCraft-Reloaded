@@ -4945,6 +4945,7 @@ public class OneCannon{
 						NavyCraft.explosion(8,  torp.warhead, false);
 						torp.dead = true;
 						
+						
 						Craft checkCraft=null;
 						checkCraft = NavyCraft.instance.entityListener.structureUpdate(torp.warhead.getRelative(torp.hdg,2).getLocation(), p);
 						if( checkCraft == null ) {
@@ -5966,10 +5967,10 @@ public class OneCannon{
 			    	ammunition = 2;
 			    	initAmmo = ammunition;
 			    }
-			} else if (b.getRelative(BlockFace.NORTH, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
+			}else if(b.getRelative(BlockFace.NORTH, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
 				{
 					direction = BlockFace.EAST;
-				    cannonType = 9;
+				    cannonType = 10;
 				    if( ammunition == -1 )
 				    {
 				    	ammunition = 6;
@@ -5978,7 +5979,7 @@ public class OneCannon{
 			}else if(b.getRelative(BlockFace.SOUTH, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
 				{
 					direction = BlockFace.WEST;
-				    cannonType = 9;
+				    cannonType = 10;
 				    if( ammunition == -1 )
 				    {
 				    	ammunition = 6;
@@ -5987,7 +5988,7 @@ public class OneCannon{
 			}else if(b.getRelative(BlockFace.EAST, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
 				{
 					direction = BlockFace.SOUTH;
-				    cannonType = 9;
+				    cannonType = 10;
 				    if( ammunition == -1 )
 				    {
 				    	ammunition = 6;
@@ -5996,7 +5997,7 @@ public class OneCannon{
 			}else if(b.getRelative(BlockFace.WEST, 1).getType() == Material.SANDSTONE && b.getRelative(BlockFace.DOWN, 1).getType() == Material.LAPIS_BLOCK)
 				{
 					direction = BlockFace.NORTH;
-				    cannonType = 9;
+				    cannonType = 10;
 				    if( ammunition == -1 )
 				    {
 				    	ammunition = 6;
