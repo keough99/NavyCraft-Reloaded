@@ -718,6 +718,18 @@ public class OneCannon{
 			wool2 = 0x0;
 			wool3 = 0x0;
 			wool4 = 0x7;
+		} else if (cannonType == 12) {
+		wool1 = 0xE;
+		wool2 = 0x0;
+		wool3 = 0x0;
+		wool4 = 0x7;
+		
+    	} else if( cannonType == 11 )
+		{
+    		wool1 = 0xB;
+			wool2 = 0x0;
+			wool3 = 0x0;
+			wool4 = 0x7;
 		}
 		
 
@@ -776,42 +788,11 @@ public class OneCannon{
     	}
     }
 	
-	public void colorMissiles(boolean isVertical)
+	public void colorMissiles()
     {
     	//color wool
-		Block a,b,c,d;
-		if( direction == BlockFace.NORTH )
-		{
-    		a = loc.getBlock().getRelative(BlockFace.WEST,2);
-    		b = loc.getBlock().getRelative(BlockFace.EAST,2);
-    		c = loc.getBlock().getRelative(BlockFace.WEST,1);
-    		d = loc.getBlock().getRelative(BlockFace.EAST,1);
-		}
-    	else if( direction == BlockFace.SOUTH )
-    	{
-    		a = loc.getBlock().getRelative(BlockFace.EAST,2);
-    		b = loc.getBlock().getRelative(BlockFace.WEST,2);
-    		c = loc.getBlock().getRelative(BlockFace.EAST,1);
-    		d = loc.getBlock().getRelative(BlockFace.WEST,1);
-    	}
-    	else if( direction == BlockFace.EAST )
-    	{
-    		a = loc.getBlock().getRelative(BlockFace.NORTH,2);
-    		b = loc.getBlock().getRelative(BlockFace.SOUTH,2);
-    		c = loc.getBlock().getRelative(BlockFace.NORTH,1);
-    		d = loc.getBlock().getRelative(BlockFace.SOUTH,1);
-    	}
-    	else //if( direction == BlockFace.WEST )
-    	{
-    		a = loc.getBlock().getRelative(BlockFace.SOUTH,2);
-    		b = loc.getBlock().getRelative(BlockFace.NORTH,2);
-    		c = loc.getBlock().getRelative(BlockFace.SOUTH,1);
-    		d = loc.getBlock().getRelative(BlockFace.NORTH,1);
-    	}
-    	a = a.getRelative(direction,-5);
-    	b = b.getRelative(direction,-5);
-    	c = c.getRelative(direction,4);
-    	d = d.getRelative(direction,4);
+		Block a;
+		a = loc.getBlock().getRelative(direction,1);
     	
     	Byte wool1;
     	Byte wool2;
@@ -822,7 +803,7 @@ public class OneCannon{
 		wool3 = 0x0;
 		wool4 = 0x7;
 		
-		if( cannonType == 11 )
+		if( cannonType == 13 )
 		{
     		wool1 = 0xB;
 			wool2 = 0x0;
@@ -830,57 +811,14 @@ public class OneCannon{
 			wool4 = 0x7;
 		}
 		
-		if( c.getTypeId() == 35 )
-    		c.setTypeIdAndData(35, wool1, false);
-    	if( c.getRelative(direction,-1).getTypeId() == 35 )
-    		c.getRelative(direction,-1).setTypeIdAndData(35, wool2, false);
-    	if( c.getRelative(direction,-2).getTypeId() == 35 )
-    		c.getRelative(direction,-2).setTypeIdAndData(35, wool3, false);
-    	if( c.getRelative(direction,-3).getTypeId() == 35 )
-    		c.getRelative(direction,-3).setTypeIdAndData(35, wool4, false);
-    	
-    	if( d.getTypeId() == 35 )
-    		d.setTypeIdAndData(35, wool1, false);
-    	if( d.getRelative(direction,-1).getTypeId() == 35 )
-    		d.getRelative(direction,-1).setTypeIdAndData(35, wool2, false);
-    	if( d.getRelative(direction,-2).getTypeId() == 35 )
-    		d.getRelative(direction,-2).setTypeIdAndData(35, wool3, false);
-    	if( d.getRelative(direction,-3).getTypeId() == 35 )
-    		d.getRelative(direction,-3).setTypeIdAndData(35, wool4, false);
-		
-    	for( int i=0; i<4; i++ )
-    	{	
-    		
-        	if( a.getTypeId() == 35 )
-        		a.setTypeIdAndData(35, wool1, false);
-        	if( a.getRelative(direction,-1).getTypeId() == 35 )
-        		a.getRelative(direction,-1).setTypeIdAndData(35, wool2, false);
-        	if( a.getRelative(direction,-2).getTypeId() == 35 )
-        		a.getRelative(direction,-2).setTypeIdAndData(35, wool3, false);
-        	if( a.getRelative(direction,-3).getTypeId() == 35 )
-        		a.getRelative(direction,-3).setTypeIdAndData(35, wool4, false);
-        	
-        	if( b.getTypeId() == 35 )
-        		b.setTypeIdAndData(35, wool1, false);
-        	if( b.getRelative(direction,-1).getTypeId() == 35 )
-        		b.getRelative(direction,-1).setTypeIdAndData(35, wool2, false);
-        	if( b.getRelative(direction,-2).getTypeId() == 35 )
-        		b.getRelative(direction,-2).setTypeIdAndData(35, wool3, false);
-        	if( b.getRelative(direction,-3).getTypeId() == 35 )
-        		b.getRelative(direction,-3).setTypeIdAndData(35, wool4, false);
-    		
-    		
-        	
-        	if( i == 0 || i == 2 )
-        	{
-        		a = a.getRelative(direction,-4);
-        		b = b.getRelative(direction,-4);
-        	}else if( i == 1 )
-        	{
-        		a = a.getRelative(direction,4).getRelative(BlockFace.DOWN);
-        		b = b.getRelative(direction,4).getRelative(BlockFace.DOWN);
-        	}	
-    	}
+		if( a.getRelative(BlockFace.UP,1).getTypeId() == 35 )
+    		a.getRelative(BlockFace.UP,1).setTypeIdAndData(35, wool4, false);
+    	if( a.getRelative(BlockFace.UP,2).getTypeId() == 35 )
+    		a.getRelative(BlockFace.UP,2).setTypeIdAndData(35, wool3, false);
+    	if( a.getRelative(BlockFace.UP,3).getTypeId() == 35 )
+    		a.getRelative(BlockFace.UP,3).setTypeIdAndData(35, wool2, false);
+    	if( a.getRelative(BlockFace.UP,4).getTypeId() == 35 )
+    		a.getRelative(BlockFace.UP,4).setTypeIdAndData(35, wool1, false);
     }
 	
 
@@ -980,18 +918,18 @@ public class OneCannon{
 	    			depth = 0;
 	    		p.sendMessage("Missile System Active: Y axis set to " + depth + " meters.");
 	    		if (cannonType == 13 || cannonType == 14) {
-	    			colorMissiles(true);
+	    			colorMissiles();
 	    			return true;
 	    		} else {
-	    		colorMissiles(false);
+	    		colorTorpedoes();
 	    		return true;
 	    		}
 			} else {
 	    		if (cannonType == 13 || cannonType == 14) {
-	    			colorMissiles(true);
+	    			colorMissiles();
 	    			return false;
 	    		} else {
-	    		colorMissiles(false);
+	    		colorTorpedoes();
 	    		return false;
 	    		}
 			}
@@ -1101,9 +1039,9 @@ public class OneCannon{
 	    	}else if( cannonType == 11 || cannonType == 12 || cannonType == 13 || cannonType == 14)
 	    	{
 	    		if (cannonType == 13 || cannonType == 14) {
-	    		colorMissiles(true);
+	    		colorMissiles();
 	    		} else {
-	    		colorMissiles(false);
+	    		colorTorpedoes();
 	    		}
 	    		charged=1;
 	    		if(depth < 240 )
@@ -4662,7 +4600,19 @@ public class OneCannon{
 		    	if( !torp.dead )
 		    	{
 		    		NavyCraft.instance.DebugMessage(Integer.toString(i), 3);
-			    	if( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35 || ( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35 && i < 16 ))
+					int depthDifference = torp.setDepth - torp.warhead.getY();
+					if( depthDifference < 0 )
+					{
+						torp.hdg = BlockFace.DOWN;
+						missileMode = 2;
+					}else if( depthDifference > 0)
+					{
+						torp.hdg = BlockFace.UP;
+						missileMode = 1;
+					}else if (missileMode <= 0) {
+						torp.hdg = direction;
+					}
+			    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
 			    	{
 			    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 						if( i > 15 )
@@ -4685,15 +4635,7 @@ public class OneCannon{
 							
 							
 							//new position
-							torp.warhead = torp.warhead.getRelative(torp.hdg);
-							int depthDifference = torp.setDepth - torp.warhead.getY();
-							if( depthDifference < 0 )
-							{
-								torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
-							}else if( depthDifference > 0)
-							{
-								torp.warhead = torp.warhead.getRelative(BlockFace.UP);
-							}
+							torp.warhead = torp.warhead.getRelative(torp.hdg);	
 							
 							if( torp.turnProgress > -1 )
 							{
@@ -4759,8 +4701,6 @@ public class OneCannon{
 								}
 							}
 							
-							
-							
 							//check new position
 							if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
 							{
@@ -4782,7 +4722,6 @@ public class OneCannon{
 									p.sendMessage("Missile expired.");
 									return;
 								}
-			    				
 			    				torp.warhead.setTypeIdAndData(35, (byte) 0xB, false);
 			    				torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
 			    				torp.warhead.getRelative(torp.hdg, -2).setTypeIdAndData(35, (byte) 0x0, false);
@@ -4988,6 +4927,11 @@ public class OneCannon{
 								openMissileDoorsV(p);
 						}
 			    	}
+					if (depthDifference == -1 || depthDifference == 1) {
+						missileMode = 3;
+					} else if (missileMode == 3) {
+						missileMode = 0;
+					}
 			    }
 			    	if( i == 15 )
 					{
