@@ -33,6 +33,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
+import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
@@ -67,6 +68,7 @@ public class NavyCraft_BlockListener implements Listener {
 	public static WorldEditPlugin wep;
 	public static WorldGuardPlugin wgp;
 	public static CraftMover cm;
+	public static OneCannon onec;
 	public static int lastSpawn = -1;
 
 	public NavyCraft_BlockListener(NavyCraft p) {
@@ -97,7 +99,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
-
+	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
 		File shipyarddata = new File(
 		NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),

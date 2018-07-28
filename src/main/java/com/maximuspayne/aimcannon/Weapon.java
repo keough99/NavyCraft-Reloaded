@@ -13,6 +13,7 @@ public class Weapon {
 	int rudderSetting=0;
 	int turnProgress = -1;
 	int torpSetHeading=-1;
+	int torpRotation;
 	boolean doubleTurn=false;
 	int tubeNum=0;
 	boolean active=false;
@@ -27,6 +28,7 @@ public class Weapon {
 		warhead = b;
 		hdg = bf;
 		setDepth = depth;
+		torpRotation = 0;
 	}
 	
 	public Weapon(Block b, int dcdirectionIn, int depth)

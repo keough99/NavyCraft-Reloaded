@@ -514,10 +514,12 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		// fire airplane gun
 		if ((action == Action.LEFT_CLICK_AIR) && (player.getItemInHand().getType() == Material.GOLD_SWORD)&& event.getHand() == EquipmentSlot.HAND ) {
-			if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+			if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+				if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
 				ItemStack m = new ItemStack(Material.EGG, 1);
 				player.getInventory().removeItem(m);
 				player.updateInventory();
+			}
 			Craft testCraft = Craft.getPlayerCraft(event.getPlayer());
 			if ((testCraft != null) && (testCraft.driverName == player.getName()) && testCraft.type.canFly
 					&& !testCraft.sinking && !testCraft.helmDestroyed) {
@@ -540,10 +542,12 @@ public class NavyCraft_PlayerListener implements Listener {
 		// AA Gunner...
 		if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.aaGunnersList.contains(player)
 				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
-			if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+			if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+				if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
 				ItemStack m = new ItemStack(Material.EGG, 1);
 				player.getInventory().removeItem(m);
 				player.updateInventory();
+			}
 			Egg newEgg = player.launchProjectile(Egg.class);
 			newEgg.setVelocity(newEgg.getVelocity().multiply(2.0f));
 			NavyCraft.explosiveEggsList.add(newEgg);
@@ -557,10 +561,12 @@ public class NavyCraft_PlayerListener implements Listener {
 			// Flak Gunner...
 			if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.flakGunnersList.contains(player)
 					&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
-				if (event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+				if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+					if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
 					ItemStack m = new ItemStack(Material.EGG, 1);
 					player.getInventory().removeItem(m);
 					player.updateInventory();
+				}
 				Egg newEgg = player.launchProjectile(Egg.class);
 				newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 				NavyCraft.explosiveEggsList.add(newEgg);

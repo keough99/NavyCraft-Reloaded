@@ -207,22 +207,23 @@ public class CraftMover {
 					
 				}
 				
-				if (theBlock.getTypeId() == 23) { //move cannons
+				if (theBlock.getTypeId() == 23 || theBlock.getTypeId() == 158) { //move cannons
 
 					boolean stopSearch = false;
 					for (OneCannon onec : AimCannon.getCannons()) {
-						if (onec.isThisCannon(theBlock.getLocation(), false)) {
+						if (onec.isThisCannon(theBlock.getLocation(), false, false) || onec.isThisCannon(theBlock.getLocation(), false, true)) {
 							stopSearch = true;
 						}
 					}
 
 					if (!stopSearch) {
 						OneCannon oc = new OneCannon(theBlock.getLocation(), NavyCraft.instance);
-						if (oc.isValidCannon(theBlock)) {
+						if ((oc.isValidCannon(theBlock, false) && theBlock.getTypeId() == 23) || (oc.isValidCannon(theBlock, true) && theBlock.getTypeId() == 158)) {
 
 							for (OneCannon onec : AimCannon.getCannons()) {
-								boolean oldCannonFound = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true);
-								if (oldCannonFound) {
+								boolean oldCannonFound = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true, true);
+								boolean oldCannonFound2 = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true, false);
+								if (oldCannonFound || oldCannonFound2) {
 									Location newLoc = theBlock.getLocation();
 									onec.setLocation(newLoc);
 
@@ -242,10 +243,10 @@ public class CraftMover {
 		for (DataBlock dataBlock : craft.dataBlocks) {
 
 			Block theBlock = getWorldBlock(dataBlock.x, dataBlock.y, dataBlock.z);
-			if (theBlock.getTypeId() == 23) {
+			if (theBlock.getTypeId() == 23 || theBlock.getTypeId() == 158) {
 
 				for (OneCannon onec : AimCannon.getCannons()) {
-					if (onec.isThisCannon(theBlock.getLocation(), false)) {
+					if (onec.isThisCannon(theBlock.getLocation(), false, false) || onec.isThisCannon(theBlock.getLocation(), false, true)) {
 						onec.reload(p);
 					}
 				}
@@ -1672,13 +1673,19 @@ public class CraftMover {
 							signUpdates(newBlock);
 						} // end if sign
 
-						if (craft.doCost && (blockId == 23)) {
+						if (craft.doCost && (blockId == 23 || blockId == 158)) {
 							OneCannon oc = new OneCannon(newBlock.getLocation(), NavyCraft.instance);
 
-							Dispenser dispenser = (Dispenser) newBlock.getState();
-							Inventory inventory = dispenser.getInventory();
+							Inventory inventory = null;
+							if (newBlock.getType() == Material.DISPENSER) {
+					    	Dispenser dispenser = (Dispenser) newBlock.getState();
+					    	inventory = dispenser.getInventory();
+							} else if (newBlock.getType() == Material.DROPPER) {
+							Dropper dropper = (Dropper) newBlock.getState();
+					    	inventory = dropper.getInventory();
+							}
 
-							if (oc.isValidCannon(newBlock) && ((inventory.getItem(4) == null) || (inventory.getItem(4).getTypeId() != 388))) {
+							if ((oc.isValidCannon(newBlock, false) && newBlock.getTypeId() == 23) || (oc.isValidCannon(newBlock, true) && newBlock.getTypeId() == 158) && ((inventory.getItem(4) == null) || (inventory.getItem(4).getTypeId() != 388))) {
 								int cost = 0;
 								AimCannon.cannons.add(oc);
 								if (oc.cannonType == 0) {
@@ -1699,8 +1706,16 @@ public class CraftMover {
 									cost = 250;
 								} else if (oc.cannonType == 9) {
 									cost = 250;
-								}else if (oc.cannonType == 10) {
+								} else if (oc.cannonType == 10) {
 									cost = 500;
+								} else if (oc.cannonType == 11) {
+									cost = 600;
+								} else if (oc.cannonType == 12) {
+									cost = 1250;
+								} else if (oc.cannonType == 13) {
+									cost = 600;
+								} else if (oc.cannonType == 14) {
+									cost = 1250;
 								}
 								craft.vehicleCost += cost;
 								initWeaponDispensers.add(newBlock);
@@ -1849,8 +1864,14 @@ public class CraftMover {
 				}
 				if (!initWeaponDispensers.isEmpty()) {
 					for (Block b : initWeaponDispensers) {
-						Dispenser dispenser = (Dispenser) b.getState();
-						Inventory inventory = dispenser.getInventory();
+						Inventory inventory = null;
+						if (b.getType() == Material.DISPENSER) {
+				    	Dispenser dispenser = (Dispenser) b.getState();
+				    	inventory = dispenser.getInventory();
+						} else if (b.getType() == Material.DROPPER) {
+						Dropper dropper = (Dropper) b.getState();
+				    	inventory = dropper.getInventory();
+						}
 						inventory.setItem(4, new ItemStack(388, 1));
 					}
 					initWeaponDispensers.clear();
@@ -5655,11 +5676,11 @@ public class CraftMover {
 				for (Craft c : craftDamagers.keySet()) {
 					int damage = (int) (((float) craftDamagers.get(c) / (float) totalDamage) * totalBlocks);
 					if (c.customName != null) {
-						name = c.customName.toUpperCase() + " (" + c.name + " class)";
+						name = c.customName.toUpperCase();
 					} else {
-						name = c.name.toUpperCase() + " class";
+						name = c.name.toUpperCase();
 					}
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + damage / 2 + "cash!");
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.GOLD + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + damage / 2 + ChatColor.GREEN + " cash!");
 					if (!uncrewedPlayers.isEmpty()) {
 						for (Player p : uncrewedPlayers.keySet()) {
 							int d = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
@@ -5667,7 +5688,7 @@ public class CraftMover {
 								for (String s : c.crewNames) {
 									if (craft.crewHistory.contains(s) && !plugin.getServer().getPlayer(s).isOp()) { return; }
 								}
-								plugin.getServer().broadcastMessage(ChatColor.GREEN + p.getName() + " receives " + ChatColor.YELLOW + d + ChatColor.GREEN + " rank points and " + d / 2 + "cash!");
+								plugin.getServer().broadcastMessage(ChatColor.GOLD + p.getName() + ChatColor.GREEN + " receives " + ChatColor.YELLOW + d + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + d / 2 + ChatColor.GREEN + " cash!");
 							}
 						}
 					}
