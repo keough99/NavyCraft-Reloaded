@@ -4275,10 +4275,10 @@ public class OneCannon{
     				
     				
     				
-    				for( int i=0; i<150; i++ )
+    				for( int i=0; i<550; i++ )
     				{
 						fireMissileUpdateMk1(p, torp, i, testCraft, left, true);
-						sleep(80);
+						sleep(85);
 					} 
 				}catch (InterruptedException e) {
 					e.printStackTrace();
@@ -4398,7 +4398,7 @@ public class OneCannon{
 						
 						
 						//check new position
-						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						if( torp.warhead.getType() == Material.AIR )
 						{
 		    				if( i == 149 )
 							{
@@ -4505,7 +4505,7 @@ public class OneCannon{
 						//Move torp
 						torp.warhead = torp.warhead.getRelative(torp.hdg);
 						
-						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						if( torp.warhead.getType() == Material.AIR )
 						{
 							torp.warhead.setTypeIdAndData(35, (byte) 0xB, false);
 			    			torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
@@ -4601,15 +4601,15 @@ public class OneCannon{
 		    	{
 		    		NavyCraft.instance.DebugMessage(Integer.toString(i), 3);
 					int depthDifference = torp.setDepth - torp.warhead.getY();
-					if( depthDifference < 0 )
-					{
-						torp.hdg = BlockFace.DOWN;
-						missileMode = 2;
-					}else if( depthDifference > 0)
+					if( depthDifference > 0 && torp.torpRotation != -1)
 					{
 						torp.hdg = BlockFace.UP;
-						missileMode = 1;
-					}else if (missileMode <= 0) {
+						torp.torpRotation = 1;
+					if (depthDifference == 1) {
+					torp.torpRotation = 3;
+			    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 3", 3);
+					}
+					}else if ( depthDifference == 0) {
 						torp.hdg = direction;
 					}
 			    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
@@ -4617,7 +4617,7 @@ public class OneCannon{
 			    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 						if( i > 15 )
 						{
-							if( torp.warhead.getY() > 62 )
+							if( ( torp.warhead.getY() > 58 && torp.torpRotation == 2) || ( torp.warhead.getY() > 62 && torp.torpRotation != 2 ))
 				    		{
 				    			torp.warhead.setType(Material.AIR);
 				    			torp.warhead.getRelative(torp.hdg, -1).setType(Material.AIR);
@@ -4631,80 +4631,51 @@ public class OneCannon{
 				    			torp.warhead.getRelative(torp.hdg, -3).setType(Material.WATER);
 				    		}
 							
-							
-							
-							
-							//new position
-							torp.warhead = torp.warhead.getRelative(torp.hdg);	
-							
-							if( torp.turnProgress > -1 )
-							{
-								
-								if( torp.turnProgress == 10 )
-								{
-									if( torp.hdg == BlockFace.NORTH )
-									{
-										if( torp.rudder < 0 )
-											torp.hdg = BlockFace.WEST;
-										else
-											torp.hdg = BlockFace.EAST;
-									}else if( torp.hdg == BlockFace.SOUTH )
-									{
-										if( torp.rudder < 0 )
-											torp.hdg = BlockFace.EAST;
-										else
-											torp.hdg = BlockFace.WEST;
-									}else if( torp.hdg == BlockFace.EAST )
-									{
-										if( torp.rudder < 0 )
-											torp.hdg = BlockFace.NORTH;
-										else
-											torp.hdg = BlockFace.SOUTH;
-									}else
-									{
-										if( torp.rudder < 0 )
-											torp.hdg = BlockFace.SOUTH;
-										else
-											torp.hdg = BlockFace.NORTH;
-									}
-									torp.rudder = -torp.rudder;
-								}
-								
-								if( torp.turnProgress == 20 )
-								{
-									if( torp.doubleTurn )
-									{
-										torp.turnProgress = 0;
-										torp.rudder = -torp.rudder;
-										torp.doubleTurn = false;
-									}else
-									{
-										torp.turnProgress = -1;
-										torp.rudder = torp.rudderSetting;
-									}
-								}else
-									torp.turnProgress += 1;
+							if (torp.torpRotation == 4) {
+						    	NavyCraft.instance.DebugMessage("Running block fix", 3);
+								if( torp.warhead.getY() > 62 )
+					    		{
+					    			torp.warhead.setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.UP, -1).setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.UP, -2).setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.UP, -3).setType(Material.AIR);
+					    		}else
+					    		{
+					    			torp.warhead.setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.UP, -1).setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.UP, -2).setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.UP, -3).setType(Material.WATER);
+					    		}
+								if( torp.warhead.getY() > 58 )
+					    		{
+					    			torp.warhead.setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -1).setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -2).setType(Material.AIR);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -3).setType(Material.AIR);
+					    		}else
+					    		{
+					    			torp.warhead.setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -1).setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -2).setType(Material.WATER);
+					    			torp.warhead.getRelative(BlockFace.DOWN, -3).setType(Material.WATER);
+					    		}
+								torp.torpRotation = -1;
 							}
 							
-							if( torp.rudder != 0 )
-							{
-								int dirMod  = Math.abs(torp.rudder);
-								if( i % dirMod == 0 )
-								{
-									if( torp.rudder < 0 )
-									{
-										torp.warhead = getDirectionFromRelative(torp.warhead, torp.hdg, true);
-									}else
-									{
-										torp.warhead = getDirectionFromRelative(torp.warhead, torp.hdg, false);
-									}
-								}
+							if (depthDifference < 0 && i > 50) {
+							torp.hdg = BlockFace.DOWN;
+							torp.torpRotation = 2;
+							if (depthDifference == -1) {
+							torp.torpRotation = 3;
 							}
+						}
+								//new position
+								torp.warhead = torp.warhead.getRelative(torp.hdg);								
 							
 							//check new position
 							if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
 							{
-			    				if( i == 149 )
+			    				if( i == 500 )
 								{
 									if( torp.warhead.getY() > 62 )
 									{
@@ -4795,6 +4766,7 @@ public class OneCannon{
 										firingCraft.addBlock(torp.warhead.getRelative(BlockFace.UP, -7), true);
 										firingCraft.addBlock(torp.warhead.getRelative(BlockFace.UP, -8), true);
 									}
+									torp.torpRotation = 3;
 								}
 							}else
 							{
@@ -4927,12 +4899,11 @@ public class OneCannon{
 								openMissileDoorsV(p);
 						}
 			    	}
-					if (depthDifference == -1 || depthDifference == 1) {
-						missileMode = 3;
-					} else if (missileMode == 3) {
-						missileMode = 0;
-					}
-			    }
+			    	if (torp.torpRotation == 3) {
+			    		torp.torpRotation = 4;
+				    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 4", 3);
+			    	}
+		    	}
 			    	if( i == 15 )
 					{
 						
@@ -5337,6 +5308,7 @@ public class OneCannon{
     }
     
     public void fireMissileUpdateMk2(final Player p, final Weapon torp, final int i, final Craft firingCraft, final boolean left, final boolean isVertical) {
+    	if (!isVertical) {
     	nc.getServer().getScheduler().scheduleSyncDelayedTask(nc, new Runnable(){
     	//new Thread() {
 	  //  @Override
@@ -5449,7 +5421,7 @@ public class OneCannon{
 						
 						
 						//check new position
-						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						if( torp.warhead.getType() == Material.AIR )
 						{
 		    				if( i == 249 )
 							{
@@ -5555,7 +5527,7 @@ public class OneCannon{
 						//Move torp
 						torp.warhead = torp.warhead.getRelative(torp.hdg);
 						
-						if( torp.warhead.getType() == Material.WATER || torp.warhead.getType() == Material.AIR || torp.warhead.getType() == Material.STATIONARY_WATER )
+						if( torp.warhead.getType() == Material.AIR )
 						{
 							torp.warhead.setTypeIdAndData(35, (byte) 0xE, false);
 			    			torp.warhead.getRelative(torp.hdg, -1).setTypeIdAndData(35, (byte) 0x0, false);
@@ -5641,8 +5613,10 @@ public class OneCannon{
     	}
     	
 	);
-
-    }
+   } else {
+	   
+   }
+}
     
     
     public boolean isValidCannon(Block b, boolean isDropper) {
