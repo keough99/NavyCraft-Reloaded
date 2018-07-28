@@ -4278,7 +4278,7 @@ public class OneCannon{
     				for( int i=0; i<550; i++ )
     				{
 						fireMissileUpdateMk1(p, torp, i, testCraft, left, true);
-						sleep(85);
+						sleep(115);
 					} 
 				}catch (InterruptedException e) {
 					e.printStackTrace();
@@ -4796,7 +4796,7 @@ public class OneCannon{
 									else
 										rightLoading = false;
 									
-									if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+									if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 										openMissileDoorsV(p);
 								}else
 								{
@@ -4805,7 +4805,7 @@ public class OneCannon{
 									else
 										rightLoading = false;
 									
-									if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+									if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 										openMissileDoorsV(p);
 								}
 								p.sendMessage("Dud Missile! Too close.2");
@@ -4837,7 +4837,7 @@ public class OneCannon{
 								else
 									rightLoading = false;
 								
-								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+								if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 									openMissileDoorsV(p);
 							}else
 							{
@@ -4846,7 +4846,7 @@ public class OneCannon{
 								else
 									rightLoading = false;
 								
-								if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+								if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 									openMissileDoorsV(p);
 							}
 							return;
@@ -4886,7 +4886,7 @@ public class OneCannon{
 							else
 								rightLoading = false;
 							
-							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 								openMissileDoorsV(p);
 						}else
 						{
@@ -4895,7 +4895,7 @@ public class OneCannon{
 							else
 								rightLoading = false;
 							
-							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 								openMissileDoorsV(p);
 						}
 			    	}
@@ -4915,7 +4915,7 @@ public class OneCannon{
 							else
 								rightLoading = false;
 							
-							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 								openMissileDoorsV(p);
 						}else
 						{
@@ -4924,7 +4924,7 @@ public class OneCannon{
 							else
 								rightLoading = false;
 							
-							if( !leftLoading && !rightLoading && !checkOuterDoorClosed() )
+							if( !leftLoading && !rightLoading && !checkOuterDoorClosedV() )
 								openMissileDoorsV(p);
 						}
 						torp.active = true;
@@ -5314,7 +5314,7 @@ public class OneCannon{
     				for( int i=0; i<550; i++ )
     				{
 						fireMissileUpdateMk2(p, torp, i, testCraft, left, true);
-						sleep(55);
+						sleep(80);
 					} 
 				}catch (InterruptedException e) {
 					e.printStackTrace();
