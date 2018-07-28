@@ -5680,7 +5680,7 @@ public class CraftMover {
 					} else {
 						name = c.name.toUpperCase();
 					}
-					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the" + ChatColor.GOLD + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + damage / 2 + ChatColor.GREEN + " cash!");
+					plugin.getServer().broadcastMessage(ChatColor.GREEN + "The crew of the " + ChatColor.GOLD + name + " receives " + ChatColor.YELLOW + damage + ChatColor.GREEN + " rank points and " + ChatColor.YELLOW + damage / 2 + ChatColor.GREEN + " cash!");
 					if (!uncrewedPlayers.isEmpty()) {
 						for (Player p : uncrewedPlayers.keySet()) {
 							int d = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
