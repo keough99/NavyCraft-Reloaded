@@ -812,6 +812,9 @@ public class NavyCraft_FileListener implements Listener {
 		NavyCraft.playerEngineVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("engvolume").toString()));
 		NavyCraft.playerWeaponVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("wepvolume").toString()));
 		NavyCraft.playerOtherVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("othervolume").toString()));
+		NavyCraft.instance.DebugMessage("Engine V:" + NavyCraft.playerEngineVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
+		NavyCraft.instance.DebugMessage("Weapon V:" + NavyCraft.playerWeaponVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
+		NavyCraft.instance.DebugMessage("Other V:" + NavyCraft.playerOtherVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
 	}
 	
 	public static void saveVolume(String player) {
