@@ -2730,6 +2730,7 @@ public class NavyCraft_BlockListener implements Listener {
 		if(!event.isCancelled())
 			AimCannonPlayerListener.onBlockDispense(event);
 	}
+	
 	public static void showRank(Player player, String p) {
 		int exp = 0;
 		int exp1 = 0;
