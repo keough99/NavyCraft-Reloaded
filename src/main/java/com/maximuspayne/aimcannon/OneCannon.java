@@ -1779,7 +1779,7 @@ public class OneCannon{
 	public void fireTorpedoMk1(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left){
 
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
-		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth, 0);
 		AimCannon.weapons.add(torp);
 		
 		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )
@@ -2225,7 +2225,7 @@ public class OneCannon{
     	//final int taskNum;
     	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
-		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth, 0);
 		AimCannon.weapons.add(torp);
 		
 		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )
@@ -2972,7 +2972,7 @@ public class OneCannon{
     	//final int taskNum;
     	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
-		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth, 0);
 		AimCannon.weapons.add(torp);
 		
 		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )
@@ -3793,9 +3793,9 @@ public class OneCannon{
 		else if ( cannonType == 3)
 			fireTorpedoMk2(p, b, direction, depth, 0, true);
 		else if (cannonType == 11)
-			fireMissileMk1(p, b, direction, depth, 0, true, false);
+			fireMissileMk1(p, b, direction, depth, 0, 0, true, false);
 		else
-			fireMissileMk2(p, b, direction, depth, 0, true, false);
+			fireMissileMk2(p, b, direction, depth, 0, 0, true, false);
     }
     
     public void fireRight(Player p)
@@ -3816,9 +3816,9 @@ public class OneCannon{
 			//fireTorpedo(p, b, direction, depth, 500, getTubeBlockFace(false), 0);
 			fireTorpedoMk2(p, b, direction, depth, 0, false);
 		else if (cannonType == 11)
-			fireMissileMk1(p, b, direction, depth, 0, false, false);
+			fireMissileMk1(p, b, direction, depth, 0, 0, false, false);
 		else
-			fireMissileMk2(p, b, direction, depth, 0, false, false);
+			fireMissileMk2(p, b, direction, depth, 0, 0, false, false);
     }
     
     public void fireBoth(Player p)
@@ -3853,15 +3853,15 @@ public class OneCannon{
     	}else if (cannonType == 11)
     	{
     		b = getDirectionFromRelative(loc.getBlock(), direction, true).getRelative(direction,4);
-    		fireMissileMk1(p, b, direction, depth, 0,true,false);
+    		fireMissileMk1(p, b, direction, depth, 0, 0,true,false);
     		b = getDirectionFromRelative(loc.getBlock(), direction, false).getRelative(direction,4);
-    		fireMissileMk1(p, b, direction, depth, 2000,false,false);
+    		fireMissileMk1(p, b, direction, depth, 2000, 0,false,false);
     	}else
     	{
     		b = getDirectionFromRelative(loc.getBlock(), direction, true).getRelative(direction,4);
-    		fireMissileMk2(p, b, direction, depth, 0,true,false);
+    		fireMissileMk2(p, b, direction, depth, 0, 0,true,false);
     		b = getDirectionFromRelative(loc.getBlock(), direction, false).getRelative(direction,4);
-    		fireMissileMk2(p, b, direction, depth, 2000,false,false);
+    		fireMissileMk2(p, b, direction, depth, 2000, 0,false,false);
     	}
     	
     	
@@ -3881,9 +3881,9 @@ public class OneCannon{
 			testCraft.waitTorpLoading++;
 		}
 		if (cannonType == 13)
-			fireMissileMk1(p, b, direction, depth, 0, true, true);
+			fireMissileMk1(p, b, direction, depth, 0, range, true, true);
 		else
-			fireMissileMk2(p, b, direction, depth, 0, true, true);
+			fireMissileMk2(p, b, direction, depth, 0, range, true, true);
     }
     
     public Block getDirectionFromRelative(Block blockIn, BlockFace dir, boolean left)
@@ -4120,6 +4120,14 @@ public class OneCannon{
     	}
     }
     
+    public void setMissileRange(Player p)
+    {
+		if(range < 250 )
+			range = range + 5;
+		else
+			range = 0;
+    }
+    
     public void fireMissileButton(Player p, boolean isVertical)
     {
 		NavyCraft.instance.DebugMessage("Ran fire method, is vertical:" + isVertical, 3);
@@ -4200,9 +4208,9 @@ public class OneCannon{
     
  
     
-	public void fireMissileMk1(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left, final boolean isVertical){
+	public void fireMissileMk1(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final int torpRange, final boolean left, final boolean isVertical){
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
-		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth, torpRange);
 		AimCannon.weapons.add(torp);
 		
 		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )
@@ -4937,11 +4945,11 @@ public class OneCannon{
    }
 }
     
-    public void fireMissileMk2(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final boolean left, final boolean isVertical){
+    public void fireMissileMk2(final Player p, final Block b, final BlockFace torpHeading, final int torpDepth, final int delayShoot, final int torpRange, final boolean left, final boolean isVertical){
     	//final int taskNum;
     	//int taskNum = plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable(){
     	final Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
-		final Weapon torp = new Weapon(b, torpHeading, torpDepth);
+		final Weapon torp = new Weapon(b, torpHeading, torpDepth, torpRange);
 		AimCannon.weapons.add(torp);
 		
 		if( torp.warhead.getRelative(torp.hdg, -4).getRelative(BlockFace.UP).getTypeId() == 68 )

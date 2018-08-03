@@ -146,7 +146,7 @@ public class AimCannonPlayerListener implements Listener {
 					if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 					onec.fireMissileButton(event.getPlayer(), true);
 					else
-					event.getPlayer().sendMessage("Left click to fire missile!");
+					onec.setMissileRange(event.getPlayer());
 				}
 			}
 		}
