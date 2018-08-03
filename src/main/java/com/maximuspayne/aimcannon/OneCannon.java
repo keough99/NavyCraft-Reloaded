@@ -4671,7 +4671,7 @@ public class OneCannon{
 								torp.torpRotation = -1;
 							}
 							
-							if (depthDifference < 0 && (torp.setRange - i < 0)) {
+							if (depthDifference < 0 && (torp.setRange - (i + 16) < 0)) {
 							torp.hdg = BlockFace.DOWN;
 							torp.torpRotation = 2;
 							if (depthDifference == -1) {
@@ -5710,7 +5710,7 @@ public class OneCannon{
     									torp.torpRotation = -1;
     								}
     								
-    								if (depthDifference < 0 && (torp.setRange - i < 0)) {
+    								if (depthDifference < 0 && (torp.setRange - (i + 15) < 0)) {
     									torp.hdg = BlockFace.DOWN;
     									torp.torpRotation = 2;
     									if (depthDifference == -1) {

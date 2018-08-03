@@ -2137,14 +2137,18 @@ public class NavyCraft_BlockListener implements Listener {
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
 
 		if (theCraft != null) {
-			if (!theCraft.crewNames.contains(event.getPlayer().getName()) && !event.getPlayer().isOp() && !PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				return;
+			} else {
 				event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");
 				event.setCancelled(true);
 			}
 		} else {
 			theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
 			if (theCraft != null) {
-				if (!theCraft.crewNames.contains(event.getPlayer().getName()) && !event.getPlayer().isOp() && !PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+					return;
+				} else {
 					event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");
 					event.setCancelled(true);
 				}
