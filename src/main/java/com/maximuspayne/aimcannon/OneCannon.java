@@ -4126,6 +4126,7 @@ public class OneCannon{
 			range = range + 5;
 		else
 			range = 0;
+		p.sendMessage("Range set to " + range + "m.");
     }
     
     public void fireMissileButton(Player p, boolean isVertical)
@@ -4670,7 +4671,7 @@ public class OneCannon{
 								torp.torpRotation = -1;
 							}
 							
-							if (depthDifference < 0 && i > 50) {
+							if (depthDifference < 0 && (torp.setRange - i < 0)) {
 							torp.hdg = BlockFace.DOWN;
 							torp.torpRotation = 2;
 							if (depthDifference == -1) {
@@ -5709,13 +5710,13 @@ public class OneCannon{
     									torp.torpRotation = -1;
     								}
     								
-    								if (depthDifference < 0 && i > 50) {
-    								torp.hdg = BlockFace.DOWN;
-    								torp.torpRotation = 2;
-    								if (depthDifference == -1) {
-    								torp.torpRotation = 3;
+    								if (depthDifference < 0 && (torp.setRange - i < 0)) {
+    									torp.hdg = BlockFace.DOWN;
+    									torp.torpRotation = 2;
+    									if (depthDifference == -1) {
+    									torp.torpRotation = 3;
+    									}
     								}
-    							}
 
     							//new position
     							torp.warhead = torp.warhead.getRelative(torp.hdg);
