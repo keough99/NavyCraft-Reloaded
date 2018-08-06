@@ -279,16 +279,19 @@ public class NavyCraft_FileListener implements Listener {
 		if (playerData.getInt(pt.name) > 0) {
 			if (NavyCraft.playerRewards.containsKey(UUID)) {
 				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
-				Reward r2;
+				Reward r2 = null;
 				for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
 					if (r3.name == pt.name) {
 						r2 = r3;
 					}
 				}
-				Reward reward = (pt.name, r2.amount + r.amount);
-				NavyCraft.playerRewards.put(UUID, );
+				Reward reward = new Reward(pt.name, r2.amount + r.amount);
+				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
+				NavyCraft.playerRewards.get(UUID).add(reward);
 			} else {
-				NavyCraft.playerRewards.put(UUID, playerData.getInt(pt.name));
+				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
+				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
+				NavyCraft.playerRewards.get(UUID).add(r);
 			}
 		}
 	}

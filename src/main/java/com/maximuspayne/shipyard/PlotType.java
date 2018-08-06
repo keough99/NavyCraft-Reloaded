@@ -14,6 +14,8 @@ public class PlotType {
 	public int originX;
 	public int originY;
 	public int originZ;
+	public boolean doFix;
+	public boolean dontSelect;
 	public String name;
 	
 	public PlotType(String n)
@@ -26,6 +28,8 @@ public class PlotType {
 		originY = cfgm.getsyConfig().getInt("Types." + n + ".OYX");
 		originZ = cfgm.getsyConfig().getInt("Types." + n + ".OZX");
 		bfr = cfgm.getsyConfig().getInt("Types." + n + ".BFR");
+		doFix = cfgm.getsyConfig().getBoolean("Types." + n + ".doFix");
+		dontSelect = cfgm.getsyConfig().getBoolean("Types." + n + ".dontSelect");
 	}
 	
 	public static void initialize() {
