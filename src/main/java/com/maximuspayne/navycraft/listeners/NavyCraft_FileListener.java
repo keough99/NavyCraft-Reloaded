@@ -18,6 +18,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.shipyard.Plot;
 import com.maximuspayne.shipyard.PlotType;
+import com.maximuspayne.shipyard.Reward;
 import com.maximuspayne.shipyard.Shipyard;
 
 @SuppressWarnings("deprecation")
@@ -277,11 +278,20 @@ public class NavyCraft_FileListener implements Listener {
 	for (PlotType pt : Shipyard.plots) {
 		if (playerData.getInt(pt.name) > 0) {
 			if (NavyCraft.playerRewards.containsKey(UUID)) {
-				NavyCraft.playerSHIP1Rewards.put(UUID, NavyCraft.playerSHIP1Rewards.get(UUID) + playerData.getInt("SHIP1"));
+				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
+				Reward r2;
+				for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
+					if (r3.name == pt.name) {
+						r2 = r3;
+					}
+				}
+				Reward reward = (pt.name, r2.amount + r.amount);
+				NavyCraft.playerRewards.put(UUID, );
 			} else {
-				NavyCraft.playerSHIP1Rewards.put(UUID, playerData.getInt("SHIP1"));
+				NavyCraft.playerRewards.put(UUID, playerData.getInt(pt.name));
 			}
 		}
+	}
 		try {
 			playerData.save(f);
 		} catch (IOException e) {
