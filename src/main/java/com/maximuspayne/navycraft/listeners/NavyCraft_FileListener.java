@@ -17,6 +17,8 @@ import com.maximuspayne.navycraft.ConfigManager;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.shipyard.Plot;
+import com.maximuspayne.shipyard.PlotType;
+import com.maximuspayne.shipyard.Shipyard;
 
 @SuppressWarnings("deprecation")
 public class NavyCraft_FileListener implements Listener {
@@ -272,103 +274,12 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		
-		if (playerData.getInt("SHIP1") > 0) {
-			if (NavyCraft.playerSHIP1Rewards.containsKey(UUID)) {
+	for (PlotType pt : Shipyard.plots) {
+		if (playerData.getInt(pt.name) > 0) {
+			if (NavyCraft.playerRewards.containsKey(UUID)) {
 				NavyCraft.playerSHIP1Rewards.put(UUID, NavyCraft.playerSHIP1Rewards.get(UUID) + playerData.getInt("SHIP1"));
 			} else {
 				NavyCraft.playerSHIP1Rewards.put(UUID, playerData.getInt("SHIP1"));
-			}
-		}
-		if (playerData.getInt("SHIP2") > 0) {
-			if (NavyCraft.playerSHIP2Rewards.containsKey(UUID)) {
-				NavyCraft.playerSHIP2Rewards.put(UUID, NavyCraft.playerSHIP2Rewards.get(UUID) + playerData.getInt("SHIP2"));
-			} else {
-				NavyCraft.playerSHIP2Rewards.put(UUID, playerData.getInt("SHIP2"));
-			}
-		}
-		if (playerData.getInt("SHIP3") > 0) {
-			if (NavyCraft.playerSHIP3Rewards.containsKey(UUID)) {
-				NavyCraft.playerSHIP3Rewards.put(UUID, NavyCraft.playerSHIP3Rewards.get(UUID) + playerData.getInt("SHIP3"));
-			} else {
-				NavyCraft.playerSHIP3Rewards.put(UUID, playerData.getInt("SHIP3"));
-			}
-		}
-		if (playerData.getInt("SHIP4") > 0) {
-			if (NavyCraft.playerSHIP4Rewards.containsKey(UUID)) {
-				NavyCraft.playerSHIP4Rewards.put(UUID, NavyCraft.playerSHIP4Rewards.get(UUID) + playerData.getInt("SHIP4"));
-			} else {
-				NavyCraft.playerSHIP4Rewards.put(UUID, playerData.getInt("SHIP4"));
-			}
-		}
-		if (playerData.getInt("SHIP5") > 0) {
-			if (NavyCraft.playerSHIP5Rewards.containsKey(UUID)) {
-				NavyCraft.playerSHIP5Rewards.put(UUID, NavyCraft.playerSHIP5Rewards.get(UUID) + playerData.getInt("SHIP5"));
-			} else {
-				NavyCraft.playerSHIP5Rewards.put(UUID, playerData.getInt("SHIP5"));
-			}
-		}
-		if (playerData.getInt("HANGAR1") > 0) {
-			if (NavyCraft.playerHANGAR1Rewards.containsKey(UUID)) {
-				NavyCraft.playerHANGAR1Rewards.put(UUID, NavyCraft.playerHANGAR1Rewards.get(UUID) + playerData.getInt("HANGAR1"));
-			} else {
-				NavyCraft.playerHANGAR1Rewards.put(UUID, playerData.getInt("HANGAR1"));
-			}
-		}
-		if (playerData.getInt("HANGAR2") > 0) {
-			if (NavyCraft.playerHANGAR2Rewards.containsKey(UUID)) {
-				NavyCraft.playerHANGAR2Rewards.put(UUID, NavyCraft.playerHANGAR2Rewards.get(UUID) + playerData.getInt("HANGAR2"));
-			} else {
-				NavyCraft.playerHANGAR2Rewards.put(UUID, playerData.getInt("HANGAR2"));
-			}
-		}
-		if (playerData.getInt("TANK1") > 0) {
-			if (NavyCraft.playerTANK1Rewards.containsKey(UUID)) {
-				NavyCraft.playerTANK1Rewards.put(UUID, NavyCraft.playerTANK1Rewards.get(UUID) + playerData.getInt("TANK1"));
-			} else {
-				NavyCraft.playerTANK1Rewards.put(UUID, playerData.getInt("TANK1"));
-			}
-		}
-		if (playerData.getInt("TANK2") > 0) {
-			if (NavyCraft.playerTANK2Rewards.containsKey(UUID)) {
-				NavyCraft.playerTANK2Rewards.put(UUID, NavyCraft.playerTANK2Rewards.get(UUID) + playerData.getInt("TANK2"));
-			} else {
-				NavyCraft.playerTANK2Rewards.put(UUID, playerData.getInt("TANK2"));
-			}
-		}
-		if (playerData.getInt("MAP1") > 0) {
-			if (NavyCraft.playerMAP1Rewards.containsKey(UUID)) {
-				NavyCraft.playerMAP1Rewards.put(UUID, NavyCraft.playerMAP1Rewards.get(UUID) + playerData.getInt("MAP1"));
-			} else {
-				NavyCraft.playerMAP1Rewards.put(UUID, playerData.getInt("MAP1"));
-			}
-		}
-		if (playerData.getInt("MAP2") > 0) {
-			if (NavyCraft.playerMAP2Rewards.containsKey(UUID)) {
-				NavyCraft.playerMAP2Rewards.put(UUID, NavyCraft.playerMAP2Rewards.get(UUID) + playerData.getInt("MAP2"));
-			} else {
-				NavyCraft.playerMAP2Rewards.put(UUID, playerData.getInt("MAP2"));
-			}
-		}
-		if (playerData.getInt("MAP3") > 0) {
-			if (NavyCraft.playerMAP3Rewards.containsKey(UUID)) {
-				NavyCraft.playerMAP3Rewards.put(UUID, NavyCraft.playerMAP3Rewards.get(UUID) + playerData.getInt("MAP3"));
-			} else {
-				NavyCraft.playerMAP3Rewards.put(UUID, playerData.getInt("MAP3"));
-			}
-		}
-		if (playerData.getInt("MAP4") > 0) {
-			if (NavyCraft.playerMAP4Rewards.containsKey(UUID)) {
-				NavyCraft.playerMAP4Rewards.put(UUID, NavyCraft.playerMAP4Rewards.get(UUID) + playerData.getInt("MAP4"));
-			} else {
-				NavyCraft.playerMAP4Rewards.put(UUID, playerData.getInt("MAP4"));
-			}
-		}
-		if (playerData.getInt("MAP5") > 0) {
-			if (NavyCraft.playerMAP5Rewards.containsKey(UUID)) {
-				NavyCraft.playerMAP5Rewards.put(UUID, NavyCraft.playerMAP5Rewards.get(UUID) + playerData.getInt("MAP5"));
-			} else {
-				NavyCraft.playerMAP5Rewards.put(UUID, playerData.getInt("MAP5"));
 			}
 		}
 		try {
