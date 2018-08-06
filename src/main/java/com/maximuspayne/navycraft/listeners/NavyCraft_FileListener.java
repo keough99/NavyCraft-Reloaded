@@ -29,19 +29,19 @@ public class NavyCraft_FileListener implements Listener {
 	}
 
 	public static void loadSignData() {
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		int size = list.size();
 		NavyCraft.playerSigns.clear();
 		if (size == 0) return;
 		for (String num : list) {
-			if (cfgm.syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("true")) {
-				String type = cfgm.syData.getString("Signs." + num + ".type");
-				World world = NavyCraft.instance.getServer().getWorld(cfgm.syData.getString("Signs." + num + "." + "world"));
-				int x = cfgm.syData.getInt("Signs." + num + ".x");
-				int y = cfgm.syData.getInt("Signs." + num + ".y");
-				int z = cfgm.syData.getInt("Signs." + num + ".z");
-				int id = cfgm.syData.getInt("Signs." + num + ".id");
-				String UUID = cfgm.syData.getString("Signs." + num + ".uuid");
+			if (ConfigManager.syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("true")) {
+				String type = ConfigManager.syData.getString("Signs." + num + ".type");
+				World world = NavyCraft.instance.getServer().getWorld(ConfigManager.syData.getString("Signs." + num + "." + "world"));
+				int x = ConfigManager.syData.getInt("Signs." + num + ".x");
+				int y = ConfigManager.syData.getInt("Signs." + num + ".y");
+				int z = ConfigManager.syData.getInt("Signs." + num + ".z");
+				int id = ConfigManager.syData.getInt("Signs." + num + ".id");
+				String UUID = ConfigManager.syData.getString("Signs." + num + ".uuid");
 				Block selectSignBlock = world.getBlockAt(x, y, z);
 				if (selectSignBlock.getTypeId() == 63) {
 				Sign selectSign = (Sign) selectSignBlock.getState();
@@ -61,14 +61,14 @@ public class NavyCraft_FileListener implements Listener {
 
 	public static Block findSignOpen(String type) {
 		Block selectSignBlock = null;
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-			if (cfgm.syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
-				String ptype = cfgm.syData.getString("Signs." + num + "." + "type");
-				World world = NavyCraft.instance.getServer().getWorld(cfgm.syData.getString("Signs." + num + "." + "world"));
-				int x = cfgm.syData.getInt("Signs." + num + "." + "x");
-				int y = cfgm.syData.getInt("Signs." + num + "." + "y");
-				int z = cfgm.syData.getInt("Signs." + num + "." + "z");
+			if (ConfigManager.syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
+				String ptype = ConfigManager.syData.getString("Signs." + num + "." + "type");
+				World world = NavyCraft.instance.getServer().getWorld(ConfigManager.syData.getString("Signs." + num + "." + "world"));
+				int x = ConfigManager.syData.getInt("Signs." + num + "." + "x");
+				int y = ConfigManager.syData.getInt("Signs." + num + "." + "y");
+				int z = ConfigManager.syData.getInt("Signs." + num + "." + "z");
 				if (type == ptype) {
 					selectSignBlock = world.getBlockAt(x, y, z);
 					if (selectSignBlock.getTypeId() == 63) {
@@ -85,22 +85,22 @@ public class NavyCraft_FileListener implements Listener {
 		if (selectSignBlock.getTypeId() == 63) {
 		Location loc = new Location(NavyCraft.instance.getServer().getWorld(world), x, y, z);
 		String UUID = PermissionInterface.getUUIDfromPlayer(player);
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-			int x1 = cfgm.syData.getInt("Signs." + num + "." + "x");
-			int y1 = cfgm.syData.getInt("Signs." + num + "." + "y");
-			int z1 = cfgm.syData.getInt("Signs." + num + "." + "z");
-			String world1 = cfgm.syData.getString("Signs." + num + "." + "world");
+			int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
+			int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
+			int z1 = ConfigManager.syData.getInt("Signs." + num + "." + "z");
+			String world1 = ConfigManager.syData.getString("Signs." + num + "." + "world");
 			Location loc1 = new Location(NavyCraft.instance.getServer().getWorld(world1), x1, y1, z1);
 			if (loc.equals(loc1)) {
-				cfgm.syData.set("Signs." + num + "." + "type", type.toUpperCase());
-				cfgm.syData.set("Signs." + num + "." + "world", world);
-				cfgm.syData.set("Signs." + num + "." + "x", x);
-				cfgm.syData.set("Signs." + num + "." + "y", y);
-				cfgm.syData.set("Signs." + num + "." + "z", z);
-				cfgm.syData.set("Signs." + num + "." + "isClaimed", true);
-				cfgm.syData.set("Signs." + num + "." + "uuid", UUID);
-				cfgm.syData.set("Signs." + num + "." + "id", id);
+				ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
+				ConfigManager.syData.set("Signs." + num + "." + "world", world);
+				ConfigManager.syData.set("Signs." + num + "." + "x", x);
+				ConfigManager.syData.set("Signs." + num + "." + "y", y);
+				ConfigManager.syData.set("Signs." + num + "." + "z", z);
+				ConfigManager.syData.set("Signs." + num + "." + "isClaimed", true);
+				ConfigManager.syData.set("Signs." + num + "." + "uuid", UUID);
+				ConfigManager.syData.set("Signs." + num + "." + "id", id);
 				break;
 			}
 		}
@@ -112,22 +112,22 @@ public class NavyCraft_FileListener implements Listener {
 		Block selectSignBlock = NavyCraft.instance.getServer().getWorld(world).getBlockAt(x, y, z);
 		if (selectSignBlock.getTypeId() == 63) {
 		Location loc = new Location(NavyCraft.instance.getServer().getWorld(world), x, y, z);
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-			int x1 = cfgm.syData.getInt("Signs." + num + "." + "x");
-			int y1 = cfgm.syData.getInt("Signs." + num + "." + "y");
-			int z1 = cfgm.syData.getInt("Signs." + num + "." + "z");
-			String world1 = cfgm.syData.getString("Signs." + num + "." + "world");
+			int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
+			int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
+			int z1 = ConfigManager.syData.getInt("Signs." + num + "." + "z");
+			String world1 = ConfigManager.syData.getString("Signs." + num + "." + "world");
 			Location loc1 = new Location(NavyCraft.instance.getServer().getWorld(world1), x1, y1, z1);
 			if (loc.equals(loc1)) {
-				cfgm.syData.set("Signs." + num + "." + "type", type.toUpperCase());
-				cfgm.syData.set("Signs." + num + "." + "world", world);
-				cfgm.syData.set("Signs." + num + "." + "x", x);
-				cfgm.syData.set("Signs." + num + "." + "y", y);
-				cfgm.syData.set("Signs." + num + "." + "z", z);
-				cfgm.syData.set("Signs." + num + "." + "isClaimed", false);
-				cfgm.syData.set("Signs." + num + "." + "uuid", null);
-				cfgm.syData.set("Signs." + num + "." + "id", null);
+				ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
+				ConfigManager.syData.set("Signs." + num + "." + "world", world);
+				ConfigManager.syData.set("Signs." + num + "." + "x", x);
+				ConfigManager.syData.set("Signs." + num + "." + "y", y);
+				ConfigManager.syData.set("Signs." + num + "." + "z", z);
+				ConfigManager.syData.set("Signs." + num + "." + "isClaimed", false);
+				ConfigManager.syData.set("Signs." + num + "." + "uuid", null);
+				ConfigManager.syData.set("Signs." + num + "." + "id", null);
 				break;
 			}
 		}
@@ -136,24 +136,24 @@ public class NavyCraft_FileListener implements Listener {
 }
 	
 	public static void saveSign(String type, String world, int x, int y, int z) {
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		int size = list.size();
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type.toUpperCase());
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
-		cfgm.syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", false);
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "type", type.toUpperCase());
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "world", world);
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "x", x);
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
+		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", false);
 		cfgm.savesyData();
 }
 	
 	public static boolean checkSign(int x, int y, int z, World world) {
-		List<String> list = new ArrayList<String>(cfgm.syData.getConfigurationSection("Signs").getKeys(false));
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		for (String num : list) {
-				World world1 = NavyCraft.instance.getServer().getWorld(cfgm.syData.getString("Signs." + num + "." + "world"));
-				int x1 = cfgm.syData.getInt("Signs." + num + "." + "x");
-				int y1 = cfgm.syData.getInt("Signs." + num + "." + "y");
-				int z1 = cfgm.syData.getInt("Signs." + num + "." + "z");
+				World world1 = NavyCraft.instance.getServer().getWorld(ConfigManager.syData.getString("Signs." + num + "." + "world"));
+				int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
+				int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
+				int z1 = ConfigManager.syData.getInt("Signs." + num + "." + "z");
 				Location loc1 = new Location(world1, x1, y1, z1);
 				Location loc = new Location(world, x, y, z);
 				if (loc.equals(loc1)) {
@@ -276,16 +276,17 @@ public class NavyCraft_FileListener implements Listener {
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 	for (PlotType pt : Shipyard.plots) {
+		NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 		if (playerData.getInt(pt.name) > 0) {
 			if (NavyCraft.playerRewards.containsKey(UUID)) {
 				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
 				Reward r2 = null;
 				for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
-					if (r3.name == pt.name) {
+					if (r3.name.equalsIgnoreCase(pt.name)) {
 						r2 = r3;
 					}
 				}
-				Reward reward = new Reward(pt.name, r2.amount + r.amount);
+				Reward reward = new Reward(pt.name, (r2.amount + r.amount));
 				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
 				NavyCraft.playerRewards.get(UUID).add(reward);
 			} else {

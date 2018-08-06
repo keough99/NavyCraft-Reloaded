@@ -153,14 +153,14 @@ public class NavyCraft_Timer extends BukkitRunnable {
 		    public void run()
 		    {
 	for (PlotType pt : Shipyard.plots) {
-		World syworld = NavyCraft.instance.getServer().getWorld(cfgm.syConfig.getString("SHIP1World"));
-		int startX = cfgm.syConfig.getInt("Types." + pt.name + ".SX");
-		int endX = cfgm.syConfig.getInt("Types." + pt.name + ".EX");
-		int widthX = cfgm.syConfig.getInt("Types." + pt.name + ".WX");
-		int y = cfgm.syConfig.getInt("Types." + pt.name + ".Y");
-		int startZ = cfgm.syConfig.getInt("Types." + pt.name + ".SZ");
-		int endZ = cfgm.syConfig.getInt("Types." + pt.name + ".EZ");
-		int widthZ = cfgm.syConfig.getInt("Types." + pt.name + ".WZ");
+		World syworld = NavyCraft.instance.getServer().getWorld(ConfigManager.syConfig.getString("SHIP1World"));
+		int startX = ConfigManager.syConfig.getInt("Types." + pt.name + ".SX");
+		int endX = ConfigManager.syConfig.getInt("Types." + pt.name + ".EX");
+		int widthX = ConfigManager.syConfig.getInt("Types." + pt.name + ".WX");
+		int y = ConfigManager.syConfig.getInt("Types." + pt.name + ".Y");
+		int startZ = ConfigManager.syConfig.getInt("Types." + pt.name + ".SZ");
+		int endZ = ConfigManager.syConfig.getInt("Types." + pt.name + ".EZ");
+		int widthZ = ConfigManager.syConfig.getInt("Types." + pt.name + ".WZ");
 		for (int x = startX; x <= endX; x += widthX) {
 			for (int z = startZ; z >= endZ; z -= widthZ) {
 				if (syworld.getBlockAt(x, y, z).getTypeId() == 63

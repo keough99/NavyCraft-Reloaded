@@ -231,6 +231,7 @@ public class NavyCraft_BlockListener implements Listener {
 				boolean doFix = false;
 				boolean dontSelect = false;
 				for (PlotType pt : Shipyard.plots) {
+					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 					if (pt.name == lotStr) {
 					name = pt.name;
 					doFix = pt.doFix;
@@ -245,7 +246,11 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 
-				if (name == null || sizeX == 0 || sizeY == 0 || sizeZ == 0 || originX == 0 || originY == 0 || originZ == 0 || loc == null){
+				if (name == null || sizeX == 0 || sizeY == 0 || sizeZ == 0 || loc == null){
+					NavyCraft.instance.DebugMessage(name, 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeX), 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeY), 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeZ), 3);
 					player.sendMessage(ChatColor.DARK_RED + "Sign Error: Invalid Lot");
 					return;
 				}
@@ -331,6 +336,7 @@ public class NavyCraft_BlockListener implements Listener {
 					int numPlots = 0;
 					int numRewPlots = 1;
 					for (PlotType pt : Shipyard.plots) {
+						NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 						if (pt.name == lotStr) {
 						name = pt.name;
 						sizeX = pt.sizeX;
@@ -361,7 +367,12 @@ public class NavyCraft_BlockListener implements Listener {
 						return;
 					}
 			
-				if (name == null || sizeX == 0 || sizeY == 0 || sizeZ == 0 || originX == 0 || originY == 0 || originZ == 0 || loc == null){
+				if (name == null || sizeX == 0 || sizeY == 0 || sizeZ == 0 || loc == null){
+					NavyCraft.instance.DebugMessage(name, 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeX), 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeY), 3);
+					NavyCraft.instance.DebugMessage(String.valueOf(sizeZ), 3);
+					NavyCraft.instance.DebugMessage(loc.toString(), 3);
 						player.sendMessage(ChatColor.DARK_RED + "Sign Error: Invalid Lot");
 						return;
 					}
@@ -1938,8 +1949,9 @@ public class NavyCraft_BlockListener implements Listener {
 		
 		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
 			if (s.contains("navycraft")) {
-				if (s.contains("reward")) {
+				if (s.contains("plots")) {
 				for (PlotType pt : Shipyard.plots) {
+					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 					if (s.contains(pt.name)) {
 					String[] split = s.split("\\.");
 					try {

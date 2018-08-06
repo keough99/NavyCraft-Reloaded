@@ -12,9 +12,9 @@ public class ConfigManager {
 	
 	//files and configuration
 	File shipyarddata = new File(plugin.getDataFolder(),File.separator + "shipyarddata");
-	public FileConfiguration syConfig;
+	public static FileConfiguration syConfig;
 	public File syCFile;
-	public FileConfiguration syData;
+	public static FileConfiguration syData;
 	public File syDFile;
 	
 	public void setupsyConfig() {
@@ -159,7 +159,7 @@ public class ConfigManager {
 		}
 	}
 	
-	public FileConfiguration getsyConfig () {
+	public static FileConfiguration getsyConfig () {
 		return syConfig;
 	}
 	
@@ -193,7 +193,7 @@ public class ConfigManager {
 		}
 	}
 	
-	public FileConfiguration getsyData () {
+	public static FileConfiguration getsyData () {
 		return syData;
 	}
 	

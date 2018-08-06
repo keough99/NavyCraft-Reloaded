@@ -1,12 +1,8 @@
 package com.maximuspayne.shipyard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.maximuspayne.navycraft.ConfigManager;
 
 public class PlotType {
-	public static ConfigManager cfgm;
 	public int bfr;
 	public int sizeX;
 	public int sizeY;
@@ -21,22 +17,23 @@ public class PlotType {
 	public PlotType(String n)
 	{
 		name = n;
-		sizeX = cfgm.getsyConfig().getInt("Types." + n + ".SZX");
-		sizeY = cfgm.getsyConfig().getInt("Types." + n + ".SZY");
-		sizeZ = cfgm.getsyConfig().getInt("Types." + n + ".SZZ");
-		originX= cfgm.getsyConfig().getInt("Types." + n + ".OX");
-		originY = cfgm.getsyConfig().getInt("Types." + n + ".OYX");
-		originZ = cfgm.getsyConfig().getInt("Types." + n + ".OZX");
-		bfr = cfgm.getsyConfig().getInt("Types." + n + ".BFR");
-		doFix = cfgm.getsyConfig().getBoolean("Types." + n + ".doFix");
-		dontSelect = cfgm.getsyConfig().getBoolean("Types." + n + ".dontSelect");
+		sizeX = ConfigManager.getsyConfig().getInt("Types." + n + ".SZX");
+		sizeY = ConfigManager.getsyConfig().getInt("Types." + n + ".SZY");
+		sizeZ = ConfigManager.getsyConfig().getInt("Types." + n + ".SZZ");
+		originX= ConfigManager.getsyConfig().getInt("Types." + n + ".OX");
+		originY = ConfigManager.getsyConfig().getInt("Types." + n + ".OYX");
+		originZ = ConfigManager.getsyConfig().getInt("Types." + n + ".OZX");
+		bfr = ConfigManager.getsyConfig().getInt("Types." + n + ".BFR");
+		doFix = ConfigManager.getsyConfig().getBoolean("Types." + n + ".doFix");
+		dontSelect = ConfigManager.getsyConfig().getBoolean("Types." + n + ".dontSelect");
 	}
 	
 	public static void initialize() {
-		List<String> list = new ArrayList<String>(cfgm.getsyConfig().getConfigurationSection("Types").getKeys(false));
-		for (String num : list) {
+		Shipyard.plots.clear();
+		for(String num : ConfigManager.getsyConfig().getConfigurationSection("Types").getKeys(false)){
 			PlotType Plot = new PlotType(num);
 			Shipyard.plots.add(Plot);
+			System.out.println(Plot.name + "added to registry");
 		}
 	}
 }

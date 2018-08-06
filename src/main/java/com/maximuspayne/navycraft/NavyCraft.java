@@ -33,6 +33,7 @@ import com.maximuspayne.navycraft.listeners.NavyCraft_PlayerListener;
 import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.teleportfix.TeleportFix;
 import com.maximuspayne.shipyard.Plot;
+import com.maximuspayne.shipyard.PlotType;
 import com.maximuspayne.shipyard.Reward;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -125,6 +126,7 @@ public class NavyCraft extends JavaPlugin {
 			dir.mkdir();
 
 		loadConfigManager();
+		PlotType.initialize();
 		
 		CraftType.loadTypes(dir);
 		CraftType.saveTypes(dir);
