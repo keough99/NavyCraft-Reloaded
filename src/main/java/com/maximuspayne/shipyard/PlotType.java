@@ -21,8 +21,8 @@ public class PlotType {
 		sizeY = ConfigManager.getsyConfig().getInt("Types." + n + ".SZY");
 		sizeZ = ConfigManager.getsyConfig().getInt("Types." + n + ".SZZ");
 		originX= ConfigManager.getsyConfig().getInt("Types." + n + ".OX");
-		originY = ConfigManager.getsyConfig().getInt("Types." + n + ".OYX");
-		originZ = ConfigManager.getsyConfig().getInt("Types." + n + ".OZX");
+		originY = ConfigManager.getsyConfig().getInt("Types." + n + ".OY");
+		originZ = ConfigManager.getsyConfig().getInt("Types." + n + ".OZ");
 		bfr = ConfigManager.getsyConfig().getInt("Types." + n + ".BFR");
 		doFix = ConfigManager.getsyConfig().getBoolean("Types." + n + ".doFix");
 		dontSelect = ConfigManager.getsyConfig().getBoolean("Types." + n + ".dontSelect");
