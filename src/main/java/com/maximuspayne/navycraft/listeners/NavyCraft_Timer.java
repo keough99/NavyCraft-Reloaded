@@ -152,7 +152,7 @@ public class NavyCraft_Timer extends BukkitRunnable {
     	NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new Runnable(){
 		    public void run()
 		    {
-	for (PlotType pt : Shipyard.plots) {
+	for (PlotType pt : Shipyard.getPlots()) {
 		World syworld = NavyCraft.instance.getServer().getWorld(ConfigManager.syConfig.getString("SHIP1World"));
 		int startX = ConfigManager.syConfig.getInt("Types." + pt.name + ".SX");
 		int endX = ConfigManager.syConfig.getInt("Types." + pt.name + ".EX");

@@ -275,11 +275,12 @@ public class NavyCraft_FileListener implements Listener {
 				File.separator + "userdata");
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-	for (PlotType pt : Shipyard.plots) {
+	for (PlotType pt : Shipyard.getPlots()) {
 		NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 		if (playerData.getInt(pt.name) > 0) {
-			if (NavyCraft.playerRewards.containsKey(UUID)) {
+			if (pt.name != null) {
 				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
+			if (NavyCraft.playerRewards.containsKey(UUID) && NavyCraft.playerRewards.get(UUID).contains(r)) {
 				Reward r2 = null;
 				for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
 					if (r3.name.equalsIgnoreCase(pt.name)) {
@@ -290,12 +291,14 @@ public class NavyCraft_FileListener implements Listener {
 				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
 				NavyCraft.playerRewards.get(UUID).add(reward);
 			} else {
-				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
 				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
 				NavyCraft.playerRewards.get(UUID).add(r);
 			}
+		} else {
+			NavyCraft.instance.DebugMessage("Plot name was null!", 3);
 		}
 	}
+}
 		try {
 			playerData.save(f);
 		} catch (IOException e) {

@@ -230,7 +230,7 @@ public class NavyCraft_BlockListener implements Listener {
 				String name = null;
 				boolean doFix = false;
 				boolean dontSelect = false;
-				for (PlotType pt : Shipyard.plots) {
+				for (PlotType pt : Shipyard.getPlots()) {
 					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 					if (pt.name == lotStr) {
 					name = pt.name;
@@ -335,7 +335,7 @@ public class NavyCraft_BlockListener implements Listener {
 					String name = null;
 					int numPlots = 0;
 					int numRewPlots = 1;
-					for (PlotType pt : Shipyard.plots) {
+					for (PlotType pt : Shipyard.getPlots()) {
 						NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 						if (pt.name == lotStr) {
 						name = pt.name;
@@ -1950,7 +1950,7 @@ public class NavyCraft_BlockListener implements Listener {
 		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
 			if (s.contains("navycraft")) {
 				if (s.contains("plots")) {
-				for (PlotType pt : Shipyard.plots) {
+				for (PlotType pt : Shipyard.getPlots()) {
 					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 					if (s.contains(pt.name)) {
 					String[] split = s.split("\\.");
