@@ -119,6 +119,10 @@ public class NavyCraft extends JavaPlugin {
 	
 	private ConfigManager cfgm;
 
+	public static HashMap<String, ArrayList<Reward>> getRewards() {
+		return playerRewards;
+	}
+	
 	public void loadProperties() {
 		getConfig().options().copyDefaults(true);
 		File dir = getDataFolder();

@@ -1661,8 +1661,8 @@ public class NavyCraft_PlayerListener implements Listener {
 							String typeString = split[3];
 							boolean isCanceled = false;
 						for (PlotType pt : Shipyard.getPlots()) {
-							NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 							if (typeString.equalsIgnoreCase(pt.name)) {
+								isCanceled = false;
 								break;
 							} else {
 								isCanceled = true;
@@ -1733,8 +1733,8 @@ public class NavyCraft_PlayerListener implements Listener {
 							String typeString = split[3];
 							boolean isCanceled = false;
 						for (PlotType pt : Shipyard.getPlots()) {
-							NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 							if (typeString.equalsIgnoreCase(pt.name)) {
+								isCanceled = false;
 								break;
 							} else {
 								isCanceled = true;
@@ -1867,7 +1867,6 @@ public class NavyCraft_PlayerListener implements Listener {
 
 								Block tpBlock = null;
 							for (PlotType pt :Shipyard.getPlots()) {
-								NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 								if (typeString.equalsIgnoreCase(pt.name)) {
 									tpBlock = NavyCraft_FileListener.findSignOpen(pt.name);
 									break;
@@ -2451,7 +2450,6 @@ public class NavyCraft_PlayerListener implements Listener {
 								if (UUID != null) {
 								player.sendMessage(ChatColor.AQUA + p + "'s Shipyard Plots:");
 							for (PlotType pt : Shipyard.getPlots()) {
-								NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 								int numPlots = 0;
 								int numRewPlots = 0;
 								if (NavyCraft.playerSigns.containsKey(UUID)) {
@@ -2546,7 +2544,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 						for (PlotType pt : Shipyard.getPlots()) {
-							NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 							int numPlots = 0;
 							int numRewPlots = 0;
 							if (NavyCraft.playerSigns.containsKey(UUID)) {

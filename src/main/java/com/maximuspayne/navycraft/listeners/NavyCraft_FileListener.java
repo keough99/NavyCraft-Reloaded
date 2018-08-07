@@ -23,7 +23,6 @@ import com.maximuspayne.shipyard.Shipyard;
 
 @SuppressWarnings("deprecation")
 public class NavyCraft_FileListener implements Listener {
-	private static ConfigManager cfgm;
 	
 	public NavyCraft_FileListener(NavyCraft p) {
 	}
@@ -104,7 +103,7 @@ public class NavyCraft_FileListener implements Listener {
 				break;
 			}
 		}
-		cfgm.savesyData();
+		ConfigManager.savesyData();
 	}
 }
 	
@@ -131,7 +130,7 @@ public class NavyCraft_FileListener implements Listener {
 				break;
 			}
 		}
-		cfgm.savesyData();
+		ConfigManager.savesyData();
 	}
 }
 	
@@ -144,7 +143,7 @@ public class NavyCraft_FileListener implements Listener {
 		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "y", y);
 		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "z", z);
 		ConfigManager.syData.set("Signs." + String.valueOf(size + 1) + "." + "isClaimed", false);
-		cfgm.savesyData();
+		ConfigManager.savesyData();
 }
 	
 	public static boolean checkSign(int x, int y, int z, World world) {
@@ -268,7 +267,7 @@ public class NavyCraft_FileListener implements Listener {
 		}
 	}
 	
-	public static void loadRewardsFile(String player) {
+	public static void loadRewardsFile(String player, ArrayList<Reward> list) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
@@ -276,35 +275,21 @@ public class NavyCraft_FileListener implements Listener {
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 	for (PlotType pt : Shipyard.getPlots()) {
-		NavyCraft.instance.DebugMessage(pt.name + "found", 3);
-		if (playerData.getInt(pt.name) > 0) {
-			if (pt.name != null) {
-				Reward r = new Reward(pt.name, playerData.getInt(pt.name));
-			if (NavyCraft.playerRewards.containsKey(UUID) && NavyCraft.playerRewards.get(UUID).contains(r)) {
-				Reward r2 = null;
-				for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
-					if (r3.name.equalsIgnoreCase(pt.name)) {
-						r2 = r3;
-					}
-				}
-				Reward reward = new Reward(pt.name, (r2.amount + r.amount));
-				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
-				NavyCraft.playerRewards.get(UUID).add(reward);
-			} else {
-				NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
-				NavyCraft.playerRewards.get(UUID).add(r);
+		Reward r = new Reward(pt.name, playerData.getInt(pt.name.toUpperCase()));
+		for (Reward r2 : list) {
+			if (r2.name.equalsIgnoreCase(r.name)) {
+				r = new Reward (pt.name, r2.amount + r.amount);
 			}
-		} else {
-			NavyCraft.instance.DebugMessage("Plot name was null!", 3);
 		}
+		list.add(r);
 	}
-}
-		try {
-			playerData.save(f);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	NavyCraft.playerRewards.put(UUID, list);
+	try {
+		playerData.save(f);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 		return;
 	}
 

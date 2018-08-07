@@ -13,9 +13,9 @@ public class ConfigManager {
 	//files and configuration
 	File shipyarddata = new File(plugin.getDataFolder(),File.separator + "shipyarddata");
 	public static FileConfiguration syConfig;
-	public File syCFile;
+	public static File syCFile;
 	public static FileConfiguration syData;
-	public File syDFile;
+	public static File syDFile;
 	
 	public void setupsyConfig() {
 		if (!plugin.getDataFolder().exists()) {
@@ -163,14 +163,14 @@ public class ConfigManager {
 		return syConfig;
 	}
 	
-	public void savesyConfig() {
+	public static void savesyConfig() {
 		try {
 			syConfig.save(syCFile);
 		} catch (IOException e) {
 			System.out.println("Could not save shipyard config.yml file");
 		}
 	}
-	public void reloadsyConfig() {
+	public static void reloadsyConfig() {
 		syConfig = YamlConfiguration.loadConfiguration(syCFile);
 	}
 	
@@ -197,14 +197,14 @@ public class ConfigManager {
 		return syData;
 	}
 	
-	public void savesyData() {
+	public static void savesyData() {
 		try {
 			syData.save(syDFile);
 		} catch (IOException e) {
 			System.out.println("Could not save shipyard config.yml file");
 		}
 	}
-	public void reloadsyData() {
+	public static void reloadsyData() {
 		syData = YamlConfiguration.loadConfiguration(syDFile);
 	}
 

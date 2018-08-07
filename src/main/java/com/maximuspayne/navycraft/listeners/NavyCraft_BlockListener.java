@@ -231,7 +231,6 @@ public class NavyCraft_BlockListener implements Listener {
 				boolean doFix = false;
 				boolean dontSelect = false;
 				for (PlotType pt : Shipyard.getPlots()) {
-					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 					if (pt.name.equalsIgnoreCase(lotStr)) {
 					name = pt.name;
 					doFix = pt.doFix;
@@ -336,7 +335,6 @@ public class NavyCraft_BlockListener implements Listener {
 					int numPlots = 0;
 					int numRewPlots = 1;
 					for (PlotType pt : Shipyard.getPlots()) {
-						NavyCraft.instance.DebugMessage(pt.name + "found", 3);
 						if (pt.name.equalsIgnoreCase(lotStr)) {
 						name = pt.name;
 						sizeX = pt.sizeX;
@@ -1932,7 +1930,6 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 	
 	public static void loadRewards(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		NavyCraft.playerRewards.clear();
 		
 		String worldName = "";
@@ -1947,43 +1944,25 @@ public class NavyCraft_BlockListener implements Listener {
 		if (pex == null)
 			return;
 		
+		ArrayList<Reward> list = new ArrayList<Reward>();
 		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
+			for (PlotType pt : Shipyard.getPlots()) {
 			if (s.contains("navycraft")) {
-				if (s.contains("plots")) {
-				for (PlotType pt : Shipyard.getPlots()) {
-					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
-					if (s.contains(pt.name)) {
-					String[] split = s.split("\\.");
-					try {
+					if (s.contains(pt.name.toLowerCase())) {
+						String[] split = s.split("\\.");
+						try {
 						int num = Integer.parseInt(split[2]);
-								if (NavyCraft.playerRewards.containsKey(UUID)) {
-									Reward r = new Reward(pt.name, num);
-									Reward r2 = null;
-									for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
-										if (r3.name.equalsIgnoreCase(pt.name)) {
-											r2 = r3;
-										}
-									}
-									Reward reward = new Reward(pt.name, r2.amount + r.amount);
-									NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
-									NavyCraft.playerRewards.get(UUID).add(reward);
-									break;
-								} else {
-									Reward r = new Reward(pt.name, num);
-									NavyCraft.playerRewards.put(UUID, new ArrayList<Reward>());
-									NavyCraft.playerRewards.get(UUID).add(r);
-									break;
-								}
+						Reward r = new Reward(pt.name, num);
+						list.add(r);
 					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s + " " + s.split(".").length);
+						System.out.println("Invalid perm-" + s);
 						break;
 					}
 				}
 			}
 		}
 	}
-}
-		NavyCraft_FileListener.loadRewardsFile(player);
+		NavyCraft_FileListener.loadRewardsFile(player, list);
 		
 	}
 
