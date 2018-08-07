@@ -232,7 +232,7 @@ public class NavyCraft_BlockListener implements Listener {
 				boolean dontSelect = false;
 				for (PlotType pt : Shipyard.getPlots()) {
 					NavyCraft.instance.DebugMessage(pt.name + "found", 3);
-					if (pt.name == lotStr) {
+					if (pt.name.equalsIgnoreCase(lotStr)) {
 					name = pt.name;
 					doFix = pt.doFix;
 					dontSelect = pt.dontSelect;
@@ -337,7 +337,7 @@ public class NavyCraft_BlockListener implements Listener {
 					int numRewPlots = 1;
 					for (PlotType pt : Shipyard.getPlots()) {
 						NavyCraft.instance.DebugMessage(pt.name + "found", 3);
-						if (pt.name == lotStr) {
+						if (pt.name.equalsIgnoreCase(lotStr)) {
 						name = pt.name;
 						sizeX = pt.sizeX;
 						sizeY = pt.sizeY;
@@ -348,14 +348,14 @@ public class NavyCraft_BlockListener implements Listener {
 						loc = block.getRelative(bf, pt.bfr).getLocation();
 						if (NavyCraft.playerSigns.containsKey(UUID)) {
 							for (Plot p : NavyCraft.playerSigns.get(UUID)) {
-								if (p.name == pt.name) {
+								if (p.name.equalsIgnoreCase(pt.name)) {
 									numPlots++;
 								}
 							}
 						}
 						if (NavyCraft.playerRewards.containsKey(UUID)) {
 							for (Reward r : NavyCraft.playerRewards.get(UUID)) {
-								if (r.name == pt.name) {
+								if (r.name.equalsIgnoreCase(pt.name)) {
 									numRewPlots = r.amount;
 								}
 							}
@@ -1960,7 +1960,7 @@ public class NavyCraft_BlockListener implements Listener {
 									Reward r = new Reward(pt.name, num);
 									Reward r2 = null;
 									for (Reward r3 : NavyCraft.playerRewards.get(UUID)) {
-										if (r3.name == pt.name) {
+										if (r3.name.equalsIgnoreCase(pt.name)) {
 											r2 = r3;
 										}
 									}

@@ -1583,25 +1583,67 @@ public class NavyCraft_PlayerListener implements Listener {
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
-						if (split[1].equalsIgnoreCase("load")) {
-							if (!PermissionInterface.CheckPerm(player, "navycraft.load") && !player.isOp()) {
-								player.sendMessage(ChatColor.RED + "You do not have permission to load plots.");
+						if (split[1].equalsIgnoreCase("addSign")) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
+								player.sendMessage(ChatColor.RED + "You do not have permission to add signs.");
 								event.setCancelled(true);
 								return;
 							}
 							if (split.length < 3) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard load <type>");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard load <type>");
+								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard addsign");
+								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard addsign");
 								event.setCancelled(true);
 								return;
 							}
-							List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
-							int size = list.size();
-							int amount = size;
+							if (player.getTargetBlock(null, 5).getTypeId() == 63 && player.getTargetBlock(null, 5).getRelative(BlockFace.DOWN).getTypeId() == 68) {
+									Block selectSignBlock = player.getTargetBlock(null, 5);
+									Sign selectSign = (Sign) selectSignBlock.getState();
+									BlockFace bf;
+									bf = null;
+									// bf2 = null;
+									switch (selectSignBlock.getData()) {
+										case (byte) 0x8:// n
+											bf = BlockFace.SOUTH;
+											// bf2 = BlockFace.NORTH;
+											break;
+										case (byte) 0x0:// s
+											bf = BlockFace.NORTH;
+											// bf2 = BlockFace.SOUTH;
+											break;
+										case (byte) 0x4:// w
+											bf = BlockFace.EAST;
+											// bf2 = BlockFace.WEST;
+											break;
+										case (byte) 0xC:// e
+											bf = BlockFace.WEST;
+											// bf2 = BlockFace.EAST;
+											break;
+										default:
+											break;
+									}
+
+									if (bf == null) {
+										player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Direction?");
+										return;
+									}
+									Sign selectSign2 = (Sign) selectSignBlock.getRelative(BlockFace.DOWN).getRelative(bf, -1).getState();
+									String signLine0 = selectSign.getLine(0);
+									String signLine1 = selectSign.getLine(1);
+									String sign2Line3 = selectSign2.getLine(3);
+									int sign2Line2 = Integer.valueOf(selectSign2.getLine(2));
+									
+							if (signLine0.equalsIgnoreCase("*claim*")) {
+								NavyCraft_FileListener.saveSign(sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ());
+							} else if (signLine0.equalsIgnoreCase("*select")) {
+								NavyCraft_FileListener.saveClaimedSign(signLine1, sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ(), sign2Line2);
+							} else {
+								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!");
+								return;
+							}
 							player.sendMessage(ChatColor.GREEN + "Loaded: " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW
-									+ amount + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plots");
-							event.setCancelled(true);
+									+ "1" + sign2Line3 + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plot");
 							return;
+						}
 						} else if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
@@ -2414,18 +2456,18 @@ public class NavyCraft_PlayerListener implements Listener {
 								int numRewPlots = 0;
 								if (NavyCraft.playerSigns.containsKey(UUID)) {
 									for (Plot p1 : NavyCraft.playerSigns.get(UUID)) {
-										if (p1.name == pt.name)
+										if (p1.name.equalsIgnoreCase(pt.name))
 											numPlots++;
 									}
 								}
 								if (NavyCraft.playerRewards.containsKey(UUID)) {
 									for (Reward r : NavyCraft.playerRewards.get(UUID)) {
-										if (r.name == pt.name) {
+										if (r.name.equalsIgnoreCase(pt.name)) {
 											numRewPlots = r.amount;
 										}
 									}
 								}
-							if (numPlots != 0 && numRewPlots != 0) {
+							if (numPlots > 0 || numRewPlots > 0) {
 										player.sendMessage(ChatColor.GOLD + pt.name + ChatColor.DARK_GRAY + " [" +  ChatColor.GREEN + numPlots + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
 												+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numRewPlots + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 							}
@@ -2509,18 +2551,18 @@ public class NavyCraft_PlayerListener implements Listener {
 							int numRewPlots = 0;
 							if (NavyCraft.playerSigns.containsKey(UUID)) {
 								for (Plot p1 : NavyCraft.playerSigns.get(UUID)) {
-									if (p1.name == pt.name)
+									if (p1.name.equalsIgnoreCase(pt.name))
 										numPlots++;
 								}
 							}
 							if (NavyCraft.playerRewards.containsKey(UUID)) {
 								for (Reward r : NavyCraft.playerRewards.get(UUID)) {
-									if (r.name == pt.name) {
+									if (r.name.equalsIgnoreCase(pt.name)) {
 										numRewPlots = r.amount;
 									}
 								}
 							}
-						if (numPlots != 0 && numRewPlots != 0) {
+						if (numPlots > 0 || numRewPlots > 0) {
 									player.sendMessage(ChatColor.GOLD + pt.name + ChatColor.DARK_GRAY + " [" +  ChatColor.GREEN + numPlots + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "/"
 											+ ChatColor.DARK_GRAY + "[" + ChatColor.RED + numRewPlots + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_AQUA + " available");
 						}

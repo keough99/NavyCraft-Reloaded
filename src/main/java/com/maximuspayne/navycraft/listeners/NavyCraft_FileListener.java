@@ -69,7 +69,7 @@ public class NavyCraft_FileListener implements Listener {
 				int x = ConfigManager.syData.getInt("Signs." + num + "." + "x");
 				int y = ConfigManager.syData.getInt("Signs." + num + "." + "y");
 				int z = ConfigManager.syData.getInt("Signs." + num + "." + "z");
-				if (type == ptype) {
+				if (type.equalsIgnoreCase(ptype)) {
 					selectSignBlock = world.getBlockAt(x, y, z);
 					if (selectSignBlock.getTypeId() == 63) {
 					break;
