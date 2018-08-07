@@ -4618,7 +4618,7 @@ public class OneCannon{
 					torp.torpRotation = 3;
 			    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 3", 3);
 					}
-					}else if ( depthDifference == 0) {
+					}else if ( depthDifference <= 0) {
 						torp.hdg = direction;
 					}
 			    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
@@ -4671,13 +4671,15 @@ public class OneCannon{
 								torp.torpRotation = -1;
 							}
 							
-							if (depthDifference < 0 && (torp.setRange - (i + 16) < 0)) {
-							torp.hdg = BlockFace.DOWN;
-							torp.torpRotation = 2;
-							if (depthDifference == -1) {
-							torp.torpRotation = 3;
+							if (depthDifference <= 0) torp.rangeCounter++;
+							
+							if (depthDifference < 0 && (torp.setRange - torp.rangeCounter < 0)) {
+								torp.hdg = BlockFace.DOWN;
+								torp.torpRotation = 2;
+								if (depthDifference == -1) {
+								torp.torpRotation = 3;
+								}
 							}
-						}
 								//new position
 								torp.warhead = torp.warhead.getRelative(torp.hdg);								
 							
@@ -5657,7 +5659,7 @@ public class OneCannon{
     						torp.torpRotation = 3;
     				    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 3", 3);
     						}
-    						}else if (torp.torpRotation == 4 && depthDifference == 0) {
+    						}else if (torp.torpRotation == 4 && depthDifference <= 0) {
     							torp.hdg = direction;
     						}
     				    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
@@ -5710,7 +5712,9 @@ public class OneCannon{
     									torp.torpRotation = -1;
     								}
     								
-    								if (depthDifference < 0 && (torp.setRange - (i + 15) < 0)) {
+    								if (depthDifference <= 0) torp.rangeCounter++;
+    								
+    								if (depthDifference < 0 && (torp.setRange - torp.rangeCounter < 0)) {
     									torp.hdg = BlockFace.DOWN;
     									torp.torpRotation = 2;
     									if (depthDifference == -1) {
@@ -5721,7 +5725,7 @@ public class OneCannon{
     							//new position
     							torp.warhead = torp.warhead.getRelative(torp.hdg);
     								
-    							if (depthDifference == 0) {
+    							if (torp.torpRotation == 4) {
     								if( torp.turnProgress > -1 )
     								{
     									

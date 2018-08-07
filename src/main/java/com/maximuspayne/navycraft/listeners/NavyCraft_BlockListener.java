@@ -361,7 +361,7 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 				}
 					if (numPlots >= numRewPlots) {
-						player.sendMessage("You have no" + name + "reward plots available.");
+						player.sendMessage("You have no " + name + " reward plots available.");
 						return;
 					}
 			
