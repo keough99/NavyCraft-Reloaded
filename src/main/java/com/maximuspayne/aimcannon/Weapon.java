@@ -15,6 +15,7 @@ public class Weapon {
 	int torpSetHeading=-1;
 	int torpRotation;
 	int setRange;
+	int rangeCounter;
 	boolean doubleTurn=false;
 	int tubeNum=0;
 	boolean active=false;
