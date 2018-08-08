@@ -421,7 +421,7 @@ public class AimCannonPlayerListener implements Listener {
 
 	@SuppressWarnings("deprecation")
 	public static void onBlockDispense(BlockDispenseEvent event) {
-    	if( event.getBlock() != null && event.getBlock().getTypeId() == 23 )
+    	if( event.getBlock() != null && (event.getBlock().getTypeId() == 23 ||  event.getBlock().getTypeId() == 158))
     	{
 	    	for (OneCannon onec : AimCannon.getCannons()) 
 			{
