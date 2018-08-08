@@ -91,7 +91,7 @@ public class NavyCraft_EntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event)
     {
-    	if( event.getEntity() instanceof Skeleton && NavyCraft.aaSkelesList.contains((Skeleton)event.getEntity()) )
+    	if( event.getEntity() instanceof Skeleton && (NavyCraft.aaSkelesList.contains((Skeleton)event.getEntity()) || NavyCraft.flakSkelesList.contains((Skeleton)event.getEntity()) || NavyCraft.ciwsSkelesList.contains((Skeleton)event.getEntity()) ) )
     	{
     		if( event.getTarget() instanceof Player )
     		{

@@ -66,9 +66,12 @@ public class NavyCraft extends JavaPlugin {
 	public boolean DebugMode = false;
 
 	public static ArrayList<Player> aaGunnersList = new ArrayList<Player>();
+	public static ArrayList<Skeleton> aaSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Player> flakGunnersList = new ArrayList<Player>();
 	public static ArrayList<Skeleton> flakSkelesList = new ArrayList<Skeleton>();
-	public static ArrayList<Skeleton> aaSkelesList = new ArrayList<Skeleton>();
+	public static ArrayList<Player> ciwsGunnersList = new ArrayList<Player>();
+	public static ArrayList<Player> ciwsFiringList = new ArrayList<Player>();
+	public static ArrayList<Skeleton> ciwsSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Egg> explosiveEggsList = new ArrayList<Egg>();
 	public static HashMap<UUID, Player> shotTNTList = new HashMap<UUID, Player>();
 	

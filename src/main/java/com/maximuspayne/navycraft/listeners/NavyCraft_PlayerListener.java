@@ -238,15 +238,21 @@ public class NavyCraft_PlayerListener implements Listener {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
 			player.sendMessage(ChatColor.GOLD + "You get off the Flak-Gun.");
-		}
-
-		if (NavyCraft.aaGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
+		} else if (NavyCraft.aaGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
 				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
 			NavyCraft.aaGunnersList.remove(player);
 			if (player.getInventory().contains(Material.BLAZE_ROD)) {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
 			player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
+			
+		} else if (NavyCraft.ciwsGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
+				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
+			NavyCraft.ciwsGunnersList.remove(player);
+			if (player.getInventory().contains(Material.BLAZE_ROD)) {
+				player.getInventory().remove(Material.BLAZE_ROD);
+			}
+			player.sendMessage(ChatColor.GOLD + "You get off the CIWS.");
 			
 		} else if (NavyCraft.searchLightMap.containsKey(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
 				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
@@ -560,9 +566,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			} else {
 				event.getPlayer().sendMessage(ChatColor.RED + "You are out of ammunition!");
 			}
-		}
-			// Flak Gunner...
-			if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.flakGunnersList.contains(player)
+		} else if ((action == Action.LEFT_CLICK_AIR) && NavyCraft.flakGunnersList.contains(player)
 					&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
 				if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
 					if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
@@ -581,7 +585,47 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 
 			//// else check for movement clicking
-		} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
+		} else if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_AIR) && NavyCraft.ciwsGunnersList.contains(player)
+				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
+			if (action == Action.LEFT_CLICK_AIR) NavyCraft.ciwsFiringList.add(player);
+			if (action == Action.RIGHT_CLICK_AIR) NavyCraft.ciwsFiringList.remove(player);
+			new Thread(){
+		    	@Override
+					public void run() {
+		    		setPriority(Thread.MIN_PRIORITY);
+						//taskNum = -1;
+		    		boolean isOut = false;
+		    			try{
+		    				while( NavyCraft.ciwsFiringList.contains(player) )
+		    				{
+				    			if (!isOut) {
+				    				if (NavyCraft.ciwsFiringList.contains(player)) {
+		    					if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+		    						if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
+		    						ItemStack m = new ItemStack(Material.EGG, 1);
+		    						player.getInventory().removeItem(m);
+		    						player.updateInventory();
+		    					}
+		    					NavyCraft_BlockListener.FireCIWS(player);
+		    					event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
+		    					CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+		    							1.70f);	 
+		    					} else {
+		    						isOut = true;
+		    		    			player.sendMessage(ChatColor.RED + "You are out of ammunition!");
+		    					}
+				    		}
+				    	}
+						sleep(10);
+		    		}
+						}catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+		    		}
+		    }.start(); //, 20L);
+
+		//// else check for movement clicking
+	} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
 				&& (playerCraft.driverName == player.getName()) && (playerCraft.type.listenItem == true)) {
 			if ((NavyCraft.instance.getConfig().getString("RequireHelm") == "true")
 					&& (event.getItem().getTypeId() != playerCraft.type.HelmControllerItem)) {
@@ -3520,7 +3564,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 		if (NavyCraft.explosiveEggsList.contains(egg)) {
 			if (checkProtectedRegion(event.getPlayer(), egg.getLocation())) {
-				event.getPlayer().sendMessage(ChatColor.RED + "No AA Allowed In Dock Area");
+				event.getPlayer().sendMessage(ChatColor.RED + "No Bullets Allowed In Dock Area");
 				return;
 			}
 

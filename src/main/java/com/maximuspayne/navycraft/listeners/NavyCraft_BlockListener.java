@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -99,6 +100,12 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
+	}
+	
+	public static void FireCIWS(Player player) {
+		Egg newEgg = player.launchProjectile(Egg.class);
+		newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
+		NavyCraft.explosiveEggsList.add(newEgg);
 	}
 	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
@@ -678,6 +685,13 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 				player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
 			}
+			if (NavyCraft.ciwsGunnersList.contains(player)) {
+				NavyCraft.ciwsGunnersList.remove(player);
+				if (player.getInventory().contains(Material.BLAZE_ROD)) {
+					player.getInventory().remove(Material.BLAZE_ROD);
+				}
+				player.sendMessage(ChatColor.GOLD + "You get off the CIWS.");
+			}
 			if (NavyCraft.flakGunnersList.contains(player)) {
 				NavyCraft.flakGunnersList.remove(player);
 				if (player.getInventory().contains(Material.BLAZE_ROD)) {
@@ -1145,6 +1159,42 @@ public class NavyCraft_BlockListener implements Listener {
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 
+		}else if (craftTypeName.equalsIgnoreCase("ciws")) {
+			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
+				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
+				return;
+			}
+			BlockFace bf = BlockFace.NORTH;
+
+			switch (block.getData()) {
+				case (byte) 0x2:// n
+					bf = BlockFace.SOUTH;
+					break;
+				case (byte) 0x3:// s
+					bf = BlockFace.NORTH;
+					break;
+				case (byte) 0x4:// w
+					bf = BlockFace.EAST;
+					break;
+				case (byte) 0x5:// e
+					bf = BlockFace.WEST;
+					break;
+			}
+
+			if (player.getItemInHand().getTypeId() > 0) {
+				player.sendMessage(ChatColor.RED + "Have nothing in your hand before using this.");
+				return;
+			}
+
+			Location newLoc = new Location(player.getWorld(), block.getRelative(bf).getRelative(BlockFace.UP).getLocation().getBlockX() + 0.5, block.getRelative(bf).getRelative(BlockFace.UP).getLocation().getBlockY(), block.getRelative(bf).getRelative(BlockFace.UP).getLocation().getBlockZ() + 0.5);
+			player.teleport(newLoc);
+
+			player.setItemInHand(new ItemStack(369, 1));
+			NavyCraft.ciwsGunnersList.add(player);
+			player.sendMessage(ChatColor.GOLD + "Manning CIWS! Left Click with Blaze Rod to fire!");
+			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+
+
 		} else if (craftTypeName.equalsIgnoreCase("launcher")) {
 			Craft c = Craft.getCraft(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ());
 			if ((c != null) && (Craft.getPlayerCraft(player) == c) && c.isDressed(player)) {
@@ -1561,7 +1611,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 		theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
 		if (theCraft != null) {
-			if (((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
+			if (((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("ciws") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
 				player.sendMessage(ChatColor.RED + "You cannot create this sign on a running vehicle");
 				event.setCancelled(true);
 				return;
@@ -1569,7 +1619,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 		// }
 
-		if (PermissionInterface.CheckEnabledWorld(player.getLocation()) && ((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
+		if (PermissionInterface.CheckEnabledWorld(player.getLocation()) && ((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("ciws") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
 			int cost = 0;
 			if (craftTypeName.equalsIgnoreCase("helm")) {
 				cost = 50;
@@ -1581,6 +1631,8 @@ public class NavyCraft_BlockListener implements Listener {
 				cost = 100;
 			} else if (craftTypeName.equalsIgnoreCase("flak-gun")) {
 				cost = 200;
+			} else if (craftTypeName.equalsIgnoreCase("ciws")) {
+				cost = 500;
 			} else if (craftTypeName.equalsIgnoreCase("radio")) {
 				cost = 50;
 			} else if (craftTypeName.equalsIgnoreCase("radar")) {
