@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -246,9 +245,10 @@ public class NavyCraft_PlayerListener implements Listener {
 			}
 			player.sendMessage(ChatColor.GOLD + "You get off the AA-Gun.");
 			
-		} else if (NavyCraft.ciwsGunnersList.contains(player) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
+		} else if ((NavyCraft.ciwsGunnersList.contains(player) || NavyCraft.ciwsFiringList.contains(player)) && ((event.getFrom().getBlockX() != event.getTo().getBlockX())
 				|| (event.getFrom().getBlockZ() != event.getTo().getBlockZ()))) {
 			NavyCraft.ciwsGunnersList.remove(player);
+			NavyCraft.ciwsFiringList.remove(player);
 			if (player.getInventory().contains(Material.BLAZE_ROD)) {
 				player.getInventory().remove(Material.BLAZE_ROD);
 			}
@@ -584,45 +584,15 @@ public class NavyCraft_PlayerListener implements Listener {
 					event.getPlayer().sendMessage(ChatColor.RED + "You are out of ammunition!");
 				}
 
-			//// else check for movement clicking
-		} else if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_AIR) && NavyCraft.ciwsGunnersList.contains(player)
+			//// CIWS
+		} else if ((action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) && NavyCraft.ciwsGunnersList.contains(player)
 				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
-			if (action == Action.LEFT_CLICK_AIR) NavyCraft.ciwsFiringList.add(player);
-			if (action == Action.RIGHT_CLICK_AIR) NavyCraft.ciwsFiringList.remove(player);
-			new Thread(){
-		    	@Override
-					public void run() {
-		    		setPriority(Thread.MIN_PRIORITY);
-						//taskNum = -1;
-		    		boolean isOut = false;
-		    			try{
-		    				while( NavyCraft.ciwsFiringList.contains(player) )
-		    				{
-				    			if (!isOut) {
-				    				if (NavyCraft.ciwsFiringList.contains(player)) {
-		    					if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("false") || event.getPlayer().getInventory().contains(Material.EGG) || event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-		    						if (NavyCraft.instance.getConfig().getString("RequireAmmo").equalsIgnoreCase("true")) {
-		    						ItemStack m = new ItemStack(Material.EGG, 1);
-		    						player.getInventory().removeItem(m);
-		    						player.updateInventory();
-		    					}
-		    					NavyCraft_BlockListener.FireCIWS(player);
-		    					event.getPlayer().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-		    					CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
-		    							1.70f);	 
-		    					} else {
-		    						isOut = true;
-		    		    			player.sendMessage(ChatColor.RED + "You are out of ammunition!");
-		    					}
-				    		}
-				    	}
-						sleep(10);
-		    		}
-						}catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-		    		}
-		    }.start(); //, 20L);
+				if (action == Action.LEFT_CLICK_AIR) NavyCraft.ciwsFiringList.add(player);
+				if (action == Action.RIGHT_CLICK_AIR) NavyCraft.ciwsFiringList.remove(player);
+				
+					while(NavyCraft.ciwsFiringList.contains(player)) {
+						NavyCraft_BlockListener.fireCIWSUpdate(player);
+					}
 
 		//// else check for movement clicking
 	} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)

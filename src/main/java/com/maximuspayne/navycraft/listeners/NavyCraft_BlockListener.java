@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -101,11 +102,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
-	
-	public static void FireCIWS(Player player) {
+
+	public static void fireCIWSUpdate(Player player) {
 		Egg newEgg = player.launchProjectile(Egg.class);
 		newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 		NavyCraft.explosiveEggsList.add(newEgg);
+		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
+		CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
+			1.70f);	
 	}
 	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
@@ -691,6 +695,9 @@ public class NavyCraft_BlockListener implements Listener {
 					player.getInventory().remove(Material.BLAZE_ROD);
 				}
 				player.sendMessage(ChatColor.GOLD + "You get off the CIWS.");
+			}
+			if (NavyCraft.ciwsFiringList.contains(player)) {
+				NavyCraft.ciwsFiringList.remove(player);
 			}
 			if (NavyCraft.flakGunnersList.contains(player)) {
 				NavyCraft.flakGunnersList.remove(player);

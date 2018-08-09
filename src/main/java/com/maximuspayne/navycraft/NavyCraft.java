@@ -98,7 +98,6 @@ public class NavyCraft extends JavaPlugin {
 	
 	public static int spawnTime=10;
 	
-	
 	public static HashMap<String, ArrayList<Plot>> playerSigns = new HashMap<String, ArrayList<Plot>>();
 	
 	public static HashMap<String, ArrayList<Reward>> playerRewards = new HashMap<String, ArrayList<Reward>>();

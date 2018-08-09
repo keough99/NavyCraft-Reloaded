@@ -17,7 +17,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class AimCannonPlayerListener implements Listener {
     public static AimCannon plugin;
-
+    
     public static void onPlayerInteract(PlayerInteractEvent event) {
     	
     	if (event.getHand() != EquipmentSlot.HAND)
