@@ -589,7 +589,14 @@ public class NavyCraft_PlayerListener implements Listener {
 				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
 				if (action == Action.LEFT_CLICK_AIR) NavyCraft.ciwsFiringList.add(player);
 				if (action == Action.RIGHT_CLICK_AIR) NavyCraft.ciwsFiringList.remove(player);
-				
+				long expectedtime = System.currentTimeMillis();
+				while (NavyCraft.ciwsFiringList.contains(player)) {//Or any Loops
+				   while(System.currentTimeMillis() < expectedtime){
+				     NavyCraft_BlockListener.fireCIWSUpdate(player);
+				   }
+				   expectedtime += 1000;//Sample expectedtime += 1000; 1 second sleep
+				   //Do Something
+				}
 					while(NavyCraft.ciwsFiringList.contains(player)) {
 						NavyCraft_BlockListener.fireCIWSUpdate(player);
 					}
