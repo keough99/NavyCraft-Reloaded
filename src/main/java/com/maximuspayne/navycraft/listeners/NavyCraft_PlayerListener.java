@@ -2403,7 +2403,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
-									
+									Block block = foundSign.getBlock();
 									if (NavyCraft.playerSigns.containsKey(UUID)) {
 										for (Plot p : NavyCraft.playerSigns.get(UUID)) {
 											if (newId == NavyCraft.playerSignIndex.get(p.sign)) {
@@ -2413,10 +2413,39 @@ public class NavyCraft_PlayerListener implements Listener {
 											}
 										}
 									}
-									
-									if (foundSign != null) {
-										foundSign.setLine(2, String.valueOf(newId));
-										foundSign.update();
+									BlockFace bf = null;
+									if (block != null) {
+									// bf2 = null;
+									switch (block.getData()) {
+										case (byte) 0x8:// n
+											bf = BlockFace.SOUTH;
+											// bf2 = BlockFace.NORTH;
+											break;
+										case (byte) 0x0:// s
+											bf = BlockFace.NORTH;
+											// bf2 = BlockFace.SOUTH;
+											break;
+										case (byte) 0x4:// w
+											bf = BlockFace.EAST;
+											// bf2 = BlockFace.WEST;
+											break;
+										case (byte) 0xC:// e
+											bf = BlockFace.WEST;
+											// bf2 = BlockFace.EAST;
+											break;
+										default:
+											break;
+									}
+
+									if (bf == null) {
+										player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Direction?");
+										return;
+									}
+								}
+									Sign sign2 = (Sign) block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getState();
+									if (sign2 != null) {
+										sign2.setLine(2, String.valueOf(newId));
+										sign2.update();
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
