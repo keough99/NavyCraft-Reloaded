@@ -2282,13 +2282,25 @@ public class NavyCraft_BlockListener implements Listener {
 						String rankName = "";
 						while( newExp >= rankExp ) {
 							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
-							
-							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
-							for( String group : groupNames ) {
-								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
-									rankName = group;
-									break;
+							for(String p:PermissionsEx.getUser(playerIn).getPermissions(worldName)) {
+							if( p.contains("navycraft") ) {
+								if( p.contains("exp") ) {
+								String[] split2 = p.split("\\.");
+								try {
+								rankExp = Integer.parseInt(split2[2]);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+									System.out.println("Invalid perm-" + p);
 								}
+						}
+					}
+							}
+						}
+						List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
+						for( String group : groupNames ) {
+							if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+								rankName = group;
+								break;
 							}
 						}
 						plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
