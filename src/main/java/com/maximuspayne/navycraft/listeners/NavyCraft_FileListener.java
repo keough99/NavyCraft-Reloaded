@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.maximuspayne.navycraft.ConfigManager;
@@ -45,6 +46,11 @@ public class NavyCraft_FileListener implements Listener {
 				if (selectSignBlock.getTypeId() == 63) {
 				Sign selectSign = (Sign) selectSignBlock.getState();
 				Plot plot = new Plot(type, selectSign);
+				Player player = NavyCraft.instance.getServer().getOfflinePlayer(UUID).getPlayer();
+				if (!selectSign.getLine(1).equalsIgnoreCase(player.getName())) {
+					selectSign.setLine(1, player.getName());
+					selectSign.update();
+				}
 				if (!NavyCraft.playerSigns.containsKey(UUID)) {
 					NavyCraft.playerSigns.put(UUID, new ArrayList<Plot>());
 					NavyCraft.playerSigns.get(UUID).add(plot);

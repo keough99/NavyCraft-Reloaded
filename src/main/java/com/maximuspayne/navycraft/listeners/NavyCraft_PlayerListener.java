@@ -2376,6 +2376,58 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard rename <id> <custom name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "renames the plot");
 							}
+						} else if (split[1].equalsIgnoreCase("renumber")) {
+							if (split.length > 3) {
+								String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[2]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								int newId;
+								try {
+									newId = Integer.parseInt(split[3]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid New ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								if (tpId > -1 && newId > -1) {
+									NavyCraft_FileListener.loadSignData();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+									
+									if (NavyCraft.playerSigns.containsKey(UUID)) {
+										for (Plot p : NavyCraft.playerSigns.get(UUID)) {
+											if (newId == NavyCraft.playerSignIndex.get(p.sign)) {
+												player.sendMessage(ChatColor.RED + "ID already exists in database!");
+												event.setCancelled(true);
+												return;
+											}
+										}
+									}
+									
+									if (foundSign != null) {
+										foundSign.setLine(2, String.valueOf(newId));
+										foundSign.update();
+										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard renumber <old id> <new id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "renames the plot");
+							}
 						} else if (split[1].equalsIgnoreCase("public")) {
 							if (split.length == 3) {
 								int tpId = -1;

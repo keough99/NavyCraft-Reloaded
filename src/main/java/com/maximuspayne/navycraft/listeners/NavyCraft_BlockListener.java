@@ -2279,10 +2279,10 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int rankExp = Integer.parseInt(split[2]);
-						if( newExp >= rankExp ) {
+						String rankName = "";
+						while( newExp >= rankExp ) {
 							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
 							
-							String rankName = "";
 							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
 							for( String group : groupNames ) {
 								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
@@ -2290,8 +2290,8 @@ public class NavyCraft_BlockListener implements Listener {
 									break;
 								}
 							}
-							plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
 						}
+						plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
 						
 							
 					} catch (Exception ex) {
