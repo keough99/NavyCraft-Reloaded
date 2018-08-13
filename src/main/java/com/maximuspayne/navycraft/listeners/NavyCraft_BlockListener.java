@@ -1990,6 +1990,7 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	public static void loadRewards(String player) {
 		NavyCraft.playerRewards.clear();
+		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		
 		String worldName = "";
 		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
@@ -2012,7 +2013,12 @@ public class NavyCraft_BlockListener implements Listener {
 						try {
 						int num = Integer.parseInt(split[2]);
 						Reward r = new Reward(pt.name, num);
-						list.add(r);
+							for (Reward r2 : list) {
+								if (r2.name.equalsIgnoreCase(r.name)) {
+									r = new Reward (pt.name, r2.amount + r.amount);
+								}
+							}
+							list.add(r);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 						break;
@@ -2021,12 +2027,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
+		NavyCraft.playerRewards.put(UUID, list);
 		NavyCraft_FileListener.loadRewardsFile(player, list);
 		
 	}
 
 	public static Sign findSign(String player, int id) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		if (UUID != null) {
 		Sign foundSign = null;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
@@ -2036,10 +2044,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 		return foundSign;
+	} else {
+		return null;
 	}
+}
 
 	public static int maxId(Player player) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+		if (UUID != null) {
 		int foundHighest = -1;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
@@ -2049,7 +2061,10 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 		return foundHighest;
+	} else {
+		return -1;
 	}
+}
 
 
 	@EventHandler(priority = EventPriority.HIGH)
