@@ -46,11 +46,6 @@ public class NavyCraft_FileListener implements Listener {
 				if (selectSignBlock.getTypeId() == 63) {
 				Sign selectSign = (Sign) selectSignBlock.getState();
 				Plot plot = new Plot(type, selectSign);
-				Player player = NavyCraft.instance.getServer().getOfflinePlayer(UUID).getPlayer();
-				if (!selectSign.getLine(1).equalsIgnoreCase(player.getName())) {
-					selectSign.setLine(1, player.getName());
-					selectSign.update();
-				}
 				if (!NavyCraft.playerSigns.containsKey(UUID)) {
 					NavyCraft.playerSigns.put(UUID, new ArrayList<Plot>());
 					NavyCraft.playerSigns.get(UUID).add(plot);
