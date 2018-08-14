@@ -1993,6 +1993,7 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	public static void loadRewards(String player) {
 		NavyCraft.playerRewards.clear();
+		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		
 		String worldName = "";
 		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
@@ -2015,7 +2016,12 @@ public class NavyCraft_BlockListener implements Listener {
 						try {
 						int num = Integer.parseInt(split[2]);
 						Reward r = new Reward(pt.name, num);
-						list.add(r);
+							for (Reward r2 : list) {
+								if (r2.name.equalsIgnoreCase(r.name)) {
+									r = new Reward (pt.name, r2.amount + r.amount);
+								}
+							}
+							list.add(r);
 					} catch (Exception ex) {
 						System.out.println("Invalid perm-" + s);
 						break;
@@ -2024,12 +2030,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
+		NavyCraft.playerRewards.put(UUID, list);
 		NavyCraft_FileListener.loadRewardsFile(player, list);
 		
 	}
 
 	public static Sign findSign(String player, int id) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		if (UUID != null) {
 		Sign foundSign = null;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
@@ -2039,10 +2047,14 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 		return foundSign;
+	} else {
+		return null;
 	}
+}
 
 	public static int maxId(Player player) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+		if (UUID != null) {
 		int foundHighest = -1;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
@@ -2052,7 +2064,10 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 		return foundHighest;
+	} else {
+		return -1;
 	}
+}
 
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -2267,19 +2282,31 @@ public class NavyCraft_BlockListener implements Listener {
 					String[] split = s.split("\\.");
 					try {
 						int rankExp = Integer.parseInt(split[2]);
-						if( newExp >= rankExp ) {
+						String rankName = "";
+						while( newExp >= rankExp ) {
 							PermissionsEx.getUser(playerIn).promote(null, "navycraft");
-							
-							String rankName = "";
-							List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
-							for( String group : groupNames ) {
-								if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
-									rankName = group;
-									break;
+							for(String p:PermissionsEx.getUser(playerIn).getPermissions(worldName)) {
+							if( p.contains("navycraft") ) {
+								if( p.contains("exp") ) {
+								String[] split2 = p.split("\\.");
+								try {
+								rankExp = Integer.parseInt(split2[2]);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+									System.out.println("Invalid perm-" + p);
 								}
-							}
-							plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
 						}
+					}
+							}
+						}
+						List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
+						for( String group : groupNames ) {
+							if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+								rankName = group;
+								break;
+							}
+						}
+						plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
 						
 							
 					} catch (Exception ex) {
