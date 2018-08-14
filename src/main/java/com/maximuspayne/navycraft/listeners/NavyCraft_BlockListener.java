@@ -32,6 +32,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
+import com.maximuspayne.aimcannon.FireCIWS;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
@@ -102,14 +103,16 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
-
-	public static void fireCIWSUpdate(Player player) {
+	
+	@EventHandler
+	public void onFireCIWS (FireCIWS event) {
+		Player player = event.getPlayer();
 		Egg newEgg = player.launchProjectile(Egg.class);
 		newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
 		NavyCraft.explosiveEggsList.add(newEgg);
 		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
 		CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
-			1.70f);	
+				1.70f);	
 	}
 	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
