@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.maximuspayne.aimcannon.FireCIWS;
 import com.maximuspayne.navycraft.ConfigManager;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.craft.Craft;
@@ -47,6 +48,13 @@ public class NavyCraft_Timer extends BukkitRunnable {
 			timer.scheduleAtFixedRate(new TakeoverTask(), seconds * 1000, 60000);
 		else if(state.equals("takeoverCaptainCheck"))
 			timer.scheduleAtFixedRate(new TakeoverCaptainTask(), seconds * 1000, 60000);
+	}
+	
+	public NavyCraft_Timer(Player p, int period) {
+		//toolkit = Toolkit.getDefaultToolkit();
+		this.player = p;
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new FireCIWSTask(), 2000, period);
 	}
 	
 	public void Destroy() {
@@ -146,6 +154,34 @@ public class NavyCraft_Timer extends BukkitRunnable {
     	}
     	);
     }
+   
+	class FireCIWSTask extends TimerTask {
+		public void run() {			
+				if(NavyCraft.ciwsFiringList.contains(player)) FireCIWSUpdate();	
+				timer.cancel();
+				return;
+		}
+	}
+	
+   public void FireCIWSUpdate()
+    {
+    	plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
+		    public void run()
+		    {		    	
+		    	FireCIWS FireCIWS = new FireCIWS(player);
+		    		try {
+		    			while(NavyCraft.ciwsFiringList.contains(FireCIWS.getPlayer())) {
+		    		    NavyCraft.instance.getServer().getPluginManager().callEvent(FireCIWS);
+						wait(3000);
+		    			}
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    }
+    	}
+    	);
+	 }
    
    //Shipyard initial Sign Loading
 	public static void loadPlots() {
