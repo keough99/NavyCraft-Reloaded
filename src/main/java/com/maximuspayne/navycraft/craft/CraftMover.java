@@ -218,7 +218,7 @@ public class CraftMover {
 
 					if (!stopSearch) {
 						OneCannon oc = new OneCannon(theBlock.getLocation(), NavyCraft.instance);
-						if (oc.isValidCannon(theBlock, false) && (theBlock.getTypeId() == 23 || theBlock.getTypeId() == 158)) {
+						if ((oc.isValidCannon(theBlock, false) && theBlock.getTypeId() == 23) || (oc.isValidCannon(theBlock, true) && theBlock.getTypeId() == 158)) {
 
 							for (OneCannon onec : AimCannon.getCannons()) {
 								boolean oldCannonFound = onec.isThisCannon(new Location(craft.world, dataBlock.x + craft.minX, dataBlock.y + craft.minY, dataBlock.z + craft.minZ), true, true);

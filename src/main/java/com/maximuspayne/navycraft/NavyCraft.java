@@ -71,7 +71,6 @@ public class NavyCraft extends JavaPlugin {
 	public static ArrayList<Skeleton> flakSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Player> ciwsGunnersList = new ArrayList<Player>();
 	public static ArrayList<Player> ciwsFiringList = new ArrayList<Player>();
-	public static HashMap<Player, Long> ciwsCooldown = new HashMap<Player, Long>();
 	public static ArrayList<Skeleton> ciwsSkelesList = new ArrayList<Skeleton>();
 	public static ArrayList<Egg> explosiveEggsList = new ArrayList<Egg>();
 	public static HashMap<UUID, Player> shotTNTList = new HashMap<UUID, Player>();
