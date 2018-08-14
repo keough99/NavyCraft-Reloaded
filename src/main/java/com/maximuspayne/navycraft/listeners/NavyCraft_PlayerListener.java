@@ -2391,6 +2391,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 									Sign foundSign = null;
 									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+									if (foundSign != null) {
 									Block block = foundSign.getBlock();
 									if (NavyCraft.playerSigns.containsKey(UUID)) {
 										for (Plot p : NavyCraft.playerSigns.get(UUID)) {
@@ -2431,7 +2432,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									}
 								}
 									Sign sign2 = (Sign) block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getState();
-									if (sign2 != null) {
 										sign2.setLine(2, String.valueOf(newId));
 										sign2.update();
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
