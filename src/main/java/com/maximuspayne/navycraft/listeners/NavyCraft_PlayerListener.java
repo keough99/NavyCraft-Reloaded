@@ -1598,12 +1598,6 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
-							if (split.length < 3) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard addsign");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard addsign");
-								event.setCancelled(true);
-								return;
-							}
 							if (player.getTargetBlock(null, 5).getTypeId() == 63 && player.getTargetBlock(null, 5).getRelative(BlockFace.DOWN).getTypeId() == 68) {
 									Block selectSignBlock = player.getTargetBlock(null, 5);
 									Sign selectSign = (Sign) selectSignBlock.getState();
@@ -1706,7 +1700,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							String UUID = PermissionInterface.getUUIDfromPlayer(playerString);
 							if (UUID != null) {
-							NavyCraft_FileListener.saveRewardsFile(UUID, typeString, rewNum);
+							player.sendMessage("placeholder");
 							} else {
 								player.sendMessage(ChatColor.RED + playerString + "has never joined the server!");
 								event.setCancelled(true);
@@ -1779,7 +1773,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 							String UUID = PermissionInterface.getUUIDfromPlayer(playerString);
 							if (UUID != null) {
-							NavyCraft_FileListener.saveRewardsFile(UUID, typeString, rewNum);
+							player.sendMessage("placeholder");
 							} else {
 								player.sendMessage(ChatColor.RED + playerString + "has never joined the server!");
 								event.setCancelled(true);
@@ -2732,7 +2726,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerEngineVolumes.put(player, inValue);
-							NavyCraft_FileListener.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "Engine volume muted");
 							event.setCancelled(true);
 							return;
@@ -2744,7 +2737,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerEngineVolumes.put(player, inValue);
-										NavyCraft_FileListener.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for engines - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -2768,7 +2760,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerWeaponVolumes.put(player, inValue);
-							NavyCraft_FileListener.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "Gun volume muted");
 							event.setCancelled(true);
 							return;
@@ -2780,7 +2771,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerWeaponVolumes.put(player, inValue);
-										NavyCraft_FileListener.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for weapons - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -2804,7 +2794,6 @@ public class NavyCraft_PlayerListener implements Listener {
 						if (split[2].equalsIgnoreCase("mute")) {
 							float inValue = 0.0f;
 							NavyCraft.playerOtherVolumes.put(player, inValue);
-							NavyCraft_FileListener.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "Other volumes muted");
 							event.setCancelled(true);
 							return;
@@ -2816,7 +2805,6 @@ public class NavyCraft_PlayerListener implements Listener {
 									inValue = Float.parseFloat(split[2]);
 									if ((inValue >= 0) && (inValue <= 100.0f)) {
 										NavyCraft.playerOtherVolumes.put(player, inValue);
-										NavyCraft_FileListener.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for other - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");
@@ -2842,7 +2830,6 @@ public class NavyCraft_PlayerListener implements Listener {
 							NavyCraft.playerEngineVolumes.put(player, inValue);
 							NavyCraft.playerWeaponVolumes.put(player, inValue);
 							NavyCraft.playerOtherVolumes.put(player, inValue);
-							NavyCraft_FileListener.saveVolume(player.getName());
 							player.sendMessage(ChatColor.GOLD + "All volume muted");
 							event.setCancelled(true);
 							return;
@@ -2856,7 +2843,6 @@ public class NavyCraft_PlayerListener implements Listener {
 										NavyCraft.playerOtherVolumes.put(player, inValue);
 										NavyCraft.playerWeaponVolumes.put(player, inValue);
 										NavyCraft.playerEngineVolumes.put(player, inValue);
-										NavyCraft_FileListener.saveVolume(player.getName());
 										player.sendMessage(ChatColor.GOLD + "Volume set for all - " + ChatColor.GREEN + inValue + "%");
 									} else {
 										player.sendMessage(ChatColor.RED + "Invalid volume percent, use a number from 0 to 100");

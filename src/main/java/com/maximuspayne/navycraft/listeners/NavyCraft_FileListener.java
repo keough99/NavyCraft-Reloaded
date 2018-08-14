@@ -175,23 +175,6 @@ public class NavyCraft_FileListener implements Listener {
 		if (!f.exists()) {
 			try {
 				playerData.set("exp", 0);
-				playerData.set("SHIP1", 0);
-				playerData.set("SHIP2", 0);
-				playerData.set("SHIP3", 0);
-				playerData.set("SHIP4", 0);
-				playerData.set("SHIP5", 0);
-				playerData.set("HANGAR1", 0);
-				playerData.set("HANGAR2", 0);
-				playerData.set("TANK1", 0);
-				playerData.set("TANK2", 0);
-				playerData.set("MAP1", 0);
-				playerData.set("MAP2", 0);
-				playerData.set("MAP3", 0);
-				playerData.set("MAP4", 0);
-				playerData.set("MAP5", 0);
-				playerData.set("wepvolume", 5.0);
-				playerData.set("engvolume", 5.0);
-				playerData.set("othervolume", 5.0);
 				
 				playerData.save(f);
 			} catch (IOException exception) {
@@ -200,7 +183,6 @@ public class NavyCraft_FileListener implements Listener {
 		}
 		// Put all the file data to hashmaps
 		loadExperience(player);
-		loadVolume(player);
 	}
 
 	public static void loadExperience(String player) {
@@ -227,87 +209,6 @@ public class NavyCraft_FileListener implements Listener {
 			playerData.save(f);
 		} catch (IOException e) {
 			loadPlayerData(player);
-		}
-	}
-	
-	public static void loadVolume(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
-		File f = new File(userdata, File.separator + UUID + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		NavyCraft.playerEngineVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("engvolume").toString()));
-		NavyCraft.playerWeaponVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("wepvolume").toString()));
-		NavyCraft.playerOtherVolumes.put(NavyCraft.instance.getServer().getPlayer(player),Float.valueOf(playerData.get("othervolume").toString()));
-		NavyCraft.instance.DebugMessage("Engine V:" + NavyCraft.playerEngineVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
-		NavyCraft.instance.DebugMessage("Weapon V:" + NavyCraft.playerWeaponVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
-		NavyCraft.instance.DebugMessage("Other V:" + NavyCraft.playerOtherVolumes.get(NavyCraft.instance.getServer().getPlayer(player)).toString(), 3);
-	}
-	
-	public static void saveVolume(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
-		File f = new File(userdata, File.separator + UUID + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		if (NavyCraft.playerWeaponVolumes.containsKey(NavyCraft.instance.getServer().getPlayer(player))) {
-		playerData.set("wepvolume",NavyCraft.playerWeaponVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
-		}
-		if (NavyCraft.playerEngineVolumes.containsKey(NavyCraft.instance.getServer().getPlayer(player))) {
-		playerData.set("engvolume",NavyCraft.playerEngineVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
-		}
-		if (NavyCraft.playerOtherVolumes.containsKey(NavyCraft.instance.getServer().getPlayer(player))) {
-		playerData.set("othervolume",NavyCraft.playerOtherVolumes.get(NavyCraft.instance.getServer().getPlayer(player)));
-		}
-		try {
-			playerData.save(f);
-		} catch (IOException e) {
-			loadPlayerData(player);
-		}
-	}
-	
-	public static void loadRewardsFile(String player, ArrayList<Reward> list) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
-		File f = new File(userdata, File.separator + UUID + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-	for (PlotType pt : Shipyard.getPlots()) {
-		Reward r = new Reward(pt.name, playerData.getInt(pt.name.toUpperCase()));
-		for (Reward r2 : list) {
-			if (r2.name.equalsIgnoreCase(r.name)) {
-				r = new Reward (pt.name, r2.amount + r.amount);
-			}
-		}
-		list.add(r);
-	}
-	NavyCraft.playerRewards.put(UUID, list);
-	try {
-		playerData.save(f);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		return;
-	}
-
-	public static void saveRewardsFile(String player, String type, int newRewNum) {
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
-		File f = new File(userdata, File.separator + player + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		if (type != null) {
-			playerData.set(type.toUpperCase(), Integer.valueOf(playerData.get(type.toUpperCase()).toString()) + newRewNum);
-			try {
-				playerData.save(f);
-			} catch (IOException e) {
-				loadPlayerData(player);
-			}
-			return;
 		}
 	}
 

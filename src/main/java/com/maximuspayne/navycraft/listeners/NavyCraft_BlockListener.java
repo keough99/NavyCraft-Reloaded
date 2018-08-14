@@ -444,7 +444,7 @@ public class NavyCraft_BlockListener implements Listener {
 						int y = sign.getY();
 						int z = sign.getZ();
 						World world = sign.getWorld();
-						NavyCraft_FileListener.saveClaimedSign(player.getName(), lotStr, world.getName(), x, y, z,Integer.valueOf(sign2.getLine(2)));
+						NavyCraft_FileListener.saveClaimedSign(player.getName(), lotStr, world.getName(), x, y, z, maxId(player) + 1);
 						
 						NavyCraft_FileListener.loadSignData();
 					} else {
@@ -2031,8 +2031,6 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 	}
 		NavyCraft.playerRewards.put(UUID, list);
-		NavyCraft_FileListener.loadRewardsFile(player, list);
-		
 	}
 
 	public static Sign findSign(String player, int id) {
@@ -2053,9 +2051,9 @@ public class NavyCraft_BlockListener implements Listener {
 }
 
 	public static int maxId(Player player) {
+		int foundHighest = -1;
 		String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
 		if (UUID != null) {
-		int foundHighest = -1;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(p.sign)) {
@@ -2063,10 +2061,8 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-		return foundHighest;
-	} else {
-		return -1;
 	}
+		return foundHighest;
 }
 
 
