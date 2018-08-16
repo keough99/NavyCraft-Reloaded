@@ -163,6 +163,22 @@ public class NavyCraft_FileListener implements Listener {
 		return false;
 	}
 	
+	public static String getSign(int x, int y, int z, World world) {
+		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
+		for (String num : list) {
+				World world1 = NavyCraft.instance.getServer().getWorld(ConfigManager.syData.getString("Signs." + num + "." + "world"));
+				int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
+				int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
+				int z1 = ConfigManager.syData.getInt("Signs." + num + "." + "z");
+				Location loc1 = new Location(world1, x1, y1, z1);
+				Location loc = new Location(world, x, y, z);
+				if (loc.equals(loc1)) {
+					return num;
+				}
+		}
+		return null;
+	}
+	
 	public static void loadPlayerData(String player) {
 		String UUID = PermissionInterface.getUUIDfromPlayer(player);
 		File userdata = new File(

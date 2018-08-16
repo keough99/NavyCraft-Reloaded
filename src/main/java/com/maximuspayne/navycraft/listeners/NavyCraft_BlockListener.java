@@ -2058,9 +2058,12 @@ public class NavyCraft_BlockListener implements Listener {
 			for (Plot p : NavyCraft.playerSigns.get(UUID)) {
 				if (foundHighest < NavyCraft.playerSignIndex.get(p.sign)) {
 					foundHighest = NavyCraft.playerSignIndex.get(p.sign);
+					NavyCraft.instance.DebugMessage(String.valueOf(foundHighest), 3);
 				}
 			}
 		}
+	} else {
+		player.sendMessage(ChatColor.RED + "Error UUID was null?");
 	}
 		return foundHighest;
 }
