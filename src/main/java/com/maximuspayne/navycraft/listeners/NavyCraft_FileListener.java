@@ -62,6 +62,7 @@ public class NavyCraft_FileListener implements Listener {
 	public static Block findSignOpen(String type) {
 		Block selectSignBlock = null;
 		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
+		if (list.size() == 0) return selectSignBlock;
 		for (String num : list) {
 			if (ConfigManager.syData.getString("Signs." + num + ".isClaimed").equalsIgnoreCase("false")) {
 				String ptype = ConfigManager.syData.getString("Signs." + num + "." + "type");
@@ -87,6 +88,7 @@ public class NavyCraft_FileListener implements Listener {
 		if (selectSignBlock.getTypeId() == 63) {
 		Location loc = new Location(NavyCraft.instance.getServer().getWorld(world), x, y, z);
 		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
+		if (list.size() != 0) {
 		for (String num1 : list) {
 			int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
 			int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
@@ -101,8 +103,12 @@ public class NavyCraft_FileListener implements Listener {
 				isRegistered = false;
 			}
 		}
+	} else {
+		isRegistered = false;
+	}
 		if (!isRegistered) {
 			num = String.valueOf(list.size() + 1);
+			
 		}
 		ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
 		ConfigManager.syData.set("Signs." + num + "." + "world", world);
