@@ -128,6 +128,7 @@ public class NavyCraft_FileListener implements Listener {
 				ConfigManager.syData.set("Signs." + num + "." + "isClaimed", false);
 				ConfigManager.syData.set("Signs." + num + "." + "uuid", null);
 				ConfigManager.syData.set("Signs." + num + "." + "id", null);
+				ConfigManager.syData.set("Signs." + num + "." + "members", null);
 				break;
 			}
 		}

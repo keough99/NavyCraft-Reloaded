@@ -12,6 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -1909,7 +1910,11 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											String regionName = "--" + player.getName() + "-" + tpId;
+											int x = foundSign.getX();
+											int y = foundSign.getY();
+											int z = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 											DefaultDomain dd = regionManager.getRegion(regionName).getMembers();
 
@@ -1954,7 +1959,11 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											String regionName = "--" + player.getName() + "-" + tpId;
+											int x = foundSign.getX();
+											int y = foundSign.getY();
+											int z = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 											String playerInName = split[3];
 											Player p = plugin.getServer().getPlayer(playerInName);
@@ -2009,7 +2018,11 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											String regionName = "--" + player.getName() + "-" + tpId;
+											int x = foundSign.getX();
+											int y = foundSign.getY();
+											int z = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 											String playerInName = split[3];
 
@@ -2063,7 +2076,11 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											String regionName = "--" + player.getName() + "-" + tpId;
+											int x1 = foundSign.getX();
+											int y1 = foundSign.getY();
+											int z1 = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
 
 											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
 											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
@@ -2138,7 +2155,11 @@ public class NavyCraft_PlayerListener implements Listener {
 											if (wgp != null) {
 												RegionManager regionManager = wgp
 														.getRegionManager(plugin.getServer().getWorld("shipyard"));
-												String regionName = "--" + player.getName() + "-" + tpId;
+												int x1 = foundSign.getX();
+												int y1 = foundSign.getY();
+												int z1 = foundSign.getZ();
+												World world = foundSign.getWorld();
+												String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
 												int startX = 0;
 												int endX = 0;
 												int startZ = 0;
@@ -2249,7 +2270,11 @@ public class NavyCraft_PlayerListener implements Listener {
 											if (wgp != null) {
 												RegionManager regionManager = wgp
 														.getRegionManager(plugin.getServer().getWorld("shipyard"));
-												String regionName = "--" + p + "-" + tpId;
+												int x1 = foundSign.getX();
+												int y1 = foundSign.getY();
+												int z1 = foundSign.getZ();
+												World world = foundSign.getWorld();
+												String regionName = "--" + p + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
 												int startX = 0;
 												int endX = 0;
 												int startZ = 0;
@@ -2344,7 +2369,11 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											String regionName = "--" + player.getName() + "-" + tpId;
+											int x1 = foundSign.getX();
+											int y1 = foundSign.getY();
+											int z1 = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
 
 											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
 											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();

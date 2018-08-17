@@ -214,7 +214,11 @@ public class NavyCraft_BlockListener implements Listener {
 							wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 							if (wgp != null) {
 								RegionManager regionManager = wgp.getRegionManager(plugin.getServer().getWorld("shipyard"));
-								String regionName = "--" + ownerName + "-" + tpId;
+								int x = foundSign.getX();
+								int y = foundSign.getY();
+								int z = foundSign.getZ();
+								World world = foundSign.getWorld();
+								String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getName())) {
 									player.sendMessage("You are not allowed to select this plot.");
@@ -399,20 +403,6 @@ public class NavyCraft_BlockListener implements Listener {
 			
 						// ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
 			
-						String regionName = "--" + player.getName() + "-" + (maxId(player) + 1);
-			
-						regionManager.addRegion(new com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion(regionName, new com.sk89q.worldedit.BlockVector(originX, originY, originZ), new com.sk89q.worldedit.BlockVector((originX + sizeX) - 1, (originY + sizeY) - 1, (originZ + sizeZ) - 1)));
-						DefaultDomain owners = new DefaultDomain();
-						com.sk89q.worldguard.LocalPlayer lp = wgp.wrapPlayer(player);
-						owners.addPlayer(lp);
-						regionManager.getRegion(regionName).setOwners(owners);
-			
-						try {
-							regionManager.save();
-						} catch (StorageException e) {
-							e.printStackTrace();
-						}
-			
 						sign.setLine(0, "*Select*");
 						if (player.getName().length() > 15) {
 							sign.setLine(1, player.getName().substring(0, 16));
@@ -441,8 +431,20 @@ public class NavyCraft_BlockListener implements Listener {
 						int z = sign.getZ();
 						World world = sign.getWorld();
 						NavyCraft_FileListener.saveClaimedSign(UUID, lotStr, world.getName(), x, y, z, maxId(player) + 1);
-						
 						NavyCraft_FileListener.loadSignData();
+						String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
+						
+						regionManager.addRegion(new com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion(regionName, new com.sk89q.worldedit.BlockVector(originX, originY, originZ), new com.sk89q.worldedit.BlockVector((originX + sizeX) - 1, (originY + sizeY) - 1, (originZ + sizeZ) - 1)));
+						DefaultDomain owners = new DefaultDomain();
+						com.sk89q.worldguard.LocalPlayer lp = wgp.wrapPlayer(player);
+						owners.addPlayer(lp);
+						regionManager.getRegion(regionName).setOwners(owners);
+			
+						try {
+							regionManager.save();
+						} catch (StorageException e) {
+							e.printStackTrace();
+						}
 					} else {
 						player.sendMessage("World Guard error");
 					}
