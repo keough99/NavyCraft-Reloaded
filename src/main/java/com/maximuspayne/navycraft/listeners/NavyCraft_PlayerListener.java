@@ -2,11 +2,9 @@ package com.maximuspayne.navycraft.listeners;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -2464,12 +2462,6 @@ public class NavyCraft_PlayerListener implements Listener {
 											}
 										}
 									}
-									
-									wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-									if (wgp != null) {
-										RegionManager regionManager = wgp.getRegionManager(plugin.getServer().getWorld("shipyard"));
-										String regionName = "--" + player.getName() + "-" + tpId;
-										String regionNewName = "--" + player.getName() + "-" + newId;
 									BlockFace bf = null;
 									if (block != null) {
 									// bf2 = null;
@@ -2503,17 +2495,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										sign2.setLine(2, String.valueOf(newId));
 										sign2.update();
 										NavyCraft_FileListener.updateSign(UUID, sign2.getLine(3), foundSign.getX(), foundSign.getY(), foundSign.getZ(), foundSign.getWorld(), newId);
-										HashMap<String, ProtectedRegion> regions = new HashMap<>();
-										regions.put(regionNewName, regionManager.getRegion(regionName));
-										regionManager.setRegions(regions);
-
-										try {
-											regionManager.save();
-										} catch (StorageException e) {
-											e.printStackTrace();
-										}
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
-									}
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
 									}
