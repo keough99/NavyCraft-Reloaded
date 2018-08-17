@@ -389,10 +389,6 @@ public class NavyCraft_BlockListener implements Listener {
 						return;
 					}
 					
-					if (!NavyCraft_FileListener.checkSign(sign.getX(), sign.getY(), sign.getZ(), sign.getWorld())) {
-						NavyCraft_FileListener.saveSign(lotStr, sign.getWorld().getName(), sign.getX(), sign.getY(), sign.getZ());
-					}
-					
 					originX = loc.getBlockX() + originX;
 					originY = loc.getBlockY() + originY;
 					originZ = loc.getBlockZ() + originZ;

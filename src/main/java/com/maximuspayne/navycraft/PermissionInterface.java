@@ -69,12 +69,8 @@ public class PermissionInterface {
 	@SuppressWarnings("deprecation")
 	public static String getUUIDfromPlayer(String player) {
 		String UUID = NavyCraft.instance.getServer().getOfflinePlayer(player).getUniqueId().toString();
-		if(UUID == null || NavyCraft.instance.getServer().getOfflinePlayer(player).hasPlayedBefore()) {
-			return null;
-		} else {
-			return UUID;
+		return UUID;
 		}
-}
 	
 	public static boolean CheckPerm(Player player, String command) {		
 		command = command.replace(" ", ".");

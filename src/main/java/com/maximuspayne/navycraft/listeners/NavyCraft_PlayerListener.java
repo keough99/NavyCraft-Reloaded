@@ -58,6 +58,7 @@ import com.maximuspayne.shipyard.Plot;
 import com.maximuspayne.shipyard.PlotType;
 import com.maximuspayne.shipyard.Reward;
 import com.maximuspayne.shipyard.Shipyard;
+import com.sk89q.worldedit.blocks.SignBlock;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -2428,6 +2429,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									Sign sign2 = (Sign) block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getState();
 										sign2.setLine(2, String.valueOf(newId));
 										sign2.update();
+										NavyCraft_FileListener.updateSign(UUID, type, foundSign.getX(), foundSign.getY(), foundSign.getZ(), foundSign.getWorld(), id);
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
