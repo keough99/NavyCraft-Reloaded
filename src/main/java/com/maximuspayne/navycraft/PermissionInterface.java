@@ -3,6 +3,26 @@ package com.maximuspayne.navycraft;
 
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.craft.CraftType;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.extent.Extent;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.function.mask.ExistingBlockMask;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.registry.WorldData;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -136,4 +156,45 @@ public class PermissionInterface {
 		}
 		return true;
 	}
+	
+	public static void loadSchem(String filename, int x, int y, int z, org.bukkit.World world) {
+        File dataDirectory = new File (plugin.getDataFolder(), "saves");
+        File file = new File(dataDirectory, filename); // The schematic file
+        Vector to = new Vector(x, y, z); // Where you want to paste
+        World weWorld = new BukkitWorld(world);
+        WorldData worldData = weWorld.getWorldData();
+        Clipboard clipboard;
+        try {
+            clipboard = ClipboardFormat.SCHEMATIC.getReader(new FileInputStream(file)).read(worldData);
+            Extent source = clipboard;
+            Extent destination = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
+            ForwardExtentCopy copy = new ForwardExtentCopy(source, clipboard.getRegion(), clipboard.getOrigin(), destination, to);
+            copy.setSourceMask(new ExistingBlockMask(clipboard));
+            Operations.completeLegacy(copy);
+        } catch (IOException | WorldEditException e) {
+            e.printStackTrace();
+        }
+}
+	
+	public static void saveSchem(String filename, int x1, int y1, int z1, int x2, int y2, int z2, org.bukkit.World world) {
+        World weWorld = new BukkitWorld(world);
+        WorldData worldData = weWorld.getWorldData();
+        Vector pos1 = new Vector(x1, y1, z1); //First corner of your cuboid
+        Vector pos2 = new Vector(x2, y2, z2); //Second corner fo your cuboid
+        CuboidRegion cReg = new CuboidRegion(weWorld, pos1, pos2);
+        File dataDirectory = new File (plugin.getDataFolder(), "saves");
+        File file = new File(dataDirectory, filename + ".schematic"); // The schematic file
+        try {
+            BlockArrayClipboard clipboard = new BlockArrayClipboard(cReg);      
+            Extent source = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
+            Extent destination = clipboard;
+            ForwardExtentCopy copy = new ForwardExtentCopy(source, cReg, clipboard.getOrigin(), destination, pos1);
+            copy.setSourceMask(new ExistingBlockMask(source));
+            Operations.completeLegacy(copy);
+            ClipboardFormat.SCHEMATIC.getWriter(new FileOutputStream(file)).write(clipboard, worldData);          
+        } catch (IOException | MaxChangedBlocksException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
 }

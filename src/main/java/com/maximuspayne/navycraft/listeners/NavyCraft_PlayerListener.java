@@ -59,7 +59,15 @@ import com.maximuspayne.shipyard.Plot;
 import com.maximuspayne.shipyard.PlotType;
 import com.maximuspayne.shipyard.Reward;
 import com.maximuspayne.shipyard.Shipyard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.EmptyClipboardException;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -2341,7 +2349,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - "
+								player.sendMessage(ChatColor.YELLOW + "/shipyard aunclaim <player> <id>" + ChatColor.DARK_GRAY + " - "
 										+ ChatColor.GOLD + "destroys all blocks within the plot");
 							}
 						}
@@ -2381,28 +2389,12 @@ public class NavyCraft_PlayerListener implements Listener {
 											int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
 											int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
 											int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+											
+											String name = player.getName() + "-";
+											
+											PermissionInterface.saveSchem(name, startX, startY, startZ, endX, endY, endZ, world);
 
-											for (int x = startX; x <= endX; x++) {
-												for (int z = startZ; z <= endZ; z++) {
-													for (int y = startY; y <= 62; y++) {
-														plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
-																.setType(Material.AIR);
-
-													}
-													int startYy;
-													if (startY > 63) {
-														startYy = startY;
-													} else {
-														startYy = 63;
-													}
-													for (int y = startYy; y <= endY; y++) {
-														plugin.getServer().getWorld("shipyard").getBlockAt(x, y, z)
-																.setType(Material.AIR);
-													}
-												}
-											}
-
-											player.sendMessage(ChatColor.GREEN + "Plot Cleared.");
+											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
 										}
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
