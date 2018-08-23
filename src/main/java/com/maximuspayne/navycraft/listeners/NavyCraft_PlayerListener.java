@@ -2383,7 +2383,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											int y = foundSign.getY();
 											int z = foundSign.getZ();
 											World world = foundSign.getWorld();
-											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
 											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
