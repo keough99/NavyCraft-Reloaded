@@ -59,15 +59,7 @@ import com.maximuspayne.shipyard.Plot;
 import com.maximuspayne.shipyard.PlotType;
 import com.maximuspayne.shipyard.Reward;
 import com.maximuspayne.shipyard.Shipyard;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -2385,16 +2377,12 @@ public class NavyCraft_PlayerListener implements Listener {
 											World world = foundSign.getWorld();
 											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
-											int startX = regionManager.getRegion(regionName).getMinimumPoint().getBlockX();
-											int endX = regionManager.getRegion(regionName).getMaximumPoint().getBlockX();
-											int startZ = regionManager.getRegion(regionName).getMinimumPoint().getBlockZ();
-											int endZ = regionManager.getRegion(regionName).getMaximumPoint().getBlockZ();
-											int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
-											int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
+											ProtectedRegion region = regionManager.getRegion(regionName);
 											
 											String name = player.getName() + "-" + nameString;
 											
-											PermissionInterface.saveSchem(name, startX, startY, startZ, endX, endY, endZ, world);
+											
+											PermissionInterface.saveSchem(player, name, region);
 
 											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
 										}
