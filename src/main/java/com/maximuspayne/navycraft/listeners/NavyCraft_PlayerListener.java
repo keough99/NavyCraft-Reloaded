@@ -2354,7 +2354,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						}
 						} else if (split[1].equalsIgnoreCase("save")) {
-							if (split.length == 3) {
+							if (split.length == 4) {
 								int tpId = -1;
 								try {
 									tpId = Integer.parseInt(split[2]);
@@ -2364,6 +2364,8 @@ public class NavyCraft_PlayerListener implements Listener {
 									return;
 								}
 
+								String nameString = split[3];
+								
 								if (tpId > -1) {
 									NavyCraft_FileListener.loadSignData();
 									NavyCraft_BlockListener.loadRewards(player.getName());
@@ -2377,9 +2379,9 @@ public class NavyCraft_PlayerListener implements Listener {
 										if (wgp != null) {
 											RegionManager regionManager = wgp
 													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											int x1 = foundSign.getX();
-											int y1 = foundSign.getY();
-											int z1 = foundSign.getZ();
+											int x = foundSign.getX();
+											int y = foundSign.getY();
+											int z = foundSign.getZ();
 											World world = foundSign.getWorld();
 											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x1, y1, z1, world);
 
@@ -2390,7 +2392,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											int startY = regionManager.getRegion(regionName).getMinimumPoint().getBlockY();
 											int endY = regionManager.getRegion(regionName).getMaximumPoint().getBlockY();
 											
-											String name = player.getName() + "-";
+											String name = player.getName() + "-" + nameString;
 											
 											PermissionInterface.saveSchem(name, startX, startY, startZ, endX, endY, endZ, world);
 
@@ -2404,7 +2406,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard clear <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the plot" );
+								player.sendMessage(ChatColor.YELLOW + "/shipyard save <id> <name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
 							}
 							
 						} else if (split[1].equalsIgnoreCase("rename")) {
