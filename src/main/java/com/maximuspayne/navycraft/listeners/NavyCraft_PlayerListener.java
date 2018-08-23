@@ -2507,6 +2507,7 @@ public class NavyCraft_PlayerListener implements Listener {
 										sign2.update();
 										NavyCraft_FileListener.updateSign(UUID, sign2.getLine(3), foundSign.getX(), foundSign.getY(), foundSign.getZ(), foundSign.getWorld(), newId);
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
+										NavyCraft_FileListener.loadSignData();
 									} else {
 										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
 									}
