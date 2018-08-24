@@ -6,9 +6,11 @@ import com.maximuspayne.navycraft.craft.CraftType;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import java.io.File;
@@ -147,23 +149,21 @@ public class PermissionInterface {
 		return true;
 	}
 	
-	public static void saveSchem(Player player, String schematicName, ProtectedRegion region){
+	public static void saveSchem(Player player, String schematicName, ProtectedRegion region, org.bukkit.World world){
         try {
-            File schematic = new File(NavyCraft.instance.getDataFolder(), "/schematics/" + schematicName);
+            File file = new File(NavyCraft.instance.getDataFolder(), "/schematics/" + schematicName);
             File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/");
             if (!dir.exists())
                 dir.mkdirs();
-        WorldEditPlugin wep = (WorldEditPlugin) NavyCraft.instance.getServer().getPluginManager().getPlugin("WorldEdit");
-        EditSession es = wep.createEditSession(player);
+        World weWorld = new BukkitWorld(world);
         
         Vector min = region.getMinimumPoint();
         Vector max = region.getMaximumPoint();
 
-        es.enableQueue();
-        CuboidClipboard clipboard = new CuboidClipboard(max.subtract(min).add(new Vector(1, 1, 1)), min);
-        clipboard.copy(es);
-        SchematicFormat.MCEDIT.save(clipboard, schematic);
-        es.flushQueue();
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
+        CuboidClipboard clipboard = new CuboidClipboard(min, max);
+        clipboard.copy(editSession);
+        SchematicFormat.MCEDIT.save(clipboard, file);
         } catch (IOException | DataException ex) {
             ex.printStackTrace();
         }
