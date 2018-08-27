@@ -2379,10 +2379,9 @@ public class NavyCraft_PlayerListener implements Listener {
 
 											ProtectedRegion region = regionManager.getRegion(regionName);
 											
-											String name = player.getName() + "-" + nameString;
+											String name = player.getName() + "-" + NavyCraft_FileListener.getSign(x, y, z, world);
 											
-											
-											PermissionInterface.saveSchem(player, name, region, world);
+											PermissionInterface.saveSchem(player, name, nameString, region, world);
 
 											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
 										}

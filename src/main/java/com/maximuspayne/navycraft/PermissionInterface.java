@@ -149,12 +149,17 @@ public class PermissionInterface {
 		return true;
 	}
 	
-	public static void saveSchem(Player player, String schematicName, ProtectedRegion region, org.bukkit.World world){
+	public static void saveSchem(Player player, String schematicName, String customName, ProtectedRegion region, org.bukkit.World world){
         try {
-            File file = new File(NavyCraft.instance.getDataFolder(), "/schematics/" + schematicName);
+            File file = new File(NavyCraft.instance.getDataFolder(), "/schematics/" + schematicName + "-" + customName + ".schematic");
             File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/");
             if (!dir.exists())
                 dir.mkdirs();
+            for (File f : dir.listFiles()) {
+            	if (f.getName().contains(schematicName)) {
+            		file = f;
+            	}
+            }
         World weWorld = new BukkitWorld(world);
         
         Vector min = region.getMinimumPoint();
