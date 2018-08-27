@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.SchematicFormat;
@@ -41,6 +45,29 @@ public class Utils {
         SchematicFormat.MCEDIT.save(clipboard, file);
         } catch (IOException | DataException ex) {
             ex.printStackTrace();
+        }
+    }
+	
+
+    public static boolean pasteSchem(String schematicName, Location pasteLoc) {
+        try {
+            File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/" + schematicName + ".schematic");
+            if (!dir.exists()) {
+            	return false;
+            }
+            EditSession editSession = new EditSession(new BukkitWorld(pasteLoc.getWorld()), 999999999);
+            editSession.enableQueue();
+
+            SchematicFormat schematic = SchematicFormat.getFormat(dir);
+            CuboidClipboard clipboard = schematic.load(dir);
+
+            clipboard.paste(editSession, BukkitUtil.toVector(pasteLoc), true);
+            editSession.flushQueue();
+            return true;
+        } catch (DataException | IOException ex) {
+            return false;
+        } catch (MaxChangedBlocksException ex) {
+            return false;
         }
     }
 	
@@ -76,4 +103,33 @@ public class Utils {
 		}
 		return true;
 	}
+	
+	public static BlockFace getBlockFace(Block block) {
+		BlockFace bf;
+		bf = null;
+		// bf2 = null;
+		switch (block.getData()) {
+			case (byte) 0x8:// n
+				bf = BlockFace.SOUTH;
+				// bf2 = BlockFace.NORTH;
+				break;
+			case (byte) 0x0:// s
+				bf = BlockFace.NORTH;
+				// bf2 = BlockFace.SOUTH;
+				break;
+			case (byte) 0x4:// w
+				bf = BlockFace.EAST;
+				// bf2 = BlockFace.WEST;
+				break;
+			case (byte) 0xC:// e
+				bf = BlockFace.WEST;
+				// bf2 = BlockFace.EAST;
+				break;
+			default:
+				break;
+		}
+		return bf;
+	}
 }
+
+
