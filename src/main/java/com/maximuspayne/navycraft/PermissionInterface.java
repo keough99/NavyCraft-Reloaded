@@ -161,7 +161,7 @@ public class PermissionInterface {
         Vector max = region.getMaximumPoint();
 
         EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
-        CuboidClipboard clipboard = new CuboidClipboard(min, max);
+        CuboidClipboard clipboard = new CuboidClipboard(max.subtract(min).add(new Vector(1, 1, 1)), min);;
         clipboard.copy(editSession);
         SchematicFormat.MCEDIT.save(clipboard, file);
         } catch (IOException | DataException ex) {
