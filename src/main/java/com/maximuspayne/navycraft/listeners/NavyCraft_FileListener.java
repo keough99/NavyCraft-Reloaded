@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 
 import com.maximuspayne.navycraft.ConfigManager;
 import com.maximuspayne.navycraft.NavyCraft;
-import com.maximuspayne.navycraft.PermissionInterface;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.shipyard.Plot;
 
 @SuppressWarnings("deprecation")
@@ -212,7 +212,7 @@ public class NavyCraft_FileListener implements Listener {
 }
 	
 	public static void loadPlayerData(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		String UUID = Utils.getUUIDfromPlayer(player);
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
 				File.separator + "userdata");
@@ -234,7 +234,7 @@ public class NavyCraft_FileListener implements Listener {
 	}
 
 	public static void loadExperience(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		String UUID = Utils.getUUIDfromPlayer(player);
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
 				File.separator + "userdata");
@@ -244,7 +244,7 @@ public class NavyCraft_FileListener implements Listener {
 	}
 	
 	public static void saveExperience(String player) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		String UUID = Utils.getUUIDfromPlayer(player);
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
 				File.separator + "userdata");

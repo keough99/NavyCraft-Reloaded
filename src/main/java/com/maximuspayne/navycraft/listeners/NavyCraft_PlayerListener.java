@@ -49,6 +49,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.Pump;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
@@ -209,7 +210,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		if (msgWords.length == 5) {
 			if (msgWords[1].equalsIgnoreCase("was") && msgWords[3].equalsIgnoreCase("by")) {
 				Player p = plugin.getServer().getPlayer(msgWords[4]);
-				if ((p != null) && PermissionInterface.CheckEnabledWorld(p.getLocation())) {
+				if ((p != null) && Utils.CheckEnabledWorld(p.getLocation())) {
 					int newExp = 100;
 					
 					plugin.getServer().broadcastMessage(ChatColor.GREEN + p.getName() + " receives " + ChatColor.YELLOW
@@ -968,7 +969,7 @@ public class NavyCraft_PlayerListener implements Listener {
 
 			if ((player.getItemInHand().getType() == Material.FLINT_AND_STEEL)
 					&& NavyCraft.cleanupPlayers.contains(player.getName())
-					&& PermissionInterface.CheckEnabledWorld(player.getLocation() )) {
+					&& Utils.CheckEnabledWorld(player.getLocation() )) {
 				Set<Material> transp = new HashSet<>();
 				transp.add(Material.AIR);
 				transp.add(Material.STATIONARY_WATER);
@@ -1047,7 +1048,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			}
 			if ((player.getItemInHand().getType() == Material.SHEARS)
 					&& NavyCraft.cleanupPlayers.contains(player.getName())
-					&& PermissionInterface.CheckEnabledWorld(player.getLocation())
+					&& Utils.CheckEnabledWorld(player.getLocation())
 					&& !NavyCraft.checkSafeDockRegion(player.getLocation())) {
 				
 				Set<Material> transp = new HashSet<>();
@@ -1082,7 +1083,7 @@ public class NavyCraft_PlayerListener implements Listener {
 			}
 			if ((player.getItemInHand().getType() == Material.GOLD_PICKAXE)
 					&& NavyCraft.cleanupPlayers.contains(player.getName())
-					&& PermissionInterface.CheckEnabledWorld(player.getLocation())
+					&& Utils.CheckEnabledWorld(player.getLocation())
 					&& !NavyCraft.checkSafeDockRegion(player.getLocation())) {
 				Set<Material> transp = new HashSet<>();
 				transp.add(Material.AIR);
@@ -1699,7 +1700,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
-							String UUID = PermissionInterface.getUUIDfromPlayer(playerString);
+							String UUID = Utils.getUUIDfromPlayer(playerString);
 							if (UUID != null) {
 							player.sendMessage("placeholder");
 							} else {
@@ -1772,7 +1773,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
-							String UUID = PermissionInterface.getUUIDfromPlayer(playerString);
+							String UUID = Utils.getUUIDfromPlayer(playerString);
 							if (UUID != null) {
 							player.sendMessage("placeholder");
 							} else {
@@ -1796,7 +1797,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_FileListener.loadSignData();
 							NavyCraft_BlockListener.loadRewards(player.getName());
-							String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+							String UUID = Utils.getUUIDfromPlayer(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
 
@@ -2375,13 +2376,13 @@ public class NavyCraft_PlayerListener implements Listener {
 											int y = foundSign.getY();
 											int z = foundSign.getZ();
 											World world = foundSign.getWorld();
-											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world)+ "-" +  "typeplaceholder";
 
 											ProtectedRegion region = regionManager.getRegion(regionName);
 											
 											String name = player.getName() + "-" + NavyCraft_FileListener.getSign(x, y, z, world);
 											
-											PermissionInterface.saveSchem(player, name, nameString, region, world);
+											Utils.saveSchem(player, name, nameString, region, world);
 
 											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
 										}
@@ -2436,7 +2437,7 @@ public class NavyCraft_PlayerListener implements Listener {
 							}
 						} else if (split[1].equalsIgnoreCase("renumber")) {
 							if (split.length > 3) {
-								String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+								String UUID = Utils.getUUIDfromPlayer(player.getName());
 								int tpId = -1;
 								try {
 									tpId = Integer.parseInt(split[2]);
@@ -2606,7 +2607,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						} else if (split[1].equalsIgnoreCase("player")) {
 							if (split.length == 3) {
 								String p = split[2];
-								String UUID = PermissionInterface.getUUIDfromPlayer(p);
+								String UUID = Utils.getUUIDfromPlayer(p);
 								NavyCraft_FileListener.loadSignData();
 								NavyCraft_BlockListener.loadRewards(p);
 								if (UUID != null) {
@@ -2643,7 +2644,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								String p = split[2];
 								NavyCraft_FileListener.loadSignData();
 								NavyCraft_BlockListener.loadRewards(p);
-								String UUID = PermissionInterface.getUUIDfromPlayer(p);
+								String UUID = Utils.getUUIDfromPlayer(p);
 								if (UUID != null) {
 								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Plots:");
 								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "ID" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
@@ -2703,7 +2704,7 @@ public class NavyCraft_PlayerListener implements Listener {
 					} else {
 						NavyCraft_FileListener.loadSignData();
 						NavyCraft_BlockListener.loadRewards(player.getName());
-						String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+						String UUID = Utils.getUUIDfromPlayer(player.getName());
 						player.sendMessage(ChatColor.AQUA + "Your Shipyard Plots:");
 						for (PlotType pt : Shipyard.getPlots()) {
 							int numPlots = 0;
@@ -3880,7 +3881,7 @@ public class NavyCraft_PlayerListener implements Listener {
 		if ((player != null) && (loc != null)) {
 			wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 			if (wgp != null) {
-				if (!PermissionInterface.CheckEnabledWorld(loc)) {
+				if (!Utils.CheckEnabledWorld(loc)) {
 					return true;
 				}
 				RegionManager regionManager = wgp.getRegionManager(player.getWorld());

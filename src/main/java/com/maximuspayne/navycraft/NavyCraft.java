@@ -263,7 +263,7 @@ public class NavyCraft extends JavaPlugin {
     	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
     	if( wgp != null && loc != null)
     	{
-    		if( !!PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !!Utils.CheckEnabledWorld(loc) )
     		{
     			return false;
     		}
@@ -293,7 +293,7 @@ public class NavyCraft extends JavaPlugin {
     	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
     	if( wgp != null && loc != null)
     	{
-    		if( !!PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !Utils.CheckEnabledWorld(loc) )
     		{
     			return false;
     		}
@@ -323,7 +323,7 @@ public class NavyCraft extends JavaPlugin {
     	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
     	if( wgp != null && loc != null)
     	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !Utils.CheckEnabledWorld(loc) )
     		{
     			return false;
     		}
@@ -353,7 +353,7 @@ public class NavyCraft extends JavaPlugin {
     	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
     	if( wgp != null && loc != null)
     	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !Utils.CheckEnabledWorld(loc) )
     		{
     			return false;
     		}
@@ -383,7 +383,7 @@ public class NavyCraft extends JavaPlugin {
     	wgp = (WorldGuardPlugin) instance.getServer().getPluginManager().getPlugin("WorldGuard");
     	if( wgp != null && loc != null)
     	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !Utils.CheckEnabledWorld(loc) )
     		{
     			return false;
     		}

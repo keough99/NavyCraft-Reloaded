@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 import com.maximuspayne.navycraft.NavyCraft;
-import com.maximuspayne.navycraft.PermissionInterface;
+import com.maximuspayne.navycraft.Utils;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -359,7 +359,7 @@ public class AimCannonPlayerListener implements Listener {
 				}
 				
 			}else { //b != null
-				if (PermissionInterface.CheckEnabledWorld(event.getPlayer().getLocation())) {
+				if (Utils.CheckEnabledWorld(event.getPlayer().getLocation())) {
 			    for (OneCannon onec : AimCannon.getCannons()) {
 				if (onec.isThisCannon(b.getLocation(), false, false)) {
 				    if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -384,7 +384,7 @@ public class AimCannonPlayerListener implements Listener {
 		for (OneCannon onec : AimCannon.getCannons()) 
 		{
 		    if (onec.isThisCannon(event.getClickedBlock().getLocation(), false, false) || onec.isThisCannon(event.getClickedBlock().getLocation(), false, true)) {
-		    	if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation()) && !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
+		    	if (Utils.CheckEnabledWorld(event.getClickedBlock().getLocation()) && !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
 		    	if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 		    		onec.Charge(event.getPlayer(), true);
 				else
@@ -401,7 +401,7 @@ public class AimCannonPlayerListener implements Listener {
 		// new Cannon
 		OneCannon oc = new OneCannon(event.getClickedBlock().getLocation(), NavyCraft.instance);
 		if ((oc.isValidCannon(event.getClickedBlock(), false) && event.getClickedBlock().getType() == Material.DISPENSER) || (oc.isValidCannon(event.getClickedBlock(), true) && event.getClickedBlock().getType() == Material.DROPPER)) {
-			if (PermissionInterface.CheckEnabledWorld(event.getClickedBlock().getLocation()) && !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
+			if (Utils.CheckEnabledWorld(event.getClickedBlock().getLocation()) && !NavyCraft.checkSafeDockRegion(event.getClickedBlock().getLocation())) {
 			if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 				oc.Charge(event.getPlayer(), true);
 			else

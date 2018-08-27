@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -15,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,11 +30,11 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import com.earth2me.essentials.Essentials;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
-import com.maximuspayne.aimcannon.FireCIWS;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 import com.maximuspayne.navycraft.craft.CraftType;
@@ -102,17 +100,6 @@ public class NavyCraft_BlockListener implements Listener {
 				}
 			}
 		}
-	}
-	
-	@EventHandler
-	public void onFireCIWS (FireCIWS event) {
-		Player player = event.getPlayer();
-		Egg newEgg = player.launchProjectile(Egg.class);
-		newEgg.setVelocity(newEgg.getVelocity().multiply(1.0f));
-		NavyCraft.explosiveEggsList.add(newEgg);
-		player.getWorld().playEffect(player.getLocation(), Effect.SMOKE, 0);
-		CraftMover.playWeaponSound(player.getLocation(), Sound.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, 5.0f,
-				1.70f);	
 	}
 	
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
@@ -346,7 +333,7 @@ public class NavyCraft_BlockListener implements Listener {
 			
 
 					NavyCraft_BlockListener.loadRewards(player.getName());
-					String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+					String UUID = Utils.getUUIDfromPlayer(player.getName());
 					Location loc = null;
 					int sizeX= 0, sizeY = 0, sizeZ = 0, originX = 0, originY = 0, originZ = 0;
 					String name = null;
@@ -1627,7 +1614,7 @@ public class NavyCraft_BlockListener implements Listener {
 		}
 		// }
 
-		if (PermissionInterface.CheckEnabledWorld(player.getLocation()) && ((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("ciws") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
+		if (Utils.CheckEnabledWorld(player.getLocation()) && ((craftTypeName.equalsIgnoreCase("flak-gun") || craftTypeName.equalsIgnoreCase("ciws") || craftTypeName.equalsIgnoreCase("helm") || craftTypeName.equalsIgnoreCase("nav") || craftTypeName.equalsIgnoreCase("periscope") || craftTypeName.equalsIgnoreCase("aa-gun") || craftTypeName.equalsIgnoreCase("radar") || craftTypeName.equalsIgnoreCase("detector") || craftTypeName.equalsIgnoreCase("sonar") || craftTypeName.equalsIgnoreCase("hydrophone") || craftTypeName.equalsIgnoreCase("subdrive") || craftTypeName.equalsIgnoreCase("firecontrol") || craftTypeName.equalsIgnoreCase("passivesonar") || craftTypeName.equalsIgnoreCase("activesonar") || craftTypeName.equalsIgnoreCase("hfsonar") || craftTypeName.equalsIgnoreCase("launcher") || craftTypeName.equalsIgnoreCase("engine") || craftTypeName.equalsIgnoreCase("tdc") || craftTypeName.equalsIgnoreCase("radio")))) {
 			int cost = 0;
 			if (craftTypeName.equalsIgnoreCase("helm")) {
 				cost = 50;
@@ -1980,7 +1967,7 @@ public class NavyCraft_BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void inventoryClickEvent(final InventoryClickEvent event) {
 		if (!event.isCancelled()) {
-			if ( PermissionInterface.CheckEnabledWorld(event.getWhoClicked().getLocation()) ) {
+			if ( Utils.CheckEnabledWorld(event.getWhoClicked().getLocation()) ) {
 				if ((event.getInventory().getType() == InventoryType.DISPENSER) && (event.getRawSlot() == 4) && ((event.getCurrentItem().getTypeId() == 388) || (event.getCursor().getTypeId() == 388))) {
 					event.setCancelled(true);
 				}
@@ -1991,7 +1978,7 @@ public class NavyCraft_BlockListener implements Listener {
 	
 	public static void loadRewards(String player) {
 		NavyCraft.playerRewards.clear();
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		String UUID = Utils.getUUIDfromPlayer(player);
 		
 		String worldName = "";
 		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
@@ -2032,7 +2019,7 @@ public class NavyCraft_BlockListener implements Listener {
 	}
 
 	public static Sign findSign(String player, int id) {
-		String UUID = PermissionInterface.getUUIDfromPlayer(player);
+		String UUID = Utils.getUUIDfromPlayer(player);
 		if (UUID != null) {
 		Sign foundSign = null;
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
@@ -2050,7 +2037,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 	public static int maxId(Player player) {
 		int foundHighest = -1;
-		String UUID = PermissionInterface.getUUIDfromPlayer(player.getName());
+		String UUID = Utils.getUUIDfromPlayer(player.getName());
 		if (UUID != null) {
 		NavyCraft.instance.DebugMessage("UUID check passed", 3);
 		if (NavyCraft.playerSigns.containsKey(UUID)) {
@@ -2073,7 +2060,7 @@ public class NavyCraft_BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockDispense(final BlockDispenseEvent event) {
 		if (!event.isCancelled()) {
-			if (PermissionInterface.CheckEnabledWorld(event.getBlock().getLocation()) && (event.getItem().getType() == Material.EMERALD)) {
+			if (Utils.CheckEnabledWorld(event.getBlock().getLocation()) && (event.getItem().getType() == Material.EMERALD)) {
 				event.setCancelled(true);
 			}
 

@@ -35,6 +35,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.PermissionInterface;
 import com.maximuspayne.navycraft.Pump;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.listeners.NavyCraft_BlockListener;
@@ -1429,7 +1430,7 @@ public class CraftMover {
 
 		if (!craft.leftSafeDock && !NavyCraft.checkSpawnRegion(new Location(craft.world, craft.minX, craft.minY, craft.minZ)) && !NavyCraft.checkSpawnRegion(new Location(craft.world, craft.maxX, craft.maxY, craft.maxZ))) {
 			craft.leftSafeDock = true;
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && !craft.doCost) {
+			if (Utils.CheckEnabledWorld(craft.getLocation()) && !craft.doCost) {
 				if (craft.captainName != null) {
 					Player p = plugin.getServer().getPlayer(craft.captainName);
 					if ((p != null) && craft.isNameOnBoard.get(craft.captainName)) {
@@ -2214,7 +2215,7 @@ public class CraftMover {
 			String line3 = "Fathometer:" + dukString;
 
 			String line1 = "Grid: ";
-			if (PermissionInterface.CheckEnabledWorld(craft.getLocation())) {
+			if (Utils.CheckEnabledWorld(craft.getLocation())) {
 				for (int i = 0; i < 2; i++) {
 					int cord = 0;
 					if (i == 0) {
@@ -5129,7 +5130,7 @@ public class CraftMover {
 
 		wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		if ((wgp != null) && (loc != null)) {
-			if ( !PermissionInterface.CheckEnabledWorld(loc) ) { return true; }
+			if ( !Utils.CheckEnabledWorld(loc) ) { return true; }
 			RegionManager regionManager = wgp.getRegionManager(craft.world);
 
 			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
@@ -5648,7 +5649,7 @@ public class CraftMover {
 					broadcastMsg = "";
 					int score = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * 100.0f);
 					int damage = (int) (((float) uncrewedPlayers.get(p) / (float) totalDamage) * totalBlocks);
-					if (PermissionInterface.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
+					if (Utils.CheckEnabledWorld(craft.getLocation()) && (!craft.crewNames.isEmpty() || (((System.currentTimeMillis() - craft.abandonTime) / 1000) < 180))) {
 						if (craft.crewHistory.contains(p.getName()) && !p.isOp()) { return; }
 					NavyCraft_BlockListener.rewardExpPlayer(damage, p);
 					}

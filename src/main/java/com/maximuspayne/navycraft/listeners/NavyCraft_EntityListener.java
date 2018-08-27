@@ -20,7 +20,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
-import com.maximuspayne.navycraft.PermissionInterface;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 
@@ -82,7 +82,7 @@ public class NavyCraft_EntityListener implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event)
     {
 
-    	if( PermissionInterface.CheckEnabledWorld(event.getEntity().getLocation()) )
+    	if( Utils.CheckEnabledWorld(event.getEntity().getLocation()) )
     	{
 
     	}

@@ -27,7 +27,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
-import com.maximuspayne.navycraft.PermissionInterface;
+import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 
@@ -874,7 +874,7 @@ public class OneCannon{
 		    else if( cannonType == 14 )//vertical missiles mk2
 		    	cost=1250;
 		    
-			if( PermissionInterface.CheckEnabledWorld(p.getLocation()) )
+			if( Utils.CheckEnabledWorld(p.getLocation()) )
 			{
 				if( ess.getUser(p).canAfford(new BigDecimal(cost)) )
 				{
@@ -6685,7 +6685,7 @@ public class OneCannon{
     
 	public void turnCannonLayer(Boolean right, Player p, int offsetY) {
 		// Get data
-		if (PermissionInterface.CheckEnabledWorld(p.getLocation())) {
+		if (Utils.CheckEnabledWorld(p.getLocation())) {
 		int[][] arr = new int[7][7];
 		byte[][] arrb = new byte[7][7];
 		for (int x = 0; x < 7; x++) {
@@ -6837,7 +6837,7 @@ public class OneCannon{
     {
     	if( wgp != null )
     	{
-    		if( !PermissionInterface.CheckEnabledWorld(loc) )
+    		if( !Utils.CheckEnabledWorld(loc) )
     		{
     			return true;
     		}
