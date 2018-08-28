@@ -133,7 +133,8 @@ public class NavyCraft_PlayerListener implements Listener {
 		try {
 		NavyCraft_FileListener.loadPlayerData(player.getName());
 		} catch (Exception ex) {
-			System.out.println("Something is wrong with" + player.getName() + "'s playerdata!");
+			System.out.println("Something is wrong with " + player.getName() + "'s playerdata!");
+			ex.printStackTrace();
 		}
 		if (Craft.reboardNames.containsKey(player.getName())) {
 			if ((Craft.reboardNames.get(player.getName()) != null)
