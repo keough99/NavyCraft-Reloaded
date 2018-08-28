@@ -17,12 +17,19 @@ import com.maximuspayne.navycraft.ConfigManager;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.shipyard.Plot;
+import com.maximuspayne.shipyard.PlotType;
+import com.maximuspayne.shipyard.Reward;
+import com.maximuspayne.shipyard.Shipyard;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 @SuppressWarnings("deprecation")
 public class NavyCraft_FileListener implements Listener {
 	
 	public NavyCraft_FileListener(NavyCraft p) {
 	}
+	
+	public static PermissionsEx pex;
 
 	public static void loadSignData() {
 		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
@@ -232,7 +239,60 @@ public class NavyCraft_FileListener implements Listener {
 		// Put all the file data to hashmaps
 		loadExperience(player);
 	}
+	
+	public static void loadExpData(String player) {
+		String worldName = "";
+		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
+			worldName = worlds[0];
+		} else {
+			worldName = NavyCraft.instance.getServer().getPlayer(player).getWorld().getName();
+		}
+		
+		pex = (PermissionsEx) NavyCraft.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if (pex == null)
+			return;
+		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
+			if (!s.contains("navycraft")) {
+					if (!s.contains("rank")) {
+						PermissionsEx.getUser(player).addPermission("navycraft.rank.0");
+					}
+			}
+		}
+	loadExperience(player);
+}
 
+	public static void loadExp(String player) {
+		String UUID = Utils.getUUIDfromPlayer(player);
+		int exp = 0;
+		String worldName = "";
+		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
+			worldName = worlds[0];
+		} else {
+			worldName = NavyCraft.instance.getServer().getPlayer(player).getWorld().getName();
+		}
+		
+		pex = (PermissionsEx) NavyCraft.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if (pex == null)
+			return;
+		
+		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
+			if (s.contains("navycraft")) {
+					if (s.contains("rank")) {
+						String[] split = s.split("\\.");
+						try {
+						exp = Integer.parseInt(split[2]);
+					} catch (Exception ex) {
+						System.out.println("Invalid perm-" + s);
+						break;
+					}
+				}
+			}
+		}
+		NavyCraft.playerExp.put(UUID, exp);
+	}
+	
 	public static void loadExperience(String player) {
 		String UUID = Utils.getUUIDfromPlayer(player);
 		File userdata = new File(
