@@ -214,7 +214,7 @@ public class NavyCraft_FileListener implements Listener {
 	}
 }
 	
-	public static void loadPlayerDataOld(String player) {
+	public static void convertOldData(String player) {
 		String UUID = Utils.getUUIDfromPlayer(player);
 		File userdata = new File(
 				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
@@ -222,18 +222,31 @@ public class NavyCraft_FileListener implements Listener {
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 		
-		// When the player file is created for the first time...
-		if (!f.exists()) {
-			try {
-				playerData.set("exp", 0);
-				
-				playerData.save(f);
-			} catch (IOException exception) {
-				exception.printStackTrace();
+		String worldName = "";
+		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
+			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
+			worldName = worlds[0];
+		} else {
+			worldName = NavyCraft.instance.getServer().getPlayer(player).getWorld().getName();
+		}
+		
+		pex = (PermissionsEx) NavyCraft.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
+		if (pex == null)
+			return;
+		
+		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
+			if (s.contains("navycraft")) {
+					if (s.contains("rank")) {
+						try {
+						PermissionsEx.getUser(player).removePermission(s);
+					} catch (Exception ex) {
+						System.out.println("Invalid perm-" + s);
+						break;
+					}
+				}
 			}
 		}
-		// Put all the file data to hashmaps
-		loadExperience(player);
+		PermissionsEx.getUser(player).addPermission("navycraft.rank." + playerData.getInt("exp"));
 	}
 	
 	public static void loadPlayerData(String player) {
@@ -252,8 +265,6 @@ public class NavyCraft_FileListener implements Listener {
 			if (!s.contains("navycraft")) {
 					if (!s.contains("rank")) {
 						PermissionsEx.getUser(player).addPermission("navycraft.rank.0");
-						loadExperienceOld(player);
-						NavyCraft.instance.DebugMessage("Didn't have rank perm!", 3);
 					}
 			}
 		}
@@ -316,19 +327,6 @@ public class NavyCraft_FileListener implements Listener {
 			}
 		}
 		PermissionsEx.getUser(player).addPermission("navycraft.rank." + NavyCraft.playerExp.get(player));
-	}
-	
-	public static void loadExperienceOld(String player) {
-		String UUID = Utils.getUUIDfromPlayer(player);
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
-		File f = new File(userdata, File.separator + UUID + ".yml");
-		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		if (!NavyCraft.playerExp.containsKey(player)) {
-		NavyCraft.playerExp.put(player, playerData.getInt("exp"));
-		saveExperience(player);
-		}
 	}
 
 }
