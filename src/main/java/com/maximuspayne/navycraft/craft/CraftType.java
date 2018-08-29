@@ -3,6 +3,8 @@ package com.maximuspayne.navycraft.craft;
 import java.io.*;
 import java.util.ArrayList;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.maximuspayne.navycraft.NavyCraft;
@@ -15,6 +17,12 @@ import com.maximuspayne.navycraft.PermissionInterface;
  * or use part of the code for your own plugins.
  */
 public class CraftType {
+	
+	private NavyCraft plugin = NavyCraft.getPlugin(NavyCraft.class);
+
+	public static FileConfiguration CraftConfig;
+	public static File CraftFile;
+	
 	
 	public String name = "";
 	public String driveCommand = "drive";
@@ -380,101 +388,111 @@ public class CraftType {
 			}			
 		}
 	}
-
-	public static void saveType(File dir, CraftType craftType, boolean force) {		
-		File craftFile = new File(dir + File.separator
-				+ craftType.name + ".txt");
-
-		if (!craftFile.exists()) {
+	public void setupCraftConfig() {
+		if (!plugin.getDataFolder().exists()) {
+			plugin.getDataFolder().mkdir();
+		}
+		CraftFile = new File(plugin.getDataFolder() + File.separator , "types.yml");
+		CraftConfig = YamlConfiguration.loadConfiguration(CraftFile);
+		
+		if (!CraftFile.exists()) {
 			try {
-				craftFile.createNewFile();
-			} catch (IOException ex) {
-				return;
+				CraftConfig.set("Types.SHIP1.SZX", 13);
+				CraftConfig.set("Types.SHIP1.SZY", 28);
+				
+				CraftConfig.save(CraftFile);
+			} catch(IOException e) {
+				System.out.println("Could not create the types.yml file!");
 			}
-		} else
-			// we don't overwrite existing files
-			return;
+		}
+	}
+	
+	public static FileConfiguration getCraftConfig () {
+		return CraftConfig;
+	}
+	
+	public static void saveCraftConfig() {
+		try {
+			CraftConfig.save(CraftFile);
+		} catch (IOException e) {
+			System.out.println("Could not save shipyard config.yml file");
+		}
+	}
+	public static void reloadCraftConfig() {
+		CraftConfig = YamlConfiguration.loadConfiguration(CraftFile);
+	}
+
+	public static void saveType(CraftType craftType, boolean force) {		
 
 		try {
-			BufferedWriter writer = new BufferedWriter(
-					new FileWriter(craftFile));
 
-			writeAttribute(writer, "driveCommand", craftType.driveCommand,
+			String name = craftType.name;
+			writeAttribute(name, "driveCommand", craftType.driveCommand,
 					force);
-			writeAttribute(writer, "minBlocks", craftType.minBlocks, true);
-			writeAttribute(writer, "maxBlocks", craftType.maxBlocks, force);
+			writeAttribute(name, "minBlocks", craftType.minBlocks, true);
+			writeAttribute(name, "maxBlocks", craftType.maxBlocks, force);
 
 			// list of blocks that make the structure of the craft
 			if (craftType.structureBlocks != null) {
-				String line = "structureBlocks=";
+				String line = null;
 				for (short blockId : craftType.structureBlocks) {
 
 					line += blockId + ",";
 				}
-
-				writer.write(line.substring(0, line.length() - 1));
-				writer.newLine();
+				writeAttribute(name, "structureBlocks", line.substring(0, line.length() - 1), force);
 			}
 			
-			writeAttribute(writer, "maxSpeed", craftType.maxSpeed, force);
-			writeAttribute(writer, "discount", craftType.discount, force);
-			writeAttribute(writer, "adminBuild", craftType.adminBuild, force);
-			writeAttribute(writer, "digBlockId", craftType.digBlockId, force);
-			writeAttribute(writer, "digBlockDurability", craftType.digBlockDurability, force);
-			writeAttribute(writer, "canNavigate", craftType.canNavigate, force);
-			writeAttribute(writer, "isTerrestrial", craftType.isTerrestrial, force);
-			writeAttribute(writer, "canFly", craftType.canFly, force);
-			writeAttribute(writer, "canDive", craftType.canDive, force);
-			writeAttribute(writer, "canDig", craftType.canDig, force);
-			writeAttribute(writer, "obeysGravity", craftType.obeysGravity, force);
-			// writeAttribute(writer, "iceBreaker", craftType.iceBreaker);
-			writeAttribute(writer, "doesCruise", craftType.doesCruise, force);
-			writeAttribute(writer, "maxEngineSpeed", craftType.maxEngineSpeed, force);
-			writeAttribute(writer, "maxSubmergedSpeed", craftType.maxSubmergedSpeed, force);
-			writeAttribute(writer, "maxForwardGear", craftType.maxForwardGear, force);
-			writeAttribute(writer, "maxReverseGear", craftType.maxReverseGear, force);
-
-			writer.close();
+			writeAttribute(name, "maxSpeed", craftType.maxSpeed, force);
+			writeAttribute(name, "discount", craftType.discount, force);
+			writeAttribute(name, "adminBuild", craftType.adminBuild, force);
+			writeAttribute(name, "digBlockId", craftType.digBlockId, force);
+			writeAttribute(name, "digBlockDurability", craftType.digBlockDurability, force);
+			writeAttribute(name, "canNavigate", craftType.canNavigate, force);
+			writeAttribute(name, "isTerrestrial", craftType.isTerrestrial, force);
+			writeAttribute(name, "canFly", craftType.canFly, force);
+			writeAttribute(name, "canDive", craftType.canDive, force);
+			writeAttribute(name, "canDig", craftType.canDig, force);
+			writeAttribute(name, "obeysGravity", craftType.obeysGravity, force);
+			// writeAttribute(name, "iceBreaker", craftType.iceBreaker);
+			writeAttribute(name, "doesCruise", craftType.doesCruise, force);
+			writeAttribute(name, "maxEngineSpeed", craftType.maxEngineSpeed, force);
+			writeAttribute(name, "maxSubmergedSpeed", craftType.maxSubmergedSpeed, force);
+			writeAttribute(name, "maxForwardGear", craftType.maxForwardGear, force);
+			writeAttribute(name, "maxReverseGear", craftType.maxReverseGear, force);
 
 		} catch (IOException ex) {
 		}
 	}
 
-	public static void saveTypes(File dir) {		
+	public static void saveTypes() {		
 		for (CraftType craftType : craftTypes) {
-			saveType(dir, craftType, false);
+			saveType(craftType, false);
 		}
 
 		// the template is just a file that shows all parameters
-		saveType(dir, getDefaultCraftType("template"), true);
+		saveType(getDefaultCraftType("template"), true);
 
 	}
 
-	private static void writeAttribute(BufferedWriter writer, String attribute,
-			String value, boolean force) throws IOException {
+	private static void writeAttribute(String name, String attribute, String value, boolean force) throws IOException {
 		if ((value == null || value.trim().equals("")) && !force)
 			return;
-		writer.write(attribute + "=" + value);
-		writer.newLine();
+		CraftConfig.set("Types." + name + "." + attribute, value);
 	}
-
-	private static void writeAttribute(BufferedWriter writer, String attribute,
-			int value, boolean force) throws IOException {
-		if (value == 0 && !force)
-			return;
-		writer.write(attribute + "=" + value);
-		writer.newLine();
-	}
-
-	private static void writeAttribute(BufferedWriter writer, String attribute,
-			boolean value, boolean force) throws IOException {
+	
+	private static void writeAttribute(String name, String attribute, Boolean value, boolean force) throws IOException {
 		if (!value && !force)
 			return;
-		writer.write(attribute + "=" + value);
-		writer.newLine();
+		CraftConfig.set("Types." + name + "." + attribute, value);
+	}
+	
+	private static void writeAttribute(String name, String attribute, int value, boolean force) throws IOException {
+		if (value == 0 && !force)
+			return;
+		CraftConfig.set("Types." + name + "." + attribute, value);
 	}
 
-	public static void loadTypes(File dir) {
+	public static void loadTypes() {
 		File[] craftTypesList = dir.listFiles();
 		craftTypes.clear();
 
