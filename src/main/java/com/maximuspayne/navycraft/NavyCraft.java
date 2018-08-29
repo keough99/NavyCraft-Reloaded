@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.logging.*;
-import java.io.File;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Egg;
@@ -128,15 +127,13 @@ public class NavyCraft extends JavaPlugin {
 	
 	public void loadProperties() {
 		getConfig().options().copyDefaults(true);
-		File dir = getDataFolder();
-		if (!dir.exists())
-			dir.mkdir();
 
 		loadConfigManager();
 		PlotType.initialize();
 		
-		CraftType.loadTypes(dir);
-		CraftType.saveTypes(dir);
+		CraftType.setupCraftConfig();
+		CraftType.loadTypes();
+		CraftType.saveTypes();
 		
 	}
 	

@@ -2,6 +2,7 @@ package com.maximuspayne.navycraft.craft;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,8 +19,6 @@ import com.maximuspayne.navycraft.PermissionInterface;
  */
 public class CraftType {
 	
-	private NavyCraft plugin = NavyCraft.getPlugin(NavyCraft.class);
-
 	public static FileConfiguration CraftConfig;
 	public static File CraftFile;
 	
@@ -388,17 +387,16 @@ public class CraftType {
 			}			
 		}
 	}
-	public void setupCraftConfig() {
-		if (!plugin.getDataFolder().exists()) {
-			plugin.getDataFolder().mkdir();
+	public static void setupCraftConfig() {
+		if (!NavyCraft.instance.getDataFolder().exists()) {
+			NavyCraft.instance.getDataFolder().mkdir();
 		}
-		CraftFile = new File(plugin.getDataFolder() + File.separator , "types.yml");
+		CraftFile = new File(NavyCraft.instance.getDataFolder() + File.separator , "types.yml");
 		CraftConfig = YamlConfiguration.loadConfiguration(CraftFile);
 		
 		if (!CraftFile.exists()) {
 			try {
-				CraftConfig.set("Types.SHIP1.SZX", 13);
-				CraftConfig.set("Types.SHIP1.SZY", 28);
+				CraftConfig.createSection("Types");
 				
 				CraftConfig.save(CraftFile);
 			} catch(IOException e) {
@@ -415,7 +413,7 @@ public class CraftType {
 		try {
 			CraftConfig.save(CraftFile);
 		} catch (IOException e) {
-			System.out.println("Could not save shipyard config.yml file");
+			System.out.println("Could not save types.yml file");
 		}
 	}
 	public static void reloadCraftConfig() {
@@ -423,9 +421,6 @@ public class CraftType {
 	}
 
 	public static void saveType(CraftType craftType, boolean force) {		
-
-		try {
-
 			String name = craftType.name;
 			writeAttribute(name, "driveCommand", craftType.driveCommand,
 					force);
@@ -459,81 +454,50 @@ public class CraftType {
 			writeAttribute(name, "maxSubmergedSpeed", craftType.maxSubmergedSpeed, force);
 			writeAttribute(name, "maxForwardGear", craftType.maxForwardGear, force);
 			writeAttribute(name, "maxReverseGear", craftType.maxReverseGear, force);
-
-		} catch (IOException ex) {
-		}
 	}
 
 	public static void saveTypes() {		
 		for (CraftType craftType : craftTypes) {
-			saveType(craftType, false);
+			saveType(craftType, true);
 		}
-
-		// the template is just a file that shows all parameters
-		saveType(getDefaultCraftType("template"), true);
-
 	}
 
-	private static void writeAttribute(String name, String attribute, String value, boolean force) throws IOException {
-		if ((value == null || value.trim().equals("")) && !force)
-			return;
+	private static void writeAttribute(String name, String attribute, String value, boolean force){
 		CraftConfig.set("Types." + name + "." + attribute, value);
+		saveCraftConfig();
 	}
 	
-	private static void writeAttribute(String name, String attribute, Boolean value, boolean force) throws IOException {
-		if (!value && !force)
-			return;
+	private static void writeAttribute(String name, String attribute, Boolean value, boolean force){
 		CraftConfig.set("Types." + name + "." + attribute, value);
+		saveCraftConfig();
 	}
 	
-	private static void writeAttribute(String name, String attribute, int value, boolean force) throws IOException {
-		if (value == 0 && !force)
-			return;
+	private static void writeAttribute(String name, String attribute, int value, boolean force){
 		CraftConfig.set("Types." + name + "." + attribute, value);
+		saveCraftConfig();
 	}
 
 	public static void loadTypes() {
-		File[] craftTypesList = dir.listFiles();
+		List<String> list = new ArrayList<String>(CraftConfig.getConfigurationSection("Types").getKeys(false));
+		int size = list.size();
 		craftTypes.clear();
 
-		for (File craftFile : craftTypesList) {
+		if (size == 0) return;
+		for (String name : list) {
 
-			if (craftFile.isFile() && craftFile.getName().endsWith(".txt")) {
-
-				String craftName = craftFile.getName().split("\\.")[0];
-
-				// skip the template file
-				if (craftName.equalsIgnoreCase("template"))
-					continue;
-
-				CraftType craftType = new CraftType(craftName);
+				CraftType craftType = new CraftType(name);
 				
 				craftType.HelmControllerItem = Integer.parseInt(NavyCraft.instance.getConfig().getString("HelmID"));
 
-				try {
-					BufferedReader reader = new BufferedReader(new FileReader(
-							craftFile));
+					List<String> info = new ArrayList<String>(CraftConfig.getConfigurationSection("Types." + name).getKeys(false));
+					int s = info.size();
 
-					String line;
-					while ((line = reader.readLine()) != null) {
-
-						String[] split;
-						split = line.split("=");
-
-						if (split.length >= 2)
-							setAttribute(craftType, split[0], split[1]);
+					if (s == 0) return;
+					for (String attribute : list) {
+							setAttribute(craftType, attribute, CraftConfig.getString(attribute));
 					}
 
-					reader.close();
-
-				} catch (IOException ex) {
-			
-					System.out.println("Warning, craft type " + craftType.name + " has an invalid engine block ID. " + 
-							"Please use a block which has a facing direction (default is furnace, ID 61).");
-				}
-
 				craftTypes.add(craftType);
-			}
 		}
 
 		if(NavyCraft.instance.getConfig().getString("WriteDefaultCraft").equalsIgnoreCase("true"))
