@@ -253,6 +253,7 @@ public class CraftType {
 		
 	}
 
+		saveType(craftType, false);
 		return craftType;
 	}
 
@@ -426,12 +427,10 @@ public class CraftType {
 					force);
 			writeAttribute(name, "minBlocks", craftType.minBlocks, true);
 			writeAttribute(name, "maxBlocks", craftType.maxBlocks, force);
-
+			String line = "0,";
 			// list of blocks that make the structure of the craft
 			if (craftType.structureBlocks != null) {
-				String line = null;
 				for (short blockId : craftType.structureBlocks) {
-
 					line += blockId + ",";
 				}
 				writeAttribute(name, "structureBlocks", line.substring(0, line.length() - 1), force);
