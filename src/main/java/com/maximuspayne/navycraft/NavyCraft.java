@@ -132,9 +132,6 @@ public class NavyCraft extends JavaPlugin {
 		PlotType.initialize();
 		
 		CraftType.setupCraftConfig();
-		CraftType.loadTypes();
-		CraftType.saveTypes();
-		
 	}
 	
 	public void loadConfigManager() {
