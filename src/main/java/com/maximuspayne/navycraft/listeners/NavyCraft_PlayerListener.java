@@ -1595,13 +1595,13 @@ public class NavyCraft_PlayerListener implements Listener {
 				// shipyard commands
 				} else if (craftName.equalsIgnoreCase("shipyard") || craftName.equalsIgnoreCase("sy") || craftName.equalsIgnoreCase("yard")) {
 					if (split.length > 1) {
-						if (split[1].equalsIgnoreCase("addSign")) {
+						if (split[1].equalsIgnoreCase("addsign")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.admin") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to add signs.");
 								event.setCancelled(true);
 								return;
 							}
-							if (player.getTargetBlock(null, 5).getTypeId() == 63 && player.getTargetBlock(null, 5).getRelative(BlockFace.DOWN).getTypeId() == 68) {
+							if (player.getTargetBlock(null, 5).getTypeId() == 63) {
 									Block selectSignBlock = player.getTargetBlock(null, 5);
 									Sign selectSign = (Sign) selectSignBlock.getState();
 									BlockFace bf;
@@ -1632,24 +1632,28 @@ public class NavyCraft_PlayerListener implements Listener {
 										player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Direction?");
 										return;
 									}
+									if (selectSignBlock.getRelative(BlockFace.DOWN).getRelative(bf, -1).getTypeId() == 68) {
 									Sign selectSign2 = (Sign) selectSignBlock.getRelative(BlockFace.DOWN).getRelative(bf, -1).getState();
 									String signLine0 = selectSign.getLine(0);
-									String signLine1 = selectSign.getLine(1);
 									String sign2Line3 = selectSign2.getLine(3);
-									int sign2Line2 = Integer.valueOf(selectSign2.getLine(2));
 									
 							if (signLine0.equalsIgnoreCase("*claim*")) {
 								NavyCraft_FileListener.saveSign(sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ());
-							} else if (signLine0.equalsIgnoreCase("*select")) {
-								NavyCraft_FileListener.saveClaimedSign(signLine1, sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ(), sign2Line2);
 							} else {
-								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!");
+								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!1");
 								return;
 							}
 							player.sendMessage(ChatColor.GREEN + "Loaded: " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW
-									+ "1" + sign2Line3 + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plot");
+									+ "1" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + sign2Line3 + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plot");
 							return;
-						}
+									} else {
+										player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!2");
+										return;
+									}
+							} else {
+								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!3");
+								return;
+							}
 						} else if (split[1].equalsIgnoreCase("reward")) {
 							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
 								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");

@@ -148,11 +148,12 @@ public class NavyCraft_Timer extends BukkitRunnable {
     }
    
    //Shipyard initial Sign Loading
-	public static void loadPlots() {
+	public static void loadPlot(String name) {
     	NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new Runnable(){
 		    public void run()
 		    {
 	for (PlotType pt : Shipyard.getPlots()) {
+		if (pt.name.equalsIgnoreCase(name)) {
 		World syworld = NavyCraft.instance.getServer().getWorld(ConfigManager.syConfig.getString("SHIP1World"));
 		int startX = ConfigManager.syConfig.getInt("Types." + pt.name + ".SX");
 		int endX = ConfigManager.syConfig.getInt("Types." + pt.name + ".EX");
@@ -179,6 +180,7 @@ public class NavyCraft_Timer extends BukkitRunnable {
 		}
 	}
 }
+		    }
     	}
     	);
 	}
