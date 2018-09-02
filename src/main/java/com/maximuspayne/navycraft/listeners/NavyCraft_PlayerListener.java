@@ -1640,18 +1640,18 @@ public class NavyCraft_PlayerListener implements Listener {
 							if (signLine0.equalsIgnoreCase("*claim*")) {
 								NavyCraft_FileListener.saveSign(sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ());
 							} else {
-								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!1");
+								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign! (Top sign isn't a claim sign)");
 								return;
 							}
 							player.sendMessage(ChatColor.GREEN + "Loaded: " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW
 									+ "1" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + sign2Line3 + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " plot");
 							return;
 									} else {
-										player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!2");
+										player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign! (Botom sign is null)");
 										return;
 									}
 							} else {
-								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign!3");
+								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign! (Top sign is null)");
 								return;
 							}
 						} else if (split[1].equalsIgnoreCase("reward")) {
