@@ -5660,7 +5660,7 @@ public class OneCannon{
     				    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 3", 3);
     						}
     						}else if (torp.torpRotation == 4 && depthDifference <= 0) {
-    							torp.hdg = direction;
+    							torp.hdg = torp.ohdg;
     						}
     				    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
     				    	{
