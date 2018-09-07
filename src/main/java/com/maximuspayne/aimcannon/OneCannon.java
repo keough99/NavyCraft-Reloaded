@@ -6509,15 +6509,19 @@ public class OneCannon{
 	    for (int y = 0; y < arr.length; y++) {
 		result[x][y] = arr[arr.length - 1 - y][x];
 		int dr = 0;
-		if (direction == BlockFace.NORTH) {
-			dr = 0;
-		} else if (direction == BlockFace.SOUTH) {
-			dr = 180;
-		} else if (direction == BlockFace.EAST) {
-			dr = 90;
-		}else if (direction == BlockFace.WEST) {
-			dr = 270;
-		}
+    	if (direction == BlockFace.NORTH) 
+    	{
+    	    dr = 90;
+    	}else if (direction == BlockFace.EAST) 
+    	{
+    	    dr = 180;  	 
+    	}else if (direction == BlockFace.SOUTH) 
+    	{
+    	    dr = 270;
+    	}else// if (direction == BlockFace.WEST) 
+    	{
+    	    dr = 0;
+    	}
 		byte[] cardinals;
 		int blockId;
 		
