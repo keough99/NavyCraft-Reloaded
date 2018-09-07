@@ -28,6 +28,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.Utils;
+import com.maximuspayne.navycraft.blocks.BlocksInfo;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 
@@ -6674,16 +6675,17 @@ public class OneCannon{
     {
     	if( cannonType == 6 )
     	{
-    		turnCannonLayer(right, p, -1);
-    		turnCannonLayer(right, p, 1);
-    		turnCannonLayer(right, p, 2);
+    		turnCannonLayer(right, p, -1, false);
+    		turnCannonLayer(right, p, 1, false);
+    		turnCannonLayer(right, p, 2, false);
+    	} else if ( cannonType == 3 || cannonType == 7 || cannonType == 8 || cannonType == 11 || cannonType == 12 ) {
+        	turnCannonLayer(right, p, 0, true);
     	}
-    	turnCannonLayer(right, p, 0);
+    	turnCannonLayer(right, p, 0, false);
     }
     
     
-    
-	public void turnCannonLayer(Boolean right, Player p, int offsetY) {
+	public void turnCannonLayer(Boolean right, Player p, int offsetY, boolean isTorpedo) {
 		// Get data
 		if (Utils.CheckEnabledWorld(p.getLocation())) {
 		int[][] arr = new int[7][7];
@@ -6697,7 +6699,7 @@ public class OneCannon{
 	
 		int[][] arro = new int[7][7];
 		byte[][] arrbo = new byte[7][7];
-		// Rotate the shit
+		// Rotate
 		if (right) {
 		    arro = rotateLeft(arr);
 		    arrbo = rotateLeftB(arrb,arro);
@@ -6709,10 +6711,9 @@ public class OneCannon{
 		// Cleanup Cannon (button und lever first)
 		for (int x = 0; x < 7; x++) {
 		    for (int z = 0; z < 7; z++) {
-			if (loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).getTypeId() == 69
-				|| loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).getTypeId() == 77) {
+			if (BlocksInfo.needsSupport(loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).getTypeId())) {
 			    loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(0, (byte) 0, false);
-			}
+				}
 		    }
 		}
 	
@@ -6731,7 +6732,8 @@ public class OneCannon{
 		    for (int z = 0; z < 7; z++) {
 			if ((arro[x][z] != 69) && (arro[x][z] != 77) && (arro[x][z] != 23)) 
 			{
-			    loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
+				if(arro[x][z] != -1 && !BlocksInfo.needsSupport(arro[x][z]) && arro[x][z] != 52 && arro[x][z] != 34 && arro[x][z] != 36 )
+					loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
 			    if( testCraft != null )
 			    {
 			    	testCraft.addBlock(loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY), true);
@@ -6747,8 +6749,7 @@ public class OneCannon{
 		// Place rest
 		for (int x = 0; x < 7; x++) {
 		    for (int z = 0; z < 7; z++) {
-			if ((arro[x][z] == 69) || (arro[x][z] == 77)) 
-			{
+				if (BlocksInfo.needsSupport(arro[x][z]) && !BlocksInfo.isDataBlock(arro[x][z]) && arro[x][z] != 63 && arro[x][z] != 68 && arro[x][z] != 65) {
 			    loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
 			    if( testCraft != null )
 			    {
