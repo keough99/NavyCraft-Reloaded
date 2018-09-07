@@ -1,6 +1,7 @@
 package com.maximuspayne.aimcannon;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -29,6 +30,7 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
+import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 
@@ -6506,80 +6508,190 @@ public class OneCannon{
 	for (int x = 0; x < arr.length; x++) {
 	    for (int y = 0; y < arr.length; y++) {
 		result[x][y] = arr[arr.length - 1 - y][x];
-		if( arro[x][y] == 77 || arro[x][y] == 69 )
-		{
-			switch (result[x][y]) {
-			case (byte) 0x3:
-			    result[x][y] = (byte) 0x1;
-			    break;
-			case (byte) 0x4:
-			    result[x][y] = (byte) 0x2;
-			    break;
-			case (byte) 0x2:
-			    result[x][y] = (byte) 0x3;
-			    break;
-			case (byte) 0x1:
-			    result[x][y] = (byte) 0x4;
-			    break;
-			case (byte) 0x9:
-			    result[x][y] = (byte) 0x4;
-			    break;
-			case (byte) 0xA:
-			    result[x][y] = (byte) 0x3;
-			    break;
-			case (byte) 0xB:
-			    result[x][y] = (byte) 0x1;
-			    break;
-			case (byte) 0xC:
-			    result[x][y] = (byte) 0x2;
-			    break;
+		int dr = 0;
+		if (direction == BlockFace.NORTH) {// n
+			dr = 90;
+		} else if (direction == BlockFace.SOUTH) {// s
+			dr = 270;
+		} else if (direction == BlockFace.WEST) {// w
+			dr = 0;
+		} else if (direction == BlockFace.EAST) {// e
+			dr = 180;
+		}
+		byte[] cardinals;
+		int blockId;
+		
+			//Block theBlock = craft.getWorldBlock(dataBlock.x, dataBlock.y, dataBlock.z);
+			blockId = arro[x][y];
+			
+			//logs
+			if( blockId == 17 && result[x][y] > 3 )
+			{
+				if( result[x][y] < 8 )
+					result[x][y] += 4;
+				else
+					result[x][y] -= 4;
 			}
-		}else if( arro[x][y] == 86 )
-		{
-			switch (result[x][y]) {
-			case (byte) 0x0:
-			    result[x][y] = (byte) 0x3;
-			    break;
-			case (byte) 0x1:
-			    result[x][y] = (byte) 0x0;
-			    break;
-			case (byte) 0x2:
-			    result[x][y] = (byte) 0x1;
-			    break;
-			case (byte) 0x3:
-			    result[x][y] = (byte) 0x2;
-			    break;
+			
+			//quartz block
+			if( blockId == 155 && result[x][y] > 2 )
+			{
+				if( result[x][y] == 3)
+					result[x][y] = 4;
+				else
+					result[x][y] = 3;
 			}
-		}else
-		{
-			switch (result[x][y]) {
-			case (byte) 0x3:
-			    result[x][y] = (byte) 0x1;
-			    break;
-			case (byte) 0x4:
-			    result[x][y] = (byte) 0x2;
-			    break;
-			case (byte) 0x2:
-			    result[x][y] = (byte) 0x3;
-			    break;
-			case (byte) 0x1:
-			    result[x][y] = (byte) 0x4;
-			    break;
-			case (byte) 0x9:
-			    result[x][y] = (byte) 0x1;
-			    break;
-			case (byte) 0xA:
-			    result[x][y] = (byte) 0x2;
-			    break;
-			case (byte) 0xB:
-			    result[x][y] = (byte) 0x3;
-			    break;
-			case (byte) 0xC:
-			    result[x][y] = (byte) 0x4;
-			    break;
+			
+			//hay bales
+			if( blockId == 170 && result[x][y] > 3 )
+			{
+				if( result[x][y] < 8 )
+					result[x][y] += 4;
+				else
+					result[x][y] -= 4;
+			}
+			
+			//torches, skip 'em if they're centered on the tile on the ground
+			if(blockId == 50 || blockId == 75 || blockId == 76) {
+				if(result[x][y] == 5)
+					continue;
+			}
+			
+			if( blockId == 33 || blockId == 29 || blockId == 34 )
+			{
+				if( result[x][y] == 0 || result[x][y] == 1 || result[x][y] == 8 || result[x][y] == 9 )
+				{
+					if( result[x][y] == 0 )
+						result[x][y] = 1;
+					if( result[x][y] == 8 )
+						result[x][y] = 9;
+					continue;
+				}
+			}
+
+			if(BlocksInfo.getCardinals(blockId) != null)
+				cardinals = Arrays.copyOf(BlocksInfo.getCardinals(blockId), 4);
+			else
+				cardinals = null;
+
+			
+			////stairs
+			if( blockId == 53 || blockId == 67 || blockId == 108 || blockId == 109 || blockId == 114 || blockId == 128 || blockId == 134 || blockId == 135 || blockId == 136 || blockId == 156 || blockId == 180 ) 
+			{	
+				if(result[x][y] > 3) 
+					{	//upside down
+						for(int c = 0; c < 4; c++) {
+							cardinals[c] += 4;
+					}
+				}
+			}
+
+			if(blockId == 26) {	//bed
+				if(result[x][y] >= 8) {
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 8;
+				}
+			}
+
+			if(blockId == 64 || blockId == 71 || blockId == 193 || blockId == 194 || blockId == 195 ||	blockId == 196 || blockId == 197//wooden or steel door
+					|| blockId == 93 || blockId == 94) {	//repeater
+
+				if(result[x][y] >= 12) {	//if the door is an open top
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 12;
+				} else if (result[x][y] >= 8) {		//if the door is a top
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 8;
+				} else if (result[x][y] >= 4) {		//not a top, but open
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 4;
+				}
+			}
+
+			if (blockId == 66 ) { // rails
+				if(result[x][y] == 0) {
+					result[x][y] = 1;
+					continue;
+				}
+				if(result[x][y] == 1) {
+					result[x][y] = 0;
+					continue;
+				}
+			}
+
+			if(blockId == 69) {	//lever
+
+				if(result[x][y] == 5 || result[x][y] == 6 ||	//if it's on the floor
+						result[x][y] == 13 || result[x][y] == 14) {
+					cardinals = new byte[]{6, 5, 14, 13};
+				}
+				else if(result[x][y] > 4) {	//switched on
+					for(int c = 0; c < 4; c++) {
+						cardinals[c] += 8;
+					}
+				}
+			}
+			
+			if(blockId == 77 || blockId == 143) {	//button
+
+				if(result[x][y] > 4) 
+					{	//switched on
+						for(int c = 0; c < 4; c++) {
+							cardinals[c] += 8;
+					}
+				}
+			}
+			
+			if(blockId == 96||blockId == 167) {	//hatch
+
+				if(result[x][y] > 4) 
+					{	//switched on
+						for(int c = 0; c < 4; c++) {
+							cardinals[c] += 4;
+					}
+				}
+			}
+
+			if(blockId == 93 || blockId == 94) {	//repeater
+				if(result[x][y] > 11) {
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 12;
+				}
+				else if(result[x][y] > 7) {
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 8;
+				}
+				else if(result[x][y] > 3) {
+					for(int c = 0; c < 4; c++)
+						cardinals[c] += 4;
+				}
+			}
+
+			if(cardinals != null) {
+				NavyCraft.instance.DebugMessage(Material.getMaterial(blockId) +
+						" Cardinals are "
+						+ cardinals[0] + ", "
+						+ cardinals[1] + ", "
+						+ cardinals[2] + ", "
+						+ cardinals[3], 2);
+
+				int i = 0;
+				for(i = 0; i < 3; i++)
+					if(result[x][y] == cardinals[i])
+						break;
+
+				NavyCraft.instance.DebugMessage("i starts as " + i + " which is " + cardinals[i], 2);
+
+				i += (dr / 90);
+
+				if(i > 3)
+					i = i - 4;
+
+				NavyCraft.instance.DebugMessage("i ends as " + i + ", which is " + cardinals[i], 2);
+
+				result[x][y] = cardinals[i];
 			}
 		}
-	    }
 	}
 	return result;
     }
@@ -6589,6 +6701,7 @@ public class OneCannon{
 	for (int x = 0; x < arr.length; x++) {
 	    for (int y = 0; y < arr.length; y++) {
 		result[x][y] = arr[y][arr.length - 1 - x];
+
 		if( arro[x][y] == 77 || arro[x][y] == 69 )
 		{
 			switch (result[x][y]) {
@@ -6749,7 +6862,7 @@ public class OneCannon{
 		// Place rest
 		for (int x = 0; x < 7; x++) {
 		    for (int z = 0; z < 7; z++) {
-				if (BlocksInfo.needsSupport(arro[x][z]) && !BlocksInfo.isDataBlock(arro[x][z]) && arro[x][z] != 63 && arro[x][z] != 68 && arro[x][z] != 65) {
+				if (BlocksInfo.needsSupport(arro[x][z]) && arro[x][z] != 63 && arro[x][z] != 68 && arro[x][z] != 65) {
 			    loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
 			    if( testCraft != null )
 			    {
