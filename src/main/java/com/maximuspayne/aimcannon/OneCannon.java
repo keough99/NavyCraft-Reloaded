@@ -30,7 +30,6 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
 import com.maximuspayne.navycraft.Utils;
 import com.maximuspayne.navycraft.blocks.BlocksInfo;
-import com.maximuspayne.navycraft.blocks.DataBlock;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.navycraft.craft.CraftMover;
 
@@ -6507,21 +6506,23 @@ public class OneCannon{
 	byte[][] result = new byte[arr.length][arr.length];
 	for (int x = 0; x < arr.length; x++) {
 	    for (int y = 0; y < arr.length; y++) {
-		result[x][y] = arr[arr.length - 1 - y][x];
+		result[x][y] = arr[y][x];
 		int dr = 0;
-    	if (direction == BlockFace.NORTH) 
-    	{
-    	    dr = 90;
-    	}else if (direction == BlockFace.EAST) 
-    	{
-    	    dr = 180;  	 
-    	}else if (direction == BlockFace.SOUTH) 
-    	{
-    	    dr = 270;
-    	}else// if (direction == BlockFace.WEST) 
-    	{
-    	    dr = 0;
-    	}
+		switch (result[x][y]) {
+		case (byte) 0x0:
+			dr = 0;
+		    break;
+		case (byte) 0x1:
+			dr = 90;
+		    break;
+		case (byte) 0x2:
+			dr = 180;
+		    break;
+		case (byte) 0x3:
+			dr = 270;
+		    break;
+		}
+		
 		byte[] cardinals;
 		int blockId;
 		
