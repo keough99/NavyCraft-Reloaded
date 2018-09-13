@@ -6504,30 +6504,28 @@ public class OneCannon{
 
     public byte[][] rotateRightB(byte[][] arr, int[][] arro) {
 	byte[][] result = new byte[arr.length][arr.length];
+	byte[] cardinals;
+	int blockId;
 	for (int x = 0; x < arr.length; x++) {
 	    for (int y = 0; y < arr.length; y++) {
-		result[x][y] = arr[y][x];
+		result[x][y] = arr[arr.length - 1 - y][x];
+		blockId = arro[x][y];
 		int dr = 0;
-		switch (result[x][y]) {
-		case (byte) 0x0:
-			dr = 0;
-		    break;
-		case (byte) 0x1:
-			dr = 90;
-		    break;
-		case (byte) 0x2:
-			dr = 180;
-		    break;
-		case (byte) 0x3:
-			dr = 270;
-		    break;
-		}
-		
-		byte[] cardinals;
-		int blockId;
+	    	if (direction == BlockFace.NORTH) 
+	    	{
+	    		dr = 90;
+	    	}else if (direction == BlockFace.EAST) 
+	    	{
+	    	    dr = 180;  	 
+	    	}else if (direction == BlockFace.SOUTH) 
+	    	{
+	    	    dr = 270;
+	    	}else// if (direction == BlockFace.WEST) 
+	    	{
+	    	    dr = 0;
+	    	}
 		
 			//Block theBlock = craft.getWorldBlock(dataBlock.x, dataBlock.y, dataBlock.z);
-			blockId = arro[x][y];
 			
 			//logs
 			if( blockId == 17 && result[x][y] > 3 )
@@ -6695,6 +6693,7 @@ public class OneCannon{
 				NavyCraft.instance.DebugMessage("i ends as " + i + ", which is " + cardinals[i], 2);
 
 				result[x][y] = cardinals[i];
+				System.out.print(cardinals[i]);
 			}
 		}
 	}
