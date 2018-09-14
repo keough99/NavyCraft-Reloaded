@@ -6911,7 +6911,7 @@ public class OneCannon{
 		    arrbo = rotateRightB(arrb,arro);
 		}
 	
-		// Cleanup Cannon (button und lever first)
+		// Cleanup Cannon (support blocks first)
 		for (int x = 0; x < 7; x++) {
 		    for (int z = 0; z < 7; z++) {
 			if (BlocksInfo.needsSupport(loc.getBlock().getRelative(x - 3, 0, z - 3).getRelative(BlockFace.UP, offsetY).getTypeId())) {
