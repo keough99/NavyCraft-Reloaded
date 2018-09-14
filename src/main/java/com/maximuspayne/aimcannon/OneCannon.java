@@ -6878,17 +6878,17 @@ public class OneCannon{
     {
     	if( cannonType == 6 )
     	{
-    		turnCannonLayer(right, p, -1, false);
-    		turnCannonLayer(right, p, 1, false);
-    		turnCannonLayer(right, p, 2, false);
+    		turnCannonLayer(right, p, -1);
+    		turnCannonLayer(right, p, 1);
+    		turnCannonLayer(right, p, 2);
     	} else if ( cannonType == 3 || cannonType == 7 || cannonType == 8 || cannonType == 11 || cannonType == 12 ) {
-        	turnCannonLayer(right, p, 0, true);
+        	turnTorpedoLayer(right, p, 0);
     	}
-    	turnCannonLayer(right, p, 0, false);
+    	turnCannonLayer(right, p, 0);
     }
     
     
-	public void turnCannonLayer(Boolean right, Player p, int offsetY, boolean isTorpedo) {
+	public void turnCannonLayer(Boolean right, Player p, int offsetY) {
 		// Get data
 		if (Utils.CheckEnabledWorld(p.getLocation())) {
 		int[][] arr = new int[7][7];
@@ -7037,6 +7037,155 @@ public class OneCannon{
     }
 }
     
+	public void turnTorpedoLayer(Boolean right, Player p, int offsetY) {
+		// Get data
+		if (Utils.CheckEnabledWorld(p.getLocation())) {
+		int[][] arr = new int[8][8];
+		byte[][] arrb = new byte[8][8];
+		for (int x = 0; x < 8; x++) {
+		    for (int z = 0; z < 8; z++) {
+			arr[x][z] = loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getTypeId();
+			arrb[x][z] = loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getData();
+		    }
+		}
+	
+		int[][] arro = new int[8][8];
+		byte[][] arrbo = new byte[8][8];
+		// Rotate
+		if (right) {
+		    arro = rotateLeft(arr);
+		    arrbo = rotateLeftB(arrb,arro);
+		} else {
+		    arro = rotateRight(arr);
+		    arrbo = rotateRightB(arrb,arro);
+		}
+	
+		// Cleanup Cannon (support blocks first)
+		for (int x = 0; x < 8; x++) {
+		    for (int z = 0; z < 8; z++) {
+			if (BlocksInfo.needsSupport(loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getTypeId())) {
+			    loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(0, (byte) 0, false);
+				}
+		    }
+		}
+	
+		// Cleanup Rest
+		for (int x = 0; x < 8; x++) {
+		    for (int z = 0; z < 8; z++) {
+		    	if( !(x-4==0 && z-4==0 && offsetY==0) )
+		    		loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(0, (byte) 0, false);
+		    }
+		}
+		
+		
+		Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
+		// Place cannon
+		for (int x = 0; x < 8; x++) {
+		    for (int z = 0; z < 8; z++) {
+			if (!BlocksInfo.needsSupport(arro[x][z])) 
+			{
+				if(arro[x][z] != -1 && arro[x][z] != 52 && arro[x][z] != 34 && arro[x][z] != 36 )
+					loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
+			    if( testCraft != null )
+			    {
+			    	testCraft.addBlock(loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY), true);
+			    }
+				
+			}else if( (arro[x][z] == 23) )
+			{
+				loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setData(arrbo[x][z]);
+		    }
+		    }
+		}
+	
+		// Place rest
+		for (int x = 0; x < 8; x++) {
+		    for (int z = 0; z < 8; z++) {
+				if (BlocksInfo.needsSupport(arro[x][z]) && arro[x][z] != 63 && arro[x][z] != 68 && arro[x][z] != 65) {
+			    loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
+			    if( testCraft != null )
+			    {
+			    	testCraft.addBlock(loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY), true);
+			    }
+			}
+		    }
+		}
+	
+		if( testCraft != null )
+		{
+			//CraftMover cm = new CraftMover(testCraft, plugin);
+			//cm.structureUpdate(null);
+		}
+		// 0x2: Facing east
+		// 0x3: Facing west
+		// 0x4: Facing north
+		// 0x5: Facing south
+		
+		if( offsetY == 0 )
+		{
+			if (right) {
+		    	if (direction == BlockFace.NORTH) 
+		    	{
+		    	    direction = BlockFace.EAST;
+		    	    loc.getBlock().setData((byte) 0x3);
+		    	}else if (direction == BlockFace.EAST) 
+		    	{
+		    	    direction = BlockFace.SOUTH;
+		    	    loc.getBlock().setData((byte) 0x4);	    	 
+		    	}else if (direction == BlockFace.SOUTH) 
+		    	{
+		    	    direction = BlockFace.WEST;
+		    	    loc.getBlock().setData((byte) 0x2);
+		    	}else// if (direction == BlockFace.WEST) 
+		    	{
+		    	    direction = BlockFace.NORTH;
+		    	    loc.getBlock().setData((byte) 0x5);
+		    	}
+			} else
+			{
+			    if (direction == BlockFace.EAST)
+			    {
+			    	    direction = BlockFace.NORTH;
+			    	    loc.getBlock().setData((byte) 0x5);
+			    }else if (direction == BlockFace.SOUTH) 
+			    {
+			    	    direction = BlockFace.EAST;
+			    	    loc.getBlock().setData((byte) 0x3);
+			    }else if (direction == BlockFace.WEST) 
+			    {
+			    	    direction = BlockFace.SOUTH;
+			    	    loc.getBlock().setData((byte) 0x4);
+			    }else// if (direction == BlockFace.NORTH) 
+			    {
+			    	    direction = BlockFace.WEST;
+			    	    loc.getBlock().setData((byte) 0x2);
+			    }
+			}
+			
+			Location teleLoc = new Location(p.getWorld(), loc.getBlock().getRelative(direction, -1).getX() + 0.5, (double)loc.getBlock().getRelative(direction, -1).getY(), loc.getBlock().getZ() + 0.5);
+			//p.sendMessage("player yaw=" + p.getLocation().getYaw() );
+			if( right )
+				teleLoc.setYaw(p.getLocation().getYaw() + 90);
+			else
+				teleLoc.setYaw(p.getLocation().getYaw() - 90);
+			teleLoc.setPitch(p.getLocation().getPitch());
+			p.teleport(teleLoc);
+			
+			
+			if( cannonTurnCounter < 4 && ((loc.getBlock().getRelative(direction, 1).getRelative(BlockFace.DOWN,1).getTypeId() == 5)
+					|| ( cannonType == 6 && loc.getBlock().getRelative(direction, 1).getRelative(BlockFace.DOWN,2).getTypeId() == 5)))
+			{
+				cannonTurnCounter++;
+				turnCannon(right, p);
+			}else
+			{
+				cannonTurnCounter=0;
+			}
+			
+		}
+    }
+}
+	
     public boolean checkProtectedRegion(Player player, Location loc)
     {
     	if( wgp != null )
