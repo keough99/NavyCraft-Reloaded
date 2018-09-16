@@ -205,7 +205,7 @@ public class NavyCraft_BlockListener implements Listener {
 								int y = foundSign.getY();
 								int z = foundSign.getZ();
 								World world = foundSign.getWorld();
-								String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
+								String regionName = "--" + ownerName + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 
 								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getName())) {
 									player.sendMessage("You are not allowed to select this plot.");

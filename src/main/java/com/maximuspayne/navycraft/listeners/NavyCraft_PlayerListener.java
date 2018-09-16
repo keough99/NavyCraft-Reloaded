@@ -1,5 +1,6 @@
 package com.maximuspayne.navycraft.listeners;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -1982,7 +1983,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											com.sk89q.worldguard.LocalPlayer lp = wgp.wrapPlayer(p);
 
 											regionManager.getRegion(regionName).getMembers().addPlayer(lp);
-
+											
 											try {
 												regionManager.save();
 											} catch (StorageException e) {
@@ -2040,7 +2041,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											}
 
 											regionManager.getRegion(regionName).getMembers().removePlayer(playerInName);
-
+											
 											try {
 												regionManager.save();
 											} catch (StorageException e) {
@@ -2352,11 +2353,65 @@ public class NavyCraft_PlayerListener implements Listener {
 										+ ChatColor.GOLD + "destroys all blocks within the defined plot");
 							}
 						}
-						} else if (split[1].equalsIgnoreCase("save")) {
-							if (split.length == 4) {
+						} else if (split[1].equalsIgnoreCase("schem") || split[1].equalsIgnoreCase("schematic")) {
+						if (split.length > 2) {
+							if (split[2].equalsIgnoreCase("save")) {
+							if (split.length == 5) {
 								int tpId = -1;
 								try {
-									tpId = Integer.parseInt(split[2]);
+									tpId = Integer.parseInt(split[3]);
+								} catch (NumberFormatException e) {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+									event.setCancelled(true);
+									return;
+								}
+
+								String nameString = split[4];
+								
+								if (tpId > -1) {
+									NavyCraft_FileListener.loadSignData();
+									NavyCraft_BlockListener.loadRewards(player.getName());
+
+									Sign foundSign = null;
+									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
+
+									if (foundSign != null) {
+										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
+												.getPlugin("WorldGuard");
+										if (wgp != null) {
+											RegionManager regionManager = wgp
+													.getRegionManager(plugin.getServer().getWorld("shipyard"));
+											int x = foundSign.getX();
+											int y = foundSign.getY();
+											int z = foundSign.getZ();
+											World world = foundSign.getWorld();
+											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
+
+											ProtectedRegion region = regionManager.getRegion(regionName);
+											
+											Sign sign2 = (Sign) foundSign.getBlock().getRelative(BlockFace.DOWN, 1).getRelative(Utils.getBlockFace(foundSign.getBlock()), -1).getState();
+											
+											String name = player.getName() + "-" +  sign2.getLine(3).trim().toUpperCase();
+											
+											Utils.saveSchem(player, name, nameString, region, world);
+
+											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + "-" + nameString + ".schematic" + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
+										}
+									} else {
+										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
+									}
+
+								} else {
+									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
+								}
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard save <id> <name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
+							}
+						} else if (split[2].equalsIgnoreCase("load")) {
+							if (split.length == 5) {
+								int tpId = -1;
+								try {
+									tpId = Integer.parseInt(split[4]);
 								} catch (NumberFormatException e) {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 									event.setCancelled(true);
@@ -2388,59 +2443,7 @@ public class NavyCraft_PlayerListener implements Listener {
 											
 											Sign sign2 = (Sign) foundSign.getBlock().getRelative(BlockFace.DOWN, 1).getRelative(Utils.getBlockFace(foundSign.getBlock()), -1).getState();
 											
-											String name = player.getName() + "-" + NavyCraft_FileListener.getSign(x, y, z, world) +  "-" +  sign2.getLine(3).trim().toUpperCase();
-											
-											Utils.saveSchem(player, name, nameString, region, world);
-
-											player.sendMessage(ChatColor.GREEN + "Plot Saved as " + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD  + name + "-" + nameString + ".schematic" + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
-										}
-									} else {
-										player.sendMessage(ChatColor.RED + "ID not found, use " + ChatColor.YELLOW + "/shipyard list" + ChatColor.RED + " to see IDs");
-									}
-
-								} else {
-									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
-								}
-							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard save <id> <name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
-							}
-						} else if (split[1].equalsIgnoreCase("load")) {
-							if (split.length == 4) {
-								int tpId = -1;
-								try {
-									tpId = Integer.parseInt(split[3]);
-								} catch (NumberFormatException e) {
-									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
-									event.setCancelled(true);
-									return;
-								}
-
-								String nameString = split[2];
-								
-								if (tpId > -1) {
-									NavyCraft_FileListener.loadSignData();
-									NavyCraft_BlockListener.loadRewards(player.getName());
-
-									Sign foundSign = null;
-									foundSign = NavyCraft_BlockListener.findSign(player.getName(), tpId);
-
-									if (foundSign != null) {
-										wgp = (WorldGuardPlugin) plugin.getServer().getPluginManager()
-												.getPlugin("WorldGuard");
-										if (wgp != null) {
-											RegionManager regionManager = wgp
-													.getRegionManager(plugin.getServer().getWorld("shipyard"));
-											int x = foundSign.getX();
-											int y = foundSign.getY();
-											int z = foundSign.getZ();
-											World world = foundSign.getWorld();
-											String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
-
-											ProtectedRegion region = regionManager.getRegion(regionName);
-											
-											Sign sign2 = (Sign) foundSign.getBlock().getRelative(BlockFace.DOWN, 1).getRelative(Utils.getBlockFace(foundSign.getBlock()), -1).getState();
-											
-											String name = player.getName() + "-" + NavyCraft_FileListener.getSign(x, y, z, world) +  "-" +  sign2.getLine(3).trim().toUpperCase() + "-" + nameString;
+											String name = player.getName() + "-" +  sign2.getLine(3).trim().toUpperCase() + "-" + nameString;
 											Location loc = new Location(world, region.getMinimumPoint().getX(), region.getMinimumPoint().getY(), region.getMinimumPoint().getZ());
 											if (Utils.pasteSchem(name, loc)) {
 											player.sendMessage(ChatColor.GREEN + "Plot loaded " + ChatColor.DARK_GRAY + "[" + ChatColor.YELLOW + "ID: " + ChatColor.GOLD + tpId + ChatColor.DARK_GRAY + " - " + ChatColor.YELLOW + "Name: "+ ChatColor.GOLD + name + ".schematic" + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + ".");
@@ -2458,6 +2461,62 @@ public class NavyCraft_PlayerListener implements Listener {
 							} else {
 								player.sendMessage(ChatColor.YELLOW + "/shipyard load <name> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
 							}
+						} else if (split[2].equalsIgnoreCase("plist")) {
+							if (split.length == 4) {
+								String p = split[3];
+								NavyCraft_FileListener.loadSignData();
+								NavyCraft_BlockListener.loadRewards(p);
+								player.sendMessage(ChatColor.AQUA + p + "'s" + " Shipyard Schematics:");
+								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "NAME" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
+					            File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/");
+									for (File f : dir.listFiles()) {
+										String[] splits = f.getName().split("-");
+										if (splits[0].equalsIgnoreCase(p)) {
+										player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + f.getName() + ChatColor.DARK_GRAY + "] " + ChatColor.GOLD + splits[1]);
+									}
+								}
+								event.setCancelled(true);
+								return;
+							} else {
+								player.sendMessage(ChatColor.YELLOW + "/shipyard schematic plist <playerName>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "List the given player's schematics");
+								event.setCancelled(true);
+								return;
+							}
+						} else if (split[2].equalsIgnoreCase("list")) {
+							NavyCraft_FileListener.loadSignData();
+							NavyCraft_BlockListener.loadRewards(player.getName());
+							player.sendMessage(ChatColor.AQUA + "Your Shipyard Schematics:");
+							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "NAME" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
+				            File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/");
+								for (File f : dir.listFiles()) {
+									String[] splits = f.getName().split("-");
+									if (splits[0].equalsIgnoreCase(player.getName())) {
+									player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + f.getName() + ChatColor.DARK_GRAY + "] " + ChatColor.GOLD + splits[1]);
+								}
+							}
+							event.setCancelled(true);
+							return;
+						} else {
+							player.sendMessage("Unknown command. Type \"/shipyard help\" for help.");
+							event.setCancelled(true);
+							return;
+						}
+							
+						} else {
+							NavyCraft_FileListener.loadSignData();
+							NavyCraft_BlockListener.loadRewards(player.getName());
+							player.sendMessage(ChatColor.AQUA + "Your Shipyard Schematics:");
+							player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "NAME" + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + " TYPE");
+				            File dir = new File(NavyCraft.instance.getDataFolder(), "/schematics/");
+								for (File f : dir.listFiles()) {
+									String[] splits = f.getName().split("-");
+									if (splits[0].equalsIgnoreCase(player.getName())) {
+									player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + f.getName() + ChatColor.DARK_GRAY + "] " + ChatColor.GOLD + splits[1]);
+								}
+							}
+							event.setCancelled(true);
+							return;
+						}
 						} else if (split[1].equalsIgnoreCase("rename")) {
 							if (split.length > 3) {
 								int tpId = -1;

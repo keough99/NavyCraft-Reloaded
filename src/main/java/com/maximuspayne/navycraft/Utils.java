@@ -30,7 +30,7 @@ public class Utils {
             if (!dir.exists())
                 dir.mkdirs();
             for (File f : dir.listFiles()) {
-            	if (f.getName().contains(schematicName)) {
+            	if (f.getName().contains(customName)) {
             		file = f;
             	}
             }
