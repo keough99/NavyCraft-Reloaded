@@ -104,7 +104,6 @@ public class AimCannonPlayerListener implements Listener {
 			
 			if( b != null )
 			{
-				NavyCraft.instance.DebugMessage("Block wasn't null!", 3);
 				for (OneCannon onec : AimCannon.getCannons()) 
 				{
 					if (onec.isThisCannon(b.getLocation(), false, false) && ( onec.cannonType == 3 || onec.cannonType == 7 || onec.cannonType == 8))
@@ -121,7 +120,6 @@ public class AimCannonPlayerListener implements Listener {
 					}
 			}
 		} else {
-			NavyCraft.instance.DebugMessage("Got to dropper detection", 3);
 			if( event.getClickedBlock().getRelative(BlockFace.NORTH).getType() == Material.DROPPER ) 
 		{
 			b = event.getClickedBlock().getRelative(BlockFace.NORTH);
@@ -137,12 +135,9 @@ public class AimCannonPlayerListener implements Listener {
 		}
 			if( b != null )
 			{
-				NavyCraft.instance.DebugMessage("Got to cannon detection method", 3);
 				for (OneCannon onec : AimCannon.getCannons()) 
 				{
-					NavyCraft.instance.DebugMessage("Got to type detection", 3);
 				if (onec.isThisCannon(b.getLocation(), false, true) && (onec.cannonType == 13 || onec.cannonType == 14 )) {
-					NavyCraft.instance.DebugMessage("Got to left click detection method", 3);
 					if( event.getAction() == Action.LEFT_CLICK_BLOCK )
 					onec.fireMissileButton(event.getPlayer(), true);
 					else
@@ -350,8 +345,6 @@ public class AimCannonPlayerListener implements Listener {
 								    onec.turnCannon(false,event.getPlayer());
 								}
 							    event.getPlayer().sendMessage("Cannon turned..");
-							    event.setCancelled(true);
-							    return;
 							}
 						}
 					}

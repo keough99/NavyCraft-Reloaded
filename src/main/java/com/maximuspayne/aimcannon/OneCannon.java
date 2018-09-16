@@ -6883,8 +6883,9 @@ public class OneCannon{
     		turnCannonLayer(right, p, 2);
     	} else if ( cannonType == 3 || cannonType == 7 || cannonType == 8 || cannonType == 11 || cannonType == 12 ) {
         	turnTorpedoLayer(right, p, 0);
-    	}
+    	} else {
     	turnCannonLayer(right, p, 0);
+    	}
     }
     
     
@@ -7040,17 +7041,17 @@ public class OneCannon{
 	public void turnTorpedoLayer(Boolean right, Player p, int offsetY) {
 		// Get data
 		if (Utils.CheckEnabledWorld(p.getLocation())) {
-		int[][] arr = new int[8][8];
-		byte[][] arrb = new byte[8][8];
-		for (int x = 0; x < 8; x++) {
-		    for (int z = 0; z < 8; z++) {
+		int[][] arr = new int[9][9];
+		byte[][] arrb = new byte[9][9];
+		for (int x = 0; x < 9; x++) {
+		    for (int z = 0; z < 9; z++) {
 			arr[x][z] = loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getTypeId();
 			arrb[x][z] = loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getData();
 		    }
 		}
 	
-		int[][] arro = new int[8][8];
-		byte[][] arrbo = new byte[8][8];
+		int[][] arro = new int[9][9];
+		byte[][] arrbo = new byte[9][9];
 		// Rotate
 		if (right) {
 		    arro = rotateLeft(arr);
@@ -7061,8 +7062,8 @@ public class OneCannon{
 		}
 	
 		// Cleanup Cannon (support blocks first)
-		for (int x = 0; x < 8; x++) {
-		    for (int z = 0; z < 8; z++) {
+		for (int x = 0; x < 9; x++) {
+		    for (int z = 0; z < 9; z++) {
 			if (BlocksInfo.needsSupport(loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).getTypeId())) {
 			    loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(0, (byte) 0, false);
 				}
@@ -7070,8 +7071,8 @@ public class OneCannon{
 		}
 	
 		// Cleanup Rest
-		for (int x = 0; x < 8; x++) {
-		    for (int z = 0; z < 8; z++) {
+		for (int x = 0; x < 9; x++) {
+		    for (int z = 0; z < 9; z++) {
 		    	if( !(x-4==0 && z-4==0 && offsetY==0) )
 		    		loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(0, (byte) 0, false);
 		    }
@@ -7080,8 +7081,8 @@ public class OneCannon{
 		
 		Craft testCraft = Craft.getCraft(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
 		// Place cannon
-		for (int x = 0; x < 8; x++) {
-		    for (int z = 0; z < 8; z++) {
+		for (int x = 0; x < 9; x++) {
+		    for (int z = 0; z < 9; z++) {
 			if (!BlocksInfo.needsSupport(arro[x][z])) 
 			{
 				if(arro[x][z] != -1 && arro[x][z] != 52 && arro[x][z] != 34 && arro[x][z] != 36 )
@@ -7099,8 +7100,8 @@ public class OneCannon{
 		}
 	
 		// Place rest
-		for (int x = 0; x < 8; x++) {
-		    for (int z = 0; z < 8; z++) {
+		for (int x = 0; x < 9; x++) {
+		    for (int z = 0; z < 9; z++) {
 				if (BlocksInfo.needsSupport(arro[x][z]) && arro[x][z] != 63 && arro[x][z] != 68 && arro[x][z] != 65) {
 			    loc.getBlock().getRelative(x - 4, 0, z - 4).getRelative(BlockFace.UP, offsetY).setTypeIdAndData(arro[x][z], arrbo[x][z], false);
 			    if( testCraft != null )
@@ -7162,7 +7163,7 @@ public class OneCannon{
 			    }
 			}
 			
-			Location teleLoc = new Location(p.getWorld(), loc.getBlock().getRelative(direction, -1).getX() + 0.5, (double)loc.getBlock().getRelative(direction, -1).getY(), loc.getBlock().getZ() + 0.5);
+			Location teleLoc = new Location(p.getWorld(), loc.getBlock().getRelative(direction, -1).getX() + 0.5, (double)loc.getBlock().getRelative(direction, -1).getY(), loc.getBlock().getRelative(direction, -1).getZ() + 0.5);
 			//p.sendMessage("player yaw=" + p.getLocation().getYaw() );
 			if( right )
 				teleLoc.setYaw(p.getLocation().getYaw() + 90);
