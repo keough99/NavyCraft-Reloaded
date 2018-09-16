@@ -6881,7 +6881,9 @@ public class OneCannon{
     		turnCannonLayer(right, p, -1);
     		turnCannonLayer(right, p, 1);
     		turnCannonLayer(right, p, 2);
-    	} else if ( cannonType == 3 || cannonType == 7 || cannonType == 8 || cannonType == 11 || cannonType == 12 ) {
+    	}
+    	if ( cannonType == 3 || cannonType == 7 || cannonType == 8 || cannonType == 11 || cannonType == 12 ) {
+    		turnTorpedoLayer(right, p, 1);
         	turnTorpedoLayer(right, p, 0);
     	} else {
     	turnCannonLayer(right, p, 0);
