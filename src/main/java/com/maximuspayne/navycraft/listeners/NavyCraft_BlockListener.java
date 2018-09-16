@@ -83,7 +83,7 @@ public class NavyCraft_BlockListener implements Listener {
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
 
 		if (theCraft != null) {
-			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.pbes")) {
 				theCraft.addBlock(event.getBlock(), false);
 			} else {
 				event.getPlayer().sendMessage(ChatColor.RED + "You can't place blocks on enemy ships!");
@@ -92,7 +92,7 @@ public class NavyCraft_BlockListener implements Listener {
 		} else {
 			theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
 			if (theCraft != null) {
-				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.pbes")) {
 					theCraft.addBlock(event.getBlock(), false);
 				} else {
 					event.getPlayer().sendMessage(ChatColor.RED + "You can't place blocks on enemy ships!");
@@ -666,7 +666,7 @@ public class NavyCraft_BlockListener implements Listener {
 				return;
 			}
 		} else if (craftTypeName.equalsIgnoreCase("periscope")) {
-			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
+			if (!PermissionInterface.CheckPerm(player, "navycraft.periscope.use")) {
 				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
 				return;
 			}
@@ -1084,7 +1084,7 @@ public class NavyCraft_BlockListener implements Listener {
 				player.sendMessage(ChatColor.RED + "Start the vehicle before using this sign.");
 			}
 		} else if (craftTypeName.equalsIgnoreCase("flak-gun")) {
-			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
+			if (!PermissionInterface.CheckPerm(player, "navycraft.flak-gun.use")) {
 				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
 				return;
 			}
@@ -1119,7 +1119,7 @@ public class NavyCraft_BlockListener implements Listener {
 			CraftMover.playOtherSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 
 		} else if (craftTypeName.equalsIgnoreCase("aa-gun")) {
-			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
+			if (!PermissionInterface.CheckPerm(player, "navycraft.aa-gun.use")) {
 				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
 				return;
 			}
@@ -1155,7 +1155,7 @@ public class NavyCraft_BlockListener implements Listener {
 
 
 		}else if (craftTypeName.equalsIgnoreCase("ciws")) {
-			if (!PermissionInterface.CheckPerm(player, "navycraft.basic")) {
+			if (!PermissionInterface.CheckPerm(player, "navycraft.ciws.use")) {
 				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
 				return;
 			}
@@ -1590,7 +1590,7 @@ public class NavyCraft_BlockListener implements Listener {
 			return;
 		}
 		
-		if (!player.isOp() && craftType != null && craftType.adminBuild && !PermissionInterface.CheckPerm(player, "navycraft.admin") ) {
+		if (!player.isOp() && craftType != null && craftType.adminBuild && !PermissionInterface.CheckPerm(player, "navycraft.admincraft") ) {
 			player.sendMessage(ChatColor.RED + "You don't have permission to create this type of sign!");
 			event.setCancelled(true);
 			return;
@@ -1806,7 +1806,7 @@ public class NavyCraft_BlockListener implements Listener {
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
 
 		if (theCraft != null) {
-			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+			if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.bbes")) {
 				return;
 			} else {
 				event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");
@@ -1815,7 +1815,7 @@ public class NavyCraft_BlockListener implements Listener {
 		} else {
 			theCraft = Craft.getCraft(event.getBlock().getX(), event.getBlock().getY(), event.getBlock().getZ());
 			if (theCraft != null) {
-				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.admin")) {
+				if (theCraft.crewNames.contains(event.getPlayer().getName()) || event.getPlayer().isOp() || PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.bbes")) {
 					return;
 				} else {
 					event.getPlayer().sendMessage(ChatColor.RED + "You can't break blocks on enemy ships!");

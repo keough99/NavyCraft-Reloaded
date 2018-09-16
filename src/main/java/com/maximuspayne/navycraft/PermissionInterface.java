@@ -20,12 +20,52 @@ public class PermissionInterface {
 		plugin = p;
 		PluginManager pm = NavyCraft.instance.getServer().getPluginManager();
 		if(pm != null) {
+			//basic permissions
+			pm.addPermission(new Permission("navycraft.basic"));
+			pm.addPermission(new Permission("navycraft.signcreate"));
 			pm.addPermission(new Permission("navycraft.periscope.use"));
 			pm.addPermission(new Permission("navycraft.aa-gun.use"));
 			pm.addPermission(new Permission("navycraft.flak-gun.use"));
-			pm.addPermission(new Permission("navycraft.periscope.create"));
-			pm.addPermission(new Permission("navycraft.aa-gun.create"));
-			pm.addPermission(new Permission("navycraft.flak-gun.create"));
+			pm.addPermission(new Permission("navycraft.ciws.use"));
+			pm.addPermission(new Permission("navycraft.searchlight.use"));
+			pm.addPermission(new Permission("navycraft.volume.engine"));
+			pm.addPermission(new Permission("navycraft.volume.weapon"));
+			pm.addPermission(new Permission("navycraft.volume.other"));
+			pm.addPermission(new Permission("navycraft.volume.all"));
+			pm.addPermission(new Permission("navycraft.rankview"));
+			
+			//admin permissions
+			pm.addPermission(new Permission("navycraft.admin"));
+			pm.addPermission(new Permission("navycraft.pbes"));
+			pm.addPermission(new Permission("navycraft.bbes"));
+			pm.addPermission(new Permission("navycraft.admincraft"));
+			pm.addPermission(new Permission("navycraft.adminsigncreate"));
+			pm.addPermission(new Permission("navycraft.craftitems"));
+			pm.addPermission(new Permission("navycraft.list"));
+			pm.addPermission(new Permission("navycraft.reload"));
+			pm.addPermission(new Permission("navycraft.debug"));
+			pm.addPermission(new Permission("navycraft.loglevel"));
+			pm.addPermission(new Permission("navycraft.cleanup"));
+			pm.addPermission(new Permission("navycraft.weapons"));
+			pm.addPermission(new Permission("navycraft.cannons"));
+			pm.addPermission(new Permission("navycraft.destroyships"));
+			pm.addPermission(new Permission("navycraft.removeships"));
+			pm.addPermission(new Permission("navycraft.tpship"));
+			pm.addPermission(new Permission("navycraft.addsign"));
+			pm.addPermission(new Permission("navycraft.aunclaim"));
+			pm.addPermission(new Permission("navycraft.explode"));
+			pm.addPermission(new Permission("navycraft.explodesigns"));
+			pm.addPermission(new Permission("navycraft.rankset"));
+			pm.addPermission(new Permission("navycraft.rankadd"));
+			pm.addPermission(new Permission("navycraft.rankremove"));
+			pm.addPermission(new Permission("navycraft.admindrive"));
+			pm.addPermission(new Permission("navycraft.takeover"));
+			pm.addPermission(new Permission("navycraft.remove"));
+			pm.addPermission(new Permission("navycraft.destroy"));
+			pm.addPermission(new Permission("navycraft.buoy"));
+			pm.addPermission(new Permission("navycraft.free"));
+			pm.addPermission(new Permission("navycraft.select"));
+			pm.addPermission(new Permission("navycraft.reward"));
 			
 			for (CraftType type : CraftType.craftTypes) 
 			{
@@ -44,12 +84,52 @@ public class PermissionInterface {
 		plugin = p;
 		PluginManager pm = NavyCraft.instance.getServer().getPluginManager();
 		if(pm != null) {
+			//basic permissions
+			pm.removePermission(new Permission("navycraft.basic"));
+			pm.removePermission(new Permission("navycraft.signcreate"));
 			pm.removePermission(new Permission("navycraft.periscope.use"));
 			pm.removePermission(new Permission("navycraft.aa-gun.use"));
 			pm.removePermission(new Permission("navycraft.flak-gun.use"));
-			pm.removePermission(new Permission("navycraft.periscope.create"));
-			pm.removePermission(new Permission("navycraft.aa-gun.create"));
-			pm.removePermission(new Permission("navycraft.flak-gun.create"));
+			pm.removePermission(new Permission("navycraft.ciws.use"));
+			pm.removePermission(new Permission("navycraft.searchlight.use"));
+			pm.removePermission(new Permission("navycraft.volume.engine"));
+			pm.removePermission(new Permission("navycraft.volume.weapon"));
+			pm.removePermission(new Permission("navycraft.volume.other"));
+			pm.removePermission(new Permission("navycraft.volume.all"));
+			pm.removePermission(new Permission("navycraft.rankview"));
+			
+			//admin permissions
+			pm.removePermission(new Permission("navycraft.admin"));
+			pm.removePermission(new Permission("navycraft.pbes"));
+			pm.removePermission(new Permission("navycraft.bbes"));
+			pm.removePermission(new Permission("navycraft.admincraft"));
+			pm.removePermission(new Permission("navycraft.adminsigncreate"));
+			pm.removePermission(new Permission("navycraft.craftitems"));
+			pm.removePermission(new Permission("navycraft.list"));
+			pm.removePermission(new Permission("navycraft.reload"));
+			pm.removePermission(new Permission("navycraft.debug"));
+			pm.removePermission(new Permission("navycraft.loglevel"));
+			pm.removePermission(new Permission("navycraft.cleanup"));
+			pm.removePermission(new Permission("navycraft.weapons"));
+			pm.removePermission(new Permission("navycraft.cannons"));
+			pm.removePermission(new Permission("navycraft.destroyships"));
+			pm.removePermission(new Permission("navycraft.removeships"));
+			pm.removePermission(new Permission("navycraft.tpship"));
+			pm.removePermission(new Permission("navycraft.addsign"));
+			pm.removePermission(new Permission("navycraft.aunclaim"));
+			pm.removePermission(new Permission("navycraft.explode"));
+			pm.removePermission(new Permission("navycraft.explodesigns"));
+			pm.removePermission(new Permission("navycraft.rankset"));
+			pm.removePermission(new Permission("navycraft.rankadd"));
+			pm.removePermission(new Permission("navycraft.rankremove"));
+			pm.removePermission(new Permission("navycraft.admindrive"));
+			pm.removePermission(new Permission("navycraft.takeover"));
+			pm.removePermission(new Permission("navycraft.remove"));
+			pm.removePermission(new Permission("navycraft.destroy"));
+			pm.removePermission(new Permission("navycraft.buoy"));
+			pm.removePermission(new Permission("navycraft.free"));
+			pm.removePermission(new Permission("navycraft.select"));
+			pm.removePermission(new Permission("navycraft.reward"));
 			
 			for (CraftType type : CraftType.craftTypes) 
 			{
