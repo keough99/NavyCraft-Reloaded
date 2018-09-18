@@ -4610,7 +4610,6 @@ public class OneCannon{
 		    {
 		    	if( !torp.dead )
 		    	{
-		    		NavyCraft.instance.DebugMessage(Integer.toString(i), 3);
 					int depthDifference = torp.setDepth - torp.warhead.getY();
 					if( depthDifference > 0 && torp.torpRotation != -1)
 					{

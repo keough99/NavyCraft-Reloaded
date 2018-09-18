@@ -251,10 +251,6 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 
 				if (name == null || sizeX == 0 || sizeY == 0 || sizeZ == 0 || loc == null){
-					NavyCraft.instance.DebugMessage(name, 3);
-					NavyCraft.instance.DebugMessage(String.valueOf(sizeX), 3);
-					NavyCraft.instance.DebugMessage(String.valueOf(sizeY), 3);
-					NavyCraft.instance.DebugMessage(String.valueOf(sizeZ), 3);
 					player.sendMessage(ChatColor.DARK_RED + "Sign Error: Invalid Lot");
 					return;
 				}

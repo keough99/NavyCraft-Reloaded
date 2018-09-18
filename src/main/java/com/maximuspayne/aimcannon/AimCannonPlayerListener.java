@@ -26,7 +26,6 @@ public class AimCannonPlayerListener implements Listener {
     ///////stone button
 	if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 	    if (event.getClickedBlock().getType() == Material.STONE_BUTTON) {
-			NavyCraft.instance.DebugMessage("Plugin found stone button!", 3);
 		Block b = null;
 		if (event.getClickedBlock().getRelative(BlockFace.NORTH_EAST).getType() == Material.DISPENSER) {
 		    b = event.getClickedBlock().getRelative(BlockFace.NORTH_EAST);
