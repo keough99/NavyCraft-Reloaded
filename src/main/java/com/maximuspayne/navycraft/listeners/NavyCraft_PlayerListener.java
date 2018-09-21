@@ -45,6 +45,7 @@ import com.maximuspayne.aimcannon.AimCannon;
 import com.maximuspayne.aimcannon.AimCannonPlayerListener;
 import com.maximuspayne.aimcannon.OneCannon;
 import com.maximuspayne.aimcannon.Weapon;
+import com.maximuspayne.aimcannon.ciwsFire;
 import com.maximuspayne.navycraft.ConfigManager;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.Periscope;
@@ -589,10 +590,13 @@ public class NavyCraft_PlayerListener implements Listener {
 				}
 
 			//// CIWS
-		} else if ((action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) && NavyCraft.ciwsGunnersList.contains(player)
-				&& (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
-				if (action == Action.LEFT_CLICK_AIR) NavyCraft.ciwsFiringList.add(player);
-				if (action == Action.RIGHT_CLICK_AIR) NavyCraft.ciwsFiringList.remove(player);
+		} else if ((action == Action.LEFT_CLICK_AIR || action == Action.RIGHT_CLICK_AIR) && NavyCraft.ciwsGunnersList.contains(player) && (player.getItemInHand().getType() == Material.BLAZE_ROD)&& event.getHand() == EquipmentSlot.HAND) {
+				if (action == Action.LEFT_CLICK_AIR && !NavyCraft.ciwsFiringList.contains(player)) {
+					NavyCraft.ciwsFiringList.add(player);
+					ciwsFire.fireCIWS(player);
+				}
+				if (action == Action.RIGHT_CLICK_AIR && NavyCraft.ciwsFiringList.contains(player)) NavyCraft.ciwsFiringList.remove(player);
+				
 		//// else check for movement clicking
 	} else if ((action == Action.RIGHT_CLICK_AIR) && (playerCraft != null)
 				&& (playerCraft.driverName == player.getName()) && (playerCraft.type.listenItem == true)) {

@@ -101,7 +101,7 @@ public class NavyCraft_BlockListener implements Listener {
 			}
 		}
 	}
-	
+    
 	public static void ClickedASign(Player player, Block block, boolean leftClick) {
 		// String world = block.getWorld().getName();
 		Craft playerCraft = Craft.getPlayerCraft(player);
