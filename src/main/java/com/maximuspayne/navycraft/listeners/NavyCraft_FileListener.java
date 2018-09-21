@@ -183,31 +183,35 @@ public class NavyCraft_FileListener implements Listener {
 		return null;
 	}
 	
-	public static void updateSign(String uuid, String type, int x, int y, int z, World world, int id) {
+	public static void updateSign(String uuid, String type, int x, int y, int z, World world, Object id, boolean isClaimed) {
 		NavyCraft.instance.DebugMessage("UUID =" + uuid, 3);
 		Block selectSignBlock = world.getBlockAt(x, y, z);
 		if (selectSignBlock.getTypeId() == 63) {
 		Location loc = new Location(world, x, y, z);
+		String num = null;
 		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
 		if (list.size() != 0) {
-			for (String num : list) {
-				int x1 = ConfigManager.syData.getInt("Signs." + num + "." + "x");
-				int y1 = ConfigManager.syData.getInt("Signs." + num + "." + "y");
-				int z1 = ConfigManager.syData.getInt("Signs." + num + "." + "z");
-				String world1 = ConfigManager.syData.getString("Signs." + num + "." + "world");
+			for (String n : list) {
+				int x1 = ConfigManager.syData.getInt("Signs." + n + "." + "x");
+				int y1 = ConfigManager.syData.getInt("Signs." + n + "." + "y");
+				int z1 = ConfigManager.syData.getInt("Signs." + n + "." + "z");
+				String world1 = ConfigManager.syData.getString("Signs." + n + "." + "world");
 				Location loc1 = new Location(NavyCraft.instance.getServer().getWorld(world1), x1, y1, z1);
 				if (loc.equals(loc1)) {
-					ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
-					ConfigManager.syData.set("Signs." + num + "." + "world", world.getName());
-					ConfigManager.syData.set("Signs." + num + "." + "x", x);
-					ConfigManager.syData.set("Signs." + num + "." + "y", y);
-					ConfigManager.syData.set("Signs." + num + "." + "z", z);
-					ConfigManager.syData.set("Signs." + num + "." + "isClaimed", true);
-					ConfigManager.syData.set("Signs." + num + "." + "uuid", uuid);
-					ConfigManager.syData.set("Signs." + num + "." + "id", id);
+					num = n;
 					break;
+				} else {
+					num = String.valueOf(list.size() + 1);
 				}
 			}
+			ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
+			ConfigManager.syData.set("Signs." + num + "." + "world", world.getName());
+			ConfigManager.syData.set("Signs." + num + "." + "x", x);
+			ConfigManager.syData.set("Signs." + num + "." + "y", y);
+			ConfigManager.syData.set("Signs." + num + "." + "z", z);
+			ConfigManager.syData.set("Signs." + num + "." + "isClaimed", isClaimed);
+			ConfigManager.syData.set("Signs." + num + "." + "uuid", uuid);
+			ConfigManager.syData.set("Signs." + num + "." + "id", id);
 			ConfigManager.savesyData();
 		}
 	}

@@ -1,5 +1,7 @@
 package com.maximuspayne.navycraft.listeners;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,12 +18,13 @@ import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.craft.Craft;
 import com.maximuspayne.shipyard.PlotType;
 import com.maximuspayne.shipyard.Shipyard;
-
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 @SuppressWarnings("deprecation")
 public class NavyCraft_Timer extends BukkitRunnable {
 	
+	public static WorldGuardPlugin wgp;
 	public static ConfigManager cfgm;
 	Plugin plugin;
 	Timer timer;
@@ -184,6 +187,35 @@ public class NavyCraft_Timer extends BukkitRunnable {
     	}
     	);
 	}
+	
+	   //Shipyard reset (deletes all plots of the type provided)
+		public static void deleteAllPlots(String name) {
+			new Thread(){
+				
+		    	@Override
+			    public void run()
+			    {
+		for (PlotType pt : Shipyard.getPlots()) {
+			if (pt.name.equalsIgnoreCase(name)) {
+				List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
+				if (list.size() != 0) {
+					for (String n : list) {
+						if (name.equalsIgnoreCase(ConfigManager.syData.getString("Signs." + n + "." + "type"))) {
+							NavyCraft_FileListener.updateSign(null, name.toUpperCase(), ConfigManager.syData.getInt("Signs." + n + "." + "x"), ConfigManager.syData.getInt("Signs." + n + "." + "y"), ConfigManager.syData.getInt("Signs." + n + "." + "z"), NavyCraft.instance.getServer().getWorld(ConfigManager.syData.getString("Signs." + n + "." + "world")), null, false);
+							try {
+								sleep(10);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+	    }
+			    }
+	    	}.start();
+		}
 @Override
 public void run() {
 }

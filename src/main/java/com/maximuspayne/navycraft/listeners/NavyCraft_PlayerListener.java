@@ -1801,6 +1801,37 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							}
+						} else if (split[1].equalsIgnoreCase("delete")) {
+							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
+								player.sendMessage(ChatColor.RED + "You do not have permission to revoke plots.");
+								event.setCancelled(true);
+								return;
+							}
+							
+							if (split.length < 2) {
+								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard revoke <player> <type> <amount>");
+								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard revoke Solmex SHIP5 1");
+								event.setCancelled(true);
+								return;
+							}
+							
+							String typeString = split[2];
+							boolean isCanceled = false;
+						for (PlotType pt : Shipyard.getPlots()) {
+							if (typeString.equalsIgnoreCase(pt.name)) {
+								isCanceled = false;
+								break;
+							} else {
+								isCanceled = true;
+							}
+						}
+						if (isCanceled) {
+							player.sendMessage(ChatColor.RED + "Unknown lot type");
+							event.setCancelled(true);
+							return;
+						}
+						NavyCraft_Timer.deleteAllPlots(typeString);
+						player.sendMessage(typeString + " Plots Deleted!");
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_FileListener.loadSignData();
 							NavyCraft_BlockListener.loadRewards(player.getName());
@@ -2625,7 +2656,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									Sign sign2 = (Sign) block.getRelative(BlockFace.DOWN, 1).getRelative(bf, -1).getState();
 										sign2.setLine(2, String.valueOf(newId));
 										sign2.update();
-										NavyCraft_FileListener.updateSign(UUID, sign2.getLine(3), foundSign.getX(), foundSign.getY(), foundSign.getZ(), foundSign.getWorld(), newId);
+										NavyCraft_FileListener.updateSign(UUID, sign2.getLine(3), foundSign.getX(), foundSign.getY(), foundSign.getZ(), foundSign.getWorld(), newId, true);
 										player.sendMessage(ChatColor.GREEN + "Plot renumbered.");
 										NavyCraft_FileListener.loadSignData();
 									} else {
