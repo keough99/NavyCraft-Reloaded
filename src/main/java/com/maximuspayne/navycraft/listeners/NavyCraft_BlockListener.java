@@ -661,6 +661,110 @@ public class NavyCraft_BlockListener implements Listener {
 				player.sendMessage("Max changed blocks error");
 				return;
 			}
+		} else if (craftTypeName.equalsIgnoreCase("*clear*")) {
+			int rotate = -1;
+			BlockFace bf, bf2;
+			bf = null;
+			bf2 = null;
+			switch (block.getData()) {
+				case (byte) 0x2:// n
+					rotate = 180;
+					bf = BlockFace.SOUTH;
+					bf2 = BlockFace.WEST;
+					break;
+				case (byte) 0x3:// s
+					rotate = 0;
+					bf = BlockFace.NORTH;
+					bf2 = BlockFace.EAST;
+					break;
+				case (byte) 0x4:// w
+					rotate = 90;
+					bf = BlockFace.EAST;
+					bf2 = BlockFace.SOUTH;
+					break;
+				case (byte) 0x5:// e
+					rotate = 270;
+					bf = BlockFace.WEST;
+					bf2 = BlockFace.NORTH;
+					break;
+				default:
+					break;
+			}
+
+			if (rotate == -1) {
+				player.sendMessage(ChatColor.DARK_RED + "Sign Error: Check Direction?");
+				return;
+			}
+			if (block.getRelative(bf, 1).getTypeId() != 22) {
+				return;
+			}
+			
+				String typeString = sign.getLine(1).trim().toLowerCase();
+				int shiftRight = 0;
+				int shiftForward = 0;
+				int shiftUp = 0;
+				int shiftDown = 0;
+				boolean typeFound = false;
+				for (PlotType pt : Shipyard.getPlots()) {
+					if (typeString.equalsIgnoreCase(pt.name)) {
+						if (!pt.doFix) {
+						shiftRight = pt.sizeX - 1;
+						shiftForward = pt.sizeZ;
+						shiftUp = 20;
+						shiftDown = 8;
+						} else {
+							shiftRight = -pt.sizeX - 1;
+							shiftForward = pt.sizeZ + 1;
+							shiftUp = pt.sizeY;
+							shiftDown = 0;
+						}
+						typeFound = true;
+						break;
+					}
+				}
+
+				if (!typeFound) {
+					player.sendMessage(ChatColor.DARK_RED + "Sign Error: Lot Type");
+					return;
+				}
+					Block rightLimit = block.getRelative(bf2, shiftRight).getRelative(bf, shiftForward + 2).getRelative(BlockFace.UP, shiftUp);
+					Block leftLimit = block.getRelative(bf, 2).getRelative(BlockFace.DOWN, shiftDown);
+					int rightX, rightY, rightZ;
+					int leftX, leftY, leftZ;
+					rightX = rightLimit.getX();
+					rightY = rightLimit.getY();
+					rightZ = rightLimit.getZ();
+					leftX = leftLimit.getX();
+					leftY = leftLimit.getY();
+					leftZ = leftLimit.getZ();
+					int startX, endX, startZ, endZ;
+					if (rightX < leftX) {
+						startX = rightX;
+						endX = leftX;
+					} else {
+						startX = leftX;
+						endX = rightX;
+					}
+					if (rightZ < leftZ) {
+						startZ = rightZ;
+						endZ = leftZ;
+					} else {
+						startZ = leftZ;
+						endZ = rightZ;
+					}
+
+					for (int x = startX; x <= endX; x++) {
+						for (int y = leftY; y <= rightY; y++) {
+							for (int z = startZ; z <= endZ; z++) {
+								if (player.getWorld().getBlockAt(x, y, z).getY() < 63) {
+									player.getWorld().getBlockAt(x, y, z).setType(Material.WATER);
+									} else {
+										player.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
+									}
+								}
+							}
+						}
+					player.sendMessage(ChatColor.GREEN + "Cleared Type: " + ChatColor.WHITE + typeString.toUpperCase());
 		} else if (craftTypeName.equalsIgnoreCase("periscope")) {
 			if (!PermissionInterface.CheckPerm(player, "navycraft.periscope.use")) {
 				player.sendMessage(ChatColor.RED + "You do not have permission to use this sign");
@@ -1591,7 +1695,7 @@ public class NavyCraft_BlockListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (!player.isOp() && ((craftTypeName.equalsIgnoreCase("claim")  && craftTypeName.equalsIgnoreCase("select") || craftTypeName.equalsIgnoreCase("spawn") || craftTypeName.equalsIgnoreCase("recall") || craftTypeName.equalsIgnoreCase("target") ) && !PermissionInterface.CheckPerm(player, "navycraft.adminsigncreate"))) {
+		if (!player.isOp() && ((craftTypeName.equalsIgnoreCase("claim")  && craftTypeName.equalsIgnoreCase("select") || craftTypeName.equalsIgnoreCase("spawn") || craftTypeName.equalsIgnoreCase("clear") || craftTypeName.equalsIgnoreCase("target") ) && !PermissionInterface.CheckPerm(player, "navycraft.adminsigncreate"))) {
 			player.sendMessage(ChatColor.RED + "You don't have permission to create this type of sign!");
 			event.setCancelled(true);
 			return;
@@ -1873,55 +1977,25 @@ public class NavyCraft_BlockListener implements Listener {
 		int shiftForward = 0;
 		int shiftUp = 0;
 		int shiftDown = 0;
-		if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP1")) {
-			shiftRight = 12;
-			shiftForward = 28;
+		boolean typeFound = false;
+		for (PlotType pt : Shipyard.getPlots()) {
+		if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase(pt.name)) {
+			shiftRight = pt.sizeX - 1;
+			shiftForward = pt.sizeZ;
+			if (!pt.doFix) {
 			shiftUp = 20;
 			shiftDown = 8;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP2")) {
-			shiftRight = 8;
-			shiftForward = 43;
-			shiftUp = 20;
-			shiftDown = 8;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP3")) {
-			shiftRight = 10;
-			shiftForward = 70;
-			shiftUp = 20;
-			shiftDown = 8;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP4")) {
-			shiftRight = 16;
-			shiftForward = 55;
-			shiftUp = 20;
-			shiftDown = 8;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("SHIP5")) {
-			shiftRight = 16;
-			shiftForward = 98;
-			shiftUp = 20;
-			shiftDown = 8;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR1")) {
-			shiftRight = 16;
-			shiftForward = 19;
-			shiftUp = 7;
-			shiftDown = 0;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("HANGAR2")) {
-			shiftRight = 24;
-			shiftForward = 32;
-			shiftUp = 14;
-			shiftDown = 0;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK1")) {
-			shiftRight = 11;
-			shiftForward = 19;
-			shiftUp = 7;
-			shiftDown = 0;
-		} else if (Craft.playerClipboardsLot.get(player).equalsIgnoreCase("TANK2")) {		
-			shiftRight = 25;
-			shiftForward = 33;
-			shiftUp = 9;
-			shiftDown = 0;
-		} else {
+			} else {
+				shiftUp = pt.sizeY;
+				shiftDown = 0;
+			}
+			typeFound = true;
+			break;
+		}
+	}
+		if (!typeFound) {
 			player.sendMessage("Unknown lot type error2!");
 		}
-
 		Block rightLimit = block.getRelative(bf2, shiftRight).getRelative(bf, shiftForward).getRelative(BlockFace.UP, shiftUp);
 		Block leftLimit = block.getRelative(bf, 1).getRelative(BlockFace.DOWN, shiftDown);
 		int rightX, rightY, rightZ;
