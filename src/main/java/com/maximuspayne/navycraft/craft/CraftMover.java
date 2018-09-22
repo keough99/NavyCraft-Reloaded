@@ -4797,7 +4797,7 @@ public class CraftMover {
 			} else if (craftTypeName.equalsIgnoreCase("flak-gun")) {
 				cost = 200;
 			} else if (craftTypeName.equalsIgnoreCase("ciws")) {
-				cost = 500;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("radar")) {
 				cost = 200;
 			} else if (craftTypeName.equalsIgnoreCase("radio")) {

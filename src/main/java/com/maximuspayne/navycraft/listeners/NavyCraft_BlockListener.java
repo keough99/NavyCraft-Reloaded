@@ -1727,7 +1727,7 @@ public class NavyCraft_BlockListener implements Listener {
 			} else if (craftTypeName.equalsIgnoreCase("flak-gun")) {
 				cost = 200;
 			} else if (craftTypeName.equalsIgnoreCase("ciws")) {
-				cost = 500;
+				cost = 1250;
 			} else if (craftTypeName.equalsIgnoreCase("radio")) {
 				cost = 50;
 			} else if (craftTypeName.equalsIgnoreCase("radar")) {
