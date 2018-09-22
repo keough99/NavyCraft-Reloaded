@@ -217,42 +217,11 @@ public class NavyCraft_FileListener implements Listener {
 	}
 }
 	
-	public static void convertOldData(String player) {
+	public static void loadPlayerData(String player) {
 		String UUID = Utils.getUUIDfromPlayer(player);
-		File userdata = new File(
-				NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(),
-				File.separator + "userdata");
+		File userdata = new File(NavyCraft.instance.getServer().getPluginManager().getPlugin("NavyCraft").getDataFolder(), File.separator + "userdata");
 		File f = new File(userdata, File.separator + UUID + ".yml");
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-		
-		String worldName = "";
-		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
-			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
-			worldName = worlds[0];
-		} else {
-			worldName = NavyCraft.instance.getServer().getPlayer(player).getWorld().getName();
-		}
-		
-		pex = (PermissionsEx) NavyCraft.instance.getServer().getPluginManager().getPlugin("PermissionsEx");
-		if (pex == null)
-			return;
-		
-		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
-			if (s.contains("navycraft")) {
-					if (s.contains("rank")) {
-						try {
-						PermissionsEx.getUser(player).removePermission(s);
-					} catch (Exception ex) {
-						System.out.println("Invalid perm-" + s);
-						break;
-					}
-				}
-			}
-		}
-		PermissionsEx.getUser(player).addPermission("navycraft.rank." + playerData.getInt("exp"));
-	}
-	
-	public static void loadPlayerData(String player) {
 		String worldName = "";
 		if (NavyCraft.instance.getConfig().getString("EnabledWorlds") != "null") {
 			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
@@ -267,7 +236,12 @@ public class NavyCraft_FileListener implements Listener {
 		for (String s : PermissionsEx.getUser(player).getPermissions(worldName)) {
 			if (!s.contains("navycraft")) {
 					if (!s.contains("rank")) {
+						if (f != null) {
+						PermissionsEx.getUser(player).addPermission("navycraft.rank." + playerData.getInt("exp"));
+						f.delete();
+						} else {
 						PermissionsEx.getUser(player).addPermission("navycraft.rank.0");
+						}
 					}
 			}
 		}

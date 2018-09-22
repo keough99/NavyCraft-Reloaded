@@ -2,12 +2,11 @@ package com.maximuspayne.navycraft;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
@@ -75,6 +74,14 @@ public class Utils {
 		String UUID = NavyCraft.instance.getServer().getOfflinePlayer(player).getUniqueId().toString();
 		return UUID;
 		}
+    public static String getNamefromUUID(String uuid) {
+    	OfflinePlayer op = NavyCraft.instance.getServer().getOfflinePlayer(uuid);
+    	if (op.hasPlayedBefore()) {
+    	    return op.getName();
+    	} else {
+    	    return null;
+    	}
+    }
 	public static boolean CheckEnabledWorld(Location loc) {
 		if(!NavyCraft.instance.getConfig().getString("EnabledWorlds").equalsIgnoreCase("null")) {
 			String[] worlds = NavyCraft.instance.getConfig().getString("EnabledWorlds").split(",");
