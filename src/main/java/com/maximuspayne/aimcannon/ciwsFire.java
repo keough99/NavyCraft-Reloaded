@@ -41,7 +41,7 @@ public static void fireCIWS(Player player)
 				while(NavyCraft.ciwsFiringList.contains(player))
 				{
 			         NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new ciwsFire(player));
-					sleep(125);
+					sleep(75);
 				}
 				
 			} catch (InterruptedException e) 

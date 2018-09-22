@@ -1660,182 +1660,6 @@ public class NavyCraft_PlayerListener implements Listener {
 								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign! (Top sign is null)");
 								return;
 							}
-						} else if (split[1].equalsIgnoreCase("reward")) {
-							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
-								player.sendMessage(ChatColor.RED + "You do not have permission to reward plots.");
-								event.setCancelled(true);
-								return;
-							}
-							
-							if (split.length < 5) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard reward <player> <type> <amount>");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard reward Solmex SHIP5 1");
-								event.setCancelled(true);
-								return;
-							}
-							
-							String typeString = split[3];
-							boolean isCanceled = false;
-						for (PlotType pt : Shipyard.getPlots()) {
-							if (typeString.equalsIgnoreCase(pt.name)) {
-								isCanceled = false;
-								break;
-							} else {
-								isCanceled = true;
-							}
-						}
-						if (isCanceled) {
-							player.sendMessage(ChatColor.RED + "Unknown lot type");
-							event.setCancelled(true);
-							return;
-						}
-							String playerString = split[2];
-							if (plugin.getServer().getPlayer(playerString) == null || !plugin.getServer()
-									.getPlayer(playerString).getName().equalsIgnoreCase(playerString)) {
-								player.sendMessage(ChatColor.RED + "Player not found or not online.");
-								event.setCancelled(true);
-								return;
-							}
-							
-							int rewNum = 0;
-							try {
-								rewNum = Integer.parseInt(split[4]);
-							} catch (NumberFormatException e) {
-								player.sendMessage(ChatColor.RED + "Invalid Number");
-								event.setCancelled(true);
-								return;
-							}
-							
-							if (rewNum <= 0) {
-								player.sendMessage(ChatColor.RED + "Cannot revoke plots below 0!");
-								event.setCancelled(true);
-								return;
-							}
-							String UUID = Utils.getUUIDfromPlayer(playerString);
-							if (UUID != null) {
-							player.sendMessage("placeholder");
-							} else {
-								player.sendMessage(ChatColor.RED + playerString + "has never joined the server!");
-								event.setCancelled(true);
-								return;
-							}
-						    if (rewNum == 1) {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
-										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
-										+ " Plot rewarded to " + ChatColor.YELLOW + playerString);
-								event.setCancelled(true);
-								return;
-							} else {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
-										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
-										+ " Plot's rewarded to " + ChatColor.YELLOW + playerString);
-								event.setCancelled(true);
-								return;
-							}
-						} else if (split[1].equalsIgnoreCase("revoke")) {
-							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
-								player.sendMessage(ChatColor.RED + "You do not have permission to revoke plots.");
-								event.setCancelled(true);
-								return;
-							}
-							
-							if (split.length < 5) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard revoke <player> <type> <amount>");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard revoke Solmex SHIP5 1");
-								event.setCancelled(true);
-								return;
-							}
-							
-							String typeString = split[3];
-							boolean isCanceled = false;
-						for (PlotType pt : Shipyard.getPlots()) {
-							if (typeString.equalsIgnoreCase(pt.name)) {
-								isCanceled = false;
-								break;
-							} else {
-								isCanceled = true;
-							}
-						}
-						if (isCanceled) {
-							player.sendMessage(ChatColor.RED + "Unknown lot type");
-							event.setCancelled(true);
-							return;
-						}
-							
-							String playerString = split[2];
-							if (plugin.getServer().getPlayer(playerString) == null || !plugin.getServer()
-									.getPlayer(playerString).getName().equalsIgnoreCase(playerString)) {
-								player.sendMessage(ChatColor.RED + "Player not found or not online.");
-								event.setCancelled(true);
-								return;
-							}
-							
-							int rewNum = 0;
-							try {
-								rewNum = Math.abs(Integer.parseInt(split[4])) * -1;
-							} catch (NumberFormatException e) {
-								player.sendMessage(ChatColor.RED + "Invalid Number");
-								event.setCancelled(true);
-								return;
-							}
-							
-							if (rewNum >= 0) {
-								player.sendMessage(ChatColor.RED + "Can't use a negative number!");
-								event.setCancelled(true);
-								return;
-							}
-							String UUID = Utils.getUUIDfromPlayer(playerString);
-							if (UUID != null) {
-							player.sendMessage("placeholder");
-							} else {
-								player.sendMessage(ChatColor.RED + playerString + "has never joined the server!");
-								event.setCancelled(true);
-								return;
-							}
-						    if (rewNum == 1) {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
-										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
-										+ " Plot revoked from " + ChatColor.YELLOW + playerString);
-								event.setCancelled(true);
-								return;
-							} else {
-								player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + Math.abs(rewNum) + ChatColor.DARK_GRAY
-										+ " - " + ChatColor.GOLD + typeString + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN
-										+ " Plot's revoked from " + ChatColor.YELLOW + playerString);
-								event.setCancelled(true);
-								return;
-							}
-						} else if (split[1].equalsIgnoreCase("delete")) {
-							if (!PermissionInterface.CheckPerm(player, "navycraft.reward") && !player.isOp()) {
-								player.sendMessage(ChatColor.RED + "You do not have permission to revoke plots.");
-								event.setCancelled(true);
-								return;
-							}
-							
-							if (split.length < 2) {
-								player.sendMessage(ChatColor.GOLD + "Usage - /shipyard revoke <player> <type> <amount>");
-								player.sendMessage(ChatColor.YELLOW + "Example - /shipyard revoke Solmex SHIP5 1");
-								event.setCancelled(true);
-								return;
-							}
-							
-							String typeString = split[2];
-							boolean isCanceled = false;
-						for (PlotType pt : Shipyard.getPlots()) {
-							if (typeString.equalsIgnoreCase(pt.name)) {
-								isCanceled = false;
-								break;
-							} else {
-								isCanceled = true;
-							}
-						}
-						if (isCanceled) {
-							player.sendMessage(ChatColor.RED + "Unknown lot type");
-							event.setCancelled(true);
-							return;
-						}
-						NavyCraft_Timer.deleteAllPlots(typeString);
-						player.sendMessage(typeString + " Plots Deleted!");
 						} else if (split[1].equalsIgnoreCase("list")) {
 							NavyCraft_FileListener.loadSignData();
 							NavyCraft_BlockListener.loadRewards(player.getName());
@@ -1877,7 +1701,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard tp <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to a plot id");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard tp <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "teleport to the given plot ID");
 							}
 						} else if (split[1].equalsIgnoreCase("help")) {
 							player.sendMessage(ChatColor.GOLD + "Shipyard v" + ChatColor.GREEN + NavyCraft.version
@@ -1888,25 +1712,22 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.AQUA + "/shipyard open <plot type> - Teleport to an unclaimed plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard unclaim <id> - Unclaimes a plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard tp <id> - Teleport to the plot id number");
-							player.sendMessage(ChatColor.AQUA
-									+ "/shipyard addmember <id> <player> - Gives player permission to that plot");
-							player.sendMessage(ChatColor.AQUA
-									+ "/shipyard remmember <id> <player> - Removes player permission to that plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard addmember <id> <player> - Gives player permission to that plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard remmember <id> <player> - Removes player permission to that plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard clear <id> - Destroys all blocks within the plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard rename <id> <custom name> - Renames the plot");
-							player.sendMessage(
-									ChatColor.AQUA + "/shipyard public <id> - Allows any player to select your vehicle");
-							player.sendMessage(ChatColor.AQUA
-									+ "/shipyard private <id> - Allows only you and your members to select your vehicle");
+							player.sendMessage(ChatColor.AQUA + "/shipyard public <id> - Allows any player to select your vehicle");
+							player.sendMessage(ChatColor.AQUA + "/shipyard private <id> - Allows only you and your members to select your vehicle");
 							player.sendMessage(ChatColor.AQUA + "/shipyard plist <player> - List the given player's plots");
-							player.sendMessage(
-									ChatColor.AQUA + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
+							player.sendMessage(ChatColor.AQUA + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
+							player.sendMessage(ChatColor.AQUA + "/shipyard schem list - List saved vehicles");
+							player.sendMessage(ChatColor.AQUA + "/shipyard schem plist - List the given player's saved vehicles");
+							player.sendMessage(ChatColor.AQUA + "/shipyard schem load <name> <id> - Load a saved vehicle into a plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard schem save <id> <name> - Saves a vehicle in a plot to a schematic");
 							if (PermissionInterface.CheckQuietPerm(player, "navycraft.admin") || player.isOp()) {
-								player.sendMessage(ChatColor.RED + "Shipyard Admin v" + ChatColor.GREEN + NavyCraft.version
-										+ ChatColor.RED + " commands :");
+								player.sendMessage(ChatColor.RED + "Shipyard Admin v" + ChatColor.GREEN + NavyCraft.version + ChatColor.RED + " commands :");
 								player.sendMessage(ChatColor.BLUE + "/shipyard player <player> - View a players plot status");
-								player.sendMessage(ChatColor.BLUE
-										+ "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
+								player.sendMessage(ChatColor.BLUE + "/shipyard reward <player> <type> <reason> - Rewards the specified plot type to the player");
 							}
 						} else if (split[1].equalsIgnoreCase("open")) {
 							if (split.length == 3) {
@@ -1976,7 +1797,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard info <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "gives player permission to that plot");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard info <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "gives information on given plot ID");
 							}
 						} else if (split[1].equalsIgnoreCase("addmember")) {
 							if (split.length == 4) {
@@ -2035,7 +1856,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard addmember <id> <player>");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard addmember <id> <player>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "gives player permission to that plot");
 							}
 						} else if (split[1].equalsIgnoreCase("remmember")) {
 							if (split.length == 4) {
@@ -2250,6 +2071,11 @@ public class NavyCraft_PlayerListener implements Listener {
 												foundSign.setLine(2, "");
 												foundSign.setLine(3, "");
 												foundSign.update();
+												foundSign2.setLine(0, "Open");
+												foundSign2.setLine(1, "1");
+												foundSign2.setLine(2, "0");
+												foundSign2.setLine(3, foundSign2.getLine(3).toUpperCase());
+												foundSign2.update();
 												NavyCraft_FileListener.loadSignData();
 												NavyCraft_BlockListener.loadRewards(player.getName());
 												try {
@@ -2272,8 +2098,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - "
-										+ ChatColor.GOLD + "destroys all blocks within the plot");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard unclaim <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the plot and unclaims it");
 							}
 							
 						} else if (split[1].equalsIgnoreCase("aunclaim")) {
@@ -2356,14 +2181,17 @@ public class NavyCraft_PlayerListener implements Listener {
 													}
 												}
 												regionManager.removeRegion(regionName);
-												NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3),
-														foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(),
-														foundSign.getZ());
+												NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3),foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(),foundSign.getZ());
 												foundSign.setLine(0, "*Claim*");
 												foundSign.setLine(1, "");
 												foundSign.setLine(2, "");
 												foundSign.setLine(3, "");
 												foundSign.update();
+												foundSign2.setLine(0, "Open");
+												foundSign2.setLine(1, "1");
+												foundSign2.setLine(2, "0");
+												foundSign2.setLine(3, foundSign2.getLine(3).toUpperCase());
+												foundSign2.update();
 												NavyCraft_FileListener.loadSignData();
 												NavyCraft_BlockListener.loadRewards(player.getName());
 												try {
@@ -2372,6 +2200,7 @@ public class NavyCraft_PlayerListener implements Listener {
 													e.printStackTrace();
 												}
 												player.sendMessage(ChatColor.GREEN + "Plot Unclaimed.");
+											}
 										} else {
 											player.sendMessage(
 													ChatColor.RED + "Error: There may be a problem with the plots signs.");
@@ -2384,10 +2213,8 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard aunclaim <player> <id>" + ChatColor.DARK_GRAY + " - "
-										+ ChatColor.GOLD + "destroys all blocks within the defined plot");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard aunclaim <player> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "destroys all blocks within the defined plot");
 							}
-						}
 						} else if (split[1].equalsIgnoreCase("schem") || split[1].equalsIgnoreCase("schematic")) {
 						if (split.length > 2) {
 							if (split[2].equalsIgnoreCase("save")) {
@@ -2440,7 +2267,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard save <id> <name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
+								player.sendMessage(ChatColor.YELLOW + "/shipyard schem save <id> <name>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves the defined plot in a schematic" );
 							}
 						} else if (split[2].equalsIgnoreCase("load")) {
 							if (split.length == 5) {
@@ -2494,7 +2321,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									player.sendMessage(ChatColor.RED + "Invalid Plot ID");
 								}
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard load <name> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
+								player.sendMessage(ChatColor.YELLOW + "/shipyard schem load <name> <id>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "saves your plot in a schematic" );
 							}
 						} else if (split[2].equalsIgnoreCase("plist")) {
 							if (split.length == 4) {
@@ -2513,7 +2340,7 @@ public class NavyCraft_PlayerListener implements Listener {
 								event.setCancelled(true);
 								return;
 							} else {
-								player.sendMessage(ChatColor.YELLOW + "/shipyard schematic plist <playerName>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "List the given player's schematics");
+								player.sendMessage(ChatColor.YELLOW + "/shipyard schem plist <player>" + ChatColor.DARK_GRAY + " - " + ChatColor.GOLD + "list the given player's schematics");
 								event.setCancelled(true);
 								return;
 							}

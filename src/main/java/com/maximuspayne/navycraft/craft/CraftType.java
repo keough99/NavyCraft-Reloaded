@@ -253,93 +253,82 @@ public class CraftType {
 		if (!CraftFile.exists()) {
 			try {
 				CraftConfig.createSection("Types");
-				CraftConfig.set("Types.ship.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				//Ship
+				CraftConfig.set("Types.ship.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,179,183,184,185,186,187,188,189,190,191,192,251,0");
+				CraftConfig.set("Types.ship.forbiddenBlocks", "29,33,416");
 				CraftConfig.set("Types.ship.driveCommand", "sail");
 				CraftConfig.set("Types.ship.canNavigate", "true");
-				CraftConfig.set("Types.ship.minBlocks", "50");
-				CraftConfig.set("Types.ship.maxBlocks", "18000");
+				CraftConfig.set("Types.ship.minBlocks", "20");
+				CraftConfig.set("Types.ship.maxBlocks", "50000");
 				CraftConfig.set("Types.ship.maxSpeed", "6");
 				CraftConfig.set("Types.ship.doesCruise", "true");
 				CraftConfig.set("Types.ship.maxEngineSpeed", "8");
 				CraftConfig.set("Types.ship.maxFowardGear", "2");
-				
-				CraftConfig.set("Types.freeship.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.ship.maxReverseGear", "-2");
+				//Freeship
+				CraftConfig.set("Types.freeship.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,179,183,184,185,186,187,188,189,190,191,192,251,0");
+				CraftConfig.set("Types.freeship.forbiddenBlocks", "29,33,416");
 				CraftConfig.set("Types.freeship.driveCommand", "sail");
 				CraftConfig.set("Types.freeship.canNavigate", "true");
-				CraftConfig.set("Types.freeship.minBlocks", "50");
-				CraftConfig.set("Types.freeship.maxBlocks", "18000");
+				CraftConfig.set("Types.freeship.minBlocks", "20");
+				CraftConfig.set("Types.freeship.maxBlocks", "50000");
 				CraftConfig.set("Types.freeship.maxSpeed", "6");
 				CraftConfig.set("Types.freeship.doesCruise", "true");
 				CraftConfig.set("Types.freeship.maxEngineSpeed", "8");
 				CraftConfig.set("Types.freeship.maxFowardGear", "2");
+				CraftConfig.set("Types.freeship.maxReverseGear", "-2");
 				CraftConfig.set("Types.freeship.discount", "100");
 				CraftConfig.set("Types.freeship.adminBuild", "true");
-				
-				CraftConfig.set("Types.submarine.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				//Submarine
+				CraftConfig.set("Types.submarine.structureBlocks", "4,5,14,15,16,17,19,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,179,183,184,185,186,187,188,189,190,191,192,251,0");
+				CraftConfig.set("Types.submarine.forbiddenBlocks", "29,33,416");
 				CraftConfig.set("Types.submarine.driveCommand", "dive");
 				CraftConfig.set("Types.submarine.canNavigate", "true");
 				CraftConfig.set("Types.submarine.minBlocks", "20");
-				CraftConfig.set("Types.submarine.maxBlocks", "18000");
+				CraftConfig.set("Types.submarine.maxBlocks", "50000");
 				CraftConfig.set("Types.submarine.maxSpeed", "3");
 				CraftConfig.set("Types.submarine.doesCruise", "true");
 				CraftConfig.set("Types.submarine.maxEngineSpeed", "6");
-				CraftConfig.set("Types.submarine.maxSubmergedSpeed", "2");
+				CraftConfig.set("Types.submarine.maxSubmergedSpeed", "3");
 				CraftConfig.set("Types.submarine.maxFowardGear", "2");
-				
-				CraftConfig.set("Types.aircraft.structureBlocks", "4,5,14,15,16,17,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.submarine.maxReverseGear", "-2");
+				//Aircraft
+				CraftConfig.set("Types.aircraft.structureBlocks", "4,5,14,15,16,17,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,179,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.aircraft.forbiddenBlocks", "29,33,251,416");
 				CraftConfig.set("Types.aircraft.driveCommand", "pilot");
 				CraftConfig.set("Types.aircraft.canFly", "true");
 				CraftConfig.set("Types.aircraft.minBlocks", "20");
-				CraftConfig.set("Types.aircraft.maxBlocks", "18000");
+				CraftConfig.set("Types.aircraft.maxBlocks", "20000");
 				CraftConfig.set("Types.aircraft.maxSpeed", "20");
 				CraftConfig.set("Types.aircraft.doesCruise", "true");
 				CraftConfig.set("Types.aircraft.maxEngineSpeed", "8");
 				CraftConfig.set("Types.aircraft.maxFowardGear", "3");
+				CraftConfig.set("Types.aircraft.maxReverseGear", "-2");
 				
-				CraftConfig.set("Types.helicopter.structureBlocks", "4,5,14,15,16,17,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.helicopter.structureBlocks", "4,5,14,15,16,17,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.helicopter.forbiddenBlocks", "29,33,251,416");
 				CraftConfig.set("Types.helicopter.driveCommand", "pilot");
 				CraftConfig.set("Types.helicopter.canFly", "true");
-				CraftConfig.set("Types.helicopter.minBlocks", "9");
-				CraftConfig.set("Types.helicopter.maxBlocks", "18000");
+				CraftConfig.set("Types.helicopter.minBlocks", "20");
+				CraftConfig.set("Types.helicopter.maxBlocks", "20000");
 				CraftConfig.set("Types.helicopter.maxSpeed", "5");
 				CraftConfig.set("Types.helicopter.doesCruise", "false");
 				CraftConfig.set("Types.helicopter.maxFowardGear", "3");
+				CraftConfig.set("Types.helicopter.maxReverseGear", "-2");
 				
-				CraftConfig.set("Types.tank.structureBlocks", "4,5,14,15,16,17,20,21,22,23,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,"
-						+ "57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,"
-						+ "92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,"
-						+ "133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,"
-						+ "164,165,166,167,168,169,170,172,173,174,183,184,185,186,187,188,189,190,191,192,0");
+				CraftConfig.set("Types.tank.structureBlocks", "4,5,14,15,16,17,20,21,22,23,24,25,26,27,28,30,35,41,42,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,89,91,92,93,94,95,96,98,101,102,106,107,108,109,112,113,114,118,121,123,124,125,126,129,131,132,133,134,135,136,139,143,144,147,148,149,150,151,152,153,154,155,156,157,158,159,160,162,163,164,165,166,167,168,169,170,172,173,174,179,183,184,185,186,187,188,189,190,191,192,251,0");
+				CraftConfig.set("Types.tank.forbiddenBlocks", "29,33,416");
 				CraftConfig.set("Types.tank.driveCommand", "drive");
 				CraftConfig.set("Types.tank.canNavigate", "false");
 				CraftConfig.set("Types.tank.isTerrestrial", "true");
 				CraftConfig.set("Types.tank.obeysGravity", "true");
-				CraftConfig.set("Types.tank.minBlocks", "10");
-				CraftConfig.set("Types.tank.maxBlocks", "5000");
+				CraftConfig.set("Types.tank.minBlocks", "20");
+				CraftConfig.set("Types.tank.maxBlocks", "10000");
 				CraftConfig.set("Types.tank.maxSpeed", "3");
 				CraftConfig.set("Types.tank.doesCruise", "true");
 				CraftConfig.set("Types.tank.maxEngineSpeed", "5");
 				CraftConfig.set("Types.tank.maxFowardGear", "3");
+				CraftConfig.set("Types.tank.maxReverseGear", "-2");
 
 				CraftConfig.save(CraftFile);
 			} catch(IOException e) {
