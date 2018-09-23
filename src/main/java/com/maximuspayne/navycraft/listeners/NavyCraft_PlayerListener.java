@@ -1708,10 +1708,10 @@ public class NavyCraft_PlayerListener implements Listener {
 									+ ChatColor.GOLD + " commands :");
 							player.sendMessage(ChatColor.AQUA + "/shipyard - Status message");
 							player.sendMessage(ChatColor.AQUA + "/shipyard list - List your current plots");
-							player.sendMessage(ChatColor.AQUA + "/shipyard info <id> - Information about plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard info <id> - Information about the given plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard open <plot type> - Teleport to an unclaimed plot");
-							player.sendMessage(ChatColor.AQUA + "/shipyard unclaim <id> - Unclaimes a plot");
-							player.sendMessage(ChatColor.AQUA + "/shipyard tp <id> - Teleport to the plot id number");
+							player.sendMessage(ChatColor.AQUA + "/shipyard unclaim <id> - Clears and unclaims a plot");
+							player.sendMessage(ChatColor.AQUA + "/shipyard tp <id> - Teleport to the plot ID number");
 							player.sendMessage(ChatColor.AQUA + "/shipyard addmember <id> <player> - Gives player permission to that plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard remmember <id> <player> - Removes player permission to that plot");
 							player.sendMessage(ChatColor.AQUA + "/shipyard clear <id> - Destroys all blocks within the plot");
@@ -1719,7 +1719,8 @@ public class NavyCraft_PlayerListener implements Listener {
 							player.sendMessage(ChatColor.AQUA + "/shipyard public <id> - Allows any player to select your vehicle");
 							player.sendMessage(ChatColor.AQUA + "/shipyard private <id> - Allows only you and your members to select your vehicle");
 							player.sendMessage(ChatColor.AQUA + "/shipyard plist <player> - List the given player's plots");
-							player.sendMessage(ChatColor.AQUA + "/shipyard ptp <player> <id> - Teleport to the player's plot id");
+							player.sendMessage(ChatColor.AQUA + "/shipyard ptp <player> <id> - Teleport to the player's plot ID");
+							player.sendMessage(ChatColor.AQUA + "/shipyard renumber <id> <newid> - Renumbers the given plot ID to new ID");
 							player.sendMessage(ChatColor.AQUA + "/shipyard schem list - List saved vehicles");
 							player.sendMessage(ChatColor.AQUA + "/shipyard schem plist - List the given player's saved vehicles");
 							player.sendMessage(ChatColor.AQUA + "/shipyard schem load <name> <id> - Load a saved vehicle into a plot");

@@ -509,7 +509,7 @@ public class NavyCraft_BlockListener implements Listener {
 			String worldName = player.getWorld().getName();
 			for(String s:PermissionsEx.getUser(player).getPermissions(worldName)) {
 				if( s.contains("navycraft") ) {
-					if( s.contains("rank") ) {
+					if( s.contains("spawn") ) {
 						String[] split = s.split("\\.");
 						try {
 							playerRank = Integer.parseInt(split[2]);	
