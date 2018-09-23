@@ -1618,10 +1618,10 @@ public class Craft {
 			return;
 		}
 		
-		if( this.setSpeed == 0 || this.gear <= 0 )
+		if( this.setSpeed == 0)
 		{
 			if( player != null )
-				player.sendMessage(ChatColor.RED + "You have to be moving forward to turn.");
+				player.sendMessage(ChatColor.RED + "You have to be moving to turn.");
 			return;
 		}
 		
