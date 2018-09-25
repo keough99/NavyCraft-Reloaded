@@ -1644,7 +1644,7 @@ public class NavyCraft_PlayerListener implements Listener {
 									String sign2Line3 = selectSign2.getLine(3);
 									
 							if (signLine0.equalsIgnoreCase("*claim*")) {
-								NavyCraft_FileListener.saveSign(sign2Line3, selectSignBlock.getWorld().getName(), selectSignBlock.getX(), selectSignBlock.getY(), selectSignBlock.getZ());
+								NavyCraft_FileListener.updateSign(null, selectSign2.getLine(3), selectSign.getX(), selectSign.getY(),selectSign.getZ(), selectSign.getWorld(), null, false);
 							} else {
 								player.sendMessage(ChatColor.RED + "That is not a valid shipyard sign! (Top sign isn't a claim sign)");
 								return;
@@ -2064,9 +2064,7 @@ public class NavyCraft_PlayerListener implements Listener {
 													}
 												}
 												regionManager.removeRegion(regionName);
-												NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3),
-														foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(),
-														foundSign.getZ());
+												NavyCraft_FileListener.updateSign(null, foundSign2.getLine(3), foundSign.getX(), foundSign.getY(),foundSign.getZ(), foundSign.getWorld(), null, false);
 												foundSign.setLine(0, "*Claim*");
 												foundSign.setLine(1, "");
 												foundSign.setLine(2, "");
@@ -2182,7 +2180,7 @@ public class NavyCraft_PlayerListener implements Listener {
 													}
 												}
 												regionManager.removeRegion(regionName);
-												NavyCraft_FileListener.saveUnclaimedSign(foundSign2.getLine(3),foundSign.getWorld().getName(), foundSign.getX(), foundSign.getY(),foundSign.getZ());
+												NavyCraft_FileListener.updateSign(null, foundSign2.getLine(3), foundSign.getX(), foundSign.getY(),foundSign.getZ(), foundSign.getWorld(), null, false);
 												foundSign.setLine(0, "*Claim*");
 												foundSign.setLine(1, "");
 												foundSign.setLine(2, "");

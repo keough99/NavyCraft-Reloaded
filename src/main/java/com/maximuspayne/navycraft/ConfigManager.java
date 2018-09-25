@@ -201,7 +201,8 @@ public class ConfigManager {
 		try {
 			syData.save(syDFile);
 		} catch (IOException e) {
-			System.out.println("Could not save shipyard config.yml file");
+			System.out.println("Could not save shipyard signs.yml file");
+			e.printStackTrace();
 		}
 	}
 	public static void reloadsyData() {
