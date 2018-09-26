@@ -950,7 +950,7 @@ public class OneCannon{
 			   
 			    } else
 			    {
-			    	p.sendMessage("You need 1xGunpowder and 1xTNT to Load the cannon!");
+			    	p.sendMessage("You need 1xGunpowder and 1xTNT to load the cannon!");
 			    	return false;
 			    }
 			}else
@@ -963,7 +963,7 @@ public class OneCannon{
     	{
 	    	if( cannonType == 0 )
 	    	{
-	    		if (p.getInventory().contains(new ItemStack(46, 1)) || charged > 0) 
+	    		if (p.getInventory().containsAtLeast(new ItemStack(46), 1) || charged > 0) 
 			    {
 			    if( charged == 0 )
 			    {
@@ -977,7 +977,7 @@ public class OneCannon{
 			    
 			    } else
 			    {
-			    	p.sendMessage("You need 1xTNT to Load the cannon!");
+			    	p.sendMessage("You need 1xTNT to load the cannon!");
 			    	return false;
 			    }
 		    	
@@ -985,7 +985,7 @@ public class OneCannon{
 			    
 	    	} else if( cannonType == 1 )
 	    	{
-	    		if (p.getInventory().contains(new ItemStack(46, 2)) || charged > 0) 
+	    		if (p.getInventory().containsAtLeast(new ItemStack(46), 2) || charged > 0) 
 				    {
 				    if( charged == 0 )
 				    {
@@ -999,14 +999,14 @@ public class OneCannon{
 				    
 				    } else
 				    {
-				    	p.sendMessage("You need 2xTNT to Load the cannon!");
+				    	p.sendMessage("You need 2xTNT to load the cannon!");
 				    	return false;
 				    }
 			    	
 				    return true;
 	    	}else if( cannonType == 6 )
 	    	{
-	    		if (p.getInventory().contains(new ItemStack(46, 3)) || charged > 0) 
+	    		if (p.getInventory().containsAtLeast(new ItemStack(46), 3) || charged > 0) 
 				    {
 				    if( charged == 0 )
 				    {
@@ -1020,7 +1020,7 @@ public class OneCannon{
 				    
 				    } else
 				    {
-				    	p.sendMessage("You need 3xTNT to Load the cannon!");
+				    	p.sendMessage("You need 3xTNT to load the cannon!");
 				    	return false;
 				    }
 			    	
@@ -1058,8 +1058,10 @@ public class OneCannon{
 	    	}
 	    	else if( cannonType == 4 )
 	    	{
-	    		if( charged == 0 )
-			    {
+		    		if ((p.getInventory().containsAtLeast(new ItemStack(46), 1) && p.getInventory().containsAtLeast(new ItemStack(152), 1)) || charged > 0) 
+				    {
+				    if( charged == 0 )
+				    {
 	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
 	    			if (theCraft != null) {
 	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
@@ -1067,88 +1069,88 @@ public class OneCannon{
 	    					return false;
 	    				}
 	    			}
-			    	if( ammunition > 0 && ammunition <= 10)
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Out of depth charges!");
-			    		return false;
-			    	}
+			    	p.getInventory().removeItem(new ItemStack(46, 1));
+			    	p.getInventory().removeItem(new ItemStack(152, 1));
 			    	charged=1;
-			    	p.sendMessage("Depth charge dropper loaded! " + ammunition + " depth charges left.");
-			    }else{
-			    	p.sendMessage("Depth charge dropper already loaded! " + ammunition + " depth charges left.");
-			    }
+			    	p.sendMessage("Depth charge dropper loaded!");
+				    }else{
+				    	p.sendMessage("Depth charge dropper already loaded!");
+				    }
+				    } else
+				    {
+				    	p.sendMessage("You need 1xTNT and 1xRedstone Block to load the Depth Charge!");
+				    	return false;
+				    }
 		    	
 			    return true;
 	    	}else if( cannonType == 5 )
 	    	{
-	    		if( charged == 0 )
+	    		if ((p.getInventory().containsAtLeast(new ItemStack(46), 2) && p.getInventory().containsAtLeast(new ItemStack(152), 1)) || charged > 0) 
 			    {
-	    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
-	    			if (theCraft != null) {
-	    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
-	    					p.sendMessage(ChatColor.RED + "You can't use Depth Charges on an aircraft!");
-	    					return false;
-	    				}
-	    			}
-			    	if( ammunition > 0 && ammunition <= 20)
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Out of depth charges!");
-			    		return false;
-			    	}
-			    	charged=1;
-			    	p.sendMessage("Depth charge launcher loaded! " + ammunition + " depth charge launches left.");
+			    if( charged == 0 )
+			    {
+    			Craft theCraft = Craft.getCraft(p.getTargetBlock(null, 100).getX(), p.getTargetBlock(null, 100).getY(), p.getTargetBlock(null, 100).getZ());
+    			if (theCraft != null) {
+    				if (theCraft.type.canFly || theCraft.type.isTerrestrial) {
+    					p.sendMessage(ChatColor.RED + "You can't use Depth Charges on an aircraft!");
+    					return false;
+    				}
+    			}
+		    	p.getInventory().removeItem(new ItemStack(46, 2));
+		    	p.getInventory().removeItem(new ItemStack(152, 1));
+		    	charged=1;
+		    	p.sendMessage("Depth charge launcher loaded!");
 			    }else{
-			    	p.sendMessage("Depth charge launcher already loaded! " + ammunition + " depth charge launches left.");
+			    	p.sendMessage("Depth charge launcher already loaded!");
 			    }
-		    	
-			    return true;
-	    		
+			    } else
+			    {
+			    	p.sendMessage("You need 2xTNT and 1x Redstone Block to load the Depth Charge!");
+			    	return false;
+			    }
+	    	
+		    return true;
 	    	}else if( cannonType == 9 )
 	    	{
-	    		if( charged == 0 )
+	    		if ((p.getInventory().containsAtLeast(new ItemStack(46), 1) && p.getInventory().containsAtLeast(new ItemStack(331), 1)) || charged > 0) 
 			    {
-			    	if( ammunition > 0 && ammunition <= 2)
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Out of bombs!");
-			    		return false;
-			    	}
-			    	charged=1;
-			    	p.sendMessage("Bomb dropper loaded! " + ammunition + " bombs left.");
+			    if( charged == 0 )
+			    {
+		    	p.getInventory().removeItem(new ItemStack(46, 1));
+		    	p.getInventory().removeItem(new ItemStack(331, 1));
+		    	charged=1;
+		    	p.sendMessage("Bomb dropper loaded!");
 			    }else{
-			    	p.sendMessage("Bomb dropper already loaded! " + ammunition + " bombs left.");
+			    	p.sendMessage("Bomb dropper already loaded!");
 			    }
-		    	
-			    return true;
-	    		
+			    } else
+			    {
+			    	p.sendMessage("You need 1xTNT and 1x Redstone to load the Bomb Dropper!");
+			    	return false;
+			    }
+	    	
+		    return true;
 	    	}else if( cannonType == 10 )
 	    	{
-	    		if( charged == 0 )
+	    		if ((p.getInventory().containsAtLeast(new ItemStack(46), 2) && p.getInventory().containsAtLeast(new ItemStack(331), 1)) || charged > 0) 
 			    {
-			    	if( ammunition > 0 && ammunition <= 6)
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Out of bombs!");
-			    		return false;
-			    	}
-			    	charged=1;
-			    	p.sendMessage("Bomb launcher loaded! " + ammunition + " bombs left.");
+			    if( charged == 0 )
+			    {
+		    	p.getInventory().removeItem(new ItemStack(46, 2));
+		    	p.getInventory().removeItem(new ItemStack(331, 1));
+		    	charged=1;
+		    	p.sendMessage("Bomb launcher loaded!");
 			    }else{
-			    	p.sendMessage("Bomb launcher already loaded! " + ammunition + " bombs left.");
+			    	p.sendMessage("Bomb launcher already loaded!");
 			    }
-		    	
-			    return true;
-	    		
+			    } else
+			    {
+			    	p.sendMessage("You need 2xTNT and 1x Redstone to load the Bomb Launcher!");
+			    	return false;
+			    }
+	    	
+		    return true;
+		    
 	    	}else
 	    	{
 	    		charged = 1;
