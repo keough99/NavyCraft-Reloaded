@@ -854,13 +854,13 @@ public class OneCannon{
 		    else if( cannonType == 3 )//torpedo mk 2
 		    	cost=600;
 		    else if( cannonType == 4 )//depth charge
-		    	cost=850;
+		    	cost=650;
 		    else if( cannonType == 5 )//depth charge mk2
-		    	cost=1250;
+		    	cost=850;
 		    else if( cannonType == 6 )//triple barrel
-		    	cost=1250;
+		    	cost=500;
 		    else if( cannonType == 7 )//torpedo mk 3
-		    	cost=1250;
+		    	cost=850;
 		    else if( cannonType == 8 )//torpedo mk 1
 		    	cost=250;
 		    else if( cannonType == 9 )//bombs mk1
@@ -963,66 +963,68 @@ public class OneCannon{
     	{
 	    	if( cannonType == 0 )
 	    	{
-	    		
+	    		if (p.getInventory().contains(new ItemStack(46, 1)) || charged > 0) 
+			    {
 			    if( charged == 0 )
 			    {
-			    	if( ammunition > 0 )
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Cannon out of ammo!");
-			    		return false;
-			    	}
+			    	p.getInventory().removeItem(new ItemStack(46, 1));
 			    	charged=1;
-			    	p.sendMessage("Cannon Loaded! " + ammunition + " shots remaining. Cannon Power X" + charged);
+			    	p.sendMessage("Cannon Loaded! Cannon Power X" + charged);
 			    }else{
 			    	charged++;
 			    	p.sendMessage("Cannon Power X" + charged);
+			    }
+			    
+			    } else
+			    {
+			    	p.sendMessage("You need 1xTNT to Load the cannon!");
+			    	return false;
 			    }
 		    	
 			    return true;
 			    
 	    	} else if( cannonType == 1 )
 	    	{
-	    		if( charged == 0 )
-			    {
-			    	if( ammunition > 0 )
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Cannon out of ammo!");
-			    		return false;
-			    	}
-			    	charged=1;
-			    	p.sendMessage("Cannon Loaded! " + ammunition + " shots remaining. Cannon Power X" + charged);
-			    }else{
-			    	charged++;
-			    	p.sendMessage("Cannon Power X" + charged);
-			    }
-		    	
-			    return true;
+	    		if (p.getInventory().contains(new ItemStack(46, 2)) || charged > 0) 
+				    {
+				    if( charged == 0 )
+				    {
+				    	p.getInventory().removeItem(new ItemStack(46, 2));
+				    	charged=1;
+				    	p.sendMessage("Cannon Loaded! Cannon Power X" + charged);
+				    }else{
+				    	charged++;
+				    	p.sendMessage("Cannon Power X" + charged);
+				    }
+				    
+				    } else
+				    {
+				    	p.sendMessage("You need 2xTNT to Load the cannon!");
+				    	return false;
+				    }
+			    	
+				    return true;
 	    	}else if( cannonType == 6 )
 	    	{
-	    		if( charged == 0 )
-			    {
-			    	if( ammunition > 0 )
-			    	{
-			    		ammunition = ammunition - 1;
-			    	}else
-			    	{
-			    		p.sendMessage( ChatColor.RED + "Cannon out of ammo!");
-			    		return false;
-			    	}
-			    	charged=1;
-			    	p.sendMessage("Cannon Loaded! " + ammunition + " shots remaining. Cannon Power X" + charged);
-			    }else{
-			    	charged++;
-			    	p.sendMessage("Cannon Power X" + charged);
-			    }
-		    	
-			    return true;
+	    		if (p.getInventory().contains(new ItemStack(46, 3)) || charged > 0) 
+				    {
+				    if( charged == 0 )
+				    {
+				    	p.getInventory().removeItem(new ItemStack(46, 3));
+				    	charged=1;
+				    	p.sendMessage("Cannon Loaded! Cannon Power X" + charged);
+				    }else{
+				    	charged++;
+				    	p.sendMessage("Cannon Power X" + charged);
+				    }
+				    
+				    } else
+				    {
+				    	p.sendMessage("You need 3xTNT to Load the cannon!");
+				    	return false;
+				    }
+			    	
+				    return true;
 			}else if( cannonType == 3 || cannonType == 7 || cannonType == 8 )
 	    	{
 				colorTorpedoes();
