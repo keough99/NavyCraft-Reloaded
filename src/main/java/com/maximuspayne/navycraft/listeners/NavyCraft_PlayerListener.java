@@ -3024,7 +3024,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						player.sendMessage(ChatColor.GOLD + "Admiral - 2000000");
 					}
 					if (split[1].equalsIgnoreCase("view")) {
-						if (!PermissionInterface.CheckPerm(player, "navycraft.rankview") && !player.isOp()) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.expview") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to view players ranks.");
 							event.setCancelled(true);
 							return;
@@ -3042,7 +3042,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						}
 					if (split[1].equalsIgnoreCase("set")) {
-						if (!PermissionInterface.CheckPerm(player, "navycraft.rankset") && !player.isOp()) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.expset") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to set exp.");
 							event.setCancelled(true);
 							return;
@@ -3064,7 +3064,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						}	
 					if (split[1].equalsIgnoreCase("add")) {
-						if (!PermissionInterface.CheckPerm(player, "navycraft.rankadd") && !player.isOp()) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.expadd") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to add exp.");
 							event.setCancelled(true);
 							return;
@@ -3086,7 +3086,7 @@ public class NavyCraft_PlayerListener implements Listener {
 						}
 						}
 					if (split[1].equalsIgnoreCase("remove")) {
-						if (!PermissionInterface.CheckPerm(player, "navycraft.rankremove") && !player.isOp()) {
+						if (!PermissionInterface.CheckPerm(player, "navycraft.expremove") && !player.isOp()) {
 							player.sendMessage(ChatColor.RED + "You do not have permission to remove exp.");
 							event.setCancelled(true);
 							return;

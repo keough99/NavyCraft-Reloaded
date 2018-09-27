@@ -32,7 +32,8 @@ public class PermissionInterface {
 			pm.addPermission(new Permission("navycraft.volume.weapon"));
 			pm.addPermission(new Permission("navycraft.volume.other"));
 			pm.addPermission(new Permission("navycraft.volume.all"));
-			pm.addPermission(new Permission("navycraft.rankview"));
+			pm.addPermission(new Permission("navycraft.expview"));
+			pm.addPermission(new Permission("navycraft.dropchance"));
 			
 			//admin permissions
 			pm.addPermission(new Permission("navycraft.admin"));
@@ -55,9 +56,9 @@ public class PermissionInterface {
 			pm.addPermission(new Permission("navycraft.aunclaim"));
 			pm.addPermission(new Permission("navycraft.explode"));
 			pm.addPermission(new Permission("navycraft.explodesigns"));
-			pm.addPermission(new Permission("navycraft.rankset"));
-			pm.addPermission(new Permission("navycraft.rankadd"));
-			pm.addPermission(new Permission("navycraft.rankremove"));
+			pm.addPermission(new Permission("navycraft.expset"));
+			pm.addPermission(new Permission("navycraft.expadd"));
+			pm.addPermission(new Permission("navycraft.expremove"));
 			pm.addPermission(new Permission("navycraft.admindrive"));
 			pm.addPermission(new Permission("navycraft.takeover"));
 			pm.addPermission(new Permission("navycraft.remove"));
@@ -96,8 +97,8 @@ public class PermissionInterface {
 			pm.removePermission(new Permission("navycraft.volume.weapon"));
 			pm.removePermission(new Permission("navycraft.volume.other"));
 			pm.removePermission(new Permission("navycraft.volume.all"));
-			pm.removePermission(new Permission("navycraft.rankview"));
-			
+			pm.removePermission(new Permission("navycraft.expview"));
+			pm.removePermission(new Permission("navycraft.dropchance"));
 			//admin permissions
 			pm.removePermission(new Permission("navycraft.admin"));
 			pm.removePermission(new Permission("navycraft.pbes"));
@@ -119,9 +120,9 @@ public class PermissionInterface {
 			pm.removePermission(new Permission("navycraft.aunclaim"));
 			pm.removePermission(new Permission("navycraft.explode"));
 			pm.removePermission(new Permission("navycraft.explodesigns"));
-			pm.removePermission(new Permission("navycraft.rankset"));
-			pm.removePermission(new Permission("navycraft.rankadd"));
-			pm.removePermission(new Permission("navycraft.rankremove"));
+			pm.removePermission(new Permission("navycraft.expset"));
+			pm.removePermission(new Permission("navycraft.expadd"));
+			pm.removePermission(new Permission("navycraft.expremove"));
 			pm.removePermission(new Permission("navycraft.admindrive"));
 			pm.removePermission(new Permission("navycraft.takeover"));
 			pm.removePermission(new Permission("navycraft.remove"));
