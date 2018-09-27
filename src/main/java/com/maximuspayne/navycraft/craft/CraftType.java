@@ -8,8 +8,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.maximuspayne.aimcannon.OneCannon;
-import com.maximuspayne.aimcannon.Weapon;
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.PermissionInterface;
 
@@ -20,16 +18,53 @@ import com.maximuspayne.navycraft.PermissionInterface;
  * or use part of the code for your own plugins.
  */
 public class CraftType {
-	public static List<Attribute> attributes = new ArrayList<Attribute>();
-	
-	public static List<Attribute> getAttributes() {
-		return attributes;
-	}
 	
 	public static FileConfiguration CraftConfig;
 	public static File CraftFile;
+	
+	
+	public String name = "";
+	public String driveCommand = "drive";
+
+	public int minBlocks = 9;
+	public int maxBlocks = 500;
+	public int maxSpeed = 4;
+	public int discount = 0;
+	
+	public boolean adminBuild=false;
+
+	public int digBlockId = 0;		//the type of block needed to make the vehicle able to drill through terrain
+	public double digBlockPercent = 0;
+	public int digBlockDurability = 0;
+	
+	public int HelmControllerItem = 0;
+
+	public boolean canFly = false;
+	public boolean canNavigate = false;
+	public boolean canDive = false;
+	public boolean canDig = false;
+	public boolean obeysGravity = false;
+	public boolean isTerrestrial = false;
+	
+	
+	public boolean doesCruise = false;
+	public boolean canZamboni = false;
+	public int maxEngineSpeed = 4;
+	public int maxForwardGear = 2;
+	public int maxReverseGear = -2;
+	public int turnRadius = 4;
+	public int maxSurfaceSpeed = 4;
+	public int maxSubmergedSpeed = 3;
+
+	public short[] structureBlocks = null; // blocks that can make the structure of the craft
+	public short[] extendedBlocks = null;		//structureblocks only for this craft type 
+	public short[] restrictedBlocks = null;	//structureblocks to be exlcuded from this craft type 
+	public short[] forbiddenBlocks = null;		//blocks that are not allowed whatsoever on this craft
 
 	public static ArrayList<CraftType> craftTypes = new ArrayList<CraftType>();
+	
+	public boolean listenItem = true;
+	public boolean listenAnimation, listenMovement = false;
 
 	public CraftType(String name) {
 		this.name = name;
@@ -58,7 +93,7 @@ public class CraftType {
 	public static CraftType getCraftType(String name) {
 
 		for (CraftType type : craftTypes) {
-			if (getAttribute("name").equalsIgnoreCase(name))
+			if (type.name.equalsIgnoreCase(name))
 				return type;
 		}
 
@@ -66,52 +101,147 @@ public class CraftType {
 	}
 
 	public String getCommand() {
-		return "/" + getAttribute("name").toLowerCase();
+		return "/" + name.toLowerCase();
 	}
 
 	public Boolean canUse(Player player){
-		if(PermissionInterface.CheckPerm(player, "navycraft." + getAttribute("name").toLowerCase()))
+		if(PermissionInterface.CheckPerm(player, "navycraft." + name.toLowerCase()))
 			return true;
 		else
 			return false;
 	}
 	// set the attributes of the craft type
-	private static void setAttribute(CraftType craftType, String attribute, String value) {
-		CraftType.getAttributes().add(new Attribute(attribute, value));
+	private static void setAttribute(CraftType craftType, String attribute,
+			String value) {
+
+		if (attribute.equalsIgnoreCase("driveCommand"))
+			craftType.driveCommand = value;
+		else if (attribute.equalsIgnoreCase("minBlocks"))
+			craftType.minBlocks = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("maxBlocks"))
+			craftType.maxBlocks = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("maxSpeed"))
+			craftType.maxSpeed = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("discount"))
+			craftType.discount = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("adminBuild"))
+			craftType.adminBuild = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("digBlockId"))
+			craftType.digBlockId = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("digBlockDurability"))
+			craftType.digBlockDurability = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("canNavigate"))
+			craftType.canNavigate = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("isTerrestrial"))
+			craftType.isTerrestrial = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("canFly"))
+			craftType.canFly = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("canDive"))
+			craftType.canDive = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("canDig"))
+			craftType.canDig = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("canZamboni"))
+			craftType.canZamboni = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("obeysGravity"))
+			craftType.obeysGravity = Boolean.parseBoolean(value);
+		
+		
+		else if (attribute.equalsIgnoreCase("doesCruise"))
+			craftType.doesCruise = Boolean.parseBoolean(value);
+		
+		else if (attribute.equalsIgnoreCase("maxEngineSpeed"))
+		{
+			craftType.maxEngineSpeed = Integer.parseInt(value);
+			craftType.maxSurfaceSpeed = Integer.parseInt(value);
+		}
+		else if (attribute.equalsIgnoreCase("maxForwardGear"))
+			craftType.maxForwardGear = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("maxReverseGear"))
+			craftType.maxReverseGear = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("turnRadius"))
+			craftType.turnRadius = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("maxSubmergedSpeed"))
+			craftType.maxSubmergedSpeed = Integer.parseInt(value);	
+		// else if(attribute.equalsIgnoreCase("iceBreaker"))
+		// craftType.iceBreaker = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("HelmControllerItem"))
+			craftType.HelmControllerItem = Integer.parseInt(value);
+		else if (attribute.equalsIgnoreCase("listenItem"))
+			craftType.listenItem = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("listenAnimation"))
+			craftType.listenAnimation = Boolean.parseBoolean(value);
+		else if (attribute.equalsIgnoreCase("listenMovement")){
+			craftType.listenMovement = Boolean.parseBoolean(value);	
+		}
+		else if (attribute.equalsIgnoreCase("structureBlocks")) {
+			String[] split = value.split(",");
+			craftType.structureBlocks = new short[split.length];
+			int i = 0;
+			for (String blockId : split) {
+				craftType.structureBlocks[i] = Short.parseShort(blockId);
+				i++;
+			}
+		} else if (attribute.equalsIgnoreCase("restrictedBlocks")) {
+			if(craftType.structureBlocks == null)
+				return;
+			
+			ArrayList<Short> restrictedBlocks = new ArrayList<Short>();
+			ArrayList<Short> newStructureBlocks = new ArrayList<Short>();
+
+			String[] split = value.split(",");
+			
+			for(String s : split){
+				try
+				{
+					restrictedBlocks.add(Short.parseShort(s));
+				}
+				catch (NumberFormatException ex) {
+					System.out.println("Tried to remove invalid block ID " + s + 
+							" from structureblocks of craft type " + craftType.name);
+				}
+			}
+			for(Short i: craftType.structureBlocks)
+				if(!restrictedBlocks.contains(i))
+					newStructureBlocks.add(i);
+			
+			Short nsb[] = new Short[newStructureBlocks.size()];
+			//craftType.structureBlocks = newStructureBlocks.toArray(short[]);
+			newStructureBlocks.toArray(nsb);
+			//I give up.
+			//craftType.structureBlocks = nsb;
+			
+		} else if (attribute.equalsIgnoreCase("extendedBlocks")) {
+			if(craftType.structureBlocks == null)
+				return;
+			
+			String[] split = value.split(",");
+			short[] newStructureBlocks = new short[craftType.structureBlocks.length + split.length];
+			
+			for(int i = 0; i < craftType.structureBlocks.length; i++) {
+				newStructureBlocks[i] = craftType.structureBlocks[i];
+			}
+			
+			int i = 0;
+			for(String s : split) {
+				try
+				{
+					newStructureBlocks[craftType.structureBlocks.length + i] = Short.parseShort(s);
+				}
+				catch (NumberFormatException ex) {
+					System.out.println("Tried to add invalid block ID " + s + 
+							" to structureblocks of craft type " + craftType.name);					
+				}				
+			}
+			craftType.structureBlocks = newStructureBlocks;
+		} else if (attribute.equalsIgnoreCase("forbiddenBlocks")) {			
+			String[] split = value.split(",");
+			craftType.forbiddenBlocks = new short[split.length];
+			for (int i = 0; i < split.length; i++) {
+				craftType.forbiddenBlocks[i] = Short.parseShort(split[i]);
+			}			
+		}
 	}
 
-	public static String getString(String attribute) {
-		for (Attribute a : attributes) {
-			if (a.name.equalsIgnoreCase(attribute)) {
-				return a.svalue;
-			}
-		}
-		return null;
-	}
-	public static short[] getShort(String attribute) {
-		for (Attribute a : attributes) {
-			if (a.name.equalsIgnoreCase(attribute)) {
-				return a.shvalue;
-			}
-		}
-		return null;
-	}
-	public static int getInt(String attribute) {
-		for (Attribute a : attributes) {
-			if (a.name.equalsIgnoreCase(attribute)) {
-				return a.ivalue;
-			}
-		}
-		return 0;
-	}
-	public static boolean getBoolean(String attribute) {
-		for (Attribute a : attributes) {
-			if (a.name.equalsIgnoreCase(attribute)) {
-				return a.bvalue;
-			}
-		}
-		return false;
-	}
 	
 	public static void setupCraftConfig() {
 		if (!NavyCraft.instance.getDataFolder().exists()) {
@@ -208,6 +338,17 @@ public class CraftType {
 		loadTypes();
 	}
 	
+	public static FileConfiguration getCraftConfig () {
+		return CraftConfig;
+	}
+	
+	public static void saveCraftConfig() {
+		try {
+			CraftConfig.save(CraftFile);
+		} catch (IOException e) {
+			System.out.println("Could not save types.yml file");
+		}
+	}
 	public static void reloadCraftConfig() {
 		CraftConfig = YamlConfiguration.loadConfiguration(CraftFile);
 	}
@@ -231,7 +372,6 @@ public class CraftType {
 					
 					for (String attribute : info) {
 							setAttribute(craftType, attribute, CraftConfig.getString("Types." + name + "." + attribute));
-							System.out.println("Setting Attribute for " + craftType.name + " " + attribute + " " + CraftConfig.getString("Types." + name + "." + attribute));
 					}
 
 				craftTypes.add(craftType);
