@@ -60,5 +60,5 @@ public class NavyCraft_InventoryListener implements Listener {
  
     }
 }
-    }
+}
 

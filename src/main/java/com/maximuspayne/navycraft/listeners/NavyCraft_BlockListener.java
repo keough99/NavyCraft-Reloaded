@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
@@ -334,7 +335,7 @@ public class NavyCraft_BlockListener implements Listener {
 					int sizeX= 0, sizeY = 0, sizeZ = 0, originX = 0, originY = 0, originZ = 0;
 					String name = null;
 					int numPlots = 0;
-					int numRewPlots = 1;
+					int numRewPlots = 0;
 					for (PlotType pt : Shipyard.getPlots()) {
 						if (pt.name.equalsIgnoreCase(lotStr)) {
 						name = pt.name;
@@ -1902,6 +1903,15 @@ public class NavyCraft_BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void on(BlockBreakEvent event) {
+    	if (event.getBlock().getType() == Material.COAL_ORE && PermissionInterface.CheckQuietPerm(event.getPlayer(), "navycraft.dropchance")) {
+    		Random pick = new Random();
+			int chance = 0;
+			for (int counter = 1; counter <= 1; counter++) {
+				chance = 1 + pick.nextInt(10);
+			}
+    			ItemStack item = new ItemStack(Material.SULPHUR, chance);
+    			event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), item);
+    	}
 		Craft theCraft = Craft.getPlayerCraft(event.getPlayer());
 		// System.out.println("Updated craft is " + updatedCraft.name + " of type " + updatedCraft.type.name);
 
@@ -2235,7 +2245,6 @@ public class NavyCraft_BlockListener implements Listener {
 	   }
 	}
 }
-	
 	public static void rewardExpPlayer(int newExp, Player player) {
 		int cash = newExp / 2;
 		int rewardedExp = newExp;
@@ -2359,8 +2368,12 @@ public class NavyCraft_BlockListener implements Listener {
 						List<String> groupNames = PermissionsEx.getUser(playerIn).getParentIdentifiers("navycraft");
 						for( String group : groupNames ) {
 							if( PermissionsEx.getPermissionManager().getGroup(group).getRankLadder().equalsIgnoreCase("navycraft") ) {
+								if (rankName != group) {
 								rankName = group;
 								break;
+								} else {
+									return;
+								}
 							}
 						}
 						plugin.getServer().broadcastMessage(ChatColor.GREEN + playerIn.getName() + " has been promoted to the rank of " + ChatColor.YELLOW + rankName.toUpperCase() + ChatColor.GREEN + "!");
