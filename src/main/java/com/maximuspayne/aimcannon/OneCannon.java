@@ -4655,6 +4655,7 @@ public class OneCannon{
 		    		if( checkProtectedRegion(p, torp.warhead.getLocation()) )
 					{
 						p.sendMessage(ChatColor.RED + "No missile explosions in dock area.");
+						torp.dead = true;
 						return;
 					}
 					
@@ -4721,8 +4722,9 @@ public class OneCannon{
 		  //  @Override
 			public void run()
 		    {
-		    	if( !torp.dead )
+				if( !torp.dead )
 		    	{
+		    		NavyCraft.instance.DebugMessage(Integer.toString(i), 3);
 					int depthDifference = torp.setDepth - torp.warhead.getY();
 					if( depthDifference > 0 && torp.torpRotation != -1)
 					{
@@ -4732,10 +4734,10 @@ public class OneCannon{
 					torp.torpRotation = 3;
 			    	NavyCraft.instance.DebugMessage(Integer.toString(torp.torpRotation) + ", tried to change to 3", 3);
 					}
-					}else if ( depthDifference <= 0) {
-						torp.hdg = direction;
+					}else if (torp.torpRotation == 4 && depthDifference <= 0) {
+						torp.hdg = torp.ohdg;
 					}
-			    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(direction, -1).getTypeId() == 35 && torp.warhead.getRelative(direction, -2).getTypeId() == 35 && torp.warhead.getRelative(direction, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
+			    	if(( torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -1).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -2).getTypeId() == 35 && torp.warhead.getRelative(torp.hdg, -3).getTypeId() == 35) ||  (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.UP, -3).getTypeId() == 35) || (torp.warhead.getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -1).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -2).getTypeId() == 35 && torp.warhead.getRelative(BlockFace.DOWN, -3).getTypeId() == 35))
 			    	{
 			    		CraftMover.playWeaponSound(torp.warhead.getLocation(), Sound.ENTITY_PLAYER_BREATH, 2.0f, 0.8f);
 						if( i > 15 )
