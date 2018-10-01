@@ -5108,6 +5108,7 @@ public class OneCannon{
 			
 
 			float rotation=0;
+			float rotation2=0;
 			int torpRotation=0;
 			if( direction == BlockFace.SOUTH )
 				torpRotation=180;
@@ -5127,20 +5128,30 @@ public class OneCannon{
 				rotation = (float) Math.PI * (torpRotation+270f) / 270f;
 			}
 			
-			
+			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
+				rotation2 = (float) Math.PI * onScopePlayer.getLocation().getPitch() / 270f;
+			else if( testCraft.lastPeriscopePitch != -9999 && testCraft.tubeMk1FiringMode == -1 )
+				rotation2 = (float) Math.PI * testCraft.lastPeriscopePitch / 270f;
+			else
+			{
+				rotation2 = (float) Math.PI * (torpRotation+270f) / 270f;
+			}
 			
 			if( left )
 				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/270f;
 			else
 				rotation += testCraft.tubeMk1FiringSpread*Math.PI/270f;
 			
+			rotation2 += torp.setDepth*Math.PI/270f;
+			
 			float nx = -(float) Math.sin(rotation);
 			float nz = (float) Math.cos(rotation);
+			float ny = (float) Math.tan(rotation2);
 			
 		////north
 			
 			//p.sendMessage("torpRotation=" + torpRotation + " rotation=" + rotation);
-			
+			p.sendMessage("rotation2=" + rotation2);
 					
 			if( torpRotation%360 == 0 )
 			{
@@ -5390,6 +5401,67 @@ public class OneCannon{
 					}
 				}
 			}
+			
+			
+			//pitch
+				if( nx > 0.5 )
+				{
+					torp.rudder2 = 1;
+					torp.turnProgress2 = 0;
+					if(  Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting2 = (int)(1.0f / nz);
+						if( torp.rudderSetting2 > 10 )
+							torp.rudderSetting2 = 10;
+						else if( torp.rudderSetting2 < -10 )
+							torp.rudderSetting2 = -10;
+					}
+				}
+				else if( nx < -0.5 )
+				{
+					torp.rudder2 = -1;
+					torp.turnProgress2 = 0;
+					if( Math.abs(nz) > .07 )
+					{
+						torp.rudderSetting2 = -(int)(1.0f / nz);
+						if( torp.rudderSetting2 > 10 )
+							torp.rudderSetting2 = 10;
+						else if( torp.rudderSetting2 < -10 )
+							torp.rudderSetting2 = -10;
+					}
+				}else if( nz < 0 )
+				{
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudder2 = (int)(1.0f / nx);
+						if( torp.rudder2 > 10 )
+							torp.rudder2 = 10;
+						else if( torp.rudder2 < -10 )
+							torp.rudder2 = -10;
+						torp.rudderSetting2 = torp.rudder2;
+					}
+				}else
+				{
+					if( nx < 0 )
+					{
+						torp.doubleTurn2 = true;
+						torp.rudder2 = -1;
+						torp.turnProgress2 = 0;
+					}else if( nx > 0 )
+					{
+						torp.doubleTurn2 = true;
+						torp.rudder2 = 1;
+						torp.turnProgress2 = 0;
+					}
+					if(  Math.abs(nx) > .07 )
+					{
+						torp.rudderSetting2 = (int)(1.0f / -nx);
+						if( torp.rudderSetting2 > 10 )
+							torp.rudderSetting2 = 10;
+						else if( torp.rudderSetting2 < -10 )
+							torp.rudderSetting2 = -10;
+					}
+				}
 			
 			
 			for( String s : testCraft.crewNames )

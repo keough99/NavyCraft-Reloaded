@@ -14,10 +14,15 @@ public class Weapon {
 	int rudderSetting=0;
 	int turnProgress = -1;
 	int torpSetHeading=-1;
+	int rudder2=0;
+	int rudderSetting2=0;
+	int turnProgress2 = -1;
+	int torpSetHeading2=-1;
 	int torpRotation;
 	int setRange;
 	int rangeCounter;
 	boolean doubleTurn=false;
+	boolean doubleTurn2=false;
 	int tubeNum=0;
 	boolean active=false;
 	boolean auto=true;
