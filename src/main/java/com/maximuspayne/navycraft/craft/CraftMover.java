@@ -1694,15 +1694,15 @@ public class CraftMover {
 								} else if (oc.cannonType == 1) {
 									cost = 250;
 								} else if (oc.cannonType == 3) {
-									cost = 600;
+									cost = 650;
 								} else if (oc.cannonType == 4) {
-									cost = 850;
+									cost = 650;
 								} else if (oc.cannonType == 5) {
-									cost = 1250;
+									cost = 850;
 								} else if (oc.cannonType == 6) {
-									cost = 1250;
+									cost = 850;
 								} else if (oc.cannonType == 7) {
-									cost = 1250;
+									cost = 850;
 								} else if (oc.cannonType == 8) {
 									cost = 250;
 								} else if (oc.cannonType == 9) {
@@ -1710,13 +1710,13 @@ public class CraftMover {
 								} else if (oc.cannonType == 10) {
 									cost = 500;
 								} else if (oc.cannonType == 11) {
-									cost = 600;
+									cost = 650;
 								} else if (oc.cannonType == 12) {
-									cost = 1250;
+									cost = 850;
 								} else if (oc.cannonType == 13) {
-									cost = 600;
+									cost = 650;
 								} else if (oc.cannonType == 14) {
-									cost = 1250;
+									cost = 850;
 								}
 								craft.vehicleCost += cost;
 								initWeaponDispensers.add(newBlock);

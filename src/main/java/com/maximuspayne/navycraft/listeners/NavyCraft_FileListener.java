@@ -101,8 +101,8 @@ public class NavyCraft_FileListener implements Listener {
 		if (selectSignBlock.getTypeId() == 63) {
 		String num = getSign(x, y, z, world);
 		List<String> list = new ArrayList<String>(ConfigManager.syData.getConfigurationSection("Signs").getKeys(false));
-		if (num == null) {
-			num = String.valueOf(list.size() + 1);
+		if (num == null && !list.isEmpty()) {
+			num = String.valueOf(list.get(list.size() - 1) + 1);
 		}
 			ConfigManager.syData.set("Signs." + num + "." + "type", type.toUpperCase());
 			ConfigManager.syData.set("Signs." + num + "." + "world", world.getName());

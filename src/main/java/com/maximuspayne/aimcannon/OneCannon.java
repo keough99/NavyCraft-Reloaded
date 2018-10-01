@@ -837,15 +837,15 @@ public class OneCannon{
 			    else if( cannonType == 1 )//double barrel
 			    	cost=250;
 			    else if( cannonType == 3 )//torpedo mk 2
-			    	cost=600;
+			    	cost=650;
 			    else if( cannonType == 4 )//depth charge
 			    	cost=850;
 			    else if( cannonType == 5 )//depth charge mk2
-			    	cost=1250;
+			    	cost=850;
 			    else if( cannonType == 6 )//triple barrel
-			    	cost=1250;
+			    	cost=850;
 			    else if( cannonType == 7 )//torpedo mk 3
-			    	cost=1250;
+			    	cost=850;
 			    else if( cannonType == 8 )//torpedo mk 1
 			    	cost=250;
 			    else if( cannonType == 9 )//bombs mk1
@@ -853,13 +853,13 @@ public class OneCannon{
 			    else if( cannonType == 10 )//bombs mk2
 			    	cost=500;
 			    else if( cannonType == 11 )//missiles mk1
-			    	cost=600;
+			    	cost=650;
 			    else if( cannonType == 12 )//missiles mk2
-			    	cost=1250;
+			    	cost=850;
 			    else if( cannonType == 13 )//vertical missiles mk1
-			    	cost=600;
+			    	cost=650;
 			    else if( cannonType == 14 )//vertical missiles mk2
-			    	cost=1250;
+			    	cost=850;
 			    
 				if( Utils.CheckEnabledWorld(p.getLocation()) )
 				{
@@ -5404,64 +5404,14 @@ public class OneCannon{
 			
 			
 			//pitch
-				if( nx > 0.5 )
-				{
-					torp.rudder2 = 1;
-					torp.turnProgress2 = 0;
-					if(  Math.abs(nz) > .07 )
+					if(  Math.abs(ny) > .07 )
 					{
-						torp.rudderSetting2 = (int)(1.0f / nz);
+						torp.rudderSetting2 = (int)(1.0f / -ny);
 						if( torp.rudderSetting2 > 10 )
 							torp.rudderSetting2 = 10;
 						else if( torp.rudderSetting2 < -10 )
 							torp.rudderSetting2 = -10;
 					}
-				}
-				else if( nx < -0.5 )
-				{
-					torp.rudder2 = -1;
-					torp.turnProgress2 = 0;
-					if( Math.abs(nz) > .07 )
-					{
-						torp.rudderSetting2 = -(int)(1.0f / nz);
-						if( torp.rudderSetting2 > 10 )
-							torp.rudderSetting2 = 10;
-						else if( torp.rudderSetting2 < -10 )
-							torp.rudderSetting2 = -10;
-					}
-				}else if( nz < 0 )
-				{
-					if(  Math.abs(nx) > .07 )
-					{
-						torp.rudder2 = (int)(1.0f / nx);
-						if( torp.rudder2 > 10 )
-							torp.rudder2 = 10;
-						else if( torp.rudder2 < -10 )
-							torp.rudder2 = -10;
-						torp.rudderSetting2 = torp.rudder2;
-					}
-				}else
-				{
-					if( nx < 0 )
-					{
-						torp.doubleTurn2 = true;
-						torp.rudder2 = -1;
-						torp.turnProgress2 = 0;
-					}else if( nx > 0 )
-					{
-						torp.doubleTurn2 = true;
-						torp.rudder2 = 1;
-						torp.turnProgress2 = 0;
-					}
-					if(  Math.abs(nx) > .07 )
-					{
-						torp.rudderSetting2 = (int)(1.0f / -nx);
-						if( torp.rudderSetting2 > 10 )
-							torp.rudderSetting2 = 10;
-						else if( torp.rudderSetting2 < -10 )
-							torp.rudderSetting2 = -10;
-					}
-				}
 			
 			
 			for( String s : testCraft.crewNames )
