@@ -195,7 +195,8 @@ public class NavyCraft_BlockListener implements Listener {
 					}
 
 					if (tpId > -1) {
-
+						NavyCraft_FileListener.loadSignData();
+						NavyCraft_BlockListener.loadRewards(ownerName);
 						Sign foundSign = null;
 						foundSign = NavyCraft_BlockListener.findSign(ownerName, tpId);
 						if ((foundSign != null) && foundSign.getLocation().equals(sign.getLocation())) {
@@ -207,8 +208,7 @@ public class NavyCraft_BlockListener implements Listener {
 								int z = foundSign.getZ();
 								World world = foundSign.getWorld();
 								String regionName = "--" + ownerName + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
-
-								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getName())) {
+								if ((regionManager.getRegion(regionName) != null) && !regionManager.getRegion(regionName).getMembers().contains(player.getUniqueId())) {
 									player.sendMessage("You are not allowed to select this plot.");
 									return;
 								}
