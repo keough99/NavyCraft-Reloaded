@@ -5119,19 +5119,20 @@ public class OneCannon{
 				torpRotation=0;
 			
 			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
-				rotation = (float) Math.PI * onScopePlayer.getLocation().getYaw() / 180f;
+				rotation = (float) Math.PI * onScopePlayer.getLocation().getYaw() / 270f;
 			else if( testCraft.lastPeriscopeYaw != -9999 && testCraft.tubeMk1FiringMode == -1 )
-				rotation = (float) Math.PI * testCraft.lastPeriscopeYaw / 180f;
+				rotation = (float) Math.PI * testCraft.lastPeriscopeYaw / 270f;
 			else
 			{
-				rotation = (float) Math.PI * (torpRotation+180f) / 180f;
-				
+				rotation = (float) Math.PI * (torpRotation+270f) / 270f;
 			}
 			
+			
+			
 			if( left )
-				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/180f;
+				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/270f;
 			else
-				rotation += testCraft.tubeMk1FiringSpread*Math.PI/180f;
+				rotation += testCraft.tubeMk1FiringSpread*Math.PI/270f;
 			
 			float nx = -(float) Math.sin(rotation);
 			float nz = (float) Math.cos(rotation);

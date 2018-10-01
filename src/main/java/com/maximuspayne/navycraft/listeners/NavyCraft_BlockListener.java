@@ -415,7 +415,6 @@ public class NavyCraft_BlockListener implements Listener {
 						int z = sign.getZ();
 						World world = sign.getWorld();
 						NavyCraft_FileListener.updateSign(UUID, lotStr, x, y, z, world, maxId(player) + 1, true);
-						NavyCraft_FileListener.loadSignData();
 						String regionName = "--" + player.getName() + "-" +  NavyCraft_FileListener.getSign(x, y, z, world);
 						
 						regionManager.addRegion(new com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion(regionName, new com.sk89q.worldedit.BlockVector(originX, originY, originZ), new com.sk89q.worldedit.BlockVector((originX + sizeX) - 1, (originY + sizeY) - 1, (originZ + sizeZ) - 1)));
