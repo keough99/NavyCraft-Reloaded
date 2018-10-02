@@ -329,6 +329,7 @@ public class NavyCraft_BlockListener implements Listener {
 					lotStr = lotStr.replaceAll(ChatColor.BLUE.toString(), "");
 			
 
+					NavyCraft_FileListener.loadSignData();
 					NavyCraft_BlockListener.loadRewards(player.getName());
 					String UUID = Utils.getUUIDfromPlayer(player.getName());
 					Location loc = null;
@@ -405,7 +406,7 @@ public class NavyCraft_BlockListener implements Listener {
 						sign2.setLine(0, "Private");
 						sign2.setLine(1, "1");
 						sign2.setLine(2, "" + (maxId(player) + 1));
-						sign2.setLine(3, lotStr);
+						sign2.setLine(3, lotStr.toUpperCase());
 						sign2.update();
 			
 						player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + lotStr.toUpperCase() + ChatColor.DARK_GRAY + "]" + ChatColor.GREEN + " Claimed!");
