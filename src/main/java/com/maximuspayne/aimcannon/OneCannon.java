@@ -5120,33 +5120,49 @@ public class OneCannon{
 				torpRotation=0;
 			
 			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
-				rotation = (float) Math.PI * onScopePlayer.getLocation().getYaw() / 270f;
+				rotation = (float) Math.PI * onScopePlayer.getLocation().getYaw() / 180f;
 			else if( testCraft.lastPeriscopeYaw != -9999 && testCraft.tubeMk1FiringMode == -1 )
-				rotation = (float) Math.PI * testCraft.lastPeriscopeYaw / 270f;
+				rotation = (float) Math.PI * testCraft.lastPeriscopeYaw / 180f;
 			else
 			{
-				rotation = (float) Math.PI * (torpRotation+270f) / 270f;
+				rotation = (float) Math.PI * (torpRotation+180f) / 180f;
 			}
 			
 			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
-				rotation2 = (float) Math.PI * onScopePlayer.getLocation().getPitch() / 270f;
+				rotation2 = (float) Math.PI * onScopePlayer.getLocation().getPitch() / 180f;
 			else if( testCraft.lastPeriscopePitch != -9999 && testCraft.tubeMk1FiringMode == -1 )
-				rotation2 = (float) Math.PI * testCraft.lastPeriscopePitch / 270f;
+				rotation2 = (float) Math.PI * testCraft.lastPeriscopePitch / 180f;
 			else
 			{
-				rotation2 = (float) Math.PI * (torpRotation+270f) / 270f;
+				rotation2 = (float) Math.PI * (torpRotation+180f) / 180f;
 			}
 			
 			if( left )
-				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/270f;
+				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/180f;
 			else
-				rotation += testCraft.tubeMk1FiringSpread*Math.PI/270f;
+				rotation += testCraft.tubeMk1FiringSpread*Math.PI/180f;
 			
-			rotation2 += torp.setDepth*Math.PI/270f;
+			rotation2 += torp.setDepth*Math.PI/180f;
 			
 			float nx = -(float) Math.sin(rotation);
 			float nz = (float) Math.cos(rotation);
 			float ny = (float) Math.tan(rotation2);
+			
+			//pitch
+			if(  Math.abs(ny) > .07 )
+			{
+				torp.rudderSetting2 = (int)(1.0f / ny);
+				if( torp.rudderSetting2 > 10 )
+					torp.rudderSetting2 = 10;
+				else if( torp.rudderSetting2 < -10 )
+					torp.rudderSetting2 = -10;
+			}
+			if( nx < 0 )
+				torp.rudder2 = -1;
+			else
+				torp.rudder2 = 1;
+			
+			p.sendMessage("rudder setting:" + torp.rudderSetting2);
 			
 		////north
 			
@@ -5403,17 +5419,6 @@ public class OneCannon{
 			}
 			
 			
-			//pitch
-					if(  Math.abs(ny) > .07 )
-					{
-						torp.rudderSetting2 = (int)(1.0f / -ny);
-						if( torp.rudderSetting2 > 10 )
-							torp.rudderSetting2 = 10;
-						else if( torp.rudderSetting2 < -10 )
-							torp.rudderSetting2 = -10;
-					}
-			
-			
 			for( String s : testCraft.crewNames )
 			{
 				Player pl = nc.getServer().getPlayer(s);
@@ -5585,6 +5590,15 @@ public class OneCannon{
 							}
 						}
 						
+						
+						if( torp.turnProgress2 == 10 )
+						{
+								if( torp.rudder2 < 0 )
+									torp.hdg = BlockFace.DOWN;
+								else
+									torp.hdg = BlockFace.UP;
+							torp.rudder2 = -torp.rudder2;
+						}
 						
 						
 						//check new position
