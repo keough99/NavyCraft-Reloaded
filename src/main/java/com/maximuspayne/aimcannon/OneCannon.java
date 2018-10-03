@@ -5134,7 +5134,7 @@ public class OneCannon{
 				rotation2 = (float) Math.PI * testCraft.lastPeriscopePitch / 180f;
 			else
 			{
-				rotation2 = (float) Math.PI * (torpRotation+180f) / 180f;
+				rotation2 = (float) Math.PI * (torp.setDepth+180f) / 180f;
 			}
 			
 			if( left )
@@ -5149,20 +5149,19 @@ public class OneCannon{
 			float ny = (float) Math.tan(rotation2);
 			
 			//pitch
-			if(  Math.abs(ny) > .07 )
+			
+			if(  Math.abs(ny) > .02 )
 			{
-				torp.rudderSetting2 = (int)(1.0f / ny);
-				if( torp.rudderSetting2 > 10 )
-					torp.rudderSetting2 = 10;
-				else if( torp.rudderSetting2 < -10 )
-					torp.rudderSetting2 = -10;
+				torp.rudder2 = (int)(1.0f / -ny);
+				if( torp.rudder2 > 10 )
+					torp.rudder2 = 10;
+				else if( torp.rudder2 < -10 )
+					torp.rudder2 = -10;
+				torp.rudderSetting2 = torp.rudder2;
 			}
-			if( nx < 0 )
-				torp.rudder2 = -1;
-			else
-				torp.rudder2 = 1;
 			
 			p.sendMessage("rudder setting:" + torp.rudderSetting2);
+			p.sendMessage("rudder:" + torp.rudder2);
 			
 		////north
 			
@@ -5578,6 +5577,7 @@ public class OneCannon{
 						if( torp.rudder != 0 )
 						{
 							int dirMod  = Math.abs(torp.rudder);
+							p.sendMessage(i + "%" + dirMod);
 							if( i % dirMod == 0 )
 							{
 								if( torp.rudder < 0 )
@@ -5591,13 +5591,19 @@ public class OneCannon{
 						}
 						
 						
-						if( torp.turnProgress2 == 10 )
+						if( torp.rudder2 != 0 )
 						{
+							int dirMod  = Math.abs(torp.rudder2);
+							if( i % dirMod == 0 )
+							{
 								if( torp.rudder2 < 0 )
-									torp.hdg = BlockFace.DOWN;
-								else
-									torp.hdg = BlockFace.UP;
-							torp.rudder2 = -torp.rudder2;
+								{
+									torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
+								}else
+								{
+									torp.warhead = torp.warhead.getRelative(BlockFace.UP);
+								}
+							}
 						}
 						
 						
