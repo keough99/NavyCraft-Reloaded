@@ -5150,17 +5150,15 @@ public class OneCannon{
 			
 			//pitch
 			
-			if(  Math.abs(ny) > .02 )
+			if(  Math.abs(ny) > .05 )
 			{
 				torp.rudder2 = (int)(1.0f / -ny);
 				if( torp.rudder2 > 10 )
 					torp.rudder2 = 10;
 				else if( torp.rudder2 < -10 )
 					torp.rudder2 = -10;
-				torp.rudderSetting2 = torp.rudder2;
 			}
 			
-			p.sendMessage("rudder setting:" + torp.rudderSetting2);
 			p.sendMessage("rudder:" + torp.rudder2);
 			
 		////north
@@ -5515,15 +5513,6 @@ public class OneCannon{
 						
 						
 						//new position
-						torp.warhead = torp.warhead.getRelative(torp.hdg);
-						int depthDifference = torp.setDepth - torp.warhead.getY();
-						if( depthDifference < 0 )
-						{
-							torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
-						}else if( depthDifference > 0)
-						{
-							torp.warhead = torp.warhead.getRelative(BlockFace.UP);
-						}
 						
 						if( torp.turnProgress > -1 )
 						{
@@ -5577,7 +5566,6 @@ public class OneCannon{
 						if( torp.rudder != 0 )
 						{
 							int dirMod  = Math.abs(torp.rudder);
-							p.sendMessage(i + "%" + dirMod);
 							if( i % dirMod == 0 )
 							{
 								if( torp.rudder < 0 )
@@ -5598,11 +5586,21 @@ public class OneCannon{
 							{
 								if( torp.rudder2 < 0 )
 								{
-									torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
+									torp.warhead = torp.warhead.getRelative(BlockFace.UP);
 								}else
 								{
-									torp.warhead = torp.warhead.getRelative(BlockFace.UP);
+									torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
 								}
+							}
+						} else {
+							torp.warhead = torp.warhead.getRelative(torp.hdg);
+							int depthDifference = torp.setDepth - torp.warhead.getY();
+							if( depthDifference < 0 )
+							{
+								torp.warhead = torp.warhead.getRelative(BlockFace.DOWN);
+							}else if( depthDifference > 0)
+							{
+								torp.warhead = torp.warhead.getRelative(BlockFace.UP);
 							}
 						}
 						
