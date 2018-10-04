@@ -14,7 +14,6 @@ public class Weapon {
 	int rudderSetting=0;
 	int turnProgress = -1;
 	int torpSetHeading=-1;
-	int rudder2=0;
 	int torpRotation;
 	int setRange;
 	int rangeCounter;

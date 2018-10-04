@@ -223,8 +223,8 @@ public class Craft {
 	
 	
 	
+	public Location lastPeriscopeLookLoc=null;
 	public float lastPeriscopeYaw=-9999;
-	public float lastPeriscopePitch=-9999;
 	
 	public HashMap<Integer,Integer> engineIDTypes = new HashMap<Integer, Integer>();
 	public HashMap<Integer, Location> engineIDLocs = new HashMap<Integer, Location>();

@@ -349,8 +349,8 @@ public class NavyCraft_PlayerListener implements Listener {
 
 				CraftMover cmer = new CraftMover(craft, plugin);
 				cmer.structureUpdate(null, false);
+				craft.lastPeriscopeLookLoc = player.getTargetBlock(null, 250).getLocation();
 				craft.lastPeriscopeYaw = player.getLocation().getYaw();
-				craft.lastPeriscopePitch = player.getLocation().getPitch();
 				Location newLoc = new Location(craft.world, playerScope.signLoc.getBlockX() + .5,
 						playerScope.signLoc.getBlockY() - .5, playerScope.signLoc.getBlockZ() + .5);
 				newLoc.setYaw(player.getLocation().getYaw());
