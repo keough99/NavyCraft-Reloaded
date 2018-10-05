@@ -5876,13 +5876,10 @@ public class CraftMover {
 					}else if (engType == 3 || engType == 6 || engType == 7) // Boilers
 					{
 						float pitch = ((float) c.setSpeed / (float) 6.0f)*0.5f + 0.5f;
-						if( i%2 == 0 )
-							playEngineSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch);
-						else
-							playEngineSound(cLoc, Sound.ENTITY_POLAR_BEAR_WARNING, volume, 0.5f);
+						playEngineSound(cLoc, Sound.ENTITY_POLAR_BEAR_WARNING, volume, pitch);
 					}else if (engType == 5 || engType == 8) // Gasolines
 					{
-						float pitch = ((float) c.setSpeed / (float) 6.0f)*1.0f + 1.0f;
+						float pitch = (((float) c.setSpeed / (float) 6.0f)*1.0f + 1.0f)/2;
 						playEngineSound(cLoc, Sound.ENTITY_MINECART_RIDING, volume, pitch);
 					}else if (engType == 9) // Nuclear
 					{
@@ -5890,12 +5887,8 @@ public class CraftMover {
 						playEngineSound(cLoc, Sound.ENTITY_WITHER_SPAWN, volume, pitch);
 					}else if ((engType >= 10) && (engType <= 17)) // Airplanes
 					{
-						float pitch = 0.5f;
-						float pitch2 = ((float) c.setSpeed / (float) 6.0f)*1.5f + 0.5f;
-						if( i%4 == 0 )
-							playEngineSound(cLoc, Sound.ENTITY_WOLF_GROWL, volume, pitch);
-						else
-							playEngineSound(cLoc, Sound.ENTITY_IRONGOLEM_HURT, volume, pitch2);
+						float pitch = (((float) c.setSpeed / (float) 6.0f)*1.5f + 0.5f)/2;
+						playEngineSound(cLoc, Sound.ENTITY_WOLF_GROWL, volume, pitch);
 						if( c.type.canFly && !c.onGround && i%3 == 0)
 							playEngineSound(c.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.3f, 0.5f);
 					}else if ((engType == 18) || (engType == 19)) // Tanks

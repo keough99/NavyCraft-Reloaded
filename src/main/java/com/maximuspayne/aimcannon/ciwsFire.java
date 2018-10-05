@@ -1,10 +1,12 @@
 package com.maximuspayne.aimcannon;
 
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.maximuspayne.navycraft.NavyCraft;
 import com.maximuspayne.navycraft.craft.CraftMover;
@@ -40,8 +42,43 @@ public static void fireCIWS(Player player)
 			{
 				while(NavyCraft.ciwsFiringList.contains(player))
 				{
-			         NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new ciwsFire(player));
-					sleep(75);
+					int radius = 50;
+					long radiusSquared = radius * radius;
+					Location newLoc = player.getLocation();
+					boolean change = false;
+					
+					for (Weapon torp: AimCannon.weapons)
+					{
+						if (!torp.dead) {
+							Location torpLoc = torp.warhead.getLocation();
+							if (torpLoc.getWorld() != player.getWorld())
+							{
+								continue;
+							}
+
+							long delta = (long)torpLoc.distanceSquared(player.getLocation());
+							if (delta < radiusSquared)
+							{
+								double dX = torpLoc.getX() - player.getLocation().getX();
+								double dY = torpLoc.getY() - player.getLocation().getY();
+								double dZ = torpLoc.getZ() - player.getLocation().getZ();
+								
+								Vector playerLookDirection = new Vector(dX + 0.5, dY - 0.5, dZ + 0.5);
+								
+								change = true;
+								newLoc.setDirection(playerLookDirection.normalize());
+								break;
+							}
+						}
+					}
+					if (change)
+					player.teleport(newLoc);
+					
+					newLoc = player.getLocation();
+					change = false;
+					
+			        NavyCraft.instance.getServer().getScheduler().scheduleSyncDelayedTask(NavyCraft.instance, new ciwsFire(player));
+					sleep(50);
 				}
 				
 			} catch (InterruptedException e) 

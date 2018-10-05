@@ -5127,9 +5127,11 @@ public class OneCannon{
 			}
 			
 			if( onScopePlayer != null && testCraft.tubeMk1FiringMode == -1 )
-				torp.setDepth = (int) onScopePlayer.getLocation().getY();
+				torp.setDepth = (int) onScopePlayer.getTargetBlock(null, 250).getY();
 			else if( testCraft.lastPeriscopeLookLoc != null && testCraft.tubeMk1FiringMode == -1 )
 				torp.setDepth = (int) testCraft.lastPeriscopeLookLoc.getY();
+			
+			p.sendMessage("depth=" + torp.setDepth);
 			
 			if( left )
 				rotation -= testCraft.tubeMk1FiringSpread*Math.PI/180f;
